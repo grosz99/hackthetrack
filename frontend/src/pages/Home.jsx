@@ -290,16 +290,16 @@ function Home() {
                         </div>
                       </td>
                       <td className="col-factor">
-                        {driver.factors.consistency.score}
+                        {Math.round(driver.factors.consistency.score)}
                       </td>
                       <td className="col-factor">
-                        {driver.factors.racecraft.score}
+                        {Math.round(driver.factors.racecraft.score)}
                       </td>
                       <td className="col-factor">
-                        {driver.factors.raw_speed.score}
+                        {Math.round(driver.factors.raw_speed.score)}
                       </td>
                       <td className="col-factor">
-                        {driver.factors.tire_mgmt.score}
+                        {Math.round(driver.factors.tire_mgmt.score)}
                       </td>
                       <td className="col-fit">
                         <div className="fit-cell">{driver.circuitFitScore}</div>
