@@ -1,0 +1,398 @@
+.home-container {
+  min-height: 100vh;
+  background: #f5f5f7;
+  padding: 0;
+}
+
+/* Header */
+.header {
+  background-color: white;
+  padding: 24px 48px;
+  border-bottom: 1px solid #e5e5e7;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.gr-logo {
+  background-color: #EB0A1E;
+  color: white;
+  font-size: 24px;
+  font-weight: 800;
+  padding: 8px 16px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.header-content {
+  flex: 1;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: #1d1d1f;
+}
+
+.header-subtitle {
+  font-size: 14px;
+  color: #86868b;
+  font-weight: 400;
+  margin: 0;
+}
+
+/* Hero Section */
+.hero-section {
+  padding: 48px 48px 32px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.hero-stats {
+  font-size: 14px;
+  color: #86868b;
+  margin-bottom: 32px;
+}
+
+/* Factor Cards */
+.factor-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.factor-card {
+  background: white;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.2s;
+}
+
+.factor-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.factor-card.speed {
+  border-top: 3px solid #FF4444;
+}
+
+.factor-card.consistency {
+  border-top: 3px solid #4444FF;
+}
+
+.factor-card.racecraft {
+  border-top: 3px solid #FF9900;
+}
+
+.factor-card.tire {
+  border-top: 3px solid #00CC66;
+}
+
+.factor-percentage {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.factor-card.consistency .factor-percentage:first-child::before,
+.factor-card.racecraft .factor-percentage:first-child::before,
+.factor-card.speed .factor-percentage:first-child::before,
+.factor-card.tire .factor-percentage:first-child::before {
+  content: '+';
+  margin-right: 2px;
+}
+
+.factor-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.factor-description {
+  font-size: 13px;
+  color: #86868b;
+  line-height: 1.4;
+}
+
+/* Selection Grid */
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 0 48px 48px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.selection-column h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+/* Driver List */
+.driver-list {
+  background: white;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.driver-row {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f5f5f7;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.driver-row:last-child {
+  border-bottom: none;
+}
+
+.driver-row:hover {
+  background-color: #fafafa;
+}
+
+.driver-row.selected {
+  background-color: #fff5f5;
+  border-left: 3px solid #EB0A1E;
+}
+
+.driver-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.driver-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #EB0A1E;
+  min-width: 50px;
+}
+
+.driver-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.driver-score {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1d1d1f;
+  min-width: 40px;
+}
+
+.driver-meta {
+  font-size: 13px;
+  color: #86868b;
+}
+
+.grade-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.grade-badge.elite {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.grade-badge.strong {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.grade-badge.average {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.grade-badge.developing {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+/* Track Grid Large */
+.track-grid-large {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.track-card-large {
+  background: white;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.track-card-large:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.track-card-large.selected {
+  background-color: #fff5f5;
+  border: 2px solid #EB0A1E;
+}
+
+.track-map {
+  width: 100%;
+  height: 120px;
+  background: #f5f5f7;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.track-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.track-placeholder {
+  color: #86868b;
+  font-size: 11px;
+}
+
+.track-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #1d1d1f;
+}
+
+.track-location {
+  font-size: 12px;
+  color: #86868b;
+  margin-bottom: 2px;
+}
+
+.track-length {
+  font-size: 12px;
+  color: #86868b;
+}
+
+/* CTA Button */
+.cta-section {
+  text-align: center;
+  padding: 32px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.analyze-button {
+  background: #EB0A1E;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.analyze-button:hover:not(:disabled) {
+  background: #d00919;
+  box-shadow: 0 4px 12px rgba(235, 10, 30, 0.3);
+}
+
+.analyze-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #d1d1d6;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 24px 48px;
+  color: #86868b;
+  font-size: 13px;
+  border-top: 1px solid #e5e5e7;
+  background: white;
+}
+
+/* Scrollbar styling */
+.driver-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.driver-list::-webkit-scrollbar-track {
+  background: #f5f5f7;
+}
+
+.driver-list::-webkit-scrollbar-thumb {
+  background: #d1d1d6;
+  border-radius: 3px;
+}
+
+.driver-list::-webkit-scrollbar-thumb:hover {
+  background: #b1b1b6;
+}
+
+/* Track Profile Section */
+.track-profile-section {
+  padding: 32px 24px;
+  margin: 0 auto;
+  background: white;
+  margin-bottom: 2px;
+}
+
+.radar-chart-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: #86868b;
+  margin-bottom: 24px;
+}

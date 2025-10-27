@@ -1,0 +1,164 @@
+/* Clean Rankings Table - Fresh Start */
+
+.rankings-section {
+  padding: 40px 48px;
+  background: white;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.rankings-table-container {
+  overflow-x: auto;
+  border: 1px solid #e5e5e7;
+  border-radius: 8px;
+  margin-top: 24px;
+}
+
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  table-layout: auto;
+}
+
+.rankings-table thead {
+  background: #fafafa;
+  border-bottom: 2px solid #e5e5e7;
+}
+
+.rankings-table th {
+  padding: 12px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #86868b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+/* Column Width Specifications */
+.rankings-table th.col-rank,
+.rankings-table td.col-rank {
+  width: 60px;
+  text-align: center;
+}
+
+.rankings-table th.col-driver,
+.rankings-table td.col-driver {
+  width: 140px;
+  text-align: left;
+}
+
+.rankings-table th.col-radar,
+.rankings-table td.col-radar {
+  width: 130px;
+  text-align: center;
+}
+
+.rankings-table th.col-factor,
+.rankings-table td.col-factor {
+  width: 90px;
+  text-align: center;
+}
+
+.rankings-table th.col-fit,
+.rankings-table td.col-fit {
+  width: 100px;
+  text-align: center;
+}
+
+.rankings-table tbody tr {
+  border-bottom: 1px solid #e5e5e7;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.rankings-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.rankings-table tbody tr.selected {
+  background: #fff5f5;
+  border-left: 3px solid #EB0A1E;
+}
+
+.rankings-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.rankings-table td {
+  padding: 16px 12px;
+  vertical-align: middle;
+}
+
+/* Rank Column */
+.rank-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+/* Driver Column */
+.driver-info-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.driver-number {
+  font-size: 16px;
+  font-weight: 700;
+  color: #EB0A1E;
+  min-width: 40px;
+}
+
+.grade-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.grade-badge.elite {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.grade-badge.strong {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.grade-badge.average {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.grade-badge.developing {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+/* Radar Column */
+.radar-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Factor Columns */
+.col-factor {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+/* Circuit Fit Column */
+.fit-cell {
+  font-size: 20px;
+  font-weight: 700;
+  color: #EB0A1E;
+}
