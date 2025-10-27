@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(for file in barber/*_Anonymized.CSV)",
+      "Bash(do basename \"$file\")",
+      "Bash(done)",
+      "Bash(tree:*)",
+      "Bash(git remote:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Read(//c/Users/PC/Downloads/**)",
+      "Bash(for track in barber cota roadamerica sebring sonoma vir)",
+      "Bash(do echo \"\")",
+      "Bash(echo:*)",
+      "Bash([ -f \"data/race_results/provisional_results/$track_r1_provisional_results.csv\" ])",
+      "Bash([ -f \"data/race_results/provisional_results/$track_r2_provisional_results.csv\" ])",
+      "Bash([ -f \"data/race_results/best_10_laps/$track_r1_best_10_laps.csv\" ])",
+      "Bash([ -f \"data/race_results/best_10_laps/$track_r2_best_10_laps.csv\" ])",
+      "Bash([ -f \"data/race_results/analysis_endurance/$track_r1_analysis_endurance.csv\" ])",
+      "Bash([ -f \"data/race_results/analysis_endurance/$track_r2_analysis_endurance.csv\" ])",
+      "Bash([ -f \"data/lap_timing/$track_r1_lap_time.csv\" ])",
+      "Bash([ -f \"data/lap_timing/$track_r2_lap_time.csv\" ])",
+      "Bash(python:*)",
+      "Bash(tee:*)",
+      "Bash(cut:*)",
+      "Bash(tr:*)",
+      "Bash(column:*)",
+      "Bash(pip install:*)",
+      "Bash(git rev-parse:*)",
+      "Bash(git init:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
