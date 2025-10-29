@@ -86,6 +86,23 @@ function TrackIntelligence() {
       // Convert to 0-100 scale (negative fit is better, so invert)
       const fitScore = Math.max(0, Math.min(100, Math.round(50 - (fit * 5))));
 
+      // Calculate factor rankings (which factor is 1st, 2nd, 3rd, 4th strongest for this driver)
+      const factorScores = [
+        { name: 'consistency', score: driver.factors.consistency.score },
+        { name: 'racecraft', score: driver.factors.racecraft.score },
+        { name: 'raw_speed', score: driver.factors.raw_speed.score },
+        { name: 'tire_mgmt', score: driver.factors.tire_mgmt.score }
+      ];
+
+      // Sort by score descending to get rankings
+      const sortedFactors = [...factorScores].sort((a, b) => b.score - a.score);
+
+      // Create ranking map
+      const factorRankings = {};
+      sortedFactors.forEach((factor, index) => {
+        factorRankings[factor.name] = index + 1; // 1st, 2nd, 3rd, 4th
+      });
+
       // Create radar data for this driver
       const normalize = (zScore) => {
         // Convert z-score (-3 to +3) to 0-100 scale
@@ -119,6 +136,7 @@ function TrackIntelligence() {
       return {
         ...driver,
         circuitFitScore: fitScore,
+        factorRankings,
         radarData: driverRadarData
       };
     });
