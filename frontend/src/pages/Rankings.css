@@ -262,6 +262,29 @@
   line-height: 1;
 }
 
+/* Factor Ranking Styles */
+.stat-value.rank-1 {
+  color: #EB0A1E;
+  font-weight: 800;
+  font-size: 22px;
+}
+
+.stat-value.rank-2 {
+  color: #1d1d1f;
+  font-weight: 700;
+}
+
+.stat-value.rank-3 {
+  color: #6e6e73;
+  font-weight: 600;
+}
+
+.stat-value.rank-4 {
+  color: #86868b;
+  font-weight: 500;
+  font-size: 18px;
+}
+
 /* Circuit Fit Column - DOMINANT, most important */
 .fit-col {
   justify-content: center;
