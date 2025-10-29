@@ -1,0 +1,337 @@
+# Racing Analytics Platform 🏁
+
+**"Making the Predictable Unpredictable"**
+
+A 3-page AI-powered racing analytics platform that leverages the validated 4-Factor Model (R² = 0.895) to provide track intelligence, strategy coaching, and telemetry comparison tools for Toyota GR86 spec racing series.
+
+---
+
+## 🎯 Features
+
+### Page 1: Track Intelligence
+- **Track Selection**: Choose from 6 tracks (Barber, COTA, Road America, Sebring, Sonoma, VIR)
+- **Spider Graph**: Visualize track demand profiles across 4 skill dimensions
+- **Driver Rankings**: See predicted performance based on circuit fit scores
+- **Skill Breakdown**: Understand each driver's strengths and weaknesses
+
+### Page 2: AI Strategy Coach
+- **Anthropic Claude Integration**: Chat with AI strategist powered by Claude 3.5 Sonnet
+- **Context-Aware Insights**: AI knows your driver profile and track demands
+- **Actionable Strategy**: Get specific race-day guidance based on data
+- **Suggested Questions**: Pre-built prompts to explore key topics
+
+### Page 3: Telemetry Comparison
+- **Lap-by-Lap Analysis**: Compare your performance against any driver
+- **Sector Deltas**: Identify exactly where time is gained/lost
+- **Visual Charts**: Line charts and bar graphs showing performance gaps
+- **Key Insights**: AI-generated recommendations on improvement areas
+
+---
+
+## 🏗️ Architecture
+
+### Backend (Python FastAPI)
+```
+backend/
+├── app/
+│   ├── api/
+│   │   └── routes.py          # All API endpoints
+│   ├── services/
+│   │   ├── data_loader.py     # CSV data loading & caching
+│   │   └── ai_strategy.py     # Anthropic Claude integration
+│   ├── models.py              # Pydantic data models
+│   └── __init__.py
+├── main.py                    # FastAPI application
+├── requirements.txt           # Python dependencies
+└── .env.example              # Environment variables template
+```
+
+### Frontend (React + Vite)
+```
+frontend/
+├── src/
+│   ├── pages/
+│   │   ├── TrackIntelligence.jsx    # Page 1
+│   │   ├── StrategyChat.jsx          # Page 2
+│   │   └── TelemetryComparison.jsx   # Page 3
+│   ├── components/
+│   │   └── Navigation.jsx            # Main navigation bar
+│   ├── services/
+│   │   └── api.js                    # API client
+│   ├── data/
+│   │   └── dashboardData.json        # Pre-calculated driver/track data
+│   ├── App.jsx                       # React Router setup
+│   └── main.jsx                      # React entry point
+├── package.json
+└── .env.example                     # Frontend environment variables
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Python 3.11+
+- Node.js 18+
+- Anthropic API key ([get one here](https://console.anthropic.com/))
+
+### Backend Setup
+
+1. **Navigate to backend directory**:
+   ```bash
+   cd backend
+   ```
+
+2. **Create virtual environment**:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**:
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edit `.env` and add your Anthropic API key:
+   ```
+   ANTHROPIC_API_KEY=your_api_key_here
+   PORT=8000
+   ```
+
+5. **Run the backend**:
+   ```bash
+   python main.py
+   ```
+
+   Backend will be available at `http://localhost:8000`
+
+### Frontend Setup
+
+1. **Navigate to frontend directory**:
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**:
+   ```bash
+   cp .env.example .env
+   ```
+
+   Edit `.env`:
+   ```
+   VITE_API_URL=http://localhost:8000
+   ```
+
+4. **Run the frontend**:
+   ```bash
+   npm run dev
+   ```
+
+   Frontend will be available at `http://localhost:5173`
+
+### Access the Application
+
+Open your browser and navigate to `http://localhost:5173`
+
+---
+
+## 📊 API Endpoints
+
+### Tracks
+- `GET /api/tracks` - Get all tracks with demand profiles
+- `GET /api/tracks/{track_id}` - Get specific track
+
+### Drivers
+- `GET /api/drivers` - Get all drivers with skill profiles
+- `GET /api/drivers?track_id={track_id}` - Get drivers with circuit fit for track
+- `GET /api/drivers/{driver_number}` - Get specific driver
+
+### Predictions
+- `POST /api/predict` - Predict driver performance at track
+  ```json
+  {
+    "driver_number": 13,
+    "track_id": "cota"
+  }
+  ```
+
+### AI Chat
+- `POST /api/chat` - Send message to AI strategy coach
+  ```json
+  {
+    "message": "What should I focus on at Road America?",
+    "driver_number": 13,
+    "track_id": "roadamerica",
+    "history": []
+  }
+  ```
+
+### Telemetry
+- `GET /api/telemetry/compare?track_id={id}&driver_1={num}&driver_2={num}&race_num={1|2}`
+  - Compare lap-by-lap data between two drivers
+
+### Health
+- `GET /api/health` - Check API health and data loading status
+
+---
+
+## 🎨 Design Principles
+
+### Color Palette
+- **Primary Red**: `#EB0A1E` (GR branding)
+- **Dark**: `#1d1d1f` (text)
+- **Mid Gray**: `#86868b` (secondary text)
+- **Light Gray**: `#e5e5e7` (borders)
+- **White**: `#ffffff` (backgrounds)
+- **Success Green**: `#34C759` (positive deltas)
+
+### Typography
+- **System Font Stack**: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto
+- **Headings**: 600-700 weight
+- **Body**: 400-500 weight
+
+### Layout
+- **Max Width**: 1400-1600px
+- **Border Radius**: 8-16px (modern, rounded)
+- **Shadows**: Subtle elevation (0 2px 8px rgba(0,0,0,0.05))
+
+---
+
+## 🧪 Testing
+
+### Backend Tests
+```bash
+cd backend
+pytest
+```
+
+### Frontend Tests
+```bash
+cd frontend
+npm test
+```
+
+---
+
+## 📦 Deployment
+
+### Backend (Railway/Fly.io/Heroku)
+
+1. **Set environment variables** in your hosting platform:
+   - `ANTHROPIC_API_KEY`
+   - `PORT` (usually auto-set by platform)
+
+2. **Deploy**:
+   ```bash
+   # Railway
+   railway up
+
+   # Fly.io
+   fly deploy
+
+   # Heroku
+   git push heroku main
+   ```
+
+### Frontend (Vercel/Netlify)
+
+1. **Build the frontend**:
+   ```bash
+   cd frontend
+   npm run build
+   ```
+
+2. **Deploy to Vercel**:
+   ```bash
+   vercel deploy
+   ```
+
+   Set environment variable:
+   - `VITE_API_URL` = your deployed backend URL
+
+3. **Or deploy to Netlify**:
+   - Connect your GitHub repo
+   - Set build command: `npm run build`
+   - Set publish directory: `dist`
+   - Add environment variable: `VITE_API_URL`
+
+---
+
+## 🔑 Key Technologies
+
+### Backend
+- **FastAPI**: Modern Python API framework
+- **Anthropic SDK**: Claude 3.5 Sonnet integration
+- **Pandas**: Data manipulation and analysis
+- **Pydantic**: Data validation and settings
+
+### Frontend
+- **React 19**: UI framework
+- **React Router v7**: Client-side routing
+- **Recharts**: Data visualization
+- **Vite**: Build tool and dev server
+
+---
+
+## 📈 The 4-Factor Model
+
+The platform is built on a validated statistical model with:
+- **R² = 0.895** (explains 89.5% of race finishes)
+- **MAE = 1.78 positions**
+- **291 driver-race observations** across 12 races
+
+### The 4 Factors (by importance):
+
+1. **Raw Speed (50%)** - Qualifying pace, best lap times
+2. **Consistency (31%)** - Lap-to-lap variation, sector consistency
+3. **Racecraft (16%)** - Overtaking ability, position changes
+4. **Tire Management (10%)** - Late-race pace preservation
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 🙏 Acknowledgments
+
+- Inspired by **PFF.com** (analytics presentation)
+- Inspired by **DataGolf.com** (statistical modeling)
+- Inspired by **VRS.racing** (telemetry comparison)
+- Powered by **Anthropic Claude** (AI strategy coaching)
+- Data from **Toyota GR86 Cup** racing series
+
+---
+
+## 📞 Support
+
+For issues or questions:
+- Open an issue on GitHub
+- Email: support@example.com
+
+---
+
+**Built with ❤️ for grassroots motorsports**

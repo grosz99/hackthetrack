@@ -1,0 +1,813 @@
+.home-container {
+  min-height: 100vh;
+  background: #fafafa;
+  padding: 0;
+}
+
+/* ===== CONSOLIDATED HERO HEADER ===== */
+.hero-header {
+  background: linear-gradient(135deg, #1d1d1f 0%, #2d2d2f 100%);
+  padding: 48px 48px 56px 48px;
+  border-bottom: 4px solid #EB0A1E;
+}
+
+.hero-content {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 8px 16px;
+  background: rgba(235, 10, 30, 0.15);
+  border-radius: 8px;
+  border: 1px solid rgba(235, 10, 30, 0.3);
+}
+
+.gr-logo-compact {
+  background-color: #EB0A1E;
+  color: white;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+.hero-label {
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.hero-main-title {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: white;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.hero-description {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 0 0 32px 0;
+  max-width: 700px;
+  line-height: 1.5;
+}
+
+/* ===== COMPACT TRACK SELECTOR ===== */
+.track-selector-container {
+  margin-top: 32px;
+}
+
+.track-selector-label {
+  display: block;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  opacity: 0.9;
+}
+
+.track-pills {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  max-width: 1200px;
+}
+
+.track-pill {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 140px;
+}
+
+.track-pill:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(235, 10, 30, 0.4);
+  transform: translateY(-1px);
+}
+
+.track-pill.active {
+  background: #EB0A1E;
+  border-color: #EB0A1E;
+  box-shadow: 0 4px 12px rgba(235, 10, 30, 0.4);
+}
+
+.track-pill-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+}
+
+.track-pill-location {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.track-pill.active .track-pill-location {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Factor Cards */
+.factor-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.factor-card {
+  background: white;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.2s;
+}
+
+.factor-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.factor-card.speed {
+  border-top: 3px solid #FF4444;
+}
+
+.factor-card.consistency {
+  border-top: 3px solid #4444FF;
+}
+
+.factor-card.racecraft {
+  border-top: 3px solid #FF9900;
+}
+
+.factor-card.tire {
+  border-top: 3px solid #00CC66;
+}
+
+.factor-percentage {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.factor-card.consistency .factor-percentage:first-child::before,
+.factor-card.racecraft .factor-percentage:first-child::before,
+.factor-card.speed .factor-percentage:first-child::before,
+.factor-card.tire .factor-percentage:first-child::before {
+  content: '+';
+  margin-right: 2px;
+}
+
+.factor-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1d1d1f;
+}
+
+.factor-description {
+  font-size: 13px;
+  color: #86868b;
+  line-height: 1.4;
+}
+
+/* Selection Grid */
+.selection-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+  padding: 0 48px 48px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.selection-column h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+/* Driver List */
+.driver-list {
+  background: white;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.driver-row {
+  padding: 16px 20px;
+  border-bottom: 1px solid #f5f5f7;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.driver-row:last-child {
+  border-bottom: none;
+}
+
+.driver-row:hover {
+  background-color: #fafafa;
+}
+
+.driver-row.selected {
+  background-color: #fff5f5;
+  border-left: 3px solid #EB0A1E;
+}
+
+.driver-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.driver-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #EB0A1E;
+  min-width: 50px;
+}
+
+.driver-details {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.driver-score {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1d1d1f;
+  min-width: 40px;
+}
+
+.driver-meta {
+  font-size: 13px;
+  color: #86868b;
+}
+
+.grade-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.grade-badge.elite {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.grade-badge.strong {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.grade-badge.average {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.grade-badge.developing {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+/* Track Grid Large */
+.track-grid-large {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.track-card-large {
+  background: white;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.track-card-large:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.track-card-large.selected {
+  background-color: #fff5f5;
+  border: 2px solid #EB0A1E;
+}
+
+.track-map {
+  width: 100%;
+  height: 120px;
+  background: #f5f5f7;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.track-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.track-placeholder {
+  color: #86868b;
+  font-size: 11px;
+}
+
+.track-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #1d1d1f;
+}
+
+.track-location {
+  font-size: 12px;
+  color: #86868b;
+  margin-bottom: 2px;
+}
+
+.track-length {
+  font-size: 12px;
+  color: #86868b;
+}
+
+/* CTA Button */
+.cta-section {
+  text-align: center;
+  padding: 32px 48px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.analyze-button {
+  background: #EB0A1E;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.analyze-button:hover:not(:disabled) {
+  background: #d00919;
+  box-shadow: 0 4px 12px rgba(235, 10, 30, 0.3);
+}
+
+.analyze-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #d1d1d6;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  padding: 24px 48px;
+  color: #86868b;
+  font-size: 13px;
+  border-top: 1px solid #e5e5e7;
+  background: white;
+}
+
+/* Scrollbar styling */
+.driver-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.driver-list::-webkit-scrollbar-track {
+  background: #f5f5f7;
+}
+
+.driver-list::-webkit-scrollbar-thumb {
+  background: #d1d1d6;
+  border-radius: 3px;
+}
+
+.driver-list::-webkit-scrollbar-thumb:hover {
+  background: #b1b1b6;
+}
+
+/* ===== CIRCUIT DEMANDS SECTION (ABOVE RANKINGS) ===== */
+.circuit-demands-section {
+  background: white;
+  border-bottom: 2px solid #e5e5e7;
+  padding: 40px 48px;
+}
+
+.circuit-demands-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.demands-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.demands-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+}
+
+.demands-subtitle {
+  font-size: 15px;
+  color: #86868b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.demands-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 48px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.radar-chart-wrapper {
+  flex: 0 0 500px;
+  min-width: 500px;
+}
+
+/* Track Insights Panel */
+.track-insights-panel {
+  flex: 1;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.insights-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.insights-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+.track-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.meta-item {
+  font-size: 13px;
+  color: #86868b;
+  font-weight: 500;
+}
+
+.meta-divider {
+  color: #d1d1d6;
+  font-weight: 300;
+}
+
+.track-insight-text {
+  font-size: 15px;
+  line-height: 1.7;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+/* Legend Explainer */
+.legend-explainer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px;
+  background: #fafafa;
+  border-radius: 8px;
+  border: 1px solid #e5e5e7;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.legend-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-icon.avg {
+  background: #9e9ea3;
+  border: 2px dashed #9e9ea3;
+}
+
+.legend-icon.podium {
+  background: #EB0A1E;
+  border: 2px solid #EB0A1E;
+}
+
+.legend-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #1d1d1f;
+}
+
+.legend-text strong {
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+/* ===== RANKINGS SECTION WRAPPER ===== */
+.rankings-section-wrapper {
+  max-width: 1800px;
+  margin: 32px auto;
+  padding: 0 48px 48px 48px;
+}
+
+/* Two Column Layout (matches Circuit Demands above) */
+.rankings-two-column {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 24px;
+  align-items: start;
+}
+
+/* When no driver selected, table takes full width */
+.rankings-two-column:has(.driver-detail-panel:not(:empty)) {
+  grid-template-columns: 1fr 420px;
+}
+
+/* ===== DRIVER DETAIL PANEL ===== */
+.driver-detail-panel {
+  background: white;
+  border: 1px solid #e5e5e7;
+  border-radius: 12px;
+  overflow: hidden;
+  position: sticky;
+  top: 24px;
+  animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Panel Header */
+.panel-header {
+  padding: 24px;
+  background: #fafafa;
+  border-bottom: 2px solid #e5e5e7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-title-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.panel-driver-number {
+  font-size: 24px;
+  font-weight: 800;
+  color: #EB0A1E;
+  margin: 0;
+}
+
+.panel-grade-badge {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.panel-grade-badge.elite {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.panel-grade-badge.strong {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.panel-grade-badge.average {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.panel-grade-badge.developing {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+.panel-fit-score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.fit-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #86868b;
+}
+
+.fit-number {
+  font-size: 32px;
+  font-weight: 800;
+  color: #EB0A1E;
+  line-height: 1;
+}
+
+/* Panel Sections */
+.panel-section {
+  padding: 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.panel-section:last-child {
+  border-bottom: none;
+}
+
+.section-heading {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0 0 16px 0;
+}
+
+/* Radar Chart in Panel */
+.panel-radar {
+  margin: 0 -10px;
+}
+
+/* Performance Factors List */
+.factor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.factor-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.factor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.factor-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+.factor-importance {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.factor-importance.high {
+  background: #fff3f3;
+  color: #EB0A1E;
+}
+
+.factor-importance.medium {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+.factor-importance.low {
+  background: #f0f0f0;
+  color: #6e6e73;
+}
+
+.factor-bar-container {
+  position: relative;
+  height: 32px;
+  background: #f5f5f7;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.factor-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #EB0A1E 0%, #ff4444 100%);
+  border-radius: 6px;
+  transition: width 0.4s ease;
+}
+
+.factor-score-text {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.stat-box {
+  background: #fafafa;
+  border: 1px solid #e5e5e7;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: #86868b;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1d1d1f;
+}

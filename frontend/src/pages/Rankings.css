@@ -1,0 +1,326 @@
+/* ===== FRESH START: CSS GRID-BASED RANKINGS TABLE ===== */
+
+.rankings-main {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e5e7;
+  overflow: hidden;
+}
+
+.rankings-main .grid-cell:first-child,
+.rankings-main .header-cell:first-child {
+  border-left: 1px solid #e5e5e7;
+}
+
+.rankings-header {
+  padding: 32px 36px;
+  border-bottom: 2px solid #e5e5e7;
+  background: white;
+}
+
+.rankings-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.rankings-subtitle {
+  font-size: 14px;
+  color: #86868b;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===== GRID CONTAINER ===== */
+.rankings-grid-container {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== GRID HEADER ===== */
+.grid-header {
+  display: grid;
+  grid-template-columns: 100px 150px 200px 200px 200px 200px 220px;
+  background: #f5f5f7;
+  border-bottom: 3px solid #d1d1d6;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.header-cell {
+  padding: 18px 20px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #1d1d1f;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-right: 1px solid #d1d1d6;
+}
+
+.header-cell:last-child {
+  border-right: none;
+}
+
+/* Header with Info Icon */
+.header-with-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+
+/* Info Icon */
+.info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 13px;
+  color: #86868b;
+  cursor: help;
+  transition: all 0.2s ease;
+  border-radius: 50%;
+  background: transparent;
+  position: relative;
+}
+
+.info-icon:hover {
+  color: #EB0A1E;
+  background: rgba(235, 10, 30, 0.08);
+}
+
+/* Tooltip */
+.info-icon::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  background: #1d1d1f;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  white-space: normal;
+  width: 280px;
+  text-align: left;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 1000;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Tooltip Arrow */
+.info-icon::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 8px solid #1d1d1f;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease;
+  z-index: 1001;
+}
+
+/* Show Tooltip on Hover */
+.info-icon:hover::after,
+.info-icon:hover::before {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== DATA ROWS ===== */
+.grid-row {
+  display: grid;
+  grid-template-columns: 100px 150px 200px 200px 200px 200px 220px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: white;
+}
+
+.grid-row:hover {
+  background: #fafafa;
+}
+
+.grid-row.selected {
+  background: #fff5f5;
+  border-left: 4px solid #EB0A1E;
+}
+
+.grid-row:last-child .grid-cell {
+  border-bottom: none;
+}
+
+/* ===== GRID CELLS ===== */
+.grid-cell {
+  padding: 20px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 72px;
+  border-right: 1px solid #e5e5e7;
+  border-bottom: 1px solid #e5e5e7;
+}
+
+.grid-cell:last-child {
+  border-right: none;
+}
+
+/* ===== COLUMN SPECIFIC STYLES ===== */
+
+/* Rank Column - Smaller, subordinate */
+.rank-col {
+  justify-content: center;
+}
+
+.rank-number {
+  font-size: 20px;
+  font-weight: 700;
+  color: #6e6e73;
+  line-height: 1;
+}
+
+/* Driver Column - Clear but not dominant */
+.driver-col {
+  justify-content: center;
+}
+
+.driver-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.driver-number {
+  font-size: 18px;
+  font-weight: 700;
+  color: #EB0A1E;
+  min-width: 50px;
+}
+
+.grade-badge {
+  padding: 6px 13px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.grade-badge.elite {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.grade-badge.strong {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.grade-badge.average {
+  background-color: #e3f2fd;
+  color: #1565c0;
+}
+
+.grade-badge.developing {
+  background-color: #fce4ec;
+  color: #c2185b;
+}
+
+/* Stat Columns - Medium emphasis */
+.stat-col {
+  justify-content: center;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1d1d1f;
+  line-height: 1;
+}
+
+/* Circuit Fit Column - DOMINANT, most important */
+.fit-col {
+  justify-content: center;
+}
+
+.fit-value {
+  font-size: 32px;
+  font-weight: 800;
+  color: #EB0A1E;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1400px) {
+  .grid-header,
+  .grid-row {
+    grid-template-columns: 90px 135px 180px 180px 180px 180px 200px;
+  }
+
+  .header-cell {
+    padding: 18px 16px;
+  }
+
+  .grid-cell {
+    padding: 20px 16px;
+  }
+
+  .stat-value {
+    font-size: 19px;
+  }
+
+  .fit-value {
+    font-size: 30px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .grid-header,
+  .grid-row {
+    grid-template-columns: 80px 120px 160px 160px 160px 160px 180px;
+  }
+
+  .stat-value {
+    font-size: 18px;
+  }
+
+  .fit-value {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 900px) {
+  .rankings-grid-container {
+    overflow-x: auto;
+  }
+
+  .grid-header,
+  .grid-row {
+    min-width: 1270px;
+  }
+}

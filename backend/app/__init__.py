@@ -1,0 +1,3 @@
+"""
+Racing Analytics API Application.
+"""
