@@ -189,9 +189,9 @@ export default function Overview() {
         </div>
       </div>
 
-      {/* Season Performance Section - 2x3 Tiles + Spider Chart */}
-      <div className="season-performance-section">
-        {/* 2x3 Performance Tiles */}
+      {/* Top Section - Compact Tiles + Race Chart */}
+      <div style={{ display: 'flex', gap: '24px', marginBottom: '48px' }}>
+        {/* Compact Performance Tiles - 2x3 Grid */}
         <div className="season-performance-tiles">
           <div className="performance-tile">
             <div className="tile-value">{seasonStats.wins}</div>
@@ -224,185 +224,202 @@ export default function Overview() {
           </div>
         </div>
 
-        {/* Performance Radar Chart with Button */}
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'stretch' }}>
-          <div className="spider-chart-container" style={{ flex: 1 }}>
-            <h3>Performance Radar</h3>
-            <ResponsiveContainer width="100%" height={350}>
-              <RadarChart data={radarData}>
-                <PolarGrid stroke="#ddd" />
-                <PolarAngleAxis
-                  dataKey="metric"
-                  tick={{ fill: '#000', fontSize: 12, fontWeight: 600 }}
-                />
-                <PolarRadiusAxis
-                  angle={90}
-                  domain={[0, 100]}
-                  tick={{ fill: '#666', fontSize: 10 }}
-                />
-                <Radar
-                  name="Performance"
-                  dataKey="value"
-                  stroke="#e74c3c"
-                  fill="#e74c3c"
-                  fillOpacity={0.3}
-                  strokeWidth={3}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
+        {/* Race by Race Performance Chart with Expand Button */}
+        {racePerformanceData.length > 0 && (
+          <div style={{ display: 'flex', gap: '20px', alignItems: 'stretch', flex: 1 }}>
+            <div className="race-performance" style={{ flex: 1, marginTop: 0 }}>
+              <h2>Race by Race Performance</h2>
+              <ResponsiveContainer width="100%" height={350}>
+                <ComposedChart
+                  data={racePerformanceData}
+                  margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+                  <XAxis
+                    dataKey="race"
+                    angle={-45}
+                    textAnchor="end"
+                    height={100}
+                    tick={{ fill: '#000', fontSize: 11, fontWeight: 600 }}
+                  />
+                  <YAxis
+                    reversed
+                    domain={[1, 20]}
+                    label={{ value: 'Position', angle: -90, position: 'insideLeft', fill: '#000', fontWeight: 600 }}
+                    tick={{ fill: '#000', fontWeight: 600 }}
+                  />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#fff', border: '2px solid #e74c3c', borderRadius: '8px' }}
+                    labelStyle={{ color: '#000', fontWeight: 600 }}
+                  />
+                  <Legend
+                    wrapperStyle={{ paddingTop: '20px' }}
+                    iconType="line"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="startPos"
+                    stroke="#888"
+                    strokeWidth={4}
+                    name="Starting Position"
+                    dot={{ r: 6, fill: '#888', strokeWidth: 3, stroke: '#e74c3c' }}
+                    style={{ filter: 'drop-shadow(0px 0px 2px rgba(231, 76, 60, 0.8))' }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="finishPos"
+                    stroke="#000"
+                    strokeWidth={4}
+                    name="Finishing Position"
+                    dot={{ r: 6, fill: '#000', strokeWidth: 3, stroke: '#e74c3c' }}
+                    style={{ filter: 'drop-shadow(0px 0px 2px rgba(231, 76, 60, 0.8))' }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
 
-          {/* Expand to Skills Button */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-            <NavLink
-              to="/skills"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: '#e74c3c',
+            {/* Expand to Race Logs Button */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+              <NavLink
+                to="/race-log"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  background: '#e74c3c',
+                  color: '#fff',
+                  fontSize: '36px',
+                  fontWeight: 900,
+                  textDecoration: 'none',
+                  borderRadius: '50%',
+                  border: '4px solid #fff',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 16px rgba(231, 76, 60, 0.4)',
+                  width: '80px',
+                  height: '80px',
+                  flexShrink: 0
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.background = '#c0392b';
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(231, 76, 60, 0.6)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.background = '#e74c3c';
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.4)';
+                }}
+              >
+                →
+              </NavLink>
+              <span style={{
+                fontSize: '12px',
+                fontWeight: 700,
                 color: '#fff',
-                fontSize: '36px',
-                fontWeight: 900,
-                textDecoration: 'none',
-                borderRadius: '50%',
-                border: '4px solid #fff',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 16px rgba(231, 76, 60, 0.4)',
-                width: '80px',
-                height: '80px',
-                flexShrink: 0
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.background = '#c0392b';
-                e.currentTarget.style.transform = 'scale(1.1)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(231, 76, 60, 0.6)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.background = '#e74c3c';
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.4)';
-              }}
-            >
-              →
-            </NavLink>
-            <span style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              color: '#fff',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              textAlign: 'center'
-            }}>
-              See<br/>Skills
-            </span>
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                textAlign: 'center'
+              }}>
+                See Race<br/>Logs
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
-      {/* Race by Race Performance Chart with Expand Button */}
-      {racePerformanceData.length > 0 && (
-        <div style={{ display: 'flex', gap: '20px', alignItems: 'stretch', marginTop: '24px' }}>
-          <div className="race-performance" style={{ flex: 1, marginTop: 0 }}>
-            <h2>Race by Race Performance</h2>
-            <ResponsiveContainer width="100%" height={350}>
-              <ComposedChart
-                data={racePerformanceData}
-                margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
-                <XAxis
-                  dataKey="race"
-                  angle={-45}
-                  textAnchor="end"
-                  height={100}
-                  tick={{ fill: '#000', fontSize: 11, fontWeight: 600 }}
-                />
-                <YAxis
-                  reversed
-                  domain={[1, 20]}
-                  label={{ value: 'Position', angle: -90, position: 'insideLeft', fill: '#000', fontWeight: 600 }}
-                  tick={{ fill: '#000', fontWeight: 600 }}
-                />
-                <Tooltip
-                  contentStyle={{ backgroundColor: '#fff', border: '2px solid #e74c3c', borderRadius: '8px' }}
-                  labelStyle={{ color: '#000', fontWeight: 600 }}
-                />
-                <Legend
-                  wrapperStyle={{ paddingTop: '20px' }}
-                  iconType="line"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="startPos"
-                  stroke="#888"
-                  strokeWidth={4}
-                  name="Starting Position"
-                  dot={{ r: 6, fill: '#888', strokeWidth: 3, stroke: '#e74c3c' }}
-                  style={{ filter: 'drop-shadow(0px 0px 2px rgba(231, 76, 60, 0.8))' }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="finishPos"
-                  stroke="#000"
-                  strokeWidth={4}
-                  name="Finishing Position"
-                  dot={{ r: 6, fill: '#000', strokeWidth: 3, stroke: '#e74c3c' }}
-                  style={{ filter: 'drop-shadow(0px 0px 2px rgba(231, 76, 60, 0.8))' }}
-                />
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
+      {/* Bottom Section - Performance Radar + Contextual Chart */}
+      <div style={{ display: 'flex', gap: '20px', alignItems: 'stretch' }}>
+        {/* Performance Radar Chart */}
+        <div className="spider-chart-container" style={{ flex: 1 }}>
+          <h3>Performance Radar</h3>
+          <ResponsiveContainer width="100%" height={350}>
+            <RadarChart data={radarData}>
+              <PolarGrid stroke="#ddd" />
+              <PolarAngleAxis
+                dataKey="metric"
+                tick={{ fill: '#000', fontSize: 12, fontWeight: 600 }}
+              />
+              <PolarRadiusAxis
+                angle={90}
+                domain={[0, 100]}
+                tick={{ fill: '#666', fontSize: 10 }}
+              />
+              <Radar
+                name="Performance"
+                dataKey="value"
+                stroke="#e74c3c"
+                fill="#e74c3c"
+                fillOpacity={0.3}
+                strokeWidth={3}
+              />
+            </RadarChart>
+          </ResponsiveContainer>
+        </div>
 
-          {/* Expand to Race Logs Button */}
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-            <NavLink
-              to="/race-log"
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                background: '#e74c3c',
-                color: '#fff',
-                fontSize: '36px',
-                fontWeight: 900,
-                textDecoration: 'none',
-                borderRadius: '50%',
-                border: '4px solid #fff',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 16px rgba(231, 76, 60, 0.4)',
-                width: '80px',
-                height: '80px',
-                flexShrink: 0
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.background = '#c0392b';
-                e.currentTarget.style.transform = 'scale(1.1)';
-                e.currentTarget.style.boxShadow = '0 8px 24px rgba(231, 76, 60, 0.6)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.background = '#e74c3c';
-                e.currentTarget.style.transform = 'scale(1)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.4)';
-              }}
-            >
-              →
-            </NavLink>
-            <span style={{
-              fontSize: '12px',
-              fontWeight: 700,
-              color: '#fff',
-              textTransform: 'uppercase',
-              letterSpacing: '1px',
-              textAlign: 'center'
-            }}>
-              See Race<br/>Logs
-            </span>
+        {/* Contextual Performance Chart - Placeholder */}
+        <div className="spider-chart-container" style={{ flex: 1 }}>
+          <h3>Performance Context</h3>
+          <div style={{
+            height: '350px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: '#666',
+            fontSize: '16px',
+            fontWeight: 600
+          }}>
+            Additional Chart Coming Soon
           </div>
         </div>
-      )}
+
+        {/* Expand to Skills Button */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+          <NavLink
+            to="/skills"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              background: '#e74c3c',
+              color: '#fff',
+              fontSize: '36px',
+              fontWeight: 900,
+              textDecoration: 'none',
+              borderRadius: '50%',
+              border: '4px solid #fff',
+              cursor: 'pointer',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 16px rgba(231, 76, 60, 0.4)',
+              width: '80px',
+              height: '80px',
+              flexShrink: 0
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = '#c0392b';
+              e.currentTarget.style.transform = 'scale(1.1)';
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(231, 76, 60, 0.6)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = '#e74c3c';
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.4)';
+            }}
+          >
+            →
+          </NavLink>
+          <span style={{
+            fontSize: '12px',
+            fontWeight: 700,
+            color: '#fff',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            textAlign: 'center'
+          }}>
+            See<br/>Skills
+          </span>
+        </div>
+      </div>
     </div>
   );
 }
