@@ -13,6 +13,8 @@ import './Skills.css';
 export default function Skills() {
   const [driverNumber, setDriverNumber] = useState(13);
   const [driverData, setDriverData] = useState(null);
+  const [topDrivers, setTopDrivers] = useState([]);
+  const [selectedFactor, setSelectedFactor] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [drivers] = useState([
@@ -28,8 +30,22 @@ export default function Skills() {
       try {
         setLoading(true);
         setError(null);
-        const response = await api.get(`/api/drivers/${driverNumber}`);
-        setDriverData(response.data);
+
+        // Fetch current driver data and all drivers to find top 3
+        const [driverResponse, allDriversResponse] = await Promise.all([
+          api.get(`/api/drivers/${driverNumber}`),
+          api.get('/api/drivers')
+        ]);
+
+        setDriverData(driverResponse.data);
+
+        // Get top 3 drivers by overall score (excluding current driver)
+        const sortedDrivers = allDriversResponse.data
+          .filter(d => d.driver_number !== driverNumber)
+          .sort((a, b) => b.overall_score - a.overall_score)
+          .slice(0, 3);
+
+        setTopDrivers(sortedDrivers);
       } catch (err) {
         console.error('Error fetching driver data:', err);
         setError('Failed to load driver data');
@@ -61,29 +77,45 @@ export default function Skills() {
     );
   }
 
-  // Prepare radar chart data
+  // Prepare radar chart data with top drivers comparison
   const radarData = [
     {
       factor: 'Consistency',
-      value: driverData.consistency?.percentile || 0,
+      user: driverData.consistency?.percentile || 0,
+      top1: topDrivers[0]?.consistency?.percentile || 0,
+      top2: topDrivers[1]?.consistency?.percentile || 0,
+      top3: topDrivers[2]?.consistency?.percentile || 0,
       fullMark: 100
     },
     {
       factor: 'Racecraft',
-      value: driverData.racecraft?.percentile || 0,
+      user: driverData.racecraft?.percentile || 0,
+      top1: topDrivers[0]?.racecraft?.percentile || 0,
+      top2: topDrivers[1]?.racecraft?.percentile || 0,
+      top3: topDrivers[2]?.racecraft?.percentile || 0,
       fullMark: 100
     },
     {
       factor: 'Raw Speed',
-      value: driverData.speed?.percentile || 0,
+      user: driverData.speed?.percentile || 0,
+      top1: topDrivers[0]?.speed?.percentile || 0,
+      top2: topDrivers[1]?.speed?.percentile || 0,
+      top3: topDrivers[2]?.speed?.percentile || 0,
       fullMark: 100
     },
     {
       factor: 'Tire Mgmt',
-      value: driverData.tire_management?.percentile || 0,
+      user: driverData.tire_management?.percentile || 0,
+      top1: topDrivers[0]?.tire_management?.percentile || 0,
+      top2: topDrivers[1]?.tire_management?.percentile || 0,
+      top3: topDrivers[2]?.tire_management?.percentile || 0,
       fullMark: 100
     },
   ];
+
+  const handleFactorClick = (factorName) => {
+    setSelectedFactor(factorName);
+  };
 
   return (
     <div className="skills-page">
@@ -181,21 +213,87 @@ export default function Skills() {
         </div>
       </div>
 
-      {/* Overall Rating Section */}
-      <div className="overall-rating-section">
-        <div className="overall-rating-card">
-          <h3 className="rating-label">Overall Rating</h3>
-          <div className="rating-value">{driverData.overall_score || 0}</div>
-          <div className="rating-percentile">Top {100 - (driverData.overall_score || 0)}%</div>
+      {/* Main Content Grid - Radar Left, Factor Cards Right */}
+      <div className="skills-content-new">
+        {/* Radar Chart on left side */}
+        <div className="radar-chart-container-new">
+          <h3 className="chart-title">Performance Comparison</h3>
+          <p className="chart-subtitle">You vs Top 3 Drivers</p>
+          <ResponsiveContainer width="100%" height={500}>
+            <RadarChart data={radarData}>
+              <PolarGrid stroke="#333" strokeWidth={1} />
+              <PolarAngleAxis
+                dataKey="factor"
+                tick={{ fill: '#fff', fontSize: 16, fontWeight: 700 }}
+              />
+              <PolarRadiusAxis
+                angle={90}
+                domain={[0, 100]}
+                tick={{ fill: '#888', fontSize: 12, fontWeight: 600 }}
+              />
+              {/* Top 3 drivers in black/gray */}
+              <Radar
+                name={`#${topDrivers[0]?.driver_number || 'N/A'}`}
+                dataKey="top1"
+                stroke="#555"
+                fill="#555"
+                fillOpacity={0.15}
+                strokeWidth={2}
+              />
+              <Radar
+                name={`#${topDrivers[1]?.driver_number || 'N/A'}`}
+                dataKey="top2"
+                stroke="#666"
+                fill="#666"
+                fillOpacity={0.15}
+                strokeWidth={2}
+              />
+              <Radar
+                name={`#${topDrivers[2]?.driver_number || 'N/A'}`}
+                dataKey="top3"
+                stroke="#777"
+                fill="#777"
+                fillOpacity={0.15}
+                strokeWidth={2}
+              />
+              {/* Current driver in red */}
+              <Radar
+                name={`You (#${driverNumber})`}
+                dataKey="user"
+                stroke="#e74c3c"
+                fill="#e74c3c"
+                fillOpacity={0.4}
+                strokeWidth={4}
+              />
+            </RadarChart>
+          </ResponsiveContainer>
+          <div className="radar-legend">
+            <div className="legend-item">
+              <div className="legend-color" style={{ background: '#e74c3c' }}></div>
+              <span>You (#{driverNumber})</span>
+            </div>
+            <div className="legend-item">
+              <div className="legend-color" style={{ background: '#555' }}></div>
+              <span>Top Driver #{topDrivers[0]?.driver_number || 'N/A'}</span>
+            </div>
+            <div className="legend-item">
+              <div className="legend-color" style={{ background: '#666' }}></div>
+              <span>2nd Best #{topDrivers[1]?.driver_number || 'N/A'}</span>
+            </div>
+            <div className="legend-item">
+              <div className="legend-color" style={{ background: '#777' }}></div>
+              <span>3rd Best #{topDrivers[2]?.driver_number || 'N/A'}</span>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Main Content Grid */}
-      <div className="skills-content">
-        {/* Factor Cards Grid */}
-        <div className="factor-cards-grid">
+        {/* Factor Cards Grid - 2x2 on right side */}
+        <div className="factor-cards-grid-new">
           {/* Consistency Card */}
-          <div className="factor-card">
+          <div
+            className={`factor-card-large ${selectedFactor === 'Consistency' ? 'selected' : ''}`}
+            onClick={() => handleFactorClick('Consistency')}
+          >
             <div className="factor-header">
               <h3 className="factor-name">Consistency</h3>
               <div className="factor-score">{driverData.consistency?.score || 0}</div>
@@ -215,7 +313,10 @@ export default function Skills() {
           </div>
 
           {/* Racecraft Card */}
-          <div className="factor-card">
+          <div
+            className={`factor-card-large ${selectedFactor === 'Racecraft' ? 'selected' : ''}`}
+            onClick={() => handleFactorClick('Racecraft')}
+          >
             <div className="factor-header">
               <h3 className="factor-name">Racecraft</h3>
               <div className="factor-score">{driverData.racecraft?.score || 0}</div>
@@ -235,7 +336,10 @@ export default function Skills() {
           </div>
 
           {/* Raw Speed Card */}
-          <div className="factor-card">
+          <div
+            className={`factor-card-large ${selectedFactor === 'Raw Speed' ? 'selected' : ''}`}
+            onClick={() => handleFactorClick('Raw Speed')}
+          >
             <div className="factor-header">
               <h3 className="factor-name">Raw Speed</h3>
               <div className="factor-score">{driverData.speed?.score || 0}</div>
@@ -255,7 +359,10 @@ export default function Skills() {
           </div>
 
           {/* Tire Management Card */}
-          <div className="factor-card">
+          <div
+            className={`factor-card-large ${selectedFactor === 'Tire Management' ? 'selected' : ''}`}
+            onClick={() => handleFactorClick('Tire Management')}
+          >
             <div className="factor-header">
               <h3 className="factor-name">Tire Management</h3>
               <div className="factor-score">{driverData.tire_management?.score || 0}</div>
@@ -274,37 +381,24 @@ export default function Skills() {
             </div>
           </div>
         </div>
-
-        {/* Radar Chart */}
-        <div className="radar-chart-container">
-          <h3 className="chart-title">Skills Radar</h3>
-          <ResponsiveContainer width="100%" height={400}>
-            <RadarChart data={radarData}>
-              <PolarGrid
-                stroke="#ddd"
-                strokeWidth={2}
-              />
-              <PolarAngleAxis
-                dataKey="factor"
-                tick={{ fill: '#000', fontSize: 14, fontWeight: 700 }}
-              />
-              <PolarRadiusAxis
-                angle={90}
-                domain={[0, 100]}
-                tick={{ fill: '#666', fontSize: 12, fontWeight: 600 }}
-              />
-              <Radar
-                name="Skills"
-                dataKey="value"
-                stroke="#e74c3c"
-                fill="#e74c3c"
-                fillOpacity={0.4}
-                strokeWidth={4}
-              />
-            </RadarChart>
-          </ResponsiveContainer>
-        </div>
       </div>
+
+      {/* Variable Detail View - shown when factor is clicked */}
+      {selectedFactor && (
+        <div className="variable-detail-section">
+          <div className="variable-detail-header">
+            <h2>{selectedFactor} Variables</h2>
+            <button className="close-button" onClick={() => setSelectedFactor(null)}>✕</button>
+          </div>
+          <div className="variable-detail-content">
+            <p className="coming-soon">Variable breakdown visualization coming soon...</p>
+            <p className="detail-description">
+              This will show individual variables that make up the {selectedFactor} factor,
+              with violin chart distributions showing where you rank vs top drivers.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
