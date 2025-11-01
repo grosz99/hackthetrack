@@ -1,20 +1,24 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import TrackIntelligence from './pages/TrackIntelligence'
-import StrategyChat from './pages/StrategyChat'
-import TelemetryComparison from './pages/TelemetryComparison'
-import Navigation from './components/Navigation'
+
+// Import pages
+import Overview from './pages/Overview'
+import RaceLog from './pages/RaceLog'
+import Skills from './pages/Skills'
+import Improve from './pages/Improve'
 
 function App() {
   return (
     <Router>
-      <div className="app">
-        <Navigation />
-        <Routes>
-          <Route path="/" element={<Navigate to="/track-intelligence" replace />} />
-          <Route path="/track-intelligence" element={<TrackIntelligence />} />
-          <Route path="/strategy" element={<StrategyChat />} />
-          <Route path="/telemetry" element={<TelemetryComparison />} />
-        </Routes>
+      <div className="app min-h-screen bg-bg-primary">
+        <main>
+          <Routes>
+            <Route path="/" element={<Navigate to="/overview" replace />} />
+            <Route path="/overview" element={<Overview />} />
+            <Route path="/race-log" element={<RaceLog />} />
+            <Route path="/skills" element={<Skills />} />
+            <Route path="/improve" element={<Improve />} />
+          </Routes>
+        </main>
       </div>
     </Router>
   )

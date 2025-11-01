@@ -97,6 +97,26 @@ export async function compareTelemetry(trackId, driver1, driver2, raceNum = 1) {
 }
 
 /**
+ * Get detailed telemetry with three-tier comparison
+ */
+export async function getDetailedTelemetry(trackId, raceNum, driverNumber, lapNumber = null) {
+  const params = new URLSearchParams({
+    track_id: trackId,
+    race_num: raceNum,
+    driver_number: driverNumber,
+    data_type: 'speed_trace'
+  });
+
+  if (lapNumber !== null) {
+    params.append('lap_number', lapNumber);
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/telemetry/detailed?${params}`);
+  if (!response.ok) throw new Error('Failed to fetch detailed telemetry');
+  return response.json();
+}
+
+/**
  * Check API health
  */
 export async function checkHealth() {
@@ -104,3 +124,29 @@ export async function checkHealth() {
   if (!response.ok) throw new Error('API health check failed');
   return response.json();
 }
+
+/**
+ * Default export - Axios-like interface for backward compatibility
+ */
+const api = {
+  get: async (url) => {
+    const response = await fetch(`${API_BASE_URL}${url}`);
+    if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+    const data = await response.json();
+    return { data };
+  },
+  post: async (url, body) => {
+    const response = await fetch(`${API_BASE_URL}${url}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) throw new Error(`Failed to post to ${url}`);
+    const data = await response.json();
+    return { data };
+  },
+};
+
+export default api;

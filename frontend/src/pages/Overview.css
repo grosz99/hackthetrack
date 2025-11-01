@@ -1,0 +1,547 @@
+/* ============================================================================
+   CIRCUIT FIT - OVERVIEW PAGE DARK THEME
+   Tyler Maxson / NASCAR-Inspired Card Design
+   ============================================================================ */
+
+.driver-overview {
+  padding: 40px 60px;
+  background: #0a0a0a;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ============================================================================
+   Header Section - Circular Badge Style
+   ============================================================================ */
+
+.driver-header {
+  margin-bottom: 32px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.driver-number-display {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6px solid #fff;
+  box-shadow: 0 8px 32px rgba(231, 76, 60, 0.4);
+  flex-shrink: 0;
+}
+
+.number-large {
+  font-size: 90px;
+  font-weight: 900;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  line-height: 1;
+}
+
+.driver-name-section {
+  flex: 1;
+}
+
+.driver-name {
+  font-size: 64px;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  color: #fff;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+
+.season-subtitle {
+  font-size: 24px;
+  color: #888;
+  font-weight: 500;
+  letter-spacing: -0.5px;
+}
+
+/* ============================================================================
+   Navigation Tabs - Tyler Maxson Style (Full Width)
+   ============================================================================ */
+
+.nav-tabs-container {
+  width: 100%;
+  margin-bottom: 48px;
+  margin-left: -60px;
+  margin-right: -60px;
+  padding: 0 60px;
+}
+
+.nav-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: none;
+  width: 100%;
+}
+
+.tab {
+  background: transparent;
+  border: none;
+  color: #888;
+  padding: 20px 40px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  border-radius: 8px;
+  letter-spacing: -0.3px;
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab:hover {
+  color: #ccc;
+}
+
+.tab.active {
+  background: #fff;
+  color: #000;
+}
+
+/* ============================================================================
+   Season Performance Section - 2x3 Grid + Spider Chart
+   ============================================================================ */
+
+.season-performance-section {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 32px;
+  margin-bottom: 48px;
+}
+
+.season-performance-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.performance-tile {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px 16px;
+  text-align: center;
+  border: 4px solid #e74c3c;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 120px;
+}
+
+.performance-tile:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(231, 76, 60, 0.3);
+}
+
+.tile-value {
+  font-size: 56px;
+  font-weight: 900;
+  color: #000;
+  margin-bottom: 10px;
+  font-family: 'Inter', sans-serif;
+  line-height: 1;
+}
+
+.tile-label {
+  font-size: 13px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+}
+
+/* ============================================================================
+   Stats Container - Two Column Grid
+   ============================================================================ */
+
+.stats-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 40px;
+}
+
+/* ============================================================================
+   2025 Season Performance Card - Full Width with Red Accent
+   ============================================================================ */
+
+.season-performance-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  border: 4px solid #e74c3c;
+  margin-bottom: 48px;
+  position: relative;
+  overflow: hidden;
+}
+
+.season-performance-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.season-performance-title {
+  font-size: 36px;
+  font-weight: 900;
+  color: #000;
+  letter-spacing: -1px;
+}
+
+.season-performance-arrow {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #e74c3c;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.season-performance-arrow:hover {
+  background: #c0392b;
+  transform: scale(1.1);
+}
+
+.season-performance-card .stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 24px;
+}
+
+.season-performance-card .stat-item {
+  text-align: center;
+  padding: 20px 16px;
+  background: rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.season-performance-card .stat-item:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: #e74c3c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(231, 76, 60, 0.15);
+}
+
+.season-performance-card .stat-value {
+  font-size: 36px;
+  font-weight: 900;
+  color: #e74c3c;
+  margin-bottom: 6px;
+  font-family: 'Inter', sans-serif;
+  line-height: 1;
+}
+
+.season-performance-card .stat-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+}
+
+/* ============================================================================
+   Season Stats Card
+   ============================================================================ */
+
+.season-stats {
+  background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #333;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.season-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.season-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0;
+  color: #fff;
+  letter-spacing: -0.5px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 20px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stat-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #00d4ff;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.15);
+}
+
+.stat-value {
+  font-size: 36px;
+  font-weight: 800;
+  color: #00d4ff;
+  margin-bottom: 6px;
+  font-family: 'Roboto Mono', monospace;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+/* ============================================================================
+   Spider Chart Container
+   ============================================================================ */
+
+.spider-chart-container {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  border: 4px solid #e74c3c;
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.2);
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.spider-chart-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(231, 76, 60, 0.3);
+}
+
+.spider-chart-container h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  color: #000;
+  text-align: center;
+  letter-spacing: -0.5px;
+}
+
+/* ============================================================================
+   Race Performance Chart
+   ============================================================================ */
+
+.race-performance {
+  background: #fff;
+  border-radius: 16px;
+  padding: 28px;
+  border: 4px solid #e74c3c;
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.2);
+  margin-top: 24px;
+  transition: all 0.3s ease;
+}
+
+.race-performance:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(231, 76, 60, 0.3);
+}
+
+.race-performance h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 24px 0;
+  color: #000;
+  letter-spacing: -0.5px;
+}
+
+/* ============================================================================
+   Loading and Error States
+   ============================================================================ */
+
+.loading-container,
+.error-container {
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
+  border-radius: 16px;
+  border: 1px solid #333;
+}
+
+.loading-text,
+.error-text {
+  color: #888;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.error-text {
+  color: #ff4444;
+}
+
+/* ============================================================================
+   Responsive Design
+   ============================================================================ */
+
+@media (max-width: 1200px) {
+  .season-performance-section {
+    grid-template-columns: 1fr;
+  }
+
+  .season-performance-tiles {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .season-performance-card .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .driver-overview {
+    padding: 24px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .driver-number-display {
+    width: 140px;
+    height: 140px;
+  }
+
+  .number-large {
+    font-size: 70px;
+  }
+
+  .driver-name {
+    font-size: 48px;
+  }
+
+  .season-subtitle {
+    font-size: 18px;
+  }
+
+  .season-performance-section {
+    grid-template-columns: 1fr;
+  }
+
+  .season-performance-tiles {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+  }
+
+  .season-performance-card .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+  }
+
+  .nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tab {
+    padding: 14px 24px;
+    font-size: 16px;
+  }
+
+  .spider-chart-container,
+  .race-performance,
+  .season-performance-card {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .driver-overview {
+    padding: 16px;
+  }
+
+  .driver-number-display {
+    width: 120px;
+    height: 120px;
+  }
+
+  .number-large {
+    font-size: 56px;
+  }
+
+  .driver-name {
+    font-size: 36px;
+  }
+
+  .season-subtitle {
+    font-size: 16px;
+  }
+
+  .season-performance-section {
+    grid-template-columns: 1fr;
+  }
+
+  .season-performance-tiles {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+
+  .tile-value {
+    font-size: 40px;
+  }
+
+  .performance-tile {
+    padding: 24px 20px;
+  }
+
+  .season-performance-title {
+    font-size: 24px;
+  }
+
+  .season-performance-card .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-value {
+    font-size: 28px;
+  }
+}
