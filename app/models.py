@@ -114,3 +114,46 @@ class TelemetryComparison(BaseModel):
     driver_2_laps: List[LapData]
     sector_deltas: Dict[str, float]
     insights: List[str]
+
+
+class SeasonStats(BaseModel):
+    """Season statistics for a driver."""
+
+    driver_number: int
+    wins: int = 0
+    podiums: int = 0
+    top5: int = 0
+    top10: int = 0
+    pole_positions: int = 0
+    total_races: int = 0
+    dnfs: int = 0
+    fastest_laps: int = 0
+    avg_finish: Optional[float] = None
+    avg_qualifying: Optional[float] = None
+    avg_positions_gained: Optional[float] = None
+    points: int = 0
+    championship_position: Optional[int] = None
+
+
+class RaceResult(BaseModel):
+    """Individual race result for trending data."""
+
+    race_id: int
+    track_id: str
+    track_name: str
+    round: int
+    race_number: int
+    date: Optional[str] = None
+    start_position: Optional[int] = None
+    finish_position: Optional[int] = None
+    positions_gained: Optional[int] = None
+    fastest_lap: Optional[str] = None  # Changed from fastest_lap_time
+    gap_to_winner: Optional[str] = None
+    status: Optional[str] = None
+    # Qualifying data
+    qualifying_time: Optional[str] = None
+    gap_to_pole: Optional[str] = None
+    # Sector times (best from race)
+    s1_best_time: Optional[str] = None
+    s2_best_time: Optional[str] = None
+    s3_best_time: Optional[str] = None
