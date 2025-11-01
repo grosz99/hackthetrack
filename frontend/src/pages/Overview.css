@@ -79,23 +79,23 @@
 
 .nav-tabs {
   display: flex;
-  gap: 0;
+  gap: 16px;
   border-bottom: none;
   width: 100%;
 }
 
 .tab {
   background: transparent;
-  border: none;
-  color: #888;
+  border: 2px solid #e74c3c;
+  color: #fff;
   padding: 20px 40px;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: 'Inter', sans-serif;
-  border-radius: 8px;
-  letter-spacing: -0.3px;
+  border-radius: 12px;
+  letter-spacing: -0.5px;
   flex: 1;
   text-align: center;
   text-decoration: none;
@@ -105,12 +105,15 @@
 }
 
 .tab:hover {
-  color: #ccc;
+  color: #fff;
+  background: rgba(231, 76, 60, 0.1);
+  border-color: #e74c3c;
 }
 
 .tab.active {
   background: #fff;
   color: #000;
+  border: 2px solid #fff;
 }
 
 /* ============================================================================
