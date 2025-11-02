@@ -136,9 +136,20 @@ class DataLoader:
                 description=track_data.get("description"),
             )
 
+        # Get list of drivers with factor data in database
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT driver_number FROM factor_breakdowns")
+        drivers_with_data = {row[0] for row in cursor.fetchall()}
+        conn.close()
+
         # Load drivers with RepTrak-normalized factor scores from database
         for driver_data in data.get("drivers", []):
             driver_num = driver_data.get("number", driver_data.get("driverNumber"))
+
+            # Skip drivers without factor data (no telemetry)
+            if driver_num not in drivers_with_data:
+                continue
 
             # Get RepTrak-normalized factor scores from database
             factor_scores = self._get_driver_factor_scores(driver_num)
