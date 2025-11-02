@@ -15,7 +15,10 @@ export default function Skills() {
   const [driverData, setDriverData] = useState(null);
   const [topDrivers, setTopDrivers] = useState([]);
   const [selectedFactor, setSelectedFactor] = useState(null);
+  const [factorBreakdown, setFactorBreakdown] = useState(null);
+  const [factorComparison, setFactorComparison] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadingBreakdown, setLoadingBreakdown] = useState(false);
   const [error, setError] = useState(null);
   const [drivers] = useState([
     { number: 13, name: 'Driver #13' },
@@ -113,8 +116,34 @@ export default function Skills() {
     },
   ];
 
-  const handleFactorClick = (factorName) => {
+  const handleFactorClick = async (factorName) => {
     setSelectedFactor(factorName);
+    setLoadingBreakdown(true);
+
+    try {
+      // Map display names to API factor names
+      const factorMap = {
+        'Consistency': 'consistency',
+        'Racecraft': 'racecraft',
+        'Raw Speed': 'speed',
+        'Tire Management': 'tire_management'
+      };
+
+      const apiFactorName = factorMap[factorName];
+
+      // Fetch both breakdown and comparison data
+      const [breakdownResponse, comparisonResponse] = await Promise.all([
+        api.get(`/api/drivers/${driverNumber}/factors/${apiFactorName}`),
+        api.get(`/api/drivers/${driverNumber}/factors/${apiFactorName}/comparison`)
+      ]);
+
+      setFactorBreakdown(breakdownResponse.data);
+      setFactorComparison(comparisonResponse.data);
+    } catch (err) {
+      console.error('Error fetching factor breakdown:', err);
+    } finally {
+      setLoadingBreakdown(false);
+    }
   };
 
   return (
@@ -221,15 +250,15 @@ export default function Skills() {
           <p className="chart-subtitle">You vs Top 3 Drivers</p>
           <ResponsiveContainer width="100%" height={500}>
             <RadarChart data={radarData}>
-              <PolarGrid stroke="#333" strokeWidth={1} />
+              <PolarGrid stroke="#ddd" strokeWidth={1} />
               <PolarAngleAxis
                 dataKey="factor"
-                tick={{ fill: '#fff', fontSize: 16, fontWeight: 700 }}
+                tick={{ fill: '#000', fontSize: 16, fontWeight: 700 }}
               />
               <PolarRadiusAxis
                 angle={90}
                 domain={[0, 100]}
-                tick={{ fill: '#888', fontSize: 12, fontWeight: 600 }}
+                tick={{ fill: '#666', fontSize: 12, fontWeight: 600 }}
               />
               {/* Top 3 drivers in black/gray */}
               <Radar
@@ -387,16 +416,111 @@ export default function Skills() {
       {selectedFactor && (
         <div className="variable-detail-section">
           <div className="variable-detail-header">
-            <h2>{selectedFactor} Variables</h2>
+            <h2>{selectedFactor} Breakdown</h2>
             <button className="close-button" onClick={() => setSelectedFactor(null)}>✕</button>
           </div>
-          <div className="variable-detail-content">
-            <p className="coming-soon">Variable breakdown visualization coming soon...</p>
-            <p className="detail-description">
-              This will show individual variables that make up the {selectedFactor} factor,
-              with violin chart distributions showing where you rank vs top drivers.
-            </p>
-          </div>
+
+          {loadingBreakdown ? (
+            <div className="loading-breakdown">
+              <div className="loading-text">Loading breakdown...</div>
+            </div>
+          ) : factorBreakdown && factorComparison ? (
+            <div className="breakdown-content">
+              {/* Explanation Section */}
+              <div className="explanation-box">
+                <h3>What This Means</h3>
+                <p>{factorBreakdown.explanation}</p>
+              </div>
+
+              {/* Variables Grid */}
+              <div className="variables-grid">
+                {factorBreakdown.variables.map((variable, index) => (
+                  <div key={index} className="variable-card">
+                    <div className="variable-header">
+                      <h4>{variable.display_name}</h4>
+                      <span className="variable-percentile">{variable.percentile.toFixed(1)}th %ile</span>
+                    </div>
+                    <div className="variable-bar">
+                      <div
+                        className="variable-bar-fill"
+                        style={{ width: `${variable.normalized_value}%` }}
+                      ></div>
+                    </div>
+                    <div className="variable-stats">
+                      <span className="variable-score">{variable.normalized_value.toFixed(1)}/100</span>
+                      <span className="variable-weight">Weight: {(variable.weight * 100).toFixed(0)}%</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Comparison Section */}
+              <div className="comparison-section">
+                <h3>How You Stack Up</h3>
+                <div className="comparison-grid">
+                  {/* User Driver */}
+                  <div className="driver-comparison-card user-card">
+                    <div className="card-header">
+                      <span className="driver-label">You</span>
+                      <span className="driver-number">#{factorComparison.user_driver.driver_number}</span>
+                    </div>
+                    <div className="driver-score">{factorComparison.user_driver.percentile.toFixed(1)}th %ile</div>
+                    <div className="mini-bars">
+                      {factorBreakdown.variables.map((variable, idx) => (
+                        <div key={idx} className="mini-bar-row">
+                          <span className="mini-label">{variable.display_name}</span>
+                          <div className="mini-bar">
+                            <div
+                              className="mini-bar-fill user-fill"
+                              style={{ width: `${factorComparison.user_driver.variables[variable.name]}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Top 3 Drivers */}
+                  {factorComparison.top_drivers.map((driver, idx) => (
+                    <div key={idx} className="driver-comparison-card">
+                      <div className="card-header">
+                        <span className="driver-label">#{idx + 1} Best</span>
+                        <span className="driver-number">#{driver.driver_number}</span>
+                      </div>
+                      <div className="driver-score">{driver.percentile.toFixed(1)}th %ile</div>
+                      <div className="mini-bars">
+                        {factorBreakdown.variables.map((variable, vidx) => (
+                          <div key={vidx} className="mini-bar-row">
+                            <span className="mini-label">{variable.display_name}</span>
+                            <div className="mini-bar">
+                              <div
+                                className="mini-bar-fill"
+                                style={{ width: `${driver.variables[variable.name]}%` }}
+                              ></div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Insights */}
+                <div className="insights-box">
+                  <h4>Key Insights</h4>
+                  <ul className="insights-list">
+                    {factorComparison.insights.map((insight, idx) => (
+                      <li key={idx}>{insight}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="error-breakdown">
+              <p>Failed to load breakdown data</p>
+            </div>
+          )}
         </div>
       )}
     </div>

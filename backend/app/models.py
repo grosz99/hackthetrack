@@ -157,3 +157,61 @@ class RaceResult(BaseModel):
     s1_best_time: Optional[str] = None
     s2_best_time: Optional[str] = None
     s3_best_time: Optional[str] = None
+    # Race lap analysis
+    total_laps: Optional[int] = None
+    avg_lap_time: Optional[str] = None
+    best_lap_time: Optional[str] = None
+    worst_lap_time: Optional[str] = None
+    lap_time_std_dev: Optional[float] = None  # Consistency metric
+    # Comparisons to race best
+    driver_fastest_lap: Optional[str] = None  # Driver's fastest lap in race
+    gap_to_fastest_lap: Optional[str] = None  # Gap to fastest lap of race
+    driver_s1_best: Optional[str] = None
+    gap_to_s1_best: Optional[str] = None
+    driver_s2_best: Optional[str] = None
+    gap_to_s2_best: Optional[str] = None
+    driver_s3_best: Optional[str] = None
+    gap_to_s3_best: Optional[str] = None
+
+
+class FactorVariable(BaseModel):
+    """Variable contributing to a skill factor."""
+
+    name: str
+    display_name: str
+    raw_value: float
+    normalized_value: float = Field(..., ge=0, le=100)
+    weight: float
+    contribution: float
+    percentile: float
+
+
+class FactorBreakdownResponse(BaseModel):
+    """Breakdown of a skill factor showing component variables."""
+
+    factor_name: str
+    overall_score: float
+    percentile: float
+    variables: List[FactorVariable]
+    explanation: str
+    strongest_area: str
+    weakest_area: str
+
+
+class DriverFactorComparison(BaseModel):
+    """Comparison data for one driver."""
+
+    driver_number: int
+    driver_name: str
+    factor_score: float
+    percentile: float
+    variables: Dict[str, float]
+
+
+class FactorComparisonResponse(BaseModel):
+    """Factor comparison between user and top drivers."""
+
+    factor_name: str
+    user_driver: DriverFactorComparison
+    top_drivers: List[DriverFactorComparison]
+    insights: List[str]
