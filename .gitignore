@@ -9,7 +9,12 @@ __pycache__/
 *.so
 .Python
 venv/
+venv_linux/
 ENV/
+env/
+*.egg-info/
+dist/
+build/
 
 # IDE
 .vscode/
@@ -23,6 +28,24 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+*.ipynb
 
 # Project specific
 *.log
+*.db-journal
+*.db.backup
+
+# Build outputs
+frontend/dist/
+frontend/.npm-cache/
+frontend/node_modules/
+backend/database/
+
+# Environment
+.env.local
+.env.*.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp

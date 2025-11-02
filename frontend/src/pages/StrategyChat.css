@@ -1,10 +1,24 @@
 .strategy-container {
-  max-width: 1400px;
+  max-width: 1600px;
   margin: 0 auto;
   padding: 2rem;
   min-height: calc(100vh - 100px);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  grid-template-areas:
+    "header"
+    "skills"
+    "chat"
+    "telemetry";
+}
+
+.strategy-container:has(.telemetry-side-panel) {
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas:
+    "header header"
+    "skills skills"
+    "chat telemetry";
 }
 
 .empty-state {
@@ -29,10 +43,11 @@
 }
 
 .strategy-header {
+  grid-area: header;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
   gap: 2rem;
   flex-wrap: wrap;
 }
@@ -40,7 +55,7 @@
 .context-info h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: #1d1d1f;
+  color: #ffffff;
   margin-bottom: 1rem;
 }
 
@@ -57,12 +72,12 @@
 }
 
 .context-item .label {
-  color: #86868b;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
 }
 
 .context-item .value {
-  color: #1d1d1f;
+  color: #ffffff;
   font-weight: 600;
   font-size: 1rem;
 }
@@ -105,10 +120,11 @@
 }
 
 .skills-summary {
+  grid-area: skills;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 }
 
 .skill-card {
@@ -149,7 +165,7 @@
 }
 
 .chat-container {
-  flex: 1;
+  grid-area: chat;
   background: white;
   border-radius: 16px;
   border: 1px solid #e5e5e7;
@@ -157,6 +173,7 @@
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  min-height: 600px;
 }
 
 .messages-area {
@@ -321,6 +338,23 @@
 }
 
 /* Responsive design */
+@media (max-width: 1200px) {
+  .strategy-container:has(.telemetry-side-panel) {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "skills"
+      "chat"
+      "telemetry";
+  }
+
+  .telemetry-side-panel {
+    position: relative;
+    top: 0;
+    max-height: none;
+  }
+}
+
 @media (max-width: 768px) {
   .strategy-container {
     padding: 1rem;
@@ -353,5 +387,58 @@
 
   .send-button {
     align-self: stretch;
+  }
+}
+
+/* Telemetry visualization */
+.telemetry-actions {
+  padding: 1rem 2rem;
+  border-top: 1px solid #e5e5e7;
+  background: #fafafa;
+  display: flex;
+  justify-content: center;
+}
+
+.telemetry-button {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #0066CC 0%, #0077ED 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+.telemetry-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 102, 204, 0.4);
+}
+
+.telemetry-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.telemetry-side-panel {
+  grid-area: telemetry;
+  animation: slideIn 0.4s ease-out;
+  position: sticky;
+  top: 2rem;
+  max-height: calc(100vh - 4rem);
+  overflow-y: auto;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

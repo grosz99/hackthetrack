@@ -1,20 +1,236 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* ============================================================================
+   CIRCUIT FIT ANALYTICS - Clean White Design
+   Built with Tailwind CSS
+   ============================================================================ */
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Roboto+Mono:wght@600;700&display=swap');
+
+/* Import Tailwind Base Styles */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   Base Layer - Global Resets & Defaults
+   ============================================================================ */
+
+@layer base {
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply bg-bg-primary text-text-primary font-sans overflow-x-hidden;
+    line-height: 1.6;
+  }
+
+  #root {
+    @apply min-h-screen flex flex-col;
+  }
+
+  /* Scrollbar Styling */
+  ::-webkit-scrollbar {
+    @apply w-2.5 h-2.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-bg-primary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border-light rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-primary;
+  }
+
+  /* Selection Styling */
+  ::selection {
+    @apply bg-primary text-text-primary;
+  }
+
+  ::-moz-selection {
+    @apply bg-primary text-text-primary;
+  }
 }
 
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #0a0a0a;
-  color: #ffffff;
-  margin: 0;
+/* ============================================================================
+   Components Layer - Reusable Component Styles
+   ============================================================================ */
+
+@layer components {
+  /* Section Headers */
+  .section-header {
+    @apply font-sans font-bold text-text-primary text-2xl;
+    letter-spacing: -0.5px;
+  }
+
+  /* Stat Numbers - Large and Bold */
+  .stat-number {
+    @apply font-sans font-extrabold text-5xl leading-none text-text-primary tabular-nums;
+    letter-spacing: -0.5px;
+  }
+
+  /* Stat Labels - Clean, Minimal */
+  .stat-label {
+    @apply font-sans font-medium text-sm text-text-secondary;
+  }
+
+  /* Card Styles */
+  .card {
+    @apply bg-bg-primary border border-border rounded-xl p-8;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .card-flat {
+    @apply bg-bg-primary border border-border rounded-xl p-8;
+  }
+
+  /* Button Styles */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5;
+    @apply font-sans font-semibold text-sm;
+    @apply border-0 rounded-lg cursor-pointer transition-all duration-200;
+    @apply no-underline;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-text-inverse;
+  }
+
+  .btn-primary:hover {
+    @apply bg-primary-dark;
+  }
+
+  .btn-secondary {
+    @apply bg-bg-tertiary text-text-primary border border-border;
+  }
+
+  .btn-secondary:hover {
+    @apply bg-bg-hover;
+  }
+
+  .btn:disabled,
+  .btn-disabled {
+    @apply opacity-50 cursor-not-allowed pointer-events-none;
+  }
+
+  /* Stat Group Styles - StatMus-inspired grouping */
+  .stat-group {
+    @apply bg-bg-primary border border-border rounded-xl overflow-hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .stat-group-header {
+    @apply bg-bg-secondary px-8 py-5 border-b border-border;
+  }
+
+  .stat-group-title {
+    @apply font-sans font-bold text-lg text-text-primary;
+    letter-spacing: -0.3px;
+  }
+
+  .stat-group-description {
+    @apply font-sans text-sm text-text-secondary mt-1;
+  }
+
+  .stat-group-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-8;
+  }
+
+  .stat-group-card {
+    @apply bg-transparent border-0 p-0 shadow-none;
+  }
+
+  /* Badge/Chip Styles */
+  .badge {
+    @apply inline-flex items-center px-3 py-1;
+    @apply text-xs font-semibold uppercase tracking-wide rounded-full leading-none;
+  }
+
+  /* Percentile Badges */
+  .badge-elite {
+    @apply bg-stat-elite/10 text-stat-elite border border-stat-elite/20;
+  }
+
+  .badge-great {
+    @apply bg-stat-great/10 text-stat-great border border-stat-great/20;
+  }
+
+  .badge-good {
+    @apply bg-stat-good/10 text-stat-good border border-stat-good/20;
+  }
+
+  .badge-average {
+    @apply bg-stat-average/10 text-stat-average border border-stat-average/20;
+  }
+
+  .badge-poor {
+    @apply bg-stat-poor/10 text-stat-poor border border-stat-poor/20;
+  }
+
+  /* Container Styles */
+  .container {
+    @apply w-full max-w-container mx-auto px-6;
+  }
+
+  .container-narrow {
+    @apply w-full max-w-narrow mx-auto px-6;
+  }
 }
 
-#root {
-  min-height: 100vh;
+/* ============================================================================
+   Utilities Layer - Custom Utility Classes
+   ============================================================================ */
+
+@layer utilities {
+  /* Fade In Animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in {
+    animation: fadeIn 300ms ease-out;
+  }
+
+  /* Position Change Indicators */
+  .position-up {
+    @apply text-stat-elite;
+  }
+
+  .position-down {
+    @apply text-stat-poor;
+  }
+
+  .position-same {
+    @apply text-text-muted;
+  }
+}
+
+/* ============================================================================
+   Responsive Design Adjustments
+   ============================================================================ */
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  .stat-number {
+    @apply text-4xl;
+  }
+
+  .container,
+  .container-narrow {
+    @apply px-4;
+  }
 }

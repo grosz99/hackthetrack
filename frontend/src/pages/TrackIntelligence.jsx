@@ -213,14 +213,26 @@ function TrackIntelligence() {
       {/* Consolidated Hero Header */}
       <section className="hero-header">
         <div className="hero-content">
-          <div className="hero-badge">
-            <span className="gr-logo-compact">GR</span>
-            <span className="hero-label">Driver Intelligence</span>
-          </div>
           <h1 className="hero-main-title">Track Performance Rankings</h1>
-          <p className="hero-description">
-            Advanced analytics revealing which drivers excel at each circuit based on track demands
-          </p>
+          <div className="hero-methodology">
+            <div className="methodology-section">
+              <h3 className="methodology-title">How It Works</h3>
+              <p className="methodology-text">
+                We analyze each driver's performance across four key factors: <strong>Raw Speed</strong> (50%), <strong>Consistency</strong> (31%),
+                <strong>Racecraft</strong> (16%), and <strong>Tire Management</strong> (10%). Each track has unique demands—some reward pure speed,
+                others require precision and tire conservation. By matching driver strengths to track demands, we calculate a <strong>Circuit Fit Score</strong>
+                that predicts who will excel at each venue.
+              </p>
+            </div>
+            <div className="methodology-section">
+              <h3 className="methodology-title">How to Use</h3>
+              <p className="methodology-text">
+                <strong>Select a track</strong> to see how its demands align with each driver's skill profile. <strong>Click column headers</strong> to sort
+                by any factor and identify specialists. <strong>Click factor values</strong> to expand and see the underlying performance variables.
+                Use this intelligence to inform race predictions, fantasy picks, and strategic decisions.
+              </p>
+            </div>
+          </div>
 
           {/* Compact Track Selector */}
           <div className="track-selector-container">
@@ -498,13 +510,26 @@ function TrackIntelligence() {
                           <div className="expanded-row">
                             <div className="expanded-content">
                               <div className="expanded-header">
-                                <h4 className="expanded-title">
-                                  {factorMeta[expandedRow.factorName].icon} {factorMeta[expandedRow.factorName].title}
-                                  <span className="expanded-weight">({factorMeta[expandedRow.factorName].weight})</span>
-                                </h4>
-                                <p className="expanded-subtitle">
-                                  Underlying variables for Driver #{driver.number}
-                                </p>
+                                <div className="expanded-header-left">
+                                  <h4 className="expanded-title">
+                                    {factorMeta[expandedRow.factorName].icon} {factorMeta[expandedRow.factorName].title}
+                                    <span className="expanded-weight">({factorMeta[expandedRow.factorName].weight})</span>
+                                  </h4>
+                                  <p className="expanded-subtitle">
+                                    Underlying variables for Driver #{driver.number}
+                                  </p>
+                                </div>
+                                <button
+                                  className="strategize-button-expanded"
+                                  onClick={() => navigate('/strategy', {
+                                    state: {
+                                      driverNumber: driver.number,
+                                      trackId: selectedTrack.id
+                                    }
+                                  })}
+                                >
+                                  Go Strategize →
+                                </button>
                               </div>
                               <div className="variables-grid">
                                 {factorMeta[expandedRow.factorName].variables.map((variable, vIndex) => (

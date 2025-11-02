@@ -613,24 +613,31 @@ async def get_factor_comparison(driver_number: int, factor_name: str):
     top_driver_ids = [comparison_row[0], comparison_row[1], comparison_row[2]]
     insights = comparison_row[3].split("\n") if comparison_row[3] else []
 
-    # Get breakdowns for top drivers
+    # Get breakdowns for top drivers (skip drivers without telemetry data)
     top_drivers = []
     for top_driver_id in top_driver_ids:
         if top_driver_id is None:
             continue
 
-        top_breakdown = await get_factor_breakdown(top_driver_id, factor_name)
+        try:
+            top_breakdown = await get_factor_breakdown(top_driver_id, factor_name)
 
-        # Build variables dict
-        variables_dict = {var.name: var.normalized_value for var in top_breakdown.variables}
+            # Build variables dict
+            variables_dict = {var.name: var.normalized_value for var in top_breakdown.variables}
 
-        top_drivers.append(DriverFactorComparison(
-            driver_number=top_driver_id,
-            driver_name=f"Driver #{top_driver_id}",
-            factor_score=top_breakdown.overall_score,
-            percentile=top_breakdown.percentile,
-            variables=variables_dict
-        ))
+            top_drivers.append(DriverFactorComparison(
+                driver_number=top_driver_id,
+                driver_name=f"Driver #{top_driver_id}",
+                factor_score=top_breakdown.overall_score,
+                percentile=top_breakdown.percentile,
+                variables=variables_dict
+            ))
+        except HTTPException as e:
+            # Skip drivers without telemetry data (404 errors)
+            if e.status_code == 404:
+                print(f"Skipping driver {top_driver_id} - no telemetry data")
+                continue
+            raise
 
     # Build user driver comparison
     user_variables = {var.name: var.normalized_value for var in user_breakdown.variables}

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { sendChatMessage, getDriver, getTrack } from '../services/api';
+import { sendChatMessage, getDriver, getTrack, getDetailedTelemetry } from '../services/api';
+import SpeedTraceChart from '../components/SpeedTraceChart';
 import './StrategyChat.css';
 
 function StrategyChat() {
@@ -17,7 +18,32 @@ function StrategyChat() {
   const [loading, setLoading] = useState(false);
   const [suggestedQuestions, setSuggestedQuestions] = useState([]);
 
+  const [telemetryData, setTelemetryData] = useState(null);
+  const [telemetryLoading, setTelemetryLoading] = useState(false);
+  const [showTelemetry, setShowTelemetry] = useState(false);
+  const [highlightedCorners, setHighlightedCorners] = useState([]);
+
   const messagesEndRef = useRef(null);
+
+  // Parse AI response for corner mentions
+  const parseCornerMentions = (text) => {
+    const cornerPatterns = [
+      /turn\s+(\d+)/gi,
+      /corner\s+(\d+)/gi,
+      /T(\d+)/g,
+      /sector\s+(\d+)/gi
+    ];
+
+    const corners = new Set();
+    cornerPatterns.forEach(pattern => {
+      const matches = text.matchAll(pattern);
+      for (const match of matches) {
+        corners.add(parseInt(match[1]));
+      }
+    });
+
+    return Array.from(corners);
+  };
 
   // Load driver and track data
   useEffect(() => {
@@ -87,6 +113,12 @@ function StrategyChat() {
         { role: 'assistant', content: response.message }
       ]);
 
+      // Parse corner mentions from AI response
+      const mentionedCorners = parseCornerMentions(response.message);
+      if (mentionedCorners.length > 0) {
+        setHighlightedCorners(mentionedCorners);
+      }
+
       // Update suggested questions
       if (response.suggested_questions?.length > 0) {
         setSuggestedQuestions(response.suggested_questions);
@@ -125,6 +157,22 @@ function StrategyChat() {
         trackName: track?.name
       }
     });
+  };
+
+  const loadTelemetryData = async () => {
+    if (!driverNumber || !trackId) return;
+
+    setTelemetryLoading(true);
+    try {
+      // Default to race 1 for now
+      const data = await getDetailedTelemetry(trackId, 1, driverNumber);
+      setTelemetryData(data);
+      setShowTelemetry(true);
+    } catch (error) {
+      console.error('Error loading telemetry:', error);
+    } finally {
+      setTelemetryLoading(false);
+    }
   };
 
   // If no driver/track selected, show selection UI
@@ -246,6 +294,19 @@ function StrategyChat() {
           </div>
         )}
 
+        {/* Telemetry visualization button */}
+        {messages.length > 1 && (
+          <div className="telemetry-actions">
+            <button
+              className="telemetry-button"
+              onClick={loadTelemetryData}
+              disabled={telemetryLoading}
+            >
+              {telemetryLoading ? 'Loading...' : showTelemetry ? 'Refresh Speed Trace' : '📊 View Speed Trace Comparison'}
+            </button>
+          </div>
+        )}
+
         {/* Input area */}
         <div className="input-area">
           <textarea
@@ -265,6 +326,17 @@ function StrategyChat() {
           </button>
         </div>
       </div>
+
+      {/* Two-column layout when telemetry is shown */}
+      {showTelemetry && telemetryData && (
+        <div className="telemetry-side-panel">
+          <SpeedTraceChart
+            telemetryData={telemetryData}
+            comparisonDrivers={telemetryData.comparison_drivers}
+            highlightedCorners={highlightedCorners}
+          />
+        </div>
+      )}
     </div>
   );
 }

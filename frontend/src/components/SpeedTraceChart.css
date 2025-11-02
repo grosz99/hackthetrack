@@ -1,0 +1,130 @@
+.speed-trace-container {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e5e5e7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.speed-trace-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.speed-trace-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0;
+}
+
+.speed-trace-legend-custom {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: #1d1d1f;
+}
+
+.legend-color {
+  width: 20px;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.speed-trace-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: #86868b;
+  font-size: 1rem;
+}
+
+.custom-tooltip {
+  background: rgba(29, 29, 31, 0.95);
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.tooltip-label {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.custom-tooltip p {
+  margin: 0.25rem 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.speed-trace-insights {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #f5f5f7;
+  border-radius: 8px;
+}
+
+.speed-trace-insights h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin: 0 0 1rem 0;
+}
+
+.speed-trace-insights ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.speed-trace-insights li {
+  padding: 0.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #1d1d1f;
+  border-bottom: 1px solid #e5e5e7;
+}
+
+.speed-trace-insights li:last-child {
+  border-bottom: none;
+}
+
+.speed-trace-insights strong {
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .speed-trace-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .speed-trace-legend-custom {
+    width: 100%;
+  }
+
+  .speed-trace-container {
+    padding: 1rem;
+  }
+
+  .speed-trace-insights {
+    padding: 1rem;
+  }
+}

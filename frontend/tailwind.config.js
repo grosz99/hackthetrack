@@ -1,0 +1,105 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        primary: {
+          DEFAULT: '#EB0A1E',
+          dark: '#c20818',
+          light: '#ff1a2e',
+        },
+        bg: {
+          primary: '#ffffff',
+          secondary: '#fafafa',
+          tertiary: '#f5f5f7',
+          hover: '#fff5f5',
+          dark: '#2a2a2a',
+          darker: '#1a1a1a',
+        },
+        text: {
+          primary: '#1d1d1f',
+          secondary: '#86868b',
+          muted: '#6e6e73',
+          inverse: '#ffffff',
+        },
+        stat: {
+          elite: '#f57f17',
+          great: '#2e7d32',
+          good: '#1565c0',
+          average: '#c2185b',
+          poor: '#d32f2f',
+        },
+        border: {
+          DEFAULT: '#e5e5e7',
+          light: '#f5f5f7',
+          dark: '#d1d1d6',
+          darker: '#3a3a3a',
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        mono: ['Roboto Mono', 'monospace'],
+      },
+      fontSize: {
+        'xs': '0.75rem',
+        'sm': '0.875rem',
+        'base': '1rem',
+        'lg': '1.125rem',
+        'xl': '1.25rem',
+        '2xl': '1.5rem',
+        '3xl': '1.875rem',
+        '4xl': '2.25rem',
+        '5xl': '3rem',
+        '6xl': '3.75rem',
+      },
+      fontWeight: {
+        normal: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700,
+        extrabold: 800,
+        black: 900,
+      },
+      borderRadius: {
+        'sm': '0.25rem',
+        DEFAULT: '0.5rem',
+        'md': '0.75rem',
+        'lg': '1rem',
+        'xl': '1.5rem',
+      },
+      spacing: {
+        '1': '0.25rem',
+        '2': '0.5rem',
+        '3': '0.75rem',
+        '4': '1rem',
+        '5': '1.25rem',
+        '6': '1.5rem',
+        '8': '2rem',
+        '10': '2.5rem',
+        '12': '3rem',
+        '16': '4rem',
+        '20': '5rem',
+      },
+      boxShadow: {
+        'sm': '0 1px 2px 0 rgba(0, 0, 0, 0.25)',
+        DEFAULT: '0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)',
+        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3)',
+        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3)',
+      },
+      transitionDuration: {
+        'fast': '150ms',
+        DEFAULT: '200ms',
+        'slow': '300ms',
+      },
+      maxWidth: {
+        'container': '1600px',
+        'narrow': '1200px',
+      },
+    },
+  },
+  plugins: [],
+}

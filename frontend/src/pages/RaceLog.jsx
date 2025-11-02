@@ -253,7 +253,7 @@ export default function RaceLog() {
       <div className="race-table-container">
         <div className="table-header">
           <h2 className="table-title">2025 Season Results</h2>
-          <div className="table-subtitle">Click rows for qualifying stats</div>
+          <div className="table-subtitle">Click rows for race lap time analysis</div>
         </div>
 
         <table className="race-table">
@@ -265,6 +265,12 @@ export default function RaceLog() {
               <th onClick={() => handleSort('track_name')} style={{ cursor: 'pointer' }}>
                 Track {sortConfig.key === 'track_name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </th>
+              <th onClick={() => handleSort('qualifying_time')} style={{ cursor: 'pointer' }}>
+                Qualifying Time {sortConfig.key === 'qualifying_time' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+              </th>
+              <th onClick={() => handleSort('gap_to_pole')} style={{ cursor: 'pointer' }}>
+                Gap to Pole {sortConfig.key === 'gap_to_pole' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
+              </th>
               <th onClick={() => handleSort('start_position')} style={{ cursor: 'pointer' }}>
                 Start {sortConfig.key === 'start_position' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </th>
@@ -272,9 +278,6 @@ export default function RaceLog() {
                 Finish {sortConfig.key === 'finish_position' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </th>
               <th>Change</th>
-              <th onClick={() => handleSort('fastest_lap')} style={{ cursor: 'pointer' }}>
-                Fastest Lap {sortConfig.key === 'fastest_lap' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
-              </th>
               <th onClick={() => handleSort('gap_to_winner')} style={{ cursor: 'pointer' }}>
                 Gap to Winner {sortConfig.key === 'gap_to_winner' && (sortConfig.direction === 'asc' ? '↑' : '↓')}
               </th>
@@ -294,36 +297,65 @@ export default function RaceLog() {
                   >
                     <td>{result.round} {isExpanded ? '▼' : '▶'}</td>
                     <td className="track-name">{result.track_name || 'N/A'}</td>
+                    <td className="fastest-lap">{result.qualifying_time || '—'}</td>
+                    <td className="gap-to-winner">{result.gap_to_pole || '—'}</td>
                     <td className="position">{result.start_position || '—'}</td>
                     <td className="position">{result.finish_position || '—'}</td>
                     <td>{renderPositionChange(positionChange)}</td>
-                    <td className="fastest-lap">{result.fastest_lap || '—'}</td>
                     <td className="gap-to-winner">{result.gap_to_winner || '—'}</td>
                   </tr>
 
                   {isExpanded && (
                     <tr key={`${index}-expanded`} className="expanded-row">
-                      <td colSpan="7">
+                      <td colSpan="8">
                         <div className="expanded-details">
                           <div className="detail-section">
-                            <div className="detail-label">Qualifying Time</div>
-                            <div className="detail-value">{result.qualifying_time || '—'}</div>
+                            <div className="detail-label">Driver Fastest Lap</div>
+                            <div className="detail-value">{result.driver_fastest_lap || '—'}</div>
                           </div>
                           <div className="detail-section">
-                            <div className="detail-label">S1 Best Time</div>
-                            <div className="detail-value">{result.s1_best_time || '—'}</div>
+                            <div className="detail-label">Gap to Fastest Lap</div>
+                            <div className="detail-value" style={{
+                              color: result.gap_to_fastest_lap === '0.000' ? '#2ecc71' : '#e74c3c'
+                            }}>
+                              {result.gap_to_fastest_lap || '—'}
+                            </div>
                           </div>
                           <div className="detail-section">
-                            <div className="detail-label">S2 Best Time</div>
-                            <div className="detail-value">{result.s2_best_time || '—'}</div>
+                            <div className="detail-label">Driver S1 Best</div>
+                            <div className="detail-value">{result.driver_s1_best || '—'}</div>
                           </div>
                           <div className="detail-section">
-                            <div className="detail-label">S3 Best Time</div>
-                            <div className="detail-value">{result.s3_best_time || '—'}</div>
+                            <div className="detail-label">Gap to S1 Best</div>
+                            <div className="detail-value" style={{
+                              color: result.gap_to_s1_best === '0.000' ? '#2ecc71' : '#e74c3c'
+                            }}>
+                              {result.gap_to_s1_best || '—'}
+                            </div>
                           </div>
                           <div className="detail-section">
-                            <div className="detail-label">Gap to Pole</div>
-                            <div className="detail-value">{result.gap_to_pole || '—'}</div>
+                            <div className="detail-label">Driver S2 Best</div>
+                            <div className="detail-value">{result.driver_s2_best || '—'}</div>
+                          </div>
+                          <div className="detail-section">
+                            <div className="detail-label">Gap to S2 Best</div>
+                            <div className="detail-value" style={{
+                              color: result.gap_to_s2_best === '0.000' ? '#2ecc71' : '#e74c3c'
+                            }}>
+                              {result.gap_to_s2_best || '—'}
+                            </div>
+                          </div>
+                          <div className="detail-section">
+                            <div className="detail-label">Driver S3 Best</div>
+                            <div className="detail-value">{result.driver_s3_best || '—'}</div>
+                          </div>
+                          <div className="detail-section">
+                            <div className="detail-label">Gap to S3 Best</div>
+                            <div className="detail-value" style={{
+                              color: result.gap_to_s3_best === '0.000' ? '#2ecc71' : '#e74c3c'
+                            }}>
+                              {result.gap_to_s3_best || '—'}
+                            </div>
                           </div>
                         </div>
                       </td>

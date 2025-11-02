@@ -234,17 +234,10 @@
   justify-content: center;
 }
 
-.driver-info {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
 .driver-number {
   font-size: 18px;
   font-weight: 700;
   color: #EB0A1E;
-  min-width: 50px;
 }
 
 .grade-badge {

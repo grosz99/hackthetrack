@@ -368,9 +368,19 @@ class FactorAnalyzer:
         # Get top 3 drivers for this factor based on reflected factor scores
         factor_column = FACTOR_VARIABLES[factor_name]["factor_column"]
 
+        # Only compare with drivers that have telemetry data
+        driver_telemetry = self.features_df.groupby('driver_number')['steering_smoothness'].mean()
+        drivers_with_telemetry = driver_telemetry[driver_telemetry > 0].index.tolist()
+
         # Calculate average reflected factor score for each driver
         driver_scores = self.factor_scores_df.groupby('driver_number')[factor_column].mean()
-        driver_scores = driver_scores[driver_scores.index != driver_number]  # Exclude current driver
+
+        # Filter to only drivers with telemetry and exclude current driver
+        driver_scores = driver_scores[
+            (driver_scores.index.isin(drivers_with_telemetry)) &
+            (driver_scores.index != driver_number)
+        ]
+
         top_3_drivers = driver_scores.nlargest(3)
 
         top_drivers = []
