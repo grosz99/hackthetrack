@@ -1,42 +1,42 @@
 /* Improve Page - NASCAR Aesthetic */
 
 .improve-page {
+  padding: 40px 60px;
+  background: #0a0a0a;
   min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  width: 100%;
 }
 
 /* Header */
 .improve-header {
-  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
-  color: white;
-  padding: 24px 32px;
-  box-shadow: 0 4px 20px rgba(231, 76, 60, 0.3);
+  margin-bottom: 32px;
 }
 
 .header-content {
-  max-width: 1400px;
-  margin: 0 auto;
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 32px;
 }
 
 .driver-number-display {
-  background: rgba(255, 255, 255, 0.15);
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-radius: 16px;
-  padding: 16px 24px;
-  min-width: 80px;
-  text-align: center;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6px solid #fff;
+  box-shadow: 0 8px 32px rgba(231, 76, 60, 0.4);
+  flex-shrink: 0;
 }
 
 .number-large {
-  font-size: 48px;
+  font-size: 90px;
   font-weight: 900;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
   line-height: 1;
-  color: white;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .driver-name-section {
@@ -44,18 +44,20 @@
 }
 
 .driver-name {
-  margin: 0 0 4px 0;
-  font-size: 28px;
+  margin: 0 0 12px 0;
+  font-size: 56px;
   font-weight: 900;
-  color: white;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: -1px;
 }
 
 .season-subtitle {
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Inter', sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -108,9 +110,6 @@
 
 /* Main Content */
 .improve-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 32px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
