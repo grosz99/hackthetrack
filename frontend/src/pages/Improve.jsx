@@ -172,25 +172,59 @@ export default function Improve() {
 
   return (
     <div className="improve-page">
-      {/* Header */}
+      {/* Header Section */}
       <div className="improve-header">
         <div className="header-content">
           <div className="driver-number-display">
             <span className="number-large">{driverNumber}</span>
           </div>
-          <div className="header-title-section">
-            <h1>Driver Skill Improvement Lab</h1>
-            <p className="header-subtitle">
-              Adjust your skills by ±{POINTS_BUDGET} points to see who you'd be like and what to work on
-            </p>
+          <div className="driver-name-section">
+            <h1 className="driver-name">Driver #{driverNumber}</h1>
+            <div className="season-subtitle">Toyota Gazoo Series</div>
           </div>
 
           {/* Driver Selector */}
-          <div style={{ marginLeft: 'auto' }}>
+          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <span style={{
+              fontSize: '18px',
+              fontWeight: 700,
+              color: '#fff',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}>
+              Select Driver
+            </span>
             <select
               value={driverNumber}
               onChange={(e) => setDriverNumber(Number(e.target.value))}
-              className="driver-select"
+              style={{
+                padding: '12px 20px',
+                fontSize: '16px',
+                fontWeight: 700,
+                background: '#fff',
+                color: '#000',
+                border: '4px solid #e74c3c',
+                borderRadius: '12px',
+                cursor: 'pointer',
+                outline: 'none',
+                transition: 'all 0.3s ease',
+                boxShadow: '0 4px 16px rgba(231, 76, 60, 0.3)',
+                minWidth: '200px',
+                fontFamily: 'Inter, sans-serif',
+                appearance: 'none',
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23e74c3c' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 16px center',
+                paddingRight: '48px'
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'translateY(-2px)';
+                e.currentTarget.style.boxShadow = '0 6px 24px rgba(231, 76, 60, 0.4)';
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.3)';
+              }}
             >
               {drivers.map((driver) => (
                 <option key={driver.number} value={driver.number}>

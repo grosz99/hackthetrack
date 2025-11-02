@@ -39,36 +39,25 @@
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.header-title-section h1 {
-  margin: 0 0 8px 0;
-  font-size: 32px;
+.driver-name-section {
+  flex: 1;
+}
+
+.driver-name {
+  margin: 0 0 4px 0;
+  font-size: 28px;
   font-weight: 900;
   color: white;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.header-subtitle {
-  margin: 0;
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
-}
-
-.driver-select {
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 700;
-  background: white;
-  color: #000;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-radius: 12px;
-  cursor: pointer;
-  min-width: 200px;
-  transition: all 0.3s ease;
-}
-
-.driver-select:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+.season-subtitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Navigation Tabs */
