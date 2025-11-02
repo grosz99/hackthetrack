@@ -372,7 +372,7 @@ export default function Overview() {
         {/* 4-Factor Spider Chart */}
         <div className="spider-chart-container" style={{ flex: 1 }}>
           <h3>Performance Radar - 4 Key Factors</h3>
-          <ResponsiveContainer width="100%" height={400}>
+          <ResponsiveContainer width="100%" height={350}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="#ddd" strokeWidth={1} />
               <PolarAngleAxis
@@ -420,28 +420,60 @@ export default function Overview() {
               />
             </RadarChart>
           </ResponsiveContainer>
+
+          {/* Legend */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'center',
+            gap: '24px',
+            marginTop: '12px',
+            fontSize: '13px',
+            fontWeight: 600
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{
+                width: '24px',
+                height: '3px',
+                background: '#e74c3c',
+                borderRadius: '2px'
+              }}></div>
+              <span>You (#{driverNumber})</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <div style={{
+                width: '24px',
+                height: '3px',
+                background: '#666',
+                borderRadius: '2px'
+              }}></div>
+              <span>Top 3 Drivers</span>
+            </div>
+          </div>
         </div>
 
         {/* 4 Factor Breakdown Tiles */}
-        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignContent: 'stretch' }}>
           {/* Consistency Card */}
           <div style={{
             background: 'white',
-            borderRadius: '12px',
-            padding: '20px',
-            border: '3px solid #e74c3c',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+            borderRadius: '16px',
+            padding: '28px 24px',
+            border: '4px solid #e74c3c',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <h4 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Consistency</h4>
-              <div style={{ fontSize: '24px', fontWeight: 900, color: '#e74c3c' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h4 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#000' }}>Consistency</h4>
+              <div style={{ fontSize: '36px', fontWeight: 900, color: '#e74c3c', lineHeight: 1 }}>
                 {Math.round(driverData?.consistency?.score || 0)}
               </div>
             </div>
-            <div style={{ fontSize: '14px', fontWeight: 600, color: '#666', marginBottom: '12px' }}>
+            <div style={{ fontSize: '16px', fontWeight: 600, color: '#666', marginBottom: '16px' }}>
               {(driverData?.consistency?.percentile || 0).toFixed(1)}th Percentile
             </div>
-            <div style={{ height: '8px', background: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '12px', background: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
               <div style={{
                 height: '100%',
                 background: '#e74c3c',
@@ -454,21 +486,24 @@ export default function Overview() {
           {/* Racecraft Card */}
           <div style={{
             background: 'white',
-            borderRadius: '12px',
-            padding: '20px',
-            border: '3px solid #e74c3c',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+            borderRadius: '16px',
+            padding: '28px 24px',
+            border: '4px solid #e74c3c',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <h4 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Racecraft</h4>
-              <div style={{ fontSize: '24px', fontWeight: 900, color: '#e74c3c' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h4 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#000' }}>Racecraft</h4>
+              <div style={{ fontSize: '36px', fontWeight: 900, color: '#e74c3c', lineHeight: 1 }}>
                 {Math.round(driverData?.racecraft?.score || 0)}
               </div>
             </div>
-            <div style={{ fontSize: '14px', fontWeight: 600, color: '#666', marginBottom: '12px' }}>
+            <div style={{ fontSize: '16px', fontWeight: 600, color: '#666', marginBottom: '16px' }}>
               {(driverData?.racecraft?.percentile || 0).toFixed(1)}th Percentile
             </div>
-            <div style={{ height: '8px', background: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '12px', background: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
               <div style={{
                 height: '100%',
                 background: '#e74c3c',
@@ -481,21 +516,24 @@ export default function Overview() {
           {/* Speed Card */}
           <div style={{
             background: 'white',
-            borderRadius: '12px',
-            padding: '20px',
-            border: '3px solid #e74c3c',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+            borderRadius: '16px',
+            padding: '28px 24px',
+            border: '4px solid #e74c3c',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <h4 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Raw Speed</h4>
-              <div style={{ fontSize: '24px', fontWeight: 900, color: '#e74c3c' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h4 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#000' }}>Raw Speed</h4>
+              <div style={{ fontSize: '36px', fontWeight: 900, color: '#e74c3c', lineHeight: 1 }}>
                 {Math.round(driverData?.speed?.score || 0)}
               </div>
             </div>
-            <div style={{ fontSize: '14px', fontWeight: 600, color: '#666', marginBottom: '12px' }}>
+            <div style={{ fontSize: '16px', fontWeight: 600, color: '#666', marginBottom: '16px' }}>
               {(driverData?.speed?.percentile || 0).toFixed(1)}th Percentile
             </div>
-            <div style={{ height: '8px', background: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '12px', background: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
               <div style={{
                 height: '100%',
                 background: '#e74c3c',
@@ -508,21 +546,24 @@ export default function Overview() {
           {/* Tire Management Card */}
           <div style={{
             background: 'white',
-            borderRadius: '12px',
-            padding: '20px',
-            border: '3px solid #e74c3c',
-            boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+            borderRadius: '16px',
+            padding: '28px 24px',
+            border: '4px solid #e74c3c',
+            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between'
           }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-              <h4 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Tire Mgmt</h4>
-              <div style={{ fontSize: '24px', fontWeight: 900, color: '#e74c3c' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+              <h4 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#000' }}>Tire Mgmt</h4>
+              <div style={{ fontSize: '36px', fontWeight: 900, color: '#e74c3c', lineHeight: 1 }}>
                 {Math.round(driverData?.tire_management?.score || 0)}
               </div>
             </div>
-            <div style={{ fontSize: '14px', fontWeight: 600, color: '#666', marginBottom: '12px' }}>
+            <div style={{ fontSize: '16px', fontWeight: 600, color: '#666', marginBottom: '16px' }}>
               {(driverData?.tire_management?.percentile || 0).toFixed(1)}th Percentile
             </div>
-            <div style={{ height: '8px', background: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+            <div style={{ height: '12px', background: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
               <div style={{
                 height: '100%',
                 background: '#e74c3c',
