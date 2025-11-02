@@ -215,3 +215,63 @@ class FactorComparisonResponse(BaseModel):
     user_driver: DriverFactorComparison
     top_drivers: List[DriverFactorComparison]
     insights: List[str]
+
+
+# Improve Page Models
+
+class AdjustedSkills(BaseModel):
+    """User's adjusted skill levels for potential prediction."""
+
+    speed: float = Field(..., ge=0, le=100, description="Speed percentile (0-100)")
+    consistency: float = Field(..., ge=0, le=100, description="Consistency percentile (0-100)")
+    racecraft: float = Field(..., ge=0, le=100, description="Racecraft percentile (0-100)")
+    tire_management: float = Field(..., ge=0, le=100, description="Tire Management percentile (0-100)")
+
+
+class PredictionWithUncertainty(BaseModel):
+    """Prediction result with confidence intervals."""
+
+    predicted_finish: float
+    confidence_interval_lower: float
+    confidence_interval_upper: float
+    confidence_level: str  # 'high', 'medium', 'low'
+    is_extrapolating: bool
+    warning_message: Optional[str] = None
+
+
+class SimilarDriverMatch(BaseModel):
+    """Similar driver match result."""
+
+    driver_number: int
+    driver_name: str
+    similarity_score: float
+    match_percentage: float
+    skill_differences: Dict[str, float]
+    predicted_finish: float
+    key_strengths: List[str]
+
+
+class ImprovementRecommendation(BaseModel):
+    """Skill improvement recommendation."""
+
+    factor_name: str
+    display_name: str
+    current_score: float
+    current_percentile: float
+    priority: int
+    rationale: str
+    impact_estimate: str
+    drills: List[str]
+
+
+class ImprovePredictionResponse(BaseModel):
+    """Complete response for Improve page prediction."""
+
+    driver_number: int
+    current_skills: AdjustedSkills
+    adjusted_skills: AdjustedSkills
+    points_used: float
+    points_available: float
+    prediction: PredictionWithUncertainty
+    similar_drivers: List[SimilarDriverMatch]
+    recommendations: List[ImprovementRecommendation]

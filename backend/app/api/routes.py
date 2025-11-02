@@ -18,6 +18,11 @@ from ..models import (
     FactorBreakdownResponse,
     DriverFactorComparison,
     FactorComparisonResponse,
+    AdjustedSkills,
+    PredictionWithUncertainty,
+    SimilarDriverMatch,
+    ImprovementRecommendation,
+    ImprovePredictionResponse,
 )
 from ..services.data_loader import data_loader
 from ..services.ai_strategy import ai_service
@@ -685,3 +690,111 @@ def _generate_factor_explanation(
     )
 
     return explanation
+
+
+# ============================================================================
+# IMPROVE (POTENTIAL) PAGE ENDPOINTS
+# ============================================================================
+
+@router.post(
+    "/drivers/{driver_number}/improve/predict",
+    response_model=ImprovePredictionResponse,
+    summary="Predict potential with adjusted skills",
+    description="Calculate predictions, similar drivers, and recommendations for adjusted skills"
+)
+async def predict_with_adjusted_skills(driver_number: int, adjusted_skills: AdjustedSkills):
+    """
+    Predict driver performance with adjusted skill levels.
+
+    Uses statistically validated methods:
+    - Empirical z-score conversion (not assumed σ=15)
+    - Model-weighted driver similarity
+    - Bootstrap confidence intervals
+    - Extrapolation detection
+
+    Statistical validation: See specs/IMPROVE_PAGE_STATISTICAL_VALIDATION.md
+    """
+    from pathlib import Path
+    from ..services.improve_predictor import ImprovePredictor, POINTS_BUDGET
+
+    # Get current driver skills
+    driver = data_loader.get_driver(driver_number)
+    if not driver:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Driver {driver_number} not found"
+        )
+
+    # Extract current skills
+    current_skills = {
+        'speed': driver.speed.percentile,
+        'consistency': driver.consistency.percentile,
+        'racecraft': driver.racecraft.percentile,
+        'tire_management': driver.tire_management.percentile
+    }
+
+    # Convert adjusted_skills to dict
+    adjusted_skills_dict = {
+        'speed': adjusted_skills.speed,
+        'consistency': adjusted_skills.consistency,
+        'racecraft': adjusted_skills.racecraft,
+        'tire_management': adjusted_skills.tire_management
+    }
+
+    # Calculate points used (sum of absolute changes)
+    points_used = sum(
+        abs(adjusted_skills_dict[factor] - current_skills[factor])
+        for factor in current_skills.keys()
+    )
+
+    # Validate points budget
+    if points_used > POINTS_BUDGET:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Points used ({points_used:.1f}) exceeds budget ({POINTS_BUDGET}). "
+                   f"Adjust your skills to stay within the {POINTS_BUDGET} point limit."
+        )
+
+    # Initialize predictor
+    db_path = Path(__file__).parent.parent.parent.parent / "circuit-fit.db"
+    predictor = ImprovePredictor(db_path)
+
+    try:
+        # Get prediction with uncertainty
+        prediction = predictor.predict_finish_with_uncertainty(adjusted_skills_dict)
+
+        # Find similar drivers
+        similar_drivers = predictor.find_similar_drivers(
+            adjusted_skills_dict,
+            exclude_driver=driver_number,
+            top_n=4  # Top 4 for UI display
+        )
+
+        # Generate improvement recommendations
+        recommendations = predictor.generate_recommendations(
+            current_skills,
+            driver_number
+        )
+
+        # Build response
+        response = ImprovePredictionResponse(
+            driver_number=driver_number,
+            current_skills=AdjustedSkills(**current_skills),
+            adjusted_skills=adjusted_skills,
+            points_used=points_used,
+            points_available=POINTS_BUDGET - points_used,
+            prediction=PredictionWithUncertainty(**prediction.to_dict()),
+            similar_drivers=[
+                SimilarDriverMatch(**driver.to_dict())
+                for driver in similar_drivers
+            ],
+            recommendations=[
+                ImprovementRecommendation(**rec.to_dict())
+                for rec in recommendations
+            ]
+        )
+
+        return response
+
+    finally:
+        predictor.close()
