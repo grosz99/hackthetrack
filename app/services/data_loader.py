@@ -70,6 +70,38 @@ class DataLoader:
 
         print(f"Data loaded: {len(self.tracks)} tracks, {len(self.drivers)} drivers")
 
+    def _get_driver_factor_scores(self, driver_number: int) -> Dict:
+        """Get RepTrak-normalized factor scores from database."""
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+
+        factor_scores = {}
+        for factor_name in ["speed", "consistency", "racecraft", "tire_management"]:
+            # Get overall score and percentile
+            cursor.execute("""
+                SELECT AVG(normalized_value), AVG(percentile)
+                FROM factor_breakdowns
+                WHERE driver_number = ? AND factor_name = ?
+            """, (driver_number, factor_name))
+
+            result = cursor.fetchone()
+            if result and result[0] is not None:
+                score = result[0]
+                percentile = result[1]
+            else:
+                # Fallback to 50 if no data
+                score = 50
+                percentile = 50
+
+            factor_scores[factor_name] = {
+                "score": score,
+                "percentile": percentile,
+                "z_score": 0  # Z-score not needed for RepTrak normalization
+            }
+
+        conn.close()
+        return factor_scores
+
     def _load_dashboard_data(self):
         """Load pre-calculated dashboard data from JSON."""
         json_path = self.frontend_data_path / "dashboardData.json"
@@ -104,52 +136,56 @@ class DataLoader:
                 description=track_data.get("description"),
             )
 
-        # Load drivers
+        # Load drivers with RepTrak-normalized factor scores from database
         for driver_data in data.get("drivers", []):
             driver_num = driver_data.get("number", driver_data.get("driverNumber"))
 
-            # Create factor scores
-            factors = driver_data.get("factors", driver_data.get("skillBreakdown", {}))
-            speed_data = factors.get("raw_speed", factors.get("speed", {}))
-            consistency_data = factors.get("consistency", {})
-            racecraft_data = factors.get("racecraft", {})
-            tire_data = factors.get("tire_mgmt", factors.get("tireManagement", {}))
+            # Get RepTrak-normalized factor scores from database
+            factor_scores = self._get_driver_factor_scores(driver_num)
 
             # Build stats - some fields might be at top level
             races = driver_data.get("races", 0)
             avg_finish = driver_data.get("avg_finish", 0)
 
+            # Calculate overall score as average of the 4 factor scores
+            overall_score = (
+                factor_scores["speed"]["score"] +
+                factor_scores["consistency"]["score"] +
+                factor_scores["racecraft"]["score"] +
+                factor_scores["tire_management"]["score"]
+            ) / 4
+
             self.drivers[driver_num] = Driver(
                 driver_number=driver_num,
                 driver_name=driver_data.get("name"),
-                overall_score=driver_data.get("overall_score", 0),
+                overall_score=overall_score,
                 speed=FactorScore(
                     name="Speed",
-                    score=speed_data.get("score", 0),
-                    percentile=speed_data.get("percentile", 0),
-                    z_score=speed_data.get("z_score", 0),
+                    score=factor_scores["speed"]["score"],
+                    percentile=factor_scores["speed"]["percentile"],
+                    z_score=factor_scores["speed"]["z_score"],
                 ),
                 consistency=FactorScore(
                     name="Consistency",
-                    score=consistency_data.get("score", 0),
-                    percentile=consistency_data.get("percentile", 0),
-                    z_score=consistency_data.get("z_score", 0),
+                    score=factor_scores["consistency"]["score"],
+                    percentile=factor_scores["consistency"]["percentile"],
+                    z_score=factor_scores["consistency"]["z_score"],
                 ),
                 racecraft=FactorScore(
                     name="Racecraft",
-                    score=racecraft_data.get("score", 0),
-                    percentile=racecraft_data.get("percentile", 0),
-                    z_score=racecraft_data.get("z_score", 0),
+                    score=factor_scores["racecraft"]["score"],
+                    percentile=factor_scores["racecraft"]["percentile"],
+                    z_score=factor_scores["racecraft"]["z_score"],
                 ),
                 tire_management=FactorScore(
                     name="Tire Management",
-                    score=tire_data.get("score", 0),
-                    percentile=tire_data.get("percentile", 0),
-                    z_score=tire_data.get("z_score", 0),
+                    score=factor_scores["tire_management"]["score"],
+                    percentile=factor_scores["tire_management"]["percentile"],
+                    z_score=factor_scores["tire_management"]["z_score"],
                 ),
                 stats=DriverStats(
                     driver_number=driver_num,
-                    overall_score=driver_data.get("overall_score", 0),
+                    overall_score=overall_score,
                     races_completed=races,
                     average_finish=avg_finish,
                     best_finish=int(avg_finish) if avg_finish else 1,  # Approximate

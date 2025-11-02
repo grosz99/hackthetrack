@@ -188,28 +188,11 @@ class FactorAnalyzer:
             self.features_df['driver_number'] == driver_number
         ].drop(columns=['race', 'driver_number']).mean()
 
-        # Get overall factor score using the correct column name
-        factor_column = factor_config["factor_column"]
-        factor_row = self.factor_scores_df[
-            self.factor_scores_df['driver_number'] == driver_number
-        ]
-
-        if len(factor_row) > 0:
-            # Get the raw z-score
-            raw_score = factor_row[factor_column].values[0]
-
-            # Calculate percentile from all drivers' scores for this factor
-            all_scores = self.factor_scores_df.groupby('driver_number')[factor_column].mean()
-            overall_percentile = (all_scores < raw_score).sum() / len(all_scores) * 100
-
-            # Normalize score to 0-100 scale (using percentile)
-            overall_score = overall_percentile
-        else:
-            overall_score = 0
-            overall_percentile = 0
-
         # Calculate breakdown for each variable
         variables = []
+        total_weighted_percentile = 0
+        total_weight = 0
+
         for var_name, display_name, weight in factor_config["variables"]:
             raw_value = driver_features.get(var_name, 0)
 
@@ -220,8 +203,12 @@ class FactorAnalyzer:
             # Normalize to 0-100 (using percentile as normalized value)
             normalized_value = percentile
 
-            # Calculate contribution
+            # Calculate contribution to overall score
             contribution = weight * normalized_value
+
+            # Track for overall calculation
+            total_weighted_percentile += contribution
+            total_weight += weight
 
             variables.append(VariableBreakdown(
                 name=var_name,
@@ -232,6 +219,11 @@ class FactorAnalyzer:
                 contribution=contribution,
                 percentile=percentile
             ))
+
+        # Calculate overall score as weighted average of variable percentiles
+        # This is the RepTrak-style normalization: clean, interpretable 0-100 scale
+        overall_percentile = total_weighted_percentile / total_weight if total_weight > 0 else 0
+        overall_score = overall_percentile  # Same value, both represent the composite score
 
         # Find strongest and weakest
         sorted_vars = sorted(variables, key=lambda x: x.percentile, reverse=True)
@@ -258,25 +250,26 @@ class FactorAnalyzer:
         # Get user driver breakdown
         user_breakdown = self._calculate_factor_breakdown(driver_number, factor_name)
 
-        # Get the correct factor column
-        factor_column = FACTOR_VARIABLES[factor_name]["factor_column"]
+        # Get top 3 drivers for this factor based on RepTrak-normalized scores from database
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
 
-        # Get top 3 drivers for this factor (excluding user)
-        # Group by driver_number and get mean scores, then sort
-        driver_avg_scores = self.factor_scores_df.groupby('driver_number')[factor_column].mean()
-        driver_avg_scores = driver_avg_scores[driver_avg_scores.index != driver_number]
-        top_3_drivers = driver_avg_scores.nlargest(3)
+        # Get average normalized value for each driver (excluding current driver)
+        cursor.execute("""
+            SELECT driver_number, AVG(normalized_value) as avg_score
+            FROM factor_breakdowns
+            WHERE factor_name = ? AND driver_number != ?
+            GROUP BY driver_number
+            ORDER BY avg_score DESC
+            LIMIT 3
+        """, (factor_name, driver_number))
 
-        # Convert to DataFrame format for iteration
-        factor_scores = pd.DataFrame({
-            'driver_number': top_3_drivers.index,
-            factor_column: top_3_drivers.values
-        })
+        top_3_results = cursor.fetchall()
+        conn.close()
 
         top_drivers = []
-        for _, row in factor_scores.iterrows():
-            top_driver_number = row['driver_number']
-            top_breakdown = self._calculate_factor_breakdown(top_driver_number, factor_name)
+        for driver_num, avg_score in top_3_results:
+            top_breakdown = self._calculate_factor_breakdown(driver_num, factor_name)
 
             # Build variables dict
             variables_dict = {
@@ -285,8 +278,8 @@ class FactorAnalyzer:
             }
 
             top_drivers.append(DriverComparison(
-                driver_number=top_driver_number,
-                driver_name=f"Driver #{top_driver_number}",
+                driver_number=driver_num,
+                driver_name=f"Driver #{driver_num}",
                 factor_score=top_breakdown.overall_score,
                 percentile=top_breakdown.percentile,
                 variables=variables_dict
