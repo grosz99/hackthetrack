@@ -23,9 +23,9 @@ export default function Skills() {
   const [drivers] = useState([
     { number: 13, name: 'Driver #13' },
     { number: 7, name: 'Driver #7' },
-    { number: 22, name: 'Driver #22' },
+    { number: 5, name: 'Driver #5' },
     { number: 88, name: 'Driver #88' },
-    { number: 45, name: 'Driver #45' },
+    { number: 15, name: 'Driver #15' },
   ]);
 
   useEffect(() => {
