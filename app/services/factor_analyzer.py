@@ -1,7 +1,7 @@
 """
 Factor Analyzer Service
 Analyzes and breaks down driver skill factors into underlying variables.
-Provides racing-focused, plain-English explanations for non-technical users.
+Uses reflected factor scores for statistically correct interpretation.
 """
 
 import pandas as pd
@@ -18,6 +18,17 @@ FACTOR_MAPPING = {
     "factor_2": "racecraft",
     "factor_3": "speed",
     "factor_4": "tire_management",
+}
+
+# Factors that need reflection (multiplication by -1) due to negative loadings
+# Based on factor analysis: Factors 1, 2, 3 have dominant negative loadings
+# Factor 4 has positive loadings and does not need reflection
+FACTORS_TO_REFLECT = {
+    "factor_1_score": True,   # Consistency: dominant variables have negative loadings
+    "factor_2_score": True,   # Racecraft: dominant variables have negative loadings
+    "factor_3_score": True,   # Speed: all variables have negative loadings
+    "factor_4_score": False,  # Tire Management: positive loadings, correct sign
+    "factor_5_score": False,  # Not interpreted, keep as-is
 }
 
 # Factor variable mappings with weights
@@ -60,12 +71,14 @@ FACTOR_VARIABLES = {
     "tire_management": {
         "factor_column": "factor_4_score",
         "variables": [
-            ("pace_degradation", "Tire Wear Management", 0.30),
-            ("late_stint_perf", "Late Stint Speed", 0.30),
-            ("early_vs_late_pace", "Stint Consistency", 0.40)
+            ("pace_degradation", "Tire Wear Management", 0.20),
+            ("late_stint_perf", "Late Stint Speed", 0.20),
+            ("early_vs_late_pace", "Stint Consistency", 0.25),
+            ("steering_smoothness", "Steering Smoothness", 0.175),
+            ("lateral_g_utilization", "Cornering G-Force Usage", 0.175)
         ],
         "description": "Managing tire wear to maintain pace throughout a stint",
-        "racing_explanation": "Tire management is keeping your tires alive while staying fast. Tire wear management shows how well you preserve the rubber. Late stint speed means you're still quick even on old tires. Stint consistency shows your pace doesn't fall off a cliff as the stint goes on."
+        "racing_explanation": "Tire management is keeping your tires alive while staying fast. Tire wear management shows how well you preserve the rubber. Late stint speed means you're still quick even on old tires. Stint consistency shows your pace doesn't fall off a cliff as the stint goes on. Steering smoothness means gentle inputs that preserve tire life. Cornering G-force usage shows how hard you push through turns."
     }
 }
 
@@ -120,17 +133,95 @@ class FactorAnalyzer:
         features_path = data_path / "analysis_outputs" / "all_races_tier1_features.csv"
         self.features_df = pd.read_csv(features_path)
 
-        # Load factor scores
+        # Load telemetry features and merge
+        telemetry_path = data_path / "analysis_outputs" / "all_races_telemetry_features.csv"
+        if telemetry_path.exists():
+            telemetry_df = pd.read_csv(telemetry_path)
+            # Merge telemetry features (steering_smoothness and lateral_g_utilization)
+            self.features_df = pd.merge(
+                self.features_df,
+                telemetry_df[['race', 'driver_number', 'steering_smoothness', 'lateral_g_utilization']],
+                on=['race', 'driver_number'],
+                how='left'  # Left join to keep all tier-1 data
+            )
+            print(f"Merged telemetry features: {len(self.features_df)} observations")
+        else:
+            print(f"Warning: Telemetry features not found at {telemetry_path}")
+            # Add dummy columns filled with NaN
+            self.features_df['steering_smoothness'] = np.nan
+            self.features_df['lateral_g_utilization'] = np.nan
+
+        # Load factor scores and apply reflection
         factor_scores_path = data_path / "analysis_outputs" / "tier1_factor_scores.csv"
         self.factor_scores_df = pd.read_csv(factor_scores_path)
+        self._apply_factor_reflection()
+
+    def _apply_factor_reflection(self):
+        """
+        Apply reflection to factors with negative loadings.
+
+        This is a standard factor analysis procedure: when dominant variables
+        have negative loadings on a factor, multiply the factor scores by -1
+        to make interpretation intuitive (higher score = better performance).
+
+        Statistical justification:
+        - Factor 1 (consistency): braking_consistency loads at -0.934
+        - Factor 2 (racecraft): positions_gained loads at -0.857
+        - Factor 3 (speed): all speed metrics have negative loadings (-0.69 to -0.76)
+        - Factor 4 (tire_mgmt): positive loadings (+0.47 to +0.62), no reflection needed
+        """
+        for factor_col, should_reflect in FACTORS_TO_REFLECT.items():
+            if should_reflect and factor_col in self.factor_scores_df.columns:
+                self.factor_scores_df[factor_col] = -1 * self.factor_scores_df[factor_col]
+                print(f"Reflected {factor_col} (multiplied by -1 due to negative loadings)")
 
     def calculate_all_factors(self):
         """Pre-calculate all factor breakdowns for all drivers."""
-        drivers = self.features_df['driver_number'].unique()
+        # For hackathon: only include drivers with telemetry data
+        driver_telemetry = self.features_df.groupby('driver_number')['steering_smoothness'].mean()
+        drivers_with_telemetry = driver_telemetry[driver_telemetry > 0].index.tolist()
+
+        print(f"Total drivers: {len(self.features_df['driver_number'].unique())}")
+        print(f"Drivers with telemetry: {len(drivers_with_telemetry)}")
+        print(f"Excluding {len(self.features_df['driver_number'].unique()) - len(drivers_with_telemetry)} drivers without telemetry")
+
+        drivers = drivers_with_telemetry
         factors = list(FACTOR_VARIABLES.keys())
 
         conn = sqlite3.connect(self.db_path)
         cursor = conn.cursor()
+
+        # Create tables if they don't exist
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS factor_breakdowns (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                driver_number INTEGER NOT NULL,
+                factor_name TEXT NOT NULL,
+                variable_name TEXT NOT NULL,
+                variable_display_name TEXT NOT NULL,
+                raw_value REAL,
+                normalized_value REAL,
+                weight REAL,
+                contribution REAL,
+                percentile REAL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(driver_number, factor_name, variable_name)
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS factor_comparisons (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                driver_number INTEGER NOT NULL,
+                factor_name TEXT NOT NULL,
+                top_driver_1 INTEGER,
+                top_driver_2 INTEGER,
+                top_driver_3 INTEGER,
+                insights TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE(driver_number, factor_name)
+            )
+        """)
 
         # Clear existing data
         cursor.execute("DELETE FROM factor_breakdowns")
@@ -177,11 +268,34 @@ class FactorAnalyzer:
 
         conn.commit()
         conn.close()
-        print("All factors calculated and stored!")
+        print("All factors calculated and stored with reflected scores!")
 
     def _calculate_factor_breakdown(self, driver_number: int, factor_name: str) -> FactorBreakdown:
-        """Calculate detailed breakdown for a driver's factor."""
+        """
+        Calculate detailed breakdown for a driver's factor using reflected scores.
+
+        Uses the reflected factor scores directly for overall_score, then converts
+        to percentiles only for display purposes. This maintains statistical validity
+        while providing intuitive 0-100 scale for users.
+        """
         factor_config = FACTOR_VARIABLES[factor_name]
+        factor_column = factor_config["factor_column"]
+
+        # Get driver's reflected factor score (from factor analysis)
+        driver_factor_data = self.factor_scores_df[
+            self.factor_scores_df['driver_number'] == driver_number
+        ]
+
+        if driver_factor_data.empty:
+            # If no factor score available, calculate as average across races
+            overall_factor_score = 0.0
+        else:
+            # Average reflected factor score across all races for this driver
+            overall_factor_score = driver_factor_data[factor_column].mean()
+
+        # Calculate percentile of the reflected factor score for display
+        all_driver_scores = self.factor_scores_df.groupby('driver_number')[factor_column].mean()
+        factor_percentile = (all_driver_scores < overall_factor_score).sum() / len(all_driver_scores) * 100
 
         # Get driver's features (averaged across all races)
         driver_features = self.features_df[
@@ -190,25 +304,28 @@ class FactorAnalyzer:
 
         # Calculate breakdown for each variable
         variables = []
-        total_weighted_percentile = 0
-        total_weight = 0
 
         for var_name, display_name, weight in factor_config["variables"]:
             raw_value = driver_features.get(var_name, 0)
 
-            # Calculate percentile across all drivers
+            # Calculate percentile across all drivers for this variable
             all_values = self.features_df.groupby('driver_number')[var_name].mean()
-            percentile = (all_values < raw_value).sum() / len(all_values) * 100
 
-            # Normalize to 0-100 (using percentile as normalized value)
+            # For telemetry features, exclude zero/missing values from percentile calculation
+            if var_name in ['steering_smoothness', 'lateral_g_utilization']:
+                valid_values = all_values[all_values > 0]
+                if len(valid_values) > 0 and raw_value > 0:
+                    percentile = (valid_values < raw_value).sum() / len(valid_values) * 100
+                else:
+                    percentile = 0.0  # No data or driver has no telemetry
+            else:
+                percentile = (all_values < raw_value).sum() / len(all_values) * 100
+
+            # Use percentile as normalized value for interpretability
             normalized_value = percentile
 
-            # Calculate contribution to overall score
+            # Calculate contribution to overall display score
             contribution = weight * normalized_value
-
-            # Track for overall calculation
-            total_weighted_percentile += contribution
-            total_weight += weight
 
             variables.append(VariableBreakdown(
                 name=var_name,
@@ -220,10 +337,8 @@ class FactorAnalyzer:
                 percentile=percentile
             ))
 
-        # Calculate overall score as weighted average of variable percentiles
-        # This is the RepTrak-style normalization: clean, interpretable 0-100 scale
-        overall_percentile = total_weighted_percentile / total_weight if total_weight > 0 else 0
-        overall_score = overall_percentile  # Same value, both represent the composite score
+        # Use factor percentile as overall score for display consistency
+        overall_score = factor_percentile
 
         # Find strongest and weakest
         sorted_vars = sorted(variables, key=lambda x: x.percentile, reverse=True)
@@ -232,13 +347,13 @@ class FactorAnalyzer:
 
         # Generate racing-focused explanation
         explanation = self._generate_racing_explanation(
-            factor_name, strongest, weakest, overall_percentile
+            factor_name, strongest, weakest, factor_percentile
         )
 
         return FactorBreakdown(
             factor_name=factor_name,
             overall_score=overall_score,
-            percentile=overall_percentile,
+            percentile=factor_percentile,
             variables=variables,
             explanation=explanation,
             strongest_area=strongest.display_name,
@@ -246,29 +361,20 @@ class FactorAnalyzer:
         )
 
     def _calculate_factor_comparison(self, driver_number: int, factor_name: str) -> FactorComparison:
-        """Calculate comparison vs top 3 drivers."""
+        """Calculate comparison vs top 3 drivers using reflected factor scores."""
         # Get user driver breakdown
         user_breakdown = self._calculate_factor_breakdown(driver_number, factor_name)
 
-        # Get top 3 drivers for this factor based on RepTrak-normalized scores from database
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        # Get top 3 drivers for this factor based on reflected factor scores
+        factor_column = FACTOR_VARIABLES[factor_name]["factor_column"]
 
-        # Get average normalized value for each driver (excluding current driver)
-        cursor.execute("""
-            SELECT driver_number, AVG(normalized_value) as avg_score
-            FROM factor_breakdowns
-            WHERE factor_name = ? AND driver_number != ?
-            GROUP BY driver_number
-            ORDER BY avg_score DESC
-            LIMIT 3
-        """, (factor_name, driver_number))
-
-        top_3_results = cursor.fetchall()
-        conn.close()
+        # Calculate average reflected factor score for each driver
+        driver_scores = self.factor_scores_df.groupby('driver_number')[factor_column].mean()
+        driver_scores = driver_scores[driver_scores.index != driver_number]  # Exclude current driver
+        top_3_drivers = driver_scores.nlargest(3)
 
         top_drivers = []
-        for driver_num, avg_score in top_3_results:
+        for driver_num in top_3_drivers.index:
             top_breakdown = self._calculate_factor_breakdown(driver_num, factor_name)
 
             # Build variables dict
@@ -278,7 +384,7 @@ class FactorAnalyzer:
             }
 
             top_drivers.append(DriverComparison(
-                driver_number=driver_num,
+                driver_number=int(driver_num),
                 driver_name=f"Driver #{driver_num}",
                 factor_score=top_breakdown.overall_score,
                 percentile=top_breakdown.percentile,
@@ -365,7 +471,7 @@ class FactorAnalyzer:
 
 
 def main():
-    """Run batch calculation for all drivers and factors."""
+    """Run batch calculation for all drivers and factors with reflected scores."""
     base_path = Path(__file__).parent.parent.parent.parent
     data_path = base_path / "data"
     db_path = base_path / "circuit-fit.db"
