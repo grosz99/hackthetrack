@@ -325,10 +325,10 @@ export default function Skills() {
           >
             <div className="factor-header">
               <h3 className="factor-name">Consistency</h3>
-              <div className="factor-score">{driverData.consistency?.score || 0}</div>
+              <div className="factor-score">{Math.round(driverData.consistency?.score || 0)}</div>
             </div>
             <div className="factor-percentile">
-              {driverData.consistency?.percentile || 0}th Percentile
+              {(driverData.consistency?.percentile || 0).toFixed(1)}th Percentile
             </div>
             <div className="percentile-bar">
               <div
@@ -348,10 +348,10 @@ export default function Skills() {
           >
             <div className="factor-header">
               <h3 className="factor-name">Racecraft</h3>
-              <div className="factor-score">{driverData.racecraft?.score || 0}</div>
+              <div className="factor-score">{Math.round(driverData.racecraft?.score || 0)}</div>
             </div>
             <div className="factor-percentile">
-              {driverData.racecraft?.percentile || 0}th Percentile
+              {(driverData.racecraft?.percentile || 0).toFixed(1)}th Percentile
             </div>
             <div className="percentile-bar">
               <div
@@ -371,10 +371,10 @@ export default function Skills() {
           >
             <div className="factor-header">
               <h3 className="factor-name">Raw Speed</h3>
-              <div className="factor-score">{driverData.speed?.score || 0}</div>
+              <div className="factor-score">{Math.round(driverData.speed?.score || 0)}</div>
             </div>
             <div className="factor-percentile">
-              {driverData.speed?.percentile || 0}th Percentile
+              {(driverData.speed?.percentile || 0).toFixed(1)}th Percentile
             </div>
             <div className="percentile-bar">
               <div
@@ -394,10 +394,10 @@ export default function Skills() {
           >
             <div className="factor-header">
               <h3 className="factor-name">Tire Management</h3>
-              <div className="factor-score">{driverData.tire_management?.score || 0}</div>
+              <div className="factor-score">{Math.round(driverData.tire_management?.score || 0)}</div>
             </div>
             <div className="factor-percentile">
-              {driverData.tire_management?.percentile || 0}th Percentile
+              {(driverData.tire_management?.percentile || 0).toFixed(1)}th Percentile
             </div>
             <div className="percentile-bar">
               <div
@@ -438,7 +438,7 @@ export default function Skills() {
                   <div key={index} className="variable-card">
                     <div className="variable-header">
                       <h4>{variable.display_name}</h4>
-                      <span className="variable-percentile">{variable.percentile.toFixed(1)}th %ile</span>
+                      <span className="variable-percentile">{variable.percentile.toFixed(1)}th</span>
                     </div>
                     <div className="variable-bar">
                       <div
@@ -464,7 +464,7 @@ export default function Skills() {
                       <span className="driver-label">You</span>
                       <span className="driver-number">#{factorComparison.user_driver.driver_number}</span>
                     </div>
-                    <div className="driver-score">{factorComparison.user_driver.percentile.toFixed(1)}th %ile</div>
+                    <div className="driver-score">{factorComparison.user_driver.percentile.toFixed(1)}th percentile</div>
                     <div className="mini-bars">
                       {factorBreakdown.variables.map((variable, idx) => (
                         <div key={idx} className="mini-bar-row">
@@ -487,7 +487,7 @@ export default function Skills() {
                         <span className="driver-label">#{idx + 1} Best</span>
                         <span className="driver-number">#{driver.driver_number}</span>
                       </div>
-                      <div className="driver-score">{driver.percentile.toFixed(1)}th %ile</div>
+                      <div className="driver-score">{driver.percentile.toFixed(1)}th percentile</div>
                       <div className="mini-bars">
                         {factorBreakdown.variables.map((variable, vidx) => (
                           <div key={vidx} className="mini-bar-row">
