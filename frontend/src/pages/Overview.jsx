@@ -15,14 +15,16 @@ export default function Overview() {
   const [driverNumber, setDriverNumber] = useState(13);
   const [seasonStats, setSeasonStats] = useState(null);
   const [raceResults, setRaceResults] = useState([]);
+  const [driverData, setDriverData] = useState(null);
+  const [topDrivers, setTopDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [drivers] = useState([
     { number: 13, name: 'Driver #13' },
     { number: 7, name: 'Driver #7' },
-    { number: 22, name: 'Driver #22' },
+    { number: 5, name: 'Driver #5' },
     { number: 88, name: 'Driver #88' },
-    { number: 45, name: 'Driver #45' },
+    { number: 15, name: 'Driver #15' },
   ]);
 
   useEffect(() => {
@@ -31,14 +33,25 @@ export default function Overview() {
         setLoading(true);
         setError(null);
 
-        // Fetch season stats and race results in parallel
-        const [statsResponse, resultsResponse] = await Promise.all([
+        // Fetch season stats, race results, driver factors, and all drivers in parallel
+        const [statsResponse, resultsResponse, driverResponse, allDriversResponse] = await Promise.all([
           api.get(`/api/drivers/${driverNumber}/stats`),
-          api.get(`/api/drivers/${driverNumber}/results`)
+          api.get(`/api/drivers/${driverNumber}/results`),
+          api.get(`/api/drivers/${driverNumber}`),
+          api.get('/api/drivers')
         ]);
 
         setSeasonStats(statsResponse.data);
         setRaceResults(resultsResponse.data);
+        setDriverData(driverResponse.data);
+
+        // Get top 3 drivers by overall score (excluding current driver)
+        const sortedDrivers = allDriversResponse.data
+          .filter(d => d.driver_number !== driverNumber)
+          .sort((a, b) => b.overall_score - a.overall_score)
+          .slice(0, 3);
+
+        setTopDrivers(sortedDrivers);
       } catch (err) {
         console.error('Error fetching driver data:', err);
         setError('Failed to load driver data');
@@ -70,15 +83,41 @@ export default function Overview() {
     );
   }
 
-  // Calculate radar chart data
-  const maxRaces = seasonStats.total_races || 1;
-  const radarData = [
-    { metric: 'Wins', value: (seasonStats.wins / maxRaces) * 100, fullMark: 100 },
-    { metric: 'Podiums', value: (seasonStats.podiums / maxRaces) * 100, fullMark: 100 },
-    { metric: 'Poles', value: (seasonStats.pole_positions / maxRaces) * 100, fullMark: 100 },
-    { metric: 'Top 5s', value: (seasonStats.top5 / maxRaces) * 100, fullMark: 100 },
-    { metric: 'Top 10s', value: (seasonStats.top10 / maxRaces) * 100, fullMark: 100 },
-  ];
+  // Prepare 4-factor radar chart data with top drivers comparison
+  const radarData = driverData ? [
+    {
+      factor: 'Consistency',
+      user: driverData.consistency?.percentile || 0,
+      top1: topDrivers[0]?.consistency?.percentile || 0,
+      top2: topDrivers[1]?.consistency?.percentile || 0,
+      top3: topDrivers[2]?.consistency?.percentile || 0,
+      fullMark: 100
+    },
+    {
+      factor: 'Racecraft',
+      user: driverData.racecraft?.percentile || 0,
+      top1: topDrivers[0]?.racecraft?.percentile || 0,
+      top2: topDrivers[1]?.racecraft?.percentile || 0,
+      top3: topDrivers[2]?.racecraft?.percentile || 0,
+      fullMark: 100
+    },
+    {
+      factor: 'Speed',
+      user: driverData.speed?.percentile || 0,
+      top1: topDrivers[0]?.speed?.percentile || 0,
+      top2: topDrivers[1]?.speed?.percentile || 0,
+      top3: topDrivers[2]?.speed?.percentile || 0,
+      fullMark: 100
+    },
+    {
+      factor: 'Tire Mgmt',
+      user: driverData.tire_management?.percentile || 0,
+      top1: topDrivers[0]?.tire_management?.percentile || 0,
+      top2: topDrivers[1]?.tire_management?.percentile || 0,
+      top3: topDrivers[2]?.tire_management?.percentile || 0,
+      fullMark: 100
+    }
+  ] : [];
 
   // Prepare race performance data for chart
   const racePerformanceData = raceResults.map(result => {
@@ -328,26 +367,52 @@ export default function Overview() {
         )}
       </div>
 
-      {/* Bottom Section - Performance Radar + Contextual Chart */}
+      {/* Bottom Section - 4-Factor Performance Analysis */}
       <div style={{ display: 'flex', gap: '20px', alignItems: 'stretch' }}>
-        {/* Performance Radar Chart */}
+        {/* 4-Factor Spider Chart */}
         <div className="spider-chart-container" style={{ flex: 1 }}>
-          <h3>Performance Radar</h3>
-          <ResponsiveContainer width="100%" height={350}>
+          <h3>Performance Radar - 4 Key Factors</h3>
+          <ResponsiveContainer width="100%" height={400}>
             <RadarChart data={radarData}>
-              <PolarGrid stroke="#ddd" />
+              <PolarGrid stroke="#ddd" strokeWidth={1} />
               <PolarAngleAxis
-                dataKey="metric"
-                tick={{ fill: '#000', fontSize: 12, fontWeight: 600 }}
+                dataKey="factor"
+                tick={{ fill: '#000', fontSize: 16, fontWeight: 700 }}
               />
               <PolarRadiusAxis
                 angle={90}
                 domain={[0, 100]}
-                tick={{ fill: '#666', fontSize: 10 }}
+                tick={{ fill: '#666', fontSize: 12, fontWeight: 600 }}
+              />
+              {/* Top 3 drivers in black/gray */}
+              <Radar
+                name={`#${topDrivers[0]?.driver_number || 'N/A'}`}
+                dataKey="top1"
+                stroke="#555"
+                fill="#555"
+                fillOpacity={0.15}
+                strokeWidth={2}
               />
               <Radar
-                name="Performance"
-                dataKey="value"
+                name={`#${topDrivers[1]?.driver_number || 'N/A'}`}
+                dataKey="top2"
+                stroke="#666"
+                fill="#666"
+                fillOpacity={0.15}
+                strokeWidth={2}
+              />
+              <Radar
+                name={`#${topDrivers[2]?.driver_number || 'N/A'}`}
+                dataKey="top3"
+                stroke="#777"
+                fill="#777"
+                fillOpacity={0.15}
+                strokeWidth={2}
+              />
+              {/* User driver in red - on top */}
+              <Radar
+                name={`You (#${driverNumber})`}
+                dataKey="user"
                 stroke="#e74c3c"
                 fill="#e74c3c"
                 fillOpacity={0.3}
@@ -357,19 +422,114 @@ export default function Overview() {
           </ResponsiveContainer>
         </div>
 
-        {/* Contextual Performance Chart - Placeholder */}
-        <div className="spider-chart-container" style={{ flex: 1 }}>
-          <h3>Performance Context</h3>
+        {/* 4 Factor Breakdown Tiles */}
+        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          {/* Consistency Card */}
           <div style={{
-            height: '350px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#666',
-            fontSize: '16px',
-            fontWeight: 600
+            background: 'white',
+            borderRadius: '12px',
+            padding: '20px',
+            border: '3px solid #e74c3c',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
           }}>
-            Additional Chart Coming Soon
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <h4 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Consistency</h4>
+              <div style={{ fontSize: '24px', fontWeight: 900, color: '#e74c3c' }}>
+                {Math.round(driverData?.consistency?.score || 0)}
+              </div>
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#666', marginBottom: '12px' }}>
+              {(driverData?.consistency?.percentile || 0).toFixed(1)}th Percentile
+            </div>
+            <div style={{ height: '8px', background: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                background: '#e74c3c',
+                width: `${driverData?.consistency?.percentile || 0}%`,
+                transition: 'width 0.3s ease'
+              }}></div>
+            </div>
+          </div>
+
+          {/* Racecraft Card */}
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '20px',
+            border: '3px solid #e74c3c',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <h4 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Racecraft</h4>
+              <div style={{ fontSize: '24px', fontWeight: 900, color: '#e74c3c' }}>
+                {Math.round(driverData?.racecraft?.score || 0)}
+              </div>
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#666', marginBottom: '12px' }}>
+              {(driverData?.racecraft?.percentile || 0).toFixed(1)}th Percentile
+            </div>
+            <div style={{ height: '8px', background: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                background: '#e74c3c',
+                width: `${driverData?.racecraft?.percentile || 0}%`,
+                transition: 'width 0.3s ease'
+              }}></div>
+            </div>
+          </div>
+
+          {/* Speed Card */}
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '20px',
+            border: '3px solid #e74c3c',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <h4 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Raw Speed</h4>
+              <div style={{ fontSize: '24px', fontWeight: 900, color: '#e74c3c' }}>
+                {Math.round(driverData?.speed?.score || 0)}
+              </div>
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#666', marginBottom: '12px' }}>
+              {(driverData?.speed?.percentile || 0).toFixed(1)}th Percentile
+            </div>
+            <div style={{ height: '8px', background: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                background: '#e74c3c',
+                width: `${driverData?.speed?.percentile || 0}%`,
+                transition: 'width 0.3s ease'
+              }}></div>
+            </div>
+          </div>
+
+          {/* Tire Management Card */}
+          <div style={{
+            background: 'white',
+            borderRadius: '12px',
+            padding: '20px',
+            border: '3px solid #e74c3c',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.1)'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <h4 style={{ margin: 0, fontSize: '18px', fontWeight: 700 }}>Tire Mgmt</h4>
+              <div style={{ fontSize: '24px', fontWeight: 900, color: '#e74c3c' }}>
+                {Math.round(driverData?.tire_management?.score || 0)}
+              </div>
+            </div>
+            <div style={{ fontSize: '14px', fontWeight: 600, color: '#666', marginBottom: '12px' }}>
+              {(driverData?.tire_management?.percentile || 0).toFixed(1)}th Percentile
+            </div>
+            <div style={{ height: '8px', background: '#eee', borderRadius: '4px', overflow: 'hidden' }}>
+              <div style={{
+                height: '100%',
+                background: '#e74c3c',
+                width: `${driverData?.tire_management?.percentile || 0}%`,
+                transition: 'width 0.3s ease'
+              }}></div>
+            </div>
           </div>
         </div>
 
