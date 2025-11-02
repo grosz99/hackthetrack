@@ -6,6 +6,10 @@ import os
 from typing import List, Optional
 from anthropic import Anthropic
 from ..models import ChatMessage, Driver, Track
+from dotenv import load_dotenv
+
+# Load environment variables before initializing the client
+load_dotenv()
 
 
 class AIStrategyService:
@@ -13,7 +17,9 @@ class AIStrategyService:
 
     def __init__(self):
         self.client = Anthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
-        self.model = "claude-3-5-sonnet-20241022"
+        # Using Haiku 4.5 for optimal speed & cost in conversational AI coaching
+        # 4-5x faster than Sonnet, 1/3 the cost, with near-frontier performance
+        self.model = "claude-haiku-4-5-20251001"
 
     def _build_system_prompt(self, driver: Driver, track: Track) -> str:
         """Build context-rich system prompt with driver and track data."""
@@ -81,17 +87,30 @@ Provide actionable, data-driven racing strategy and insights based on:
 2. The track's demand profile (what skills matter most here)
 3. The circuit fit score (how well driver matches track)
 4. The 4-factor model predictions
+5. High-frequency telemetry data for detailed analysis
+
+**THREE-TIER TELEMETRY SYSTEM:**
+When discussing specific driving technique improvements, you can reference telemetry comparisons.
+The system automatically provides three reference points:
+- **You** (baseline): Current performance
+- **Next Tier** (achievable target): Driver 1-2 positions ahead in race results
+- **Leader** (ultimate goal): Race winner or top performer
+
+Example usage in your responses:
+"Your braking into Turn 5 is 15m earlier than the next tier driver and 25m earlier than the leader.
+The telemetry shows you could carry 3-4mph more mid-corner speed by braking later."
 
 **Guidelines:**
 - Be specific and actionable (e.g., "Focus on brake consistency in Turn 3-5")
 - Reference the data (e.g., "Your consistency is 66th percentile, but this track demands high consistency")
-- Explain trade-offs (e.g., "Speed matters most here (50%), but your racecraft could help you gain positions")
-- Suggest comparisons for the telemetry page (e.g., "Compare yourself to driver #7 who excels at consistency")
-- Keep responses concise but insightful
+- When discussing technique, mention specific corners and reference telemetry insights
+- Explain the progression: You → Next Tier → Leader (shows achievable steps)
+- Suggest specific telemetry comparisons (e.g., "Let's look at your brake traces vs the next tier driver in the hairpin")
+- Keep responses concise but insightful (2-3 paragraphs max)
 - Use a supportive, coaching tone
 
 **Theme: "Making the Predictable Unpredictable"**
-Help drivers understand how their unique skill profile can overcome predictions and find competitive advantages.
+Help drivers understand how their unique skill profile can overcome predictions and find competitive advantages through data-driven insights.
 """
 
     def get_strategy_insights(
