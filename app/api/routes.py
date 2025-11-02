@@ -12,6 +12,12 @@ from ..models import (
     ChatResponse,
     TelemetryComparison,
     LapData,
+    SeasonStats,
+    RaceResult,
+    FactorVariable,
+    FactorBreakdownResponse,
+    DriverFactorComparison,
+    FactorComparisonResponse,
 )
 from ..services.data_loader import data_loader
 from ..services.ai_strategy import ai_service
@@ -83,6 +89,38 @@ async def get_driver(driver_number: int):
             status_code=404, detail=f"Driver {driver_number} not found"
         )
     return driver
+
+
+@router.get("/drivers/{driver_number}/stats", response_model=SeasonStats)
+async def get_driver_season_stats(driver_number: int):
+    """
+    Get season statistics for a driver.
+
+    Calculates wins, podiums, top 5/10, poles, DNFs, and averages from race results.
+    """
+    stats = data_loader.get_season_stats(driver_number)
+    if not stats:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No season stats found for driver {driver_number}",
+        )
+    return stats
+
+
+@router.get("/drivers/{driver_number}/results", response_model=List[RaceResult])
+async def get_driver_race_results(driver_number: int):
+    """
+    Get all race results for a driver for trending/historical data.
+
+    Returns race-by-race results ordered by round and race number.
+    """
+    results = data_loader.get_race_results(driver_number)
+    if not results:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No race results found for driver {driver_number}",
+        )
+    return results
 
 
 # ============================================================================
@@ -372,3 +410,271 @@ async def health_check():
         "tracks_loaded": len(data_loader.tracks),
         "drivers_loaded": len(data_loader.drivers),
     }
+
+
+# ============================================================================
+# TELEMETRY DETAILED ENDPOINTS
+# ============================================================================
+
+
+@router.get("/telemetry/detailed")
+async def get_detailed_telemetry(
+    track_id: str,
+    race_num: int,
+    driver_number: int,
+    lap_number: Optional[int] = None,
+    data_type: str = Query("speed_trace", description="Type of telemetry data to return")
+):
+    """
+    Get detailed high-frequency telemetry with three-tier comparison.
+
+    Three-tier comparison system:
+    - user: Your performance
+    - next_tier: Driver 1-2 positions ahead (achievable target)
+    - leader: Race winner/top performer (ultimate goal)
+
+    data_type options:
+    - speed_trace: Speed over distance with comparisons
+    - brake_comparison: Brake pressure analysis
+    - full: All telemetry channels
+    """
+    from ..services.telemetry_processor import get_telemetry_processor
+    from pathlib import Path
+
+    # Get telemetry processor
+    data_path = Path(__file__).parent.parent.parent.parent / "data"
+    processor = get_telemetry_processor(data_path)
+
+    # Identify comparison drivers
+    comparison_drivers = processor.identify_comparison_drivers(
+        track_id, race_num, driver_number
+    )
+
+    if data_type == "speed_trace":
+        # Get speed traces for all three tiers
+        traces = processor.create_speed_trace(
+            track_id, race_num, driver_number, comparison_drivers, lap_number
+        )
+
+        return {
+            "track_id": track_id,
+            "race_num": race_num,
+            "data_type": "speed_trace",
+            "comparison_drivers": comparison_drivers,
+            "traces": traces,
+            "metadata": {
+                "user_position": comparison_drivers.get("user_position"),
+                "description": "Three-tier comparison: You → Next Tier → Leader"
+            }
+        }
+
+    raise HTTPException(
+        status_code=400,
+        detail=f"Unsupported data_type: {data_type}. Supported: speed_trace"
+    )
+
+
+# ============================================================================
+# FACTOR BREAKDOWN ENDPOINTS
+# ============================================================================
+
+
+@router.get(
+    "/drivers/{driver_number}/factors/{factor_name}",
+    response_model=FactorBreakdownResponse
+)
+async def get_factor_breakdown(driver_number: int, factor_name: str):
+    """
+    Get detailed breakdown of a skill factor for a driver.
+
+    Shows underlying variables that contribute to the factor, with percentile
+    rankings and racing-focused explanations.
+
+    factor_name: speed, consistency, racecraft, or tire_management
+    """
+    import sqlite3
+    from pathlib import Path
+
+    # Validate factor name
+    valid_factors = ["speed", "consistency", "racecraft", "tire_management"]
+    if factor_name not in valid_factors:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid factor_name. Must be one of: {', '.join(valid_factors)}"
+        )
+
+    # Connect to database
+    db_path = Path(__file__).parent.parent.parent.parent / "circuit-fit.db"
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # Query factor breakdown
+    cursor.execute("""
+        SELECT variable_name, variable_display_name, raw_value, normalized_value,
+               weight, contribution, percentile
+        FROM factor_breakdowns
+        WHERE driver_number = ? AND factor_name = ?
+        ORDER BY percentile DESC
+    """, (driver_number, factor_name))
+
+    rows = cursor.fetchall()
+
+    if not rows:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail=f"No factor breakdown found for driver {driver_number}, factor {factor_name}"
+        )
+
+    # Convert to FactorVariable models
+    variables = []
+    for row in rows:
+        variables.append(FactorVariable(
+            name=row[0],
+            display_name=row[1],
+            raw_value=row[2],
+            normalized_value=row[3],
+            weight=row[4],
+            contribution=row[5],
+            percentile=row[6]
+        ))
+
+    # Calculate overall score from variables
+    overall_score = sum(var.contribution for var in variables)
+    overall_percentile = sum(var.percentile * var.weight for var in variables) / sum(var.weight for var in variables)
+
+    # Find strongest and weakest
+    sorted_vars = sorted(variables, key=lambda x: x.percentile, reverse=True)
+    strongest = sorted_vars[0]
+    weakest = sorted_vars[-1]
+
+    # Generate explanation
+    explanation = _generate_factor_explanation(factor_name, strongest, weakest, overall_percentile)
+
+    conn.close()
+
+    return FactorBreakdownResponse(
+        factor_name=factor_name,
+        overall_score=overall_score,
+        percentile=overall_percentile,
+        variables=variables,
+        explanation=explanation,
+        strongest_area=strongest.display_name,
+        weakest_area=weakest.display_name
+    )
+
+
+@router.get(
+    "/drivers/{driver_number}/factors/{factor_name}/comparison",
+    response_model=FactorComparisonResponse
+)
+async def get_factor_comparison(driver_number: int, factor_name: str):
+    """
+    Compare driver's factor performance vs top 3 drivers.
+
+    Shows how driver stacks up against the best in each variable, with
+    specific insights on where to improve.
+    """
+    import sqlite3
+    from pathlib import Path
+
+    # Validate factor name
+    valid_factors = ["speed", "consistency", "racecraft", "tire_management"]
+    if factor_name not in valid_factors:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid factor_name. Must be one of: {', '.join(valid_factors)}"
+        )
+
+    # Connect to database
+    db_path = Path(__file__).parent.parent.parent.parent / "circuit-fit.db"
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+
+    # Get user driver breakdown
+    user_breakdown = await get_factor_breakdown(driver_number, factor_name)
+
+    # Get top 3 drivers for comparison
+    cursor.execute("""
+        SELECT top_driver_1, top_driver_2, top_driver_3, insights
+        FROM factor_comparisons
+        WHERE driver_number = ? AND factor_name = ?
+    """, (driver_number, factor_name))
+
+    comparison_row = cursor.fetchone()
+
+    if not comparison_row:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail=f"No comparison found for driver {driver_number}, factor {factor_name}"
+        )
+
+    top_driver_ids = [comparison_row[0], comparison_row[1], comparison_row[2]]
+    insights = comparison_row[3].split("\n") if comparison_row[3] else []
+
+    # Get breakdowns for top drivers
+    top_drivers = []
+    for top_driver_id in top_driver_ids:
+        if top_driver_id is None:
+            continue
+
+        top_breakdown = await get_factor_breakdown(top_driver_id, factor_name)
+
+        # Build variables dict
+        variables_dict = {var.name: var.normalized_value for var in top_breakdown.variables}
+
+        top_drivers.append(DriverFactorComparison(
+            driver_number=top_driver_id,
+            driver_name=f"Driver #{top_driver_id}",
+            factor_score=top_breakdown.overall_score,
+            percentile=top_breakdown.percentile,
+            variables=variables_dict
+        ))
+
+    # Build user driver comparison
+    user_variables = {var.name: var.normalized_value for var in user_breakdown.variables}
+
+    user_driver = DriverFactorComparison(
+        driver_number=driver_number,
+        driver_name=f"Driver #{driver_number}",
+        factor_score=user_breakdown.overall_score,
+        percentile=user_breakdown.percentile,
+        variables=user_variables
+    )
+
+    conn.close()
+
+    return FactorComparisonResponse(
+        factor_name=factor_name,
+        user_driver=user_driver,
+        top_drivers=top_drivers,
+        insights=insights
+    )
+
+
+def _generate_factor_explanation(
+    factor_name: str, strongest: FactorVariable,
+    weakest: FactorVariable, overall_percentile: float
+) -> str:
+    """Generate plain-English, racing-focused explanation."""
+
+    # Overall performance qualifier
+    if overall_percentile >= 90:
+        qualifier = "elite"
+    elif overall_percentile >= 75:
+        qualifier = "strong"
+    elif overall_percentile >= 50:
+        qualifier = "solid"
+    elif overall_percentile >= 25:
+        qualifier = "developing"
+    else:
+        qualifier = "needs work"
+
+    explanation = (
+        f"Your {factor_name} is {qualifier} (top {100-overall_percentile:.0f}% of the field). "
+        f"Your best area is {strongest.display_name} where you rank in the top {100-strongest.percentile:.0f}%. "
+        f"Focus on improving {weakest.display_name} - that's where you're giving up the most."
+    )
+
+    return explanation

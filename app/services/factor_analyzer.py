@@ -1,0 +1,385 @@
+"""
+Factor Analyzer Service
+Analyzes and breaks down driver skill factors into underlying variables.
+Provides racing-focused, plain-English explanations for non-technical users.
+"""
+
+import pandas as pd
+import numpy as np
+import sqlite3
+from pathlib import Path
+from typing import Dict, List, Optional, Tuple
+from pydantic import BaseModel, Field
+
+
+# Mapping of factor numbers to skill names based on factor loadings analysis
+FACTOR_MAPPING = {
+    "factor_1": "consistency",
+    "factor_2": "racecraft",
+    "factor_3": "speed",
+    "factor_4": "tire_management",
+}
+
+# Factor variable mappings with weights
+FACTOR_VARIABLES = {
+    "speed": {
+        "factor_column": "factor_3_score",
+        "variables": [
+            ("qualifying_pace", "Qualifying Speed", 0.35),
+            ("best_race_lap", "Fastest Lap Ability", 0.30),
+            ("avg_top10_pace", "Sustained Pace", 0.35)
+        ],
+        "description": "Pure speed - how fast the driver can go in qualifying and race conditions",
+        "racing_explanation": "Speed shows how fast you can push the car. High qualifying speed means you can extract maximum performance in a single lap. Fastest lap ability shows you can hit that peak speed during the race. Sustained pace means you can keep that speed consistent over multiple laps."
+    },
+
+    "consistency": {
+        "factor_column": "factor_1_score",
+        "variables": [
+            ("stint_consistency", "Lap-to-Lap Consistency", 0.35),
+            ("sector_consistency", "Sector Consistency", 0.25),
+            ("braking_consistency", "Braking Consistency", 0.20),
+            ("position_changes", "Position Stability", 0.20)
+        ],
+        "description": "Ability to hit the same lap times repeatedly without mistakes",
+        "racing_explanation": "Consistency is about hitting your marks every lap. Lap-to-lap consistency means similar lap times throughout a stint. Sector consistency shows you're nailing each section of track the same way. Braking consistency means hitting braking points precisely. Position stability shows you're not making mistakes that cost positions."
+    },
+
+    "racecraft": {
+        "factor_column": "factor_2_score",
+        "variables": [
+            ("positions_gained", "Net Positions Gained", 0.30),
+            ("position_changes", "Wheel-to-Wheel Racing", 0.25),
+            ("performance_normalized", "Race Pace vs Competition", 0.25),
+            ("qualifying_pace", "Quali vs Race Gap", 0.20)
+        ],
+        "description": "Racing IQ - overtaking, defending, and race management skills",
+        "racing_explanation": "Racecraft is your ability to race others. Net positions gained shows if you're moving forward through the field. Wheel-to-wheel racing measures how often you're making passes or defending. Race pace vs competition shows if you're faster than those around you. Quali vs race gap indicates if you race better than you qualify (or vice versa)."
+    },
+
+    "tire_management": {
+        "factor_column": "factor_4_score",
+        "variables": [
+            ("pace_degradation", "Tire Wear Management", 0.30),
+            ("late_stint_perf", "Late Stint Speed", 0.30),
+            ("early_vs_late_pace", "Stint Consistency", 0.40)
+        ],
+        "description": "Managing tire wear to maintain pace throughout a stint",
+        "racing_explanation": "Tire management is keeping your tires alive while staying fast. Tire wear management shows how well you preserve the rubber. Late stint speed means you're still quick even on old tires. Stint consistency shows your pace doesn't fall off a cliff as the stint goes on."
+    }
+}
+
+
+class VariableBreakdown(BaseModel):
+    """Individual variable contribution to a factor."""
+    name: str
+    display_name: str
+    raw_value: float
+    normalized_value: float = Field(..., ge=0, le=100)
+    weight: float
+    contribution: float
+    percentile: float
+
+
+class FactorBreakdown(BaseModel):
+    """Complete breakdown of a skill factor."""
+    factor_name: str
+    overall_score: float
+    percentile: float
+    variables: List[VariableBreakdown]
+    explanation: str
+    strongest_area: str
+    weakest_area: str
+
+
+class DriverComparison(BaseModel):
+    """Comparison data for a single driver."""
+    driver_number: int
+    driver_name: str
+    factor_score: float
+    percentile: float
+    variables: Dict[str, float]  # variable_name -> normalized_value
+
+
+class FactorComparison(BaseModel):
+    """Complete factor comparison analysis."""
+    factor_name: str
+    user_driver: DriverComparison
+    top_drivers: List[DriverComparison]
+    insights: List[str]
+
+
+class FactorAnalyzer:
+    """Service for analyzing and breaking down skill factors."""
+
+    def __init__(self, data_path: Path, db_path: Path):
+        self.data_path = data_path
+        self.db_path = db_path
+
+        # Load features data
+        features_path = data_path / "analysis_outputs" / "all_races_tier1_features.csv"
+        self.features_df = pd.read_csv(features_path)
+
+        # Load factor scores
+        factor_scores_path = data_path / "analysis_outputs" / "tier1_factor_scores.csv"
+        self.factor_scores_df = pd.read_csv(factor_scores_path)
+
+    def calculate_all_factors(self):
+        """Pre-calculate all factor breakdowns for all drivers."""
+        drivers = self.features_df['driver_number'].unique()
+        factors = list(FACTOR_VARIABLES.keys())
+
+        conn = sqlite3.connect(self.db_path)
+        cursor = conn.cursor()
+
+        # Clear existing data
+        cursor.execute("DELETE FROM factor_breakdowns")
+        cursor.execute("DELETE FROM factor_comparisons")
+
+        for driver_number in drivers:
+            print(f"Processing driver #{driver_number}...")
+
+            for factor_name in factors:
+                try:
+                    # Calculate breakdown
+                    breakdown = self._calculate_factor_breakdown(driver_number, factor_name)
+
+                    # Store breakdown variables
+                    for var in breakdown.variables:
+                        cursor.execute("""
+                            INSERT OR REPLACE INTO factor_breakdowns
+                            (driver_number, factor_name, variable_name, variable_display_name,
+                             raw_value, normalized_value, weight, contribution, percentile)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        """, (
+                            int(driver_number), factor_name, var.name, var.display_name,
+                            float(var.raw_value), float(var.normalized_value), float(var.weight),
+                            float(var.contribution), float(var.percentile)
+                        ))
+
+                    # Calculate and store comparison
+                    comparison = self._calculate_factor_comparison(driver_number, factor_name)
+
+                    cursor.execute("""
+                        INSERT OR REPLACE INTO factor_comparisons
+                        (driver_number, factor_name, top_driver_1, top_driver_2, top_driver_3, insights)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    """, (
+                        int(driver_number), factor_name,
+                        int(comparison.top_drivers[0].driver_number) if len(comparison.top_drivers) > 0 else None,
+                        int(comparison.top_drivers[1].driver_number) if len(comparison.top_drivers) > 1 else None,
+                        int(comparison.top_drivers[2].driver_number) if len(comparison.top_drivers) > 2 else None,
+                        "\n".join(comparison.insights)
+                    ))
+
+                except Exception as e:
+                    print(f"Error processing driver {driver_number}, factor {factor_name}: {e}")
+
+        conn.commit()
+        conn.close()
+        print("All factors calculated and stored!")
+
+    def _calculate_factor_breakdown(self, driver_number: int, factor_name: str) -> FactorBreakdown:
+        """Calculate detailed breakdown for a driver's factor."""
+        factor_config = FACTOR_VARIABLES[factor_name]
+
+        # Get driver's features (averaged across all races)
+        driver_features = self.features_df[
+            self.features_df['driver_number'] == driver_number
+        ].drop(columns=['race', 'driver_number']).mean()
+
+        # Get overall factor score using the correct column name
+        factor_column = factor_config["factor_column"]
+        factor_row = self.factor_scores_df[
+            self.factor_scores_df['driver_number'] == driver_number
+        ]
+
+        if len(factor_row) > 0:
+            # Get the raw z-score
+            raw_score = factor_row[factor_column].values[0]
+
+            # Calculate percentile from all drivers' scores for this factor
+            all_scores = self.factor_scores_df.groupby('driver_number')[factor_column].mean()
+            overall_percentile = (all_scores < raw_score).sum() / len(all_scores) * 100
+
+            # Normalize score to 0-100 scale (using percentile)
+            overall_score = overall_percentile
+        else:
+            overall_score = 0
+            overall_percentile = 0
+
+        # Calculate breakdown for each variable
+        variables = []
+        for var_name, display_name, weight in factor_config["variables"]:
+            raw_value = driver_features.get(var_name, 0)
+
+            # Calculate percentile across all drivers
+            all_values = self.features_df.groupby('driver_number')[var_name].mean()
+            percentile = (all_values < raw_value).sum() / len(all_values) * 100
+
+            # Normalize to 0-100 (using percentile as normalized value)
+            normalized_value = percentile
+
+            # Calculate contribution
+            contribution = weight * normalized_value
+
+            variables.append(VariableBreakdown(
+                name=var_name,
+                display_name=display_name,
+                raw_value=raw_value,
+                normalized_value=normalized_value,
+                weight=weight,
+                contribution=contribution,
+                percentile=percentile
+            ))
+
+        # Find strongest and weakest
+        sorted_vars = sorted(variables, key=lambda x: x.percentile, reverse=True)
+        strongest = sorted_vars[0]
+        weakest = sorted_vars[-1]
+
+        # Generate racing-focused explanation
+        explanation = self._generate_racing_explanation(
+            factor_name, strongest, weakest, overall_percentile
+        )
+
+        return FactorBreakdown(
+            factor_name=factor_name,
+            overall_score=overall_score,
+            percentile=overall_percentile,
+            variables=variables,
+            explanation=explanation,
+            strongest_area=strongest.display_name,
+            weakest_area=weakest.display_name
+        )
+
+    def _calculate_factor_comparison(self, driver_number: int, factor_name: str) -> FactorComparison:
+        """Calculate comparison vs top 3 drivers."""
+        # Get user driver breakdown
+        user_breakdown = self._calculate_factor_breakdown(driver_number, factor_name)
+
+        # Get the correct factor column
+        factor_column = FACTOR_VARIABLES[factor_name]["factor_column"]
+
+        # Get top 3 drivers for this factor (excluding user)
+        # Group by driver_number and get mean scores, then sort
+        driver_avg_scores = self.factor_scores_df.groupby('driver_number')[factor_column].mean()
+        driver_avg_scores = driver_avg_scores[driver_avg_scores.index != driver_number]
+        top_3_drivers = driver_avg_scores.nlargest(3)
+
+        # Convert to DataFrame format for iteration
+        factor_scores = pd.DataFrame({
+            'driver_number': top_3_drivers.index,
+            factor_column: top_3_drivers.values
+        })
+
+        top_drivers = []
+        for _, row in factor_scores.iterrows():
+            top_driver_number = row['driver_number']
+            top_breakdown = self._calculate_factor_breakdown(top_driver_number, factor_name)
+
+            # Build variables dict
+            variables_dict = {
+                var.name: var.normalized_value
+                for var in top_breakdown.variables
+            }
+
+            top_drivers.append(DriverComparison(
+                driver_number=top_driver_number,
+                driver_name=f"Driver #{top_driver_number}",
+                factor_score=top_breakdown.overall_score,
+                percentile=top_breakdown.percentile,
+                variables=variables_dict
+            ))
+
+        # Build user driver comparison object
+        user_driver = DriverComparison(
+            driver_number=driver_number,
+            driver_name=f"Driver #{driver_number}",
+            factor_score=user_breakdown.overall_score,
+            percentile=user_breakdown.percentile,
+            variables={var.name: var.normalized_value for var in user_breakdown.variables}
+        )
+
+        # Generate insights
+        insights = self._generate_comparison_insights(user_breakdown, top_drivers, factor_name)
+
+        return FactorComparison(
+            factor_name=factor_name,
+            user_driver=user_driver,
+            top_drivers=top_drivers,
+            insights=insights
+        )
+
+    def _generate_racing_explanation(
+        self, factor_name: str, strongest: VariableBreakdown,
+        weakest: VariableBreakdown, overall_percentile: float
+    ) -> str:
+        """Generate plain-English, racing-focused explanation."""
+
+        # Overall performance qualifier
+        if overall_percentile >= 90:
+            qualifier = "elite"
+        elif overall_percentile >= 75:
+            qualifier = "strong"
+        elif overall_percentile >= 50:
+            qualifier = "solid"
+        elif overall_percentile >= 25:
+            qualifier = "developing"
+        else:
+            qualifier = "needs work"
+
+        explanation = (
+            f"Your {factor_name} is {qualifier} (top {100-overall_percentile:.0f}% of the field). "
+            f"Your best area is {strongest.display_name} where you rank in the top {100-strongest.percentile:.0f}%. "
+            f"Focus on improving {weakest.display_name} - that's where you're giving up the most."
+        )
+
+        return explanation
+
+    def _generate_comparison_insights(
+        self, user: FactorBreakdown, top_drivers: List[DriverComparison], factor_name: str
+    ) -> List[str]:
+        """Generate racing-focused insights from comparison."""
+        insights = []
+
+        # Compare each variable
+        for var in user.variables:
+            user_value = var.normalized_value
+            top_avg = np.mean([
+                driver.variables.get(var.name, 0)
+                for driver in top_drivers
+            ])
+
+            gap = user_value - top_avg
+
+            if gap > 5:
+                insights.append(
+                    f"You're actually better than the top 3 in {var.display_name} - keep that strength!"
+                )
+            elif gap < -10:
+                insights.append(
+                    f"The top 3 are significantly faster in {var.display_name}. This is your biggest opportunity to improve."
+                )
+
+        # If no major gaps found, add generic insight
+        if not insights:
+            insights.append(
+                f"You're competitive with the top drivers in {factor_name}. Small improvements in each area will move you up."
+            )
+
+        return insights[:3]  # Limit to top 3 insights
+
+
+def main():
+    """Run batch calculation for all drivers and factors."""
+    base_path = Path(__file__).parent.parent.parent.parent
+    data_path = base_path / "data"
+    db_path = base_path / "circuit-fit.db"
+
+    analyzer = FactorAnalyzer(data_path, db_path)
+    analyzer.calculate_all_factors()
+
+
+if __name__ == "__main__":
+    main()
