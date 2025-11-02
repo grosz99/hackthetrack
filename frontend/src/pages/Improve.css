@@ -60,41 +60,50 @@
   letter-spacing: 0.5px;
 }
 
-/* Navigation Tabs */
+/* Navigation Tabs - Matches Skills page */
 .nav-tabs-container {
-  background: #2d2d2d;
-  border-bottom: 3px solid #e74c3c;
-  padding: 0 32px;
+  width: 100%;
+  margin-bottom: 48px;
+  margin-left: -60px;
+  margin-right: -60px;
+  padding: 0 60px;
 }
 
 .nav-tabs {
-  max-width: 1400px;
-  margin: 0 auto;
   display: flex;
-  gap: 4px;
+  gap: 16px;
+  border-bottom: none;
+  width: 100%;
 }
 
 .tab {
-  padding: 16px 32px;
-  font-size: 16px;
+  background: transparent;
+  border: 2px solid #e74c3c;
+  color: #fff;
+  padding: 20px 40px;
+  font-size: 24px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  border-radius: 12px;
+  letter-spacing: -0.5px;
+  flex: 1;
+  text-align: center;
   text-decoration: none;
-  border-bottom: 4px solid transparent;
-  transition: all 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .tab:hover {
-  color: rgba(255, 255, 255, 0.9);
-  background: rgba(231, 76, 60, 0.1);
+  background: #e74c3c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
 }
 
 .tab.active {
-  color: white;
-  border-bottom-color: #e74c3c;
-  background: rgba(231, 76, 60, 0.15);
+  background: #e74c3c;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.6);
 }
 
 /* Main Content */
