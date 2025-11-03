@@ -351,81 +351,57 @@ class DataLoader:
 
     def get_season_stats(self, driver_number: int) -> Optional[SeasonStats]:
         """
-        Get season statistics for a driver calculated from race_results.
+        Get season statistics for a driver calculated from race_results CSV files.
         """
-        conn = self._get_db_connection()
-        cursor = conn.cursor()
+        # Get race results from CSV files via race_log_processor
+        race_results = self.race_log_processor.get_driver_results(driver_number)
 
-        # Get driver_id from driver_number
-        cursor.execute(
-            "SELECT driver_id FROM drivers WHERE driver_number = ?", (driver_number,)
-        )
-        driver_row = cursor.fetchone()
-
-        if not driver_row:
-            conn.close()
+        if not race_results:
             return None
 
-        driver_id = driver_row["driver_id"]
+        # Calculate statistics from race results
+        total_races = len(race_results)
+        wins = sum(1 for r in race_results if r.finish_position == 1)
+        podiums = sum(1 for r in race_results if r.finish_position and r.finish_position <= 3)
+        top5 = sum(1 for r in race_results if r.finish_position and r.finish_position <= 5)
+        top10 = sum(1 for r in race_results if r.finish_position and r.finish_position <= 10)
+        pole_positions = sum(1 for r in race_results if r.start_position == 1)
+        dnfs = 0  # TODO: Add DNF tracking
 
-        # Calculate stats from race_results
-        cursor.execute(
-            """
-            SELECT
-                COUNT(*) as total_races,
-                SUM(CASE WHEN finish_position = 1 THEN 1 ELSE 0 END) as wins,
-                SUM(CASE WHEN finish_position <= 3 THEN 1 ELSE 0 END) as podiums,
-                SUM(CASE WHEN finish_position <= 5 THEN 1 ELSE 0 END) as top5,
-                SUM(CASE WHEN finish_position <= 10 THEN 1 ELSE 0 END) as top10,
-                SUM(CASE WHEN start_position = 1 THEN 1 ELSE 0 END) as pole_positions,
-                SUM(CASE WHEN status = 'DNF' THEN 1 ELSE 0 END) as dnfs,
-                AVG(finish_position) as avg_finish,
-                AVG(start_position) as avg_qualifying,
-                AVG(positions_gained) as avg_positions_gained
-            FROM race_results
-            WHERE driver_id = ?
-            """,
-            (driver_id,),
-        )
+        # Calculate averages
+        finish_positions = [r.finish_position for r in race_results if r.finish_position]
+        start_positions = [r.start_position for r in race_results if r.start_position]
+        positions_gained_list = [
+            r.start_position - r.finish_position
+            for r in race_results
+            if r.start_position and r.finish_position
+        ]
 
-        result = cursor.fetchone()
-        conn.close()
+        avg_finish = sum(finish_positions) / len(finish_positions) if finish_positions else None
+        avg_qualifying = sum(start_positions) / len(start_positions) if start_positions else None
+        avg_positions_gained = sum(positions_gained_list) / len(positions_gained_list) if positions_gained_list else None
 
-        if not result or result["total_races"] == 0:
-            return None
-
-        # Calculate points (simplified: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1)
+        # Calculate points (F1 points system: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1)
         points_map = {1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1}
-
-        conn = self._get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT finish_position FROM race_results WHERE driver_id = ?", (driver_id,)
-        )
         points = sum(
-            points_map.get(row["finish_position"], 0)
-            for row in cursor.fetchall()
-            if row["finish_position"]
+            points_map.get(r.finish_position, 0)
+            for r in race_results
+            if r.finish_position
         )
-        conn.close()
 
         return SeasonStats(
             driver_number=driver_number,
-            wins=result["wins"] or 0,
-            podiums=result["podiums"] or 0,
-            top5=result["top5"] or 0,
-            top10=result["top10"] or 0,
-            pole_positions=result["pole_positions"] or 0,
-            total_races=result["total_races"] or 0,
-            dnfs=result["dnfs"] or 0,
+            wins=wins,
+            podiums=podiums,
+            top5=top5,
+            top10=top10,
+            pole_positions=pole_positions,
+            total_races=total_races,
+            dnfs=dnfs,
             fastest_laps=0,  # TODO: Add fastest_lap_time tracking
-            avg_finish=round(result["avg_finish"], 2) if result["avg_finish"] else None,
-            avg_qualifying=round(result["avg_qualifying"], 2)
-            if result["avg_qualifying"]
-            else None,
-            avg_positions_gained=round(result["avg_positions_gained"], 2)
-            if result["avg_positions_gained"]
-            else None,
+            avg_finish=round(avg_finish, 2) if avg_finish else None,
+            avg_qualifying=round(avg_qualifying, 2) if avg_qualifying else None,
+            avg_positions_gained=round(avg_positions_gained, 2) if avg_positions_gained else None,
             points=points,
             championship_position=None,  # TODO: Calculate from standings
         )

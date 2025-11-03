@@ -10,23 +10,17 @@ import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
          ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
          Legend, ResponsiveContainer } from 'recharts';
 import api from '../../services/api';
+import { useDriver } from '../../context/DriverContext';
 import './Overview.css';
 
 export default function Overview() {
-  const [driverNumber, setDriverNumber] = useState(13);
+  const { selectedDriverNumber, setSelectedDriverNumber, drivers } = useDriver();
   const [seasonStats, setSeasonStats] = useState(null);
   const [raceResults, setRaceResults] = useState([]);
   const [driverData, setDriverData] = useState(null);
   const [topDrivers, setTopDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [drivers] = useState([
-    { number: 13, name: 'Driver #13' },
-    { number: 7, name: 'Driver #7' },
-    { number: 5, name: 'Driver #5' },
-    { number: 88, name: 'Driver #88' },
-    { number: 15, name: 'Driver #15' },
-  ]);
 
   useEffect(() => {
     const fetchDriverData = async () => {
@@ -36,9 +30,9 @@ export default function Overview() {
 
         // Fetch season stats, race results, driver factors, and all drivers in parallel
         const [statsResponse, resultsResponse, driverResponse, allDriversResponse] = await Promise.all([
-          api.get(`/api/drivers/${driverNumber}/stats`),
-          api.get(`/api/drivers/${driverNumber}/results`),
-          api.get(`/api/drivers/${driverNumber}`),
+          api.get(`/api/drivers/${selectedDriverNumber}/stats`),
+          api.get(`/api/drivers/${selectedDriverNumber}/results`),
+          api.get(`/api/drivers/${selectedDriverNumber}`),
           api.get('/api/drivers')
         ]);
 
@@ -48,7 +42,7 @@ export default function Overview() {
 
         // Get top 3 drivers by overall score (excluding current driver)
         const sortedDrivers = allDriversResponse.data
-          .filter(d => d.driver_number !== driverNumber)
+          .filter(d => d.driver_number !== selectedDriverNumber)
           .sort((a, b) => b.overall_score - a.overall_score)
           .slice(0, 3);
 
@@ -62,7 +56,7 @@ export default function Overview() {
     };
 
     fetchDriverData();
-  }, [driverNumber]);
+  }, [selectedDriverNumber]);
 
   if (loading) {
     return (
@@ -84,38 +78,39 @@ export default function Overview() {
     );
   }
 
-  // Prepare 4-factor radar chart data with top drivers comparison
+  // Calculate average of top 3 drivers for each factor
+  const getTopAverage = (factor) => {
+    if (topDrivers.length === 0) return 0;
+    const sum = topDrivers.reduce((acc, driver) => {
+      return acc + (driver[factor]?.percentile || 0);
+    }, 0);
+    return sum / topDrivers.length;
+  };
+
+  // Prepare 4-factor radar chart data with top 3 average
   const radarData = driverData ? [
     {
       factor: 'Consistency',
       user: driverData.consistency?.percentile || 0,
-      top1: topDrivers[0]?.consistency?.percentile || 0,
-      top2: topDrivers[1]?.consistency?.percentile || 0,
-      top3: topDrivers[2]?.consistency?.percentile || 0,
+      topAvg: getTopAverage('consistency'),
       fullMark: 100
     },
     {
       factor: 'Racecraft',
       user: driverData.racecraft?.percentile || 0,
-      top1: topDrivers[0]?.racecraft?.percentile || 0,
-      top2: topDrivers[1]?.racecraft?.percentile || 0,
-      top3: topDrivers[2]?.racecraft?.percentile || 0,
+      topAvg: getTopAverage('racecraft'),
       fullMark: 100
     },
     {
       factor: 'Speed',
       user: driverData.speed?.percentile || 0,
-      top1: topDrivers[0]?.speed?.percentile || 0,
-      top2: topDrivers[1]?.speed?.percentile || 0,
-      top3: topDrivers[2]?.speed?.percentile || 0,
+      topAvg: getTopAverage('speed'),
       fullMark: 100
     },
     {
       factor: 'Tire Mgmt',
       user: driverData.tire_management?.percentile || 0,
-      top1: topDrivers[0]?.tire_management?.percentile || 0,
-      top2: topDrivers[1]?.tire_management?.percentile || 0,
-      top3: topDrivers[2]?.tire_management?.percentile || 0,
+      topAvg: getTopAverage('tire_management'),
       fullMark: 100
     }
   ] : [];
@@ -158,8 +153,8 @@ export default function Overview() {
               Select Driver
             </span>
             <select
-              value={driverNumber}
-              onChange={(e) => setDriverNumber(Number(e.target.value))}
+              value={selectedDriverNumber}
+              onChange={(e) => setSelectedDriverNumber(Number(e.target.value))}
               style={{
                 padding: '12px 20px',
                 fontSize: '16px',
@@ -385,34 +380,18 @@ export default function Overview() {
                 domain={[0, 100]}
                 tick={{ fill: '#666', fontSize: 12, fontWeight: 600 }}
               />
-              {/* Top 3 drivers in black/gray */}
+              {/* Top 3 Average in gray */}
               <Radar
-                name={`#${topDrivers[0]?.driver_number || 'N/A'}`}
-                dataKey="top1"
+                name="Top 3 Average"
+                dataKey="topAvg"
                 stroke="#555"
                 fill="#555"
                 fillOpacity={0.15}
                 strokeWidth={2}
               />
-              <Radar
-                name={`#${topDrivers[1]?.driver_number || 'N/A'}`}
-                dataKey="top2"
-                stroke="#666"
-                fill="#666"
-                fillOpacity={0.15}
-                strokeWidth={2}
-              />
-              <Radar
-                name={`#${topDrivers[2]?.driver_number || 'N/A'}`}
-                dataKey="top3"
-                stroke="#777"
-                fill="#777"
-                fillOpacity={0.15}
-                strokeWidth={2}
-              />
               {/* User driver in red - on top */}
               <Radar
-                name={`You (#${driverNumber})`}
+                name={`You (#${selectedDriverNumber})`}
                 dataKey="user"
                 stroke="#e74c3c"
                 fill="#e74c3c"
@@ -438,16 +417,16 @@ export default function Overview() {
                 background: '#e74c3c',
                 borderRadius: '2px'
               }}></div>
-              <span>You (#{driverNumber})</span>
+              <span>You (#{selectedDriverNumber})</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <div style={{
                 width: '24px',
                 height: '3px',
-                background: '#666',
+                background: '#555',
                 borderRadius: '2px'
               }}></div>
-              <span>Top 3 Drivers</span>
+              <span>Top 3 Average</span>
             </div>
           </div>
         </div>

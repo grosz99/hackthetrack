@@ -114,14 +114,16 @@
   grid-template-columns: 1fr 1fr;
   gap: 32px;
   align-items: stretch;
+  margin-bottom: 48px;
 }
 
 /* Factor Cards Grid - 2x2 on right */
 .factor-cards-grid-new {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
   gap: 20px;
-  grid-auto-rows: 1fr;
+  height: 100%;
 }
 
 .factor-card-large {
@@ -215,7 +217,6 @@
   box-shadow: 0 6px 24px rgba(231, 76, 60, 0.25);
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
 .chart-title {

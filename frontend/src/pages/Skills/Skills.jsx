@@ -9,10 +9,11 @@ import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import api from '../../services/api';
+import { useDriver } from '../../context/DriverContext';
 import './Skills.css';
 
 export default function Skills() {
-  const [driverNumber, setDriverNumber] = useState(13);
+  const { selectedDriverNumber, setSelectedDriverNumber, drivers } = useDriver();
   const [driverData, setDriverData] = useState(null);
   const [topDrivers, setTopDrivers] = useState([]);
   const [selectedFactor, setSelectedFactor] = useState(null);
@@ -21,13 +22,6 @@ export default function Skills() {
   const [loading, setLoading] = useState(true);
   const [loadingBreakdown, setLoadingBreakdown] = useState(false);
   const [error, setError] = useState(null);
-  const [drivers] = useState([
-    { number: 13, name: 'Driver #13' },
-    { number: 7, name: 'Driver #7' },
-    { number: 5, name: 'Driver #5' },
-    { number: 88, name: 'Driver #88' },
-    { number: 15, name: 'Driver #15' },
-  ]);
 
   useEffect(() => {
     const fetchDriverData = async () => {
@@ -37,7 +31,7 @@ export default function Skills() {
 
         // Fetch current driver data and all drivers to find top 3
         const [driverResponse, allDriversResponse] = await Promise.all([
-          api.get(`/api/drivers/${driverNumber}`),
+          api.get(`/api/drivers/${selectedDriverNumber}`),
           api.get('/api/drivers')
         ]);
 
@@ -45,7 +39,7 @@ export default function Skills() {
 
         // Get top 3 drivers by overall score (excluding current driver)
         const sortedDrivers = allDriversResponse.data
-          .filter(d => d.driver_number !== driverNumber)
+          .filter(d => d.driver_number !== selectedDriverNumber)
           .sort((a, b) => b.overall_score - a.overall_score)
           .slice(0, 3);
 
@@ -59,7 +53,7 @@ export default function Skills() {
     };
 
     fetchDriverData();
-  }, [driverNumber]);
+  }, [selectedDriverNumber]);
 
   if (loading) {
     return (
@@ -81,38 +75,39 @@ export default function Skills() {
     );
   }
 
-  // Prepare radar chart data with top drivers comparison
+  // Calculate average of top 3 drivers for each factor
+  const getTopAverage = (factor) => {
+    if (topDrivers.length === 0) return 0;
+    const sum = topDrivers.reduce((acc, driver) => {
+      return acc + (driver[factor]?.percentile || 0);
+    }, 0);
+    return sum / topDrivers.length;
+  };
+
+  // Prepare radar chart data with top 3 average comparison
   const radarData = [
     {
       factor: 'Consistency',
       user: driverData.consistency?.percentile || 0,
-      top1: topDrivers[0]?.consistency?.percentile || 0,
-      top2: topDrivers[1]?.consistency?.percentile || 0,
-      top3: topDrivers[2]?.consistency?.percentile || 0,
+      topAvg: getTopAverage('consistency'),
       fullMark: 100
     },
     {
       factor: 'Racecraft',
       user: driverData.racecraft?.percentile || 0,
-      top1: topDrivers[0]?.racecraft?.percentile || 0,
-      top2: topDrivers[1]?.racecraft?.percentile || 0,
-      top3: topDrivers[2]?.racecraft?.percentile || 0,
+      topAvg: getTopAverage('racecraft'),
       fullMark: 100
     },
     {
       factor: 'Raw Speed',
       user: driverData.speed?.percentile || 0,
-      top1: topDrivers[0]?.speed?.percentile || 0,
-      top2: topDrivers[1]?.speed?.percentile || 0,
-      top3: topDrivers[2]?.speed?.percentile || 0,
+      topAvg: getTopAverage('speed'),
       fullMark: 100
     },
     {
       factor: 'Tire Mgmt',
       user: driverData.tire_management?.percentile || 0,
-      top1: topDrivers[0]?.tire_management?.percentile || 0,
-      top2: topDrivers[1]?.tire_management?.percentile || 0,
-      top3: topDrivers[2]?.tire_management?.percentile || 0,
+      topAvg: getTopAverage('tire_management'),
       fullMark: 100
     },
   ];
@@ -134,8 +129,8 @@ export default function Skills() {
 
       // Fetch both breakdown and comparison data
       const [breakdownResponse, comparisonResponse] = await Promise.all([
-        api.get(`/api/drivers/${driverNumber}/factors/${apiFactorName}`),
-        api.get(`/api/drivers/${driverNumber}/factors/${apiFactorName}/comparison`)
+        api.get(`/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}`),
+        api.get(`/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}/comparison`)
       ]);
 
       setFactorBreakdown(breakdownResponse.data);
@@ -153,10 +148,10 @@ export default function Skills() {
       <div className="skills-header">
         <div className="header-content">
           <div className="driver-number-display">
-            <span className="number-large">{driverNumber}</span>
+            <span className="number-large">{selectedDriverNumber}</span>
           </div>
           <div className="driver-name-section">
-            <h1 className="driver-name">Driver #{driverNumber}</h1>
+            <h1 className="driver-name">Driver #{selectedDriverNumber}</h1>
             <div className="season-subtitle">Toyota Gazoo Series</div>
           </div>
 
@@ -172,8 +167,8 @@ export default function Skills() {
               Select Driver
             </span>
             <select
-              value={driverNumber}
-              onChange={(e) => setDriverNumber(Number(e.target.value))}
+              value={selectedDriverNumber}
+              onChange={(e) => setSelectedDriverNumber(Number(e.target.value))}
               style={{
                 padding: '12px 20px',
                 fontSize: '16px',
@@ -248,7 +243,7 @@ export default function Skills() {
         {/* Radar Chart on left side */}
         <div className="radar-chart-container-new">
           <h3 className="chart-title">Performance Comparison</h3>
-          <p className="chart-subtitle">You vs Top 3 Drivers</p>
+          <p className="chart-subtitle">You vs Top 3 Average</p>
           <ResponsiveContainer width="100%" height={500}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="#ddd" strokeWidth={1} />
@@ -261,34 +256,18 @@ export default function Skills() {
                 domain={[0, 100]}
                 tick={{ fill: '#666', fontSize: 12, fontWeight: 600 }}
               />
-              {/* Top 3 drivers in black/gray */}
+              {/* Top 3 average in gray */}
               <Radar
-                name={`#${topDrivers[0]?.driver_number || 'N/A'}`}
-                dataKey="top1"
+                name="Top 3 Average"
+                dataKey="topAvg"
                 stroke="#555"
                 fill="#555"
-                fillOpacity={0.15}
-                strokeWidth={2}
-              />
-              <Radar
-                name={`#${topDrivers[1]?.driver_number || 'N/A'}`}
-                dataKey="top2"
-                stroke="#666"
-                fill="#666"
-                fillOpacity={0.15}
-                strokeWidth={2}
-              />
-              <Radar
-                name={`#${topDrivers[2]?.driver_number || 'N/A'}`}
-                dataKey="top3"
-                stroke="#777"
-                fill="#777"
-                fillOpacity={0.15}
-                strokeWidth={2}
+                fillOpacity={0.2}
+                strokeWidth={3}
               />
               {/* Current driver in red */}
               <Radar
-                name={`You (#${driverNumber})`}
+                name={`You (#${selectedDriverNumber})`}
                 dataKey="user"
                 stroke="#e74c3c"
                 fill="#e74c3c"
@@ -300,19 +279,11 @@ export default function Skills() {
           <div className="radar-legend">
             <div className="legend-item">
               <div className="legend-color" style={{ background: '#e74c3c' }}></div>
-              <span>You (#{driverNumber})</span>
+              <span>You (#{selectedDriverNumber})</span>
             </div>
             <div className="legend-item">
               <div className="legend-color" style={{ background: '#555' }}></div>
-              <span>Top Driver #{topDrivers[0]?.driver_number || 'N/A'}</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color" style={{ background: '#666' }}></div>
-              <span>2nd Best #{topDrivers[1]?.driver_number || 'N/A'}</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color" style={{ background: '#777' }}></div>
-              <span>3rd Best #{topDrivers[2]?.driver_number || 'N/A'}</span>
+              <span>Top 3 Average</span>
             </div>
           </div>
         </div>
