@@ -1,0 +1,73 @@
+/* Dashboard Tabs - Unified navigation styling */
+
+.dashboard-nav-tabs-container {
+  width: 100%;
+  margin-bottom: 48px;
+  margin-left: -60px;
+  margin-right: -60px;
+  padding: 0 60px;
+}
+
+.dashboard-nav-tabs {
+  display: flex;
+  gap: 16px;
+  border-bottom: none;
+  width: 100%;
+}
+
+.dashboard-tab {
+  background: transparent;
+  border: 2px solid #e74c3c;
+  color: #fff;
+  padding: 20px 40px;
+  font-size: 24px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  border-radius: 12px;
+  letter-spacing: -0.5px;
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dashboard-tab:hover {
+  color: #fff;
+  background: rgba(231, 76, 60, 0.1);
+  border-color: #e74c3c;
+}
+
+.dashboard-tab.active {
+  background: #fff;
+  color: #000;
+  border: 2px solid #fff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dashboard-nav-tabs-container {
+    margin-left: -24px;
+    margin-right: -24px;
+    padding: 0 24px;
+  }
+
+  .dashboard-nav-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+  }
+
+  .dashboard-nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .dashboard-tab {
+    padding: 14px 24px;
+    font-size: 16px;
+    min-width: 120px;
+  }
+}

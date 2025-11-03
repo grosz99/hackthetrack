@@ -6,14 +6,15 @@ import React from 'react';
  */
 
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import api from '../../services/api';
 import { useDriver } from '../../context/DriverContext';
+import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
+import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import './Skills.css';
 
 export default function Skills() {
-  const { selectedDriverNumber, setSelectedDriverNumber, drivers } = useDriver();
+  const { selectedDriverNumber, drivers } = useDriver();
   const [driverData, setDriverData] = useState(null);
   const [topDrivers, setTopDrivers] = useState([]);
   const [selectedFactor, setSelectedFactor] = useState(null);
@@ -144,8 +145,14 @@ export default function Skills() {
 
   return (
     <div className="skills-page">
-      {/* Header Section */}
-      <div className="skills-header">
+      {/* Unified Header with Scout Context */}
+      <DashboardHeader driverData={driverData} pageName="Skills" />
+
+      {/* Unified Navigation Tabs */}
+      <DashboardTabs />
+
+      {/* OLD HEADER - Hidden */}
+      <div className="skills-header" style={{ display: 'none' }}>
         <div className="header-content">
           <div className="driver-number-display">
             <span className="number-large">{selectedDriverNumber}</span>
@@ -208,8 +215,8 @@ export default function Skills() {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="nav-tabs-container">
+      {/* OLD NAV TABS - Hidden */}
+      <div className="nav-tabs-container" style={{ display: 'none' }}>
         <div className="nav-tabs">
           <NavLink
             to="/overview"

@@ -11,8 +11,10 @@ import React from 'react';
  */
 
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 import api from '../../services/api';
+import { useDriver } from '../../context/DriverContext';
+import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
+import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import './Improve.css';
 
 const POINTS_BUDGET = 1.0;
@@ -34,14 +36,7 @@ const FACTOR_DESCRIPTIONS = {
 };
 
 export default function Improve() {
-  const [driverNumber, setDriverNumber] = useState(13);
-  const [drivers] = useState([
-    { number: 13, name: 'Driver #13' },
-    { number: 7, name: 'Driver #7' },
-    { number: 5, name: 'Driver #5' },
-    { number: 88, name: 'Driver #88' },
-    { number: 15, name: 'Driver #15' },
-  ]);
+  const { selectedDriverNumber } = useDriver();
 
   const [driverData, setDriverData] = useState(null);
   const [currentSkills, setCurrentSkills] = useState(null);
@@ -58,7 +53,7 @@ export default function Improve() {
         setLoading(true);
         setError(null);
 
-        const response = await api.get(`/api/drivers/${driverNumber}`);
+        const response = await api.get(`/api/drivers/${selectedDriverNumber}`);
         setDriverData(response.data);
 
         // Initialize current and adjusted skills
@@ -84,14 +79,14 @@ export default function Improve() {
     };
 
     fetchDriverData();
-  }, [driverNumber]);
+  }, [selectedDriverNumber]);
 
   // Fetch prediction from API
   const fetchPrediction = async (skills) => {
     try {
       setUpdating(true);
       const response = await api.post(
-        `/api/drivers/${driverNumber}/improve/predict`,
+        `/api/drivers/${selectedDriverNumber}/improve/predict`,
         skills
       );
       setPrediction(response.data);
@@ -173,8 +168,14 @@ export default function Improve() {
 
   return (
     <div className="improve-page">
-      {/* Header Section */}
-      <div className="improve-header">
+      {/* Unified Header with Scout Context */}
+      <DashboardHeader driverData={driverData} pageName="Improve" />
+
+      {/* Unified Navigation Tabs */}
+      <DashboardTabs />
+
+      {/* OLD HEADER - Hidden */}
+      <div className="improve-header" style={{ display: 'none' }}>
         <div className="header-content">
           <div className="driver-number-display">
             <span className="number-large">{driverNumber}</span>
@@ -237,22 +238,8 @@ export default function Improve() {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="nav-tabs-container">
-        <div className="nav-tabs">
-          <NavLink to="/overview" className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}>
-            Overview
-          </NavLink>
-          <NavLink to="/race-log" className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}>
-            Race Log
-          </NavLink>
-          <NavLink to="/skills" className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}>
-            Skills
-          </NavLink>
-          <NavLink to="/improve" className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}>
-            Improve
-          </NavLink>
-        </div>
+      {/* OLD NAV TABS - Hidden */}
+      <div className="nav-tabs-container" style={{ display: 'none' }}>
       </div>
 
       {/* Main Content */}

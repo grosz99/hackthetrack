@@ -5,32 +5,35 @@ import React from 'react';
  */
 
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
 import api from '../../services/api';
+import { useDriver } from '../../context/DriverContext';
+import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
+import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import './RaceLog.css';
 
 export default function RaceLog() {
-  const [driverNumber, setDriverNumber] = useState(13);
+  const { selectedDriverNumber } = useDriver();
   const [raceResults, setRaceResults] = useState([]);
+  const [driverData, setDriverData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'round', direction: 'asc' });
   const [expandedRound, setExpandedRound] = useState(null);
-  const [drivers] = useState([
-    { number: 13, name: 'Driver #13' },
-    { number: 7, name: 'Driver #7' },
-    { number: 22, name: 'Driver #22' },
-    { number: 88, name: 'Driver #88' },
-    { number: 45, name: 'Driver #45' },
-  ]);
 
   useEffect(() => {
     const fetchRaceResults = async () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await api.get(`/api/drivers/${driverNumber}/results`);
-        setRaceResults(response.data);
+
+        // Fetch both race results and driver data
+        const [resultsResponse, driverResponse] = await Promise.all([
+          api.get(`/api/drivers/${selectedDriverNumber}/results`),
+          api.get(`/api/drivers/${selectedDriverNumber}`)
+        ]);
+
+        setRaceResults(resultsResponse.data);
+        setDriverData(driverResponse.data);
       } catch (err) {
         console.error('Error fetching race results:', err);
         setError('Failed to load race results');
@@ -40,7 +43,7 @@ export default function RaceLog() {
     };
 
     fetchRaceResults();
-  }, [driverNumber]);
+  }, [selectedDriverNumber]);
 
   // Sort race results
   const sortedResults = [...raceResults].sort((a, b) => {
@@ -133,14 +136,20 @@ export default function RaceLog() {
 
   return (
     <div className="race-log-page">
-      {/* Header Section */}
-      <div className="race-log-header">
+      {/* Unified Header with Scout Context */}
+      <DashboardHeader driverData={driverData} pageName="Race Log" />
+
+      {/* Unified Navigation Tabs */}
+      <DashboardTabs />
+
+      {/* OLD HEADER - REMOVE */}
+      <div className="race-log-header" style={{ display: 'none' }}>
         <div className="header-content">
           <div className="driver-number-display">
-            <span className="number-large">{driverNumber}</span>
+            <span className="number-large">{selectedDriverNumber}</span>
           </div>
           <div className="driver-name-section">
-            <h1 className="driver-name">Driver #{driverNumber}</h1>
+            <h1 className="driver-name">Driver #{selectedDriverNumber}</h1>
             <div className="season-subtitle">Toyota Gazoo Series</div>
           </div>
 
@@ -197,34 +206,8 @@ export default function RaceLog() {
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="nav-tabs-container">
-        <div className="nav-tabs">
-          <NavLink
-            to="/overview"
-            className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-          >
-            Overview
-          </NavLink>
-          <NavLink
-            to="/race-log"
-            className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-          >
-            Race Log
-          </NavLink>
-          <NavLink
-            to="/skills"
-            className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-          >
-            Skills
-          </NavLink>
-          <NavLink
-            to="/improve"
-            className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-          >
-            Improve
-          </NavLink>
-        </div>
+      {/* OLD NAV TABS - REMOVE */}
+      <div className="nav-tabs-container" style={{ display: 'none' }}>
       </div>
 
       {/* Season Averages */}
