@@ -3,8 +3,10 @@
 *.csv
 
 # IMPORTANT: These JSON files MUST be included for deployment
-!frontend/src/data/dashboardData.json  # 64KB - driver/track data
-!backend/data/driver_factors.json      # 204KB - factor analysis data
+!frontend/src/data/dashboardData.json      # 64KB - driver/track data
+!backend/data/driver_factors.json          # 204KB - factor analysis data
+!backend/data/driver_season_stats.json     # 11KB - pre-calculated season stats
+!backend/data/driver_race_results.json     # 288KB - race-by-race results
 
 # SQLite database NO LONGER NEEDED (replaced with JSON)
 

@@ -45,9 +45,13 @@ class DataLoader:
             self.race_results: Dict[str, pd.DataFrame] = {}
             self.lap_analysis: Dict[str, pd.DataFrame] = {}
 
-            # Initialize race log processor
+            # Initialize race log processor (for CSV fallback only)
             from .race_log_processor import RaceLogProcessor
             self.race_log_processor = RaceLogProcessor(self.data_path)
+
+            # Load pre-calculated race data from JSON
+            self.season_stats_lookup: Dict[int, Dict] = {}
+            self.race_results_lookup: Dict[int, List[Dict]] = {}
 
             self._load_data()
             self._initialized = True
@@ -68,7 +72,13 @@ class DataLoader:
         # Load race results and lap analysis
         self._load_race_data()
 
+        # Load pre-calculated season stats and race results from JSON
+        self._load_season_stats_json()
+        self._load_race_results_json()
+
         print(f"Data loaded: {len(self.tracks)} tracks, {len(self.drivers)} drivers")
+        print(f"Season stats loaded: {len(self.season_stats_lookup)} drivers")
+        print(f"Race results loaded: {len(self.race_results_lookup)} drivers")
 
     def _load_driver_factors_json(self):
         """Load driver factors from JSON export (replaces SQLite)."""
@@ -89,6 +99,44 @@ class DataLoader:
 
         print(f"Loaded factor data for {len(driver_factors_lookup)} drivers from JSON")
         return driver_factors_lookup
+
+    def _load_season_stats_json(self):
+        """Load pre-calculated season statistics from JSON."""
+        json_path = self.base_path / "backend" / "data" / "driver_season_stats.json"
+
+        if not json_path.exists():
+            print(f"Warning: Season stats JSON not found at {json_path}")
+            return
+
+        with open(json_path, "r") as f:
+            data = json.load(f)
+
+        # Convert string keys to integers
+        self.season_stats_lookup = {
+            int(driver_num): stats
+            for driver_num, stats in data.get("data", {}).items()
+        }
+
+        print(f"Loaded season stats for {len(self.season_stats_lookup)} drivers from JSON")
+
+    def _load_race_results_json(self):
+        """Load race-by-race results from JSON."""
+        json_path = self.base_path / "backend" / "data" / "driver_race_results.json"
+
+        if not json_path.exists():
+            print(f"Warning: Race results JSON not found at {json_path}")
+            return
+
+        with open(json_path, "r") as f:
+            data = json.load(f)
+
+        # Convert string keys to integers
+        self.race_results_lookup = {
+            int(driver_num): results
+            for driver_num, results in data.get("data", {}).items()
+        }
+
+        print(f"Loaded race results for {len(self.race_results_lookup)} drivers from JSON")
 
     def _get_driver_factor_scores(self, driver_number: int) -> Dict:
         """Get RepTrak-normalized factor scores from JSON data."""
@@ -367,68 +415,50 @@ class DataLoader:
 
     def get_season_stats(self, driver_number: int) -> Optional[SeasonStats]:
         """
-        Get season statistics for a driver calculated from race_results CSV files.
-        """
-        # Get race results from CSV files via race_log_processor
-        race_results = self.race_log_processor.get_driver_results(driver_number)
+        Get season statistics for a driver from pre-calculated JSON data.
 
-        if not race_results:
+        Returns pre-aggregated stats (wins, podiums, averages, points) for fast API responses.
+        Data sourced from driver_season_stats.json which is generated from CSV files.
+        """
+        # Get pre-calculated stats from JSON lookup
+        stats_data = self.season_stats_lookup.get(driver_number)
+
+        if not stats_data:
             return None
 
-        # Calculate statistics from race results
-        total_races = len(race_results)
-        wins = sum(1 for r in race_results if r.finish_position == 1)
-        podiums = sum(1 for r in race_results if r.finish_position and r.finish_position <= 3)
-        top5 = sum(1 for r in race_results if r.finish_position and r.finish_position <= 5)
-        top10 = sum(1 for r in race_results if r.finish_position and r.finish_position <= 10)
-        pole_positions = sum(1 for r in race_results if r.start_position == 1)
-        dnfs = 0  # TODO: Add DNF tracking
-
-        # Calculate averages
-        finish_positions = [r.finish_position for r in race_results if r.finish_position]
-        start_positions = [r.start_position for r in race_results if r.start_position]
-        positions_gained_list = [
-            r.start_position - r.finish_position
-            for r in race_results
-            if r.start_position and r.finish_position
-        ]
-
-        avg_finish = sum(finish_positions) / len(finish_positions) if finish_positions else None
-        avg_qualifying = sum(start_positions) / len(start_positions) if start_positions else None
-        avg_positions_gained = sum(positions_gained_list) / len(positions_gained_list) if positions_gained_list else None
-
-        # Calculate points (F1 points system: 25, 18, 15, 12, 10, 8, 6, 4, 2, 1)
-        points_map = {1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1}
-        points = sum(
-            points_map.get(r.finish_position, 0)
-            for r in race_results
-            if r.finish_position
-        )
-
+        # Convert dict to SeasonStats model
         return SeasonStats(
             driver_number=driver_number,
-            wins=wins,
-            podiums=podiums,
-            top5=top5,
-            top10=top10,
-            pole_positions=pole_positions,
-            total_races=total_races,
-            dnfs=dnfs,
-            fastest_laps=0,  # TODO: Add fastest_lap_time tracking
-            avg_finish=round(avg_finish, 2) if avg_finish else None,
-            avg_qualifying=round(avg_qualifying, 2) if avg_qualifying else None,
-            avg_positions_gained=round(avg_positions_gained, 2) if avg_positions_gained else None,
-            points=points,
-            championship_position=None,  # TODO: Calculate from standings
+            wins=stats_data.get("wins", 0),
+            podiums=stats_data.get("podiums", 0),
+            top5=stats_data.get("top5", 0),
+            top10=stats_data.get("top10", 0),
+            pole_positions=stats_data.get("pole_positions", 0),
+            total_races=stats_data.get("total_races", 0),
+            dnfs=stats_data.get("dnfs", 0),
+            fastest_laps=stats_data.get("fastest_laps", 0),
+            avg_finish=stats_data.get("avg_finish"),
+            avg_qualifying=stats_data.get("avg_qualifying"),
+            avg_positions_gained=stats_data.get("avg_positions_gained"),
+            points=stats_data.get("points", 0),
+            championship_position=stats_data.get("championship_position"),
         )
 
     def get_race_results(self, driver_number: int) -> List[RaceResult]:
         """
-        Get all race results for a driver for trending data.
-        Uses RaceLogProcessor to merge provisional results, qualifying, and lap data.
+        Get all race results for a driver for trending/historical data.
+
+        Returns race-by-race results from pre-loaded JSON data for fast API responses.
+        Data sourced from driver_race_results.json which is generated from CSV files.
         """
-        # Use the new race log processor to get comprehensive race data
-        return self.race_log_processor.get_driver_results(driver_number)
+        # Get race results from JSON lookup
+        results_data = self.race_results_lookup.get(driver_number)
+
+        if not results_data:
+            return []
+
+        # Convert dicts to RaceResult models
+        return [RaceResult(**result) for result in results_data]
 
 
 # Global instance
