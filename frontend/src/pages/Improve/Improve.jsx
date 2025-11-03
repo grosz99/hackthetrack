@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * Improve Page - Driver Skill Improvement Lab
  *
@@ -11,7 +12,7 @@
 
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import api from '../services/api';
+import api from '../../services/api';
 import './Improve.css';
 
 const POINTS_BUDGET = 1.0;

@@ -1,10 +1,11 @@
+import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 
 // Import pages
-import Overview from './pages/Overview'
-import RaceLog from './pages/RaceLog'
-import Skills from './pages/Skills'
-import Improve from './pages/Improve'
+import Overview from './pages/Overview/Overview'
+import RaceLog from './pages/RaceLog/RaceLog'
+import Skills from './pages/Skills/Skills'
+import Improve from './pages/Improve/Improve'
 
 function App() {
   return (

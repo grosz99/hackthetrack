@@ -8,7 +8,7 @@ import json
 import sqlite3
 from pathlib import Path
 from typing import Dict, List, Optional
-from ..models import (
+from models import (
     Track,
     TrackDemand,
     Driver,

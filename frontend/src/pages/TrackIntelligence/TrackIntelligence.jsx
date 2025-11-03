@@ -1,3 +1,4 @@
+import React from 'react';
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend } from 'recharts';

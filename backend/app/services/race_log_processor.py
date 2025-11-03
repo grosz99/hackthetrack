@@ -6,7 +6,7 @@ Processes and merges race results, qualifying, and lap data for the Race Log pag
 import pandas as pd
 from pathlib import Path
 from typing import Dict, List, Optional
-from ..models import RaceResult
+from models import RaceResult
 
 
 class RaceLogProcessor:

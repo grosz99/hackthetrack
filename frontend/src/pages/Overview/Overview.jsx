@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * Overview Page - Driver season statistics
  * Dark F1-inspired theme with modern visualizations
@@ -8,7 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
          ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
          Legend, ResponsiveContainer } from 'recharts';
-import api from '../services/api';
+import api from '../../services/api';
 import './Overview.css';
 
 export default function Overview() {

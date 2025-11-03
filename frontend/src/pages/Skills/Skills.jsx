@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * Skills Page - 4-factor analysis with spider chart
  * NASCAR aesthetic matching Overview and RaceLog pages
@@ -7,7 +8,7 @@
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
-import api from '../services/api';
+import api from '../../services/api';
 import './Skills.css';
 
 export default function Skills() {

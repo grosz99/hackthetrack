@@ -1,7 +1,8 @@
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { sendChatMessage, getDriver, getTrack, getDetailedTelemetry } from '../services/api';
-import SpeedTraceChart from '../components/SpeedTraceChart';
+import { sendChatMessage, getDriver, getTrack, getDetailedTelemetry } from '../../services/api';
+import SpeedTraceChart from '../../components/charts/SpeedTraceChart';
 import './StrategyChat.css';
 
 function StrategyChat() {

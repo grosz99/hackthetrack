@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * Race Log Page - Race-by-race results with NASCAR aesthetic
  * Matches the Tyler Maxson style from Overview page
@@ -5,7 +6,7 @@
 
 import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import api from '../services/api';
+import api from '../../services/api';
 import './RaceLog.css';
 
 export default function RaceLog() {

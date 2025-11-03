@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * PercentileBadge - Color-coded percentile indicator (PFF Style)
  *

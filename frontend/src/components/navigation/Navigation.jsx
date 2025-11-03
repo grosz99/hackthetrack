@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * Navigation - Main navigation bar with driver selector
  *

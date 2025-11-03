@@ -1,3 +1,4 @@
+import React from 'react';
 /**
  * StatCard - PFF-style stat display card
  *

@@ -1,6 +1,14 @@
-# Large data files
+# Large data files - not part of product
 data/raw_telemetry/*.csv
 data/processed_telemetry/*.csv
+data/telemetry/*.csv
+data/Telemetry/*.csv
+data/lap_timing/*.csv
+data/race_results/**/*.csv
+*.db
+*.sqlite
+*.sqlite3
+backend/database/*.db
 
 # Python
 __pycache__/
