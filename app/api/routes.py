@@ -4,7 +4,7 @@ API routes for Racing Analytics platform.
 
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
-from ..models import (
+from models import (
     Track,
     Driver,
     CircuitFitPrediction,

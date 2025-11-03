@@ -5,7 +5,7 @@ AI Strategy Chatbot Service using Anthropic Claude.
 import os
 from typing import List, Optional
 from anthropic import Anthropic
-from ..models import ChatMessage, Driver, Track
+from models import ChatMessage, Driver, Track
 from dotenv import load_dotenv
 
 # Load environment variables before initializing the client
