@@ -26,8 +26,9 @@
   color: #ffffff;
   margin: 0 0 8px 0;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: -1px;
   text-shadow: 0 4px 8px rgba(231, 76, 60, 0.5);
+  font-family: 'Inter', sans-serif;
 }
 
 .scout-subtitle {
@@ -36,7 +37,8 @@
   color: #9ca3af;
   margin: 0;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Main Content */
