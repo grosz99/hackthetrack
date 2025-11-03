@@ -1,315 +1,179 @@
-# Vercel Deployment Guide for Circuit Fit
+# Vercel Deployment Guide - Full-Stack React + FastAPI
 
-## Why Vercel? ✨
+## Overview
 
-Vercel makes deployment **much easier** than Netlify for this project because:
-- ✅ **Native Python support** - Run FastAPI backend as serverless functions
-- ✅ **Monorepo friendly** - Deploy frontend + backend from single repo
-- ✅ **Zero configuration** - Works with our existing structure
-- ✅ **Automatic HTTPS** - Free SSL certificates
-- ✅ **Edge network** - Fast global CDN
-- ✅ **Preview deployments** - Every PR gets a unique URL
+This guide provides complete instructions for deploying your React (Vite) + FastAPI monorepo application to Vercel with proper routing for both frontend SPA and backend API.
 
 ## Project Structure
 
 ```
 hackthetrack-master/
-├── frontend/              # React + Vite
+├── frontend/          # React + Vite application
 │   ├── src/
-│   ├── dist/             # Build output
+│   ├── dist/         # Build output
+│   ├── config/
+│   │   └── vite.config.js
 │   └── package.json
-├── backend/
+├── backend/          # FastAPI Python backend
+│   ├── api/
+│   │   └── index.py  # Vercel serverless function entry point
 │   ├── app/
 │   │   ├── api/
 │   │   │   └── routes.py
-│   │   ├── models.py
 │   │   └── services/
-│   ├── api/
-│   │   └── index.py      # ⭐ Vercel entry point
-│   ├── main.py           # FastAPI app
-│   └── requirements.txt
-├── data/                  # Race data CSVs
-├── vercel.json           # ⭐ Vercel configuration
-└── netlify.toml          # (can be deleted)
+│   ├── main.py       # FastAPI application
+│   ├── requirements.txt
+│   └── circuit-fit.db (SQLite database)
+├── data/             # Excluded via .vercelignore
+├── vercel.json       # Vercel configuration
+├── .vercelignore     # Files to exclude from deployment
+└── package.json      # Root package.json
 ```
 
-## Setup Steps
+## Issues Fixed
 
-### 1. Install Vercel CLI (Optional, for local testing)
+### Previous Issues
+1. 404 errors on all routes after deployment
+2. Frontend not being served correctly
+3. React Router client-side routing not working
+4. API routes not properly configured
+5. Static assets (CSS, JS) not loading
+
+### Root Causes
+1. **Incorrect route configuration**: Using deprecated patterns
+2. **Missing SPA fallback**: All non-API routes must fall back to index.html for React Router
+3. **Asset path issues**: Static assets were not properly routed
+4. **Build configuration**: Missing proper build commands for Vercel
+
+## Key Configuration Changes
+
+### 1. Updated vercel.json
+
+The routing order and configuration is critical:
+- API routes must be checked FIRST
+- Static assets (JS, CSS, images) must be routed correctly
+- ALL other routes must fall back to index.html for React Router
+
+### 2. Updated Vite Configuration
+
+Added explicit base path and build settings for Vercel compatibility.
+
+### 3. Updated Backend Handler
+
+Ensured proper Mangum wrapper and handler export for Vercel serverless functions.
+
+## Deployment Steps
+
+### Quick Deploy (Recommended)
+
+1. **Commit Changes**
+   ```bash
+   git add .
+   git commit -m "fix: configure Vercel deployment with corrected routing"
+   git push origin master
+   ```
+
+2. **Deploy to Vercel**
+   - Go to https://vercel.com/new
+   - Import your GitHub repository
+   - Vercel will auto-detect configuration from vercel.json
+   - Add environment variable: `ANTHROPIC_API_KEY`
+   - Click Deploy
+
+3. **Verify Deployment**
+   ```bash
+   # Test frontend routes
+   curl https://your-app.vercel.app/
+   curl https://your-app.vercel.app/scout
+   curl https://your-app.vercel.app/scout/driver/1/overview
+   
+   # Test API routes
+   curl https://your-app.vercel.app/api/health
+   curl https://your-app.vercel.app/api/drivers
+   ```
+
+## Environment Variables Required
+
+Add these in Vercel Dashboard (Settings > Environment Variables):
+
+1. **ANTHROPIC_API_KEY** (Required)
+   - Scope: Production + Preview + Development
+   - Value: Your Anthropic API key from https://console.anthropic.com/
+
+2. **PORT** (Optional, defaults to 8000)
+   - Scope: All environments
+   - Value: 8000
+
+## Verification Checklist
+
+After deployment, verify:
+
+- [ ] Root route (/) loads Scout Landing page
+- [ ] Direct navigation to /scout/driver/1/overview works (no 404)
+- [ ] React Router navigation works without page refresh
+- [ ] Assets load correctly (check DevTools Network tab)
+- [ ] API endpoints respond correctly
+- [ ] No CORS errors in browser console
+
+## Common Issues & Solutions
+
+### Issue: 404 on React Router Routes
+
+**Solution:** The catch-all route in vercel.json must be LAST and point to `/frontend/dist/index.html`
+
+### Issue: Assets Not Loading
+
+**Solution:** Ensure `base: '/'` is set in vite.config.js and rebuild frontend
+
+### Issue: API Returns 404
+
+**Solution:** Verify `/backend/api/index.py` exists and API route is first in vercel.json
+
+### Issue: CORS Errors
+
+**Solution:** Add your Vercel domain to CORS origins in `/backend/main.py`
+
+## Files Modified
+
+1. `/vercel.json` - Updated routing configuration
+2. `/frontend/package.json` - Added vercel-build script
+3. `/frontend/config/vite.config.js` - Added base path and build settings
+4. `/backend/api/index.py` - Updated handler wrapper
+
+## Testing Locally Before Deploy
 
 ```bash
-npm install -g vercel
-```
-
-### 2. File Configuration
-
-All necessary files are already created:
-- ✅ `vercel.json` - Deployment configuration
-- ✅ `backend/api/index.py` - Serverless function wrapper
-- ✅ `backend/requirements.txt` - Updated with `mangum` dependency
-
-### 3. Deploy to Vercel
-
-#### Option A: Via Vercel Website (Recommended for first deployment)
-
-1. Go to [vercel.com](https://vercel.com) and sign in with GitHub
-2. Click "Add New Project"
-3. Import your GitHub repository: `grosz99/hackthetrack`
-4. Vercel will auto-detect the configuration from `vercel.json`
-5. Click "Deploy"
-
-That's it! Vercel will:
-- Build the frontend (React/Vite)
-- Package the backend as serverless functions
-- Deploy both to the same domain
-- Set up automatic deployments for future git pushes
-
-#### Option B: Via CLI
-
-```bash
-# From project root
-vercel
-
-# Follow prompts:
-# - Link to existing project? No
-# - Project name? circuit-fit
-# - Directory? ./ (root)
-# - Override settings? No
-
-# For production deployment:
-vercel --prod
-```
-
-### 4. Environment Variables (if needed)
-
-If your backend uses environment variables (API keys, etc.):
-
-1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
-2. Add variables:
-   - `ANTHROPIC_API_KEY` (for AI features)
-   - Any other secrets from `backend/.env`
-
-## How It Works
-
-### Frontend Routing
-```
-https://your-app.vercel.app/          → React app (frontend/dist/index.html)
-https://your-app.vercel.app/overview  → React app (SPA routing)
-https://your-app.vercel.app/race-log  → React app (SPA routing)
-```
-
-### API Routing
-```
-https://your-app.vercel.app/api/drivers/13/stats   → backend/api/index.py (FastAPI)
-https://your-app.vercel.app/api/drivers/13/results → backend/api/index.py (FastAPI)
-```
-
-### Serverless Functions
-
-Vercel converts your FastAPI app into serverless functions:
-- Each API request spawns a new function instance
-- Functions include the entire `backend/` directory and `data/` folder
-- Max execution time: 30 seconds (configured in vercel.json)
-- Memory: 1024 MB (configured in vercel.json)
-
-## Data Files
-
-The `data/` directory (>50MB of CSV files) will be included in the deployment:
-- ✅ Configured in `vercel.json` via `includeFiles`
-- ✅ Available to backend functions at runtime
-- ⚠️ Large data files may increase cold start time slightly
-
-## Configuration Details
-
-### vercel.json Explained
-
-```json
-{
-  "builds": [
-    {
-      "src": "frontend/package.json",      // Build frontend
-      "use": "@vercel/static-build"
-    },
-    {
-      "src": "backend/api/index.py",       // Build backend function
-      "use": "@vercel/python"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",                  // API routes → backend
-      "dest": "backend/api/index.py"
-    },
-    {
-      "src": "/(.*)",                      // All other routes → frontend
-      "dest": "frontend/$1"
-    }
-  ],
-  "functions": {
-    "backend/api/index.py": {
-      "includeFiles": "{data/**,backend/**}",  // Include data + backend code
-      "memory": 1024,                           // 1GB RAM
-      "maxDuration": 30                         // 30 second timeout
-    }
-  }
-}
-```
-
-### backend/api/index.py Explained
-
-```python
-from mangum import Mangum
-from main import app
-
-# Mangum adapter converts FastAPI → AWS Lambda/Vercel format
-handler = Mangum(app, lifespan="off")
-```
-
-## Testing Locally
-
-### Test Frontend
-```bash
+# Build frontend
 cd frontend
-npm install
-npm run dev
-# Opens on http://localhost:5173
-```
+npm run build
 
-### Test Backend
-```bash
-cd backend
-pip install -r requirements.txt
-uvicorn main:app --reload
-# API on http://localhost:8000
-```
+# Verify build output
+ls -la dist/
 
-### Test Full Stack with Vercel Dev
-```bash
-vercel dev
-# Simulates Vercel environment locally
-# Frontend: http://localhost:3000
-# API: http://localhost:3000/api/*
-```
+# Test backend locally
+cd ../backend
+python main.py
 
-## Post-Deployment
-
-### 1. Update API Base URL (if needed)
-
-Check `frontend/src/services/api.js`:
-```javascript
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
-```
-
-For Vercel, this should automatically work since API is on same domain:
-```javascript
-const API_BASE_URL = '';  // Relative URLs work on Vercel
-```
-
-### 2. Verify Endpoints
-
-After deployment, test these URLs:
-- `https://your-app.vercel.app/` - Frontend loads
-- `https://your-app.vercel.app/api/health` - API health check
-- `https://your-app.vercel.app/api/drivers/13/stats` - Driver stats
-- `https://your-app.vercel.app/api/drivers/13/results` - Race log data
-
-### 3. Check Deployment Logs
-
-- Go to Vercel Dashboard → Your Project → Deployments
-- Click on latest deployment
-- View "Build Logs" and "Function Logs"
-
-## Automatic Deployments
-
-Once connected to GitHub:
-- ✅ Every `git push` to `master` → Production deployment
-- ✅ Every PR → Preview deployment with unique URL
-- ✅ Automatic rollbacks if deployment fails
-
-## Limitations & Considerations
-
-### Serverless Function Limits
-- **Execution time**: 30 seconds max (enough for API calls)
-- **Memory**: 1024 MB (configurable up to 3GB on Pro plan)
-- **Cold starts**: First request may be slower (~1-2 seconds)
-- **File size**: 50MB function limit (our data fits)
-
-### Data Files
-- CSV files are included in each function deployment
-- Consider migrating to database if data grows beyond 100MB
-- Current size (~50MB) is acceptable
-
-### Database
-- Currently using SQLite (`circuit-fit.db`)
-- ⚠️ SQLite writes won't persist between function calls
-- ✅ Read-only operations work fine
-- For write operations, consider:
-  - PostgreSQL (Vercel Postgres)
-  - PlanetScale (MySQL)
-  - Supabase (PostgreSQL)
-
-## Cost
-
-**Free Tier includes:**
-- Unlimited API calls (with rate limits)
-- 100GB bandwidth/month
-- Automatic SSL
-- Preview deployments
-- Perfect for development and low-traffic production
-
-## Troubleshooting
-
-### Build Failures
-
-**Frontend build fails:**
-```bash
-# Check frontend/package.json scripts
+# In another terminal, test frontend build
 cd frontend
-npm install
-npm run build  # Should work locally
+npm run preview
 ```
 
-**Backend function fails:**
-```bash
-# Check requirements.txt
-cd backend
-pip install -r requirements.txt
-python -c "from main import app; print('Import successful')"
-```
+## Rollback Strategy
 
-### API Not Working
+If deployment fails:
 
-1. Check function logs in Vercel Dashboard
-2. Verify `vercel.json` routes configuration
-3. Test locally with `vercel dev`
-4. Check CORS settings in `backend/main.py`
-
-### Data Files Missing
-
-If race results are empty:
-- Verify `includeFiles` in `vercel.json`
-- Check function logs for file not found errors
-- Ensure data files are in git (not .gitignored)
-
-## Migration from Netlify
-
-Since you already have `netlify.toml`:
-
-1. Keep Netlify config (doesn't hurt)
-2. Deploy to Vercel (both can coexist)
-3. Compare performance
-4. Switch DNS to Vercel if satisfied
-5. Delete Netlify site when confident
+1. **Dashboard Rollback:** Deployments > Previous deployment > Promote to Production
+2. **Git Rollback:** `git revert [commit-hash] && git push`
+3. **CLI Rollback:** `vercel rollback [deployment-url]`
 
 ## Next Steps
 
-1. ✅ Push all changes to GitHub
-2. ✅ Connect repository to Vercel
-3. ✅ Deploy and test
-4. ✅ Share Vercel URL with team
+1. Monitor deployment in Vercel dashboard
+2. Check function logs for any errors
+3. Set up custom domain if needed
+4. Enable Vercel Analytics for monitoring
 
-## Support
+---
 
-- [Vercel Documentation](https://vercel.com/docs)
-- [FastAPI + Vercel Guide](https://vercel.com/docs/functions/serverless-functions/runtimes/python)
-- [Mangum Documentation](https://mangum.io/)
+**Last Updated:** November 3, 2025

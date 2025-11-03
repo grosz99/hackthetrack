@@ -2,13 +2,26 @@
  * API service for communicating with Racing Analytics backend.
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+// Determine API base URL based on environment
+// In production (Vercel), the serverless function handles /api/* routes
+// In development, use localhost backend which also has /api prefix
+const getApiBaseUrl = () => {
+  // Check if we're in production (Vercel deployment)
+  if (import.meta.env.PROD) {
+    return '';  // Empty string - routes already include /api prefix
+  }
+
+  // Development: use environment variable or default to localhost
+  return import.meta.env.VITE_API_URL || 'http://localhost:8000';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 /**
  * Fetch all tracks
  */
 export async function getTracks() {
-  const response = await fetch(`${API_BASE_URL}/api/tracks`);
+  const response = await fetch(`${API_BASE_URL}/tracks`);
   if (!response.ok) throw new Error('Failed to fetch tracks');
   return response.json();
 }

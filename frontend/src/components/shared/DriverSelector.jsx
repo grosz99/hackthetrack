@@ -1,4 +1,3 @@
-import React from 'react';
 /**
  * DriverSelector - Dropdown for selecting drivers
  *

@@ -3,9 +3,6 @@ Vercel serverless function wrapper for FastAPI application.
 This file adapts the FastAPI app to work with Vercel's serverless platform.
 """
 
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from mangum import Mangum
 import sys
 from pathlib import Path
 
@@ -16,5 +13,13 @@ sys.path.insert(0, str(backend_path))
 # Import the main FastAPI app
 from main import app
 
+# Import Mangum after app to avoid circular imports
+from mangum import Mangum
+
 # Wrap the FastAPI app with Mangum for AWS Lambda/Vercel compatibility
 handler = Mangum(app, lifespan="off")
+
+# Vercel requires this export
+def handler_wrapper(event, context):
+    """Wrapper function for Vercel serverless deployment."""
+    return handler(event, context)

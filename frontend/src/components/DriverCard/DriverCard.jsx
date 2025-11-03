@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ClassificationBadge from '../ClassificationBadge/ClassificationBadge';
 import { classifyDriver, getDriverTags, getDataConfidence } from '../../utils/classification';
@@ -46,14 +45,6 @@ export default function DriverCard({ driver }) {
       {/* Driver Identity */}
       <div className="driver-identity">
         <h3 className="driver-name" style={{ color: '#000000' }}>{driver.name}</h3>
-        <div className="driver-tags">
-          {tags.slice(0, 3).map((tag, idx) => (
-            <span key={idx} className="tag">
-              {tag.icon && <span className="tag-icon">{tag.icon}</span>}
-              {tag.label}
-            </span>
-          ))}
-        </div>
       </div>
 
       {/* Key Metrics */}
@@ -100,21 +91,9 @@ export default function DriverCard({ driver }) {
         </div>
       </div>
 
-      {/* Circuit Fit Summary - Optional */}
-      {driver.best_tracks && driver.best_tracks.length > 0 && (
-        <div className="circuit-fit">
-          <div className="fit-label">Best Track:</div>
-          <div className="fit-value">{driver.best_tracks[0].toUpperCase()}</div>
-        </div>
-      )}
+      {/* Circuit Fit Summary - Removed for consistency */}
 
-      {/* Data Caveat */}
-      {confidence.showWarning && (
-        <div className="data-caveat" style={{ borderColor: confidence.color }}>
-          <span className="caveat-icon">⚠️</span>
-          <span className="caveat-text">{confidence.message}</span>
-        </div>
-      )}
+      {/* Data Caveat - Removed for consistency */}
 
       {/* Actions */}
       <div className="card-actions">

@@ -104,9 +104,10 @@
   font-size: 64px;
   font-weight: 800;
   margin: 0;
-  color: #fff;
+  color: #fff !important;
   letter-spacing: -2px;
   line-height: 1;
+  -webkit-text-fill-color: #fff !important;
 }
 
 .season-subtitle {

@@ -57,3 +57,4 @@ backend/database/
 tmp/
 temp/
 *.tmp
+.vercel

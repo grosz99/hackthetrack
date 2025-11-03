@@ -1,4 +1,3 @@
-import React from 'react';
 /**
  * StatGroup - Groups related stats together like StatMus player cards
  *

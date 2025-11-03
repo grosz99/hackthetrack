@@ -76,24 +76,25 @@
 
 .search-input {
   width: 100%;
-  padding: 12px 20px;
+  padding: 14px 20px;
   font-size: 16px;
   font-weight: 600;
-  background: #2a2a2a;
-  color: #ffffff;
-  border: 2px solid #3a3a3a;
+  background: #ffffff;
+  color: #000000;
+  border: 3px solid #e74c3c;
   border-radius: 8px;
   outline: none;
   transition: all 0.2s ease;
 }
 
 .search-input:focus {
-  border-color: #e74c3c;
-  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+  border-color: #c0392b;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
 }
 
 .search-input::placeholder {
-  color: #6b7280;
+  color: #9ca3af;
+  font-weight: 500;
 }
 
 .controls-right {

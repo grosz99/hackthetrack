@@ -1,4 +1,3 @@
-import React from 'react';
 import { useScout } from '../../context/ScoutContext';
 import { CLASSIFICATIONS } from '../../utils/classification';
 import './FilterSidebar.css';

@@ -1,4 +1,3 @@
-import React from 'react';
 /**
  * Race Log Page - Race-by-race results with NASCAR aesthetic
  * Matches the Tyler Maxson style from Overview page

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { sendChatMessage, getDriver, getTrack, getDetailedTelemetry } from '../../services/api';

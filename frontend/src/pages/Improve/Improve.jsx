@@ -1,4 +1,3 @@
-import React from 'react';
 /**
  * Improve Page - Driver Skill Improvement Lab
  *

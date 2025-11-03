@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDriver } from '../../context/DriverContext';
 import { useScout } from '../../context/ScoutContext';
 import { applyFilters, sortDrivers } from '../../utils/classification';

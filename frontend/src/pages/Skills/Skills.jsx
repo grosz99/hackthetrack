@@ -1,4 +1,3 @@
-import React from 'react';
 /**
  * Skills Page - 4-factor analysis with spider chart
  * NASCAR aesthetic matching Overview and RaceLog pages

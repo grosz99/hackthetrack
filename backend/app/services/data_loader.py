@@ -70,24 +70,40 @@ class DataLoader:
 
         print(f"Data loaded: {len(self.tracks)} tracks, {len(self.drivers)} drivers")
 
+    def _load_driver_factors_json(self):
+        """Load driver factors from JSON export (replaces SQLite)."""
+        json_path = self.base_path / "backend" / "data" / "driver_factors.json"
+
+        if not json_path.exists():
+            print(f"Warning: Driver factors JSON not found at {json_path}")
+            return {}
+
+        with open(json_path, "r") as f:
+            data = json.load(f)
+
+        # Convert to lookup dict: driver_number -> factors
+        driver_factors_lookup = {}
+        for driver in data.get("drivers", []):
+            driver_num = driver["driver_number"]
+            driver_factors_lookup[driver_num] = driver["factors"]
+
+        print(f"Loaded factor data for {len(driver_factors_lookup)} drivers from JSON")
+        return driver_factors_lookup
+
     def _get_driver_factor_scores(self, driver_number: int) -> Dict:
-        """Get RepTrak-normalized factor scores from database."""
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
+        """Get RepTrak-normalized factor scores from JSON data."""
+        if not hasattr(self, 'driver_factors_lookup'):
+            self.driver_factors_lookup = self._load_driver_factors_json()
+
+        driver_factors = self.driver_factors_lookup.get(driver_number, {})
 
         factor_scores = {}
         for factor_name in ["speed", "consistency", "racecraft", "tire_management"]:
-            # Get overall score and percentile
-            cursor.execute("""
-                SELECT AVG(normalized_value), AVG(percentile)
-                FROM factor_breakdowns
-                WHERE driver_number = ? AND factor_name = ?
-            """, (driver_number, factor_name))
+            factor_data = driver_factors.get(factor_name, {})
 
-            result = cursor.fetchone()
-            if result and result[0] is not None:
-                score = result[0]
-                percentile = result[1]
+            if factor_data:
+                score = factor_data.get("score", 50)
+                percentile = factor_data.get("percentile", 50)
             else:
                 # Fallback to 50 if no data
                 score = 50
@@ -96,10 +112,9 @@ class DataLoader:
             factor_scores[factor_name] = {
                 "score": score,
                 "percentile": percentile,
-                "z_score": 0  # Z-score not needed for RepTrak normalization
+                "z_score": (score - 50) / 10  # Approximate z-score for compatibility
             }
 
-        conn.close()
         return factor_scores
 
     def _load_dashboard_data(self):
@@ -136,12 +151,13 @@ class DataLoader:
                 description=track_data.get("description"),
             )
 
-        # Get list of drivers with factor data in database
-        conn = sqlite3.connect(self.db_path)
-        cursor = conn.cursor()
-        cursor.execute("SELECT DISTINCT driver_number FROM factor_breakdowns")
-        drivers_with_data = {row[0] for row in cursor.fetchall()}
-        conn.close()
+        # Load driver factors from JSON
+        if not hasattr(self, 'driver_factors_lookup'):
+            self.driver_factors_lookup = self._load_driver_factors_json()
+
+        # Get list of drivers with factor data
+        drivers_with_data = set(self.driver_factors_lookup.keys())
+        print(f"Found {len(drivers_with_data)} drivers with factor data")
 
         # Load drivers with RepTrak-normalized factor scores from database
         for driver_data in data.get("drivers", []):

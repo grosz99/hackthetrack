@@ -1,4 +1,3 @@
-import React from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useDriver } from '../../context/DriverContext';
 import { useScout } from '../../context/ScoutContext';
