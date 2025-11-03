@@ -2,25 +2,46 @@ import React from 'react';
 /**
  * Overview Page - Driver season statistics
  * Dark F1-inspired theme with modern visualizations
+ * Scout Context: Shows breadcrumb and classification when navigated from scout
  */
 
 import { useState, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
          ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
          Legend, ResponsiveContainer } from 'recharts';
 import api from '../../services/api';
 import { useDriver } from '../../context/DriverContext';
+import { useScout } from '../../context/ScoutContext';
+import { classifyDriver } from '../../utils/classification';
+import ClassificationBadge from '../../components/ClassificationBadge/ClassificationBadge';
 import './Overview.css';
 
 export default function Overview() {
   const { selectedDriverNumber, setSelectedDriverNumber, drivers } = useDriver();
+  const { driverNumber: routeDriverNumber } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [seasonStats, setSeasonStats] = useState(null);
   const [raceResults, setRaceResults] = useState([]);
   const [driverData, setDriverData] = useState(null);
   const [topDrivers, setTopDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Detect scout context
+  const isFromScout = location.pathname.startsWith('/scout/driver/');
+  const classification = driverData ? classifyDriver(driverData) : null;
+
+  // Sync route params with DriverContext
+  useEffect(() => {
+    if (routeDriverNumber) {
+      const driverNum = Number(routeDriverNumber);
+      if (driverNum !== selectedDriverNumber) {
+        setSelectedDriverNumber(driverNum);
+      }
+    }
+  }, [routeDriverNumber, selectedDriverNumber, setSelectedDriverNumber]);
 
   useEffect(() => {
     const fetchDriverData = async () => {
@@ -130,6 +151,61 @@ export default function Overview() {
 
   return (
     <div className="driver-overview">
+      {/* Scout Breadcrumb - Only show when navigated from scout */}
+      {isFromScout && (
+        <div style={{
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px'
+        }}>
+          <button
+            onClick={() => navigate('/scout')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              padding: '12px 24px',
+              background: '#e74c3c',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              transition: 'all 0.2s ease',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px'
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = '#c0392b';
+              e.currentTarget.style.transform = 'translateX(-4px)';
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = '#e74c3c';
+              e.currentTarget.style.transform = 'translateX(0)';
+            }}
+          >
+            <span style={{ fontSize: '20px' }}>←</span>
+            <span>Back to Scout Portal</span>
+          </button>
+          <div style={{
+            fontSize: '14px',
+            fontWeight: 600,
+            color: '#666',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <span style={{ color: '#e74c3c' }}>Scout Portal</span>
+            <span>›</span>
+            <span style={{ color: '#fff' }}>Driver #{seasonStats.driver_number}</span>
+            <span>›</span>
+            <span style={{ color: '#fff' }}>Overview</span>
+          </div>
+        </div>
+      )}
+
       {/* Header Section */}
       <div className="driver-header">
         <div className="header-content">
@@ -137,7 +213,12 @@ export default function Overview() {
             <span className="number-large">{seasonStats.driver_number}</span>
           </div>
           <div className="driver-name-section">
-            <h1 className="driver-name">Driver #{seasonStats.driver_number}</h1>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '8px' }}>
+              <h1 className="driver-name" style={{ margin: 0 }}>Driver #{seasonStats.driver_number}</h1>
+              {isFromScout && classification && (
+                <ClassificationBadge classification={classification} size="large" />
+              )}
+            </div>
             <div className="season-subtitle">Toyota Gazoo Series</div>
           </div>
 
@@ -198,25 +279,25 @@ export default function Overview() {
       <div className="nav-tabs-container">
         <div className="nav-tabs">
           <NavLink
-            to="/overview"
+            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/overview` : "/overview"}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Overview
           </NavLink>
           <NavLink
-            to="/race-log"
+            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/race-log` : "/race-log"}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Race Log
           </NavLink>
           <NavLink
-            to="/skills"
+            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/skills` : "/skills"}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Skills
           </NavLink>
           <NavLink
-            to="/improve"
+            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/improve` : "/improve"}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Improve
@@ -316,7 +397,7 @@ export default function Overview() {
             {/* Expand to Race Logs Button */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
               <NavLink
-                to="/race-log"
+                to={isFromScout ? `/scout/driver/${selectedDriverNumber}/race-log` : "/race-log"}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -557,7 +638,7 @@ export default function Overview() {
         {/* Expand to Skills Button */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
           <NavLink
-            to="/skills"
+            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/skills` : "/skills"}
             style={{
               display: 'flex',
               alignItems: 'center',

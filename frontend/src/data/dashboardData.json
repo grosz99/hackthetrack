@@ -2623,11 +2623,9 @@
     {
       "id": "barber",
       "name": "Barber Motorsports Park",
-      "short_name": "Barber",
       "location": "Birmingham, AL",
       "length": "2.38 miles",
       "description": "High tire degradation, hard to pass",
-      "insight": "Barber's tight, technical layout heavily emphasizes raw speed and consistency. The spider graph shows that podium finishers here excel at maintaining blistering pace lap after lap through the twisty sections. Racecraft matters least due to limited passing opportunities, making qualifying and consistent execution critical for success.",
       "image": "/track_maps/barber.png",
       "demands": {
         "raw_speed": 5.325443789550014,
@@ -2640,11 +2638,9 @@
     {
       "id": "cota",
       "name": "Circuit of The Americas",
-      "short_name": "COTA",
       "location": "Austin, TX",
       "length": "3.41 miles",
       "description": "Balanced track, rewards speed and consistency",
-      "insight": "COTA demands excellence across all performance factors. The radar shows podium finishers need strong consistency through the technical sector, raw speed on the back straight, decent tire management for the long stint, and racecraft to capitalize on multiple passing zones. This balanced profile rewards well-rounded drivers.",
       "image": "/track_maps/cota.png",
       "demands": {
         "raw_speed": 5.633089661097415,
@@ -2657,11 +2653,9 @@
     {
       "id": "roadamerica",
       "name": "Road America",
-      "short_name": "Road America",
       "location": "Elkhart Lake, WI",
       "length": "4.05 miles",
       "description": "Fast, flowing, rewards racecraft",
-      "insight": "The longest track in the series demands exceptional tire management and consistency. Road America's high-speed nature means tire degradation becomes critical over the long lap. The spider graph shows podium finishers must maintain consistent lap times while preserving their tires better than the field average, with racecraft less important on this flowing layout.",
       "image": null,
       "demands": {
         "raw_speed": 5.227565212088595,
@@ -2674,11 +2668,9 @@
     {
       "id": "sebring",
       "name": "Sebring International",
-      "short_name": "Sebring",
       "location": "Sebring, FL",
       "length": "3.74 miles",
       "description": "Power track, low degradation, rewards raw speed",
-      "insight": "Sebring is the ultimate power track. The spider graph dramatically shows that raw speed dominates here more than any other circuit. Podium finishers need exceptional straight-line pace and power deployment. With low tire degradation, tire management barely matters. Success here is about who can extract maximum speed from their car.",
       "image": null,
       "demands": {
         "raw_speed": 6.782258602230411,
@@ -2691,11 +2683,9 @@
     {
       "id": "sonoma",
       "name": "Sonoma Raceway",
-      "short_name": "Sonoma",
       "location": "Sonoma, CA",
       "length": "2.52 miles",
       "description": "Technical, elevation changes",
-      "insight": "Sonoma's elevation changes and technical corners create a unique challenge. The radar shows podium finishers need strong raw speed to power up the hills, excellent consistency through the blind crests, and good racecraft to navigate the tight racing. This track's varied demands mean versatile drivers shine here.",
       "image": null,
       "demands": {
         "raw_speed": 6.202555226658032,
@@ -2708,11 +2698,9 @@
     {
       "id": "vir",
       "name": "Virginia International Raceway",
-      "short_name": "VIR",
       "location": "Alton, VA",
       "length": "3.27 miles",
       "description": "Technical, balanced, tire mgmt doesn't matter",
-      "insight": "VIR's flowing, technical layout places the highest emphasis on consistency of any track in the series. The spider graph shows podium finishers must nail every corner lap after lap. With minimal tire degradation and limited passing, this track rewards drivers who can execute perfect laps repeatedly without mistakes.",
       "image": null,
       "demands": {
         "raw_speed": 4.560838510672493,

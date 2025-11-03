@@ -24,8 +24,42 @@ export const DriverProvider = ({ children }) => {
         const driversList = response.data
           .sort((a, b) => a.driver_number - b.driver_number)
           .map(d => ({
+            // Basic info
             number: d.driver_number,
-            name: d.driver_name || `Driver #${d.driver_number}`
+            name: d.driver_name || `Driver #${d.driver_number}`,
+
+            // Performance metrics
+            overall_score: d.overall_score || 0,
+            speed: d.speed?.score || 0,
+            consistency: d.consistency?.score || 0,
+            racecraft: d.racecraft?.score || 0,
+            tire_management: d.tire_management?.score || 0,
+
+            // Stats
+            races: d.stats?.races_completed || 0,
+            avg_finish: d.stats?.average_finish || 0,
+            best_finish: d.stats?.best_finish || 0,
+            worst_finish: d.stats?.worst_finish || 0,
+
+            // Factor details (for classification)
+            factors: {
+              raw_speed: {
+                score: d.speed?.score || 0,
+                percentile: d.speed?.percentile || 0
+              },
+              consistency: {
+                score: d.consistency?.score || 0,
+                percentile: d.consistency?.percentile || 0
+              },
+              racecraft: {
+                score: d.racecraft?.score || 0,
+                percentile: d.racecraft?.percentile || 0
+              },
+              tire_mgmt: {
+                score: d.tire_management?.score || 0,
+                percentile: d.tire_management?.percentile || 0
+              }
+            }
           }));
         setDrivers(driversList);
       } catch (error) {
