@@ -278,25 +278,25 @@ export default function Overview() {
       <div className="nav-tabs-container">
         <div className="nav-tabs">
           <NavLink
-            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/overview` : "/overview"}
+            to={isFromScout ? `/scout/driver/${routeDriverNumber || selectedDriverNumber}/overview` : "/overview"}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Overview
           </NavLink>
           <NavLink
-            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/race-log` : "/race-log"}
+            to={isFromScout ? `/scout/driver/${routeDriverNumber || selectedDriverNumber}/race-log` : "/race-log"}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Race Log
           </NavLink>
           <NavLink
-            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/skills` : "/skills"}
+            to={isFromScout ? `/scout/driver/${routeDriverNumber || selectedDriverNumber}/skills` : "/skills"}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Skills
           </NavLink>
           <NavLink
-            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/improve` : "/improve"}
+            to={isFromScout ? `/scout/driver/${routeDriverNumber || selectedDriverNumber}/improve` : "/improve"}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Improve
