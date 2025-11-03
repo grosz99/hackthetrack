@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useDriver } from '../../context/DriverContext';
 import { useScout } from '../../context/ScoutContext';
@@ -26,7 +27,7 @@ export default function DashboardHeader({ driverData, pageName }) {
   const classification = driverData ? classifyDriver(driverData) : null;
 
   // Sync route params with DriverContext
-  React.useEffect(() => {
+  useEffect(() => {
     if (routeDriverNumber) {
       const driverNum = Number(routeDriverNumber);
       if (driverNum !== selectedDriverNumber) {
