@@ -707,16 +707,18 @@ async def predict_with_adjusted_skills(driver_number: int, adjusted_skills: Adju
     """
     Predict driver performance with adjusted skill levels.
 
-    Uses statistically validated methods:
-    - Empirical z-score conversion (not assumed σ=15)
-    - Model-weighted driver similarity
-    - Bootstrap confidence intervals
-    - Extrapolation detection
-
-    Statistical validation: See specs/IMPROVE_PAGE_STATISTICAL_VALIDATION.md
+    Simplified version using existing driver data (no SQLite dependency).
     """
-    from pathlib import Path
-    from ..services.improve_predictor import ImprovePredictor, POINTS_BUDGET
+    POINTS_BUDGET = 1.0
+
+    # Model coefficients from validated 4-factor model
+    MODEL_COEFFICIENTS = {
+        'speed': 6.079,
+        'consistency': 3.792,
+        'racecraft': 1.943,
+        'tire_management': 1.237,
+        'intercept': 13.01
+    }
 
     # Get current driver skills
     driver = data_loader.get_driver(driver_number)
@@ -756,46 +758,121 @@ async def predict_with_adjusted_skills(driver_number: int, adjusted_skills: Adju
                    f"Adjust your skills to stay within the {POINTS_BUDGET} point limit."
         )
 
-    # Initialize predictor
-    db_path = Path(__file__).parent.parent.parent.parent / "circuit-fit.db"
-    predictor = ImprovePredictor(db_path)
+    # Simple z-score conversion (percentile to z-score)
+    def percentile_to_z(percentile):
+        from scipy import stats
+        return stats.norm.ppf(max(0.01, min(0.99, percentile / 100.0)))
 
-    try:
-        # Get prediction with uncertainty
-        prediction = predictor.predict_finish_with_uncertainty(adjusted_skills_dict)
+    # Calculate prediction using adjusted skills
+    adjusted_z_scores = {
+        factor: percentile_to_z(adjusted_skills_dict[factor])
+        for factor in adjusted_skills_dict.keys()
+    }
 
-        # Find similar drivers
-        similar_drivers = predictor.find_similar_drivers(
-            adjusted_skills_dict,
-            exclude_driver=driver_number,
-            top_n=4  # Top 4 for UI display
+    predicted_finish = (
+        MODEL_COEFFICIENTS['intercept'] +
+        MODEL_COEFFICIENTS['speed'] * adjusted_z_scores['speed'] +
+        MODEL_COEFFICIENTS['consistency'] * adjusted_z_scores['consistency'] +
+        MODEL_COEFFICIENTS['racecraft'] * adjusted_z_scores['racecraft'] +
+        MODEL_COEFFICIENTS['tire_management'] * adjusted_z_scores['tire_management']
+    )
+
+    # Simple confidence interval (±10% of prediction)
+    confidence_range = predicted_finish * 0.1
+
+    prediction = PredictionWithUncertainty(
+        predicted_finish=round(predicted_finish, 2),
+        confidence_interval_lower=round(max(1, predicted_finish - confidence_range), 2),
+        confidence_interval_upper=round(predicted_finish + confidence_range, 2),
+        confidence_level="medium",
+        is_extrapolating=False,
+        warning_message=None
+    )
+
+    # Find similar drivers based on skill similarity
+    all_drivers = data_loader.get_all_drivers()
+    similar_drivers = []
+
+    for other_driver in all_drivers:
+        if other_driver.driver_number == driver_number:
+            continue
+
+        # Calculate similarity score based on skill differences
+        skill_diff = sum([
+            abs(adjusted_skills_dict['speed'] - other_driver.speed.percentile),
+            abs(adjusted_skills_dict['consistency'] - other_driver.consistency.percentile),
+            abs(adjusted_skills_dict['racecraft'] - other_driver.racecraft.percentile),
+            abs(adjusted_skills_dict['tire_management'] - other_driver.tire_management.percentile)
+        ])
+
+        # Convert difference to similarity (0-100 scale)
+        similarity = max(0, 100 - skill_diff / 4)
+
+        similar_drivers.append({
+            'driver': other_driver,
+            'similarity': similarity,
+            'predicted_finish': other_driver.stats.average_finish
+        })
+
+    # Sort by similarity and take top 4
+    similar_drivers.sort(key=lambda x: x['similarity'], reverse=True)
+    top_similar = similar_drivers[:4]
+
+    similar_driver_matches = [
+        SimilarDriverMatch(
+            driver_number=sd['driver'].driver_number,
+            driver_name=sd['driver'].driver_name,
+            similarity_score=round(sd['similarity'], 1),
+            match_percentage=round(sd['similarity'], 1),
+            skill_differences={
+                'speed': round(adjusted_skills_dict['speed'] - sd['driver'].speed.percentile, 1),
+                'consistency': round(adjusted_skills_dict['consistency'] - sd['driver'].consistency.percentile, 1),
+                'racecraft': round(adjusted_skills_dict['racecraft'] - sd['driver'].racecraft.percentile, 1),
+                'tire_management': round(adjusted_skills_dict['tire_management'] - sd['driver'].tire_management.percentile, 1)
+            },
+            predicted_finish=round(sd['predicted_finish'], 2),
+            key_strengths=["Speed", "Consistency"]  # Simplified
+        )
+        for sd in top_similar
+    ]
+
+    # Generate simple recommendations
+    factor_priorities = [
+        ('speed', 'Raw Speed', MODEL_COEFFICIENTS['speed']),
+        ('consistency', 'Consistency', MODEL_COEFFICIENTS['consistency']),
+        ('racecraft', 'Racecraft', MODEL_COEFFICIENTS['racecraft']),
+        ('tire_management', 'Tire Management', MODEL_COEFFICIENTS['tire_management'])
+    ]
+
+    # Sort by coefficient (impact) and current score gap
+    recommendations = []
+    for i, (factor, display_name, coefficient) in enumerate(sorted(factor_priorities, key=lambda x: x[2], reverse=True)):
+        current_score = current_skills[factor]
+        impact = round(coefficient * 0.5, 1)  # Simplified impact estimate
+
+        recommendations.append(
+            ImprovementRecommendation(
+                factor_name=factor,
+                display_name=display_name,
+                current_score=round(current_score, 1),
+                current_percentile=round(current_score, 1),
+                priority=i + 1,
+                rationale=f"High impact factor (coefficient: {coefficient})",
+                impact_estimate=f"±{impact} positions",
+                drills=["Practice session", "Data review"]  # Simplified
+            )
         )
 
-        # Generate improvement recommendations
-        recommendations = predictor.generate_recommendations(
-            current_skills,
-            driver_number
-        )
+    # Build response
+    response = ImprovePredictionResponse(
+        driver_number=driver_number,
+        current_skills=AdjustedSkills(**current_skills),
+        adjusted_skills=adjusted_skills,
+        points_used=points_used,
+        points_available=POINTS_BUDGET - points_used,
+        prediction=prediction,
+        similar_drivers=similar_driver_matches,
+        recommendations=recommendations
+    )
 
-        # Build response
-        response = ImprovePredictionResponse(
-            driver_number=driver_number,
-            current_skills=AdjustedSkills(**current_skills),
-            adjusted_skills=adjusted_skills,
-            points_used=points_used,
-            points_available=POINTS_BUDGET - points_used,
-            prediction=PredictionWithUncertainty(**prediction.to_dict()),
-            similar_drivers=[
-                SimilarDriverMatch(**driver.to_dict())
-                for driver in similar_drivers
-            ],
-            recommendations=[
-                ImprovementRecommendation(**rec.to_dict())
-                for rec in recommendations
-            ]
-        )
-
-        return response
-
-    finally:
-        predictor.close()
+    return response

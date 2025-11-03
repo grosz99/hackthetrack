@@ -177,10 +177,10 @@ export default function Improve() {
       <div className="improve-header" style={{ display: 'none' }}>
         <div className="header-content">
           <div className="driver-number-display">
-            <span className="number-large">{driverNumber}</span>
+            <span className="number-large">{selectedDriverNumber}</span>
           </div>
           <div className="driver-name-section">
-            <h1 className="driver-name">Driver #{driverNumber}</h1>
+            <h1 className="driver-name">Driver #{selectedDriverNumber}</h1>
             <div className="season-subtitle">Toyota Gazoo Series</div>
           </div>
 
