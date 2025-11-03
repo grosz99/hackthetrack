@@ -12,7 +12,7 @@ import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import './RaceLog.css';
 
 export default function RaceLog() {
-  const { selectedDriverNumber } = useDriver();
+  const { selectedDriverNumber, drivers } = useDriver();
   const [raceResults, setRaceResults] = useState([]);
   const [driverData, setDriverData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -165,8 +165,8 @@ export default function RaceLog() {
               Select Driver
             </span>
             <select
-              value={driverNumber}
-              onChange={(e) => setDriverNumber(Number(e.target.value))}
+              value={selectedDriverNumber}
+              onChange={(e) => console.log('Old selector - should not be used')}
               style={{
                 padding: '12px 20px',
                 fontSize: '16px',

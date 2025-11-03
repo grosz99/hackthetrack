@@ -36,7 +36,7 @@ const FACTOR_DESCRIPTIONS = {
 };
 
 export default function Improve() {
-  const { selectedDriverNumber } = useDriver();
+  const { selectedDriverNumber, drivers } = useDriver();
 
   const [driverData, setDriverData] = useState(null);
   const [currentSkills, setCurrentSkills] = useState(null);
@@ -197,8 +197,8 @@ export default function Improve() {
               Select Driver
             </span>
             <select
-              value={driverNumber}
-              onChange={(e) => setDriverNumber(Number(e.target.value))}
+              value={selectedDriverNumber}
+              onChange={(e) => console.log('Old selector - should not be used')}
               style={{
                 padding: '12px 20px',
                 fontSize: '16px',
