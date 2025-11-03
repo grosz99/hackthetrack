@@ -27,7 +27,8 @@ from models import (
 from ..services.data_loader import data_loader
 from ..services.ai_strategy import ai_service
 
-router = APIRouter(prefix="/api", tags=["racing"])
+# No prefix here - it's added by main.py when including the router
+router = APIRouter(tags=["racing"])
 
 
 # ============================================================================
