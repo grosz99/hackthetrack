@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --config config/vite.config.js",
-    "build": "vite build --config config/vite.config.js",
+    "dev": "vite",
+    "build": "vite build",
+    "vercel-build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview --config config/vite.config.js"
+    "preview": "vite preview"
   },
   "dependencies": {
     "plotly.js": "^3.1.2",

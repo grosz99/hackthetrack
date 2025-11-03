@@ -1,4 +1,3 @@
-import React from 'react';
 /**
  * Overview Page - Driver season statistics
  * Dark F1-inspired theme with modern visualizations
