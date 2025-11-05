@@ -49,9 +49,18 @@ frontend/.npm-cache/
 frontend/node_modules/
 backend/database/
 
-# Environment
+# Environment - CRITICAL: Never commit these
+.env
 .env.local
 .env.*.local
+backend/.env
+frontend/.env
+
+# Snowflake RSA keys - NEVER commit these
+rsa_key.p8
+rsa_key.pub
+*.p8
+*.pem
 
 # Temporary files
 tmp/

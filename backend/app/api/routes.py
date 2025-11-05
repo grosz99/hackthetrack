@@ -5,6 +5,9 @@ API routes for Racing Analytics platform.
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional, Dict
 import pandas as pd
+import logging
+
+logger = logging.getLogger(__name__)
 from models import (
     Track,
     Driver,
@@ -139,32 +142,37 @@ async def get_driver_race_results(driver_number: int):
 # ============================================================================
 
 
+class PredictRequest(BaseModel):
+    """Request model for performance prediction."""
+    driver_number: int
+    track_id: str
+
 @router.post("/predict", response_model=CircuitFitPrediction)
-async def predict_performance(driver_number: int, track_id: str):
+async def predict_performance(request: PredictRequest):
     """
     Predict driver performance at specific track.
 
     Returns circuit fit score and predicted finish position using the 4-factor model.
     """
-    driver = data_loader.get_driver(driver_number)
-    track = data_loader.get_track(track_id)
+    driver = data_loader.get_driver(request.driver_number)
+    track = data_loader.get_track(request.track_id)
 
     if not driver:
         raise HTTPException(
-            status_code=404, detail=f"Driver {driver_number} not found"
+            status_code=404, detail=f"Driver {request.driver_number} not found"
         )
     if not track:
-        raise HTTPException(status_code=404, detail=f"Track {track_id} not found")
+        raise HTTPException(status_code=404, detail=f"Track {request.track_id} not found")
 
     # Calculate circuit fit
-    fit_score = data_loader.calculate_circuit_fit(driver_number, track_id)
+    fit_score = data_loader.calculate_circuit_fit(request.driver_number, request.track_id)
     if fit_score is None:
         raise HTTPException(
             status_code=500, detail="Failed to calculate circuit fit"
         )
 
     # Predict finish position
-    predicted_finish = data_loader.predict_finish_position(driver_number, track_id)
+    predicted_finish = data_loader.predict_finish_position(request.driver_number, request.track_id)
     if predicted_finish is None:
         raise HTTPException(
             status_code=500, detail="Failed to predict finish position"
@@ -174,8 +182,8 @@ async def predict_performance(driver_number: int, track_id: str):
     explanation = _generate_prediction_explanation(driver, track, fit_score)
 
     return CircuitFitPrediction(
-        driver_number=driver_number,
-        track_id=track_id,
+        driver_number=request.driver_number,
+        track_id=request.track_id,
         circuit_fit_score=fit_score,
         predicted_finish=predicted_finish,
         explanation=explanation,
@@ -415,11 +423,28 @@ def _generate_telemetry_insights(
 
 @router.get("/health")
 async def health_check():
-    """Health check endpoint."""
+    """
+    Health check endpoint with comprehensive data reliability status.
+
+    Returns service health and data source availability across all layers.
+    """
+    from ..services.data_reliability_service import data_reliability_service
+
+    # Get comprehensive data reliability health
+    data_health = data_reliability_service.health_check()
+
     return {
-        "status": "healthy",
+        "status": "healthy" if data_health["overall_health"] in ["healthy", "degraded"] else "unhealthy",
         "tracks_loaded": len(data_loader.tracks),
         "drivers_loaded": len(data_loader.drivers),
+        # Data reliability metrics
+        "data_sources": {
+            "snowflake": data_health["snowflake"],
+            "local_json": data_health["local_json"],
+            "cache": data_health["cache"]
+        },
+        "overall_data_health": data_health["overall_health"],
+        "recommendations": data_health["recommendations"]
     }
 
 
@@ -897,29 +922,30 @@ async def get_telemetry_drivers():
     Get a list of driver numbers that have telemetry data available.
 
     Returns a deduplicated list of driver numbers across all tracks and races.
+
+    BULLETPROOF: Uses multi-layer failover (Snowflake → JSON → Cache)
+    to ensure data is ALWAYS available.
     """
-    import pandas as pd
-    from pathlib import Path
+    from ..services.data_reliability_service import data_reliability_service
 
-    data_path = Path(__file__).parent.parent.parent.parent / "data"
-    telemetry_path = data_path / "telemetry"
+    try:
+        # Use bulletproof data reliability service with automatic failover
+        result = data_reliability_service.get_drivers_with_telemetry()
 
-    # Get all telemetry CSV files
-    driver_numbers = set()
-
-    for csv_file in telemetry_path.glob("*_wide.csv"):
-        try:
-            df = pd.read_csv(csv_file)
-            if 'vehicle_number' in df.columns:
-                driver_numbers.update(df['vehicle_number'].unique().tolist())
-        except Exception as e:
-            print(f"Error reading {csv_file}: {e}")
-            continue
-
-    return {
-        "drivers_with_telemetry": sorted([int(d) for d in driver_numbers if pd.notna(d)]),
-        "count": len(driver_numbers)
-    }
+        return {
+            "drivers_with_telemetry": result["drivers"],
+            "count": len(result["drivers"]),
+            "source": result["source"],
+            "cached": result.get("cached", False),
+            "health": result["health"]
+        }
+    except Exception as e:
+        # This should NEVER happen if data reliability service is working
+        logger.critical(f"🚨 CRITICAL: ALL DATA SOURCES FAILED: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail="Service temporarily unavailable - all data sources failed"
+        )
 
 
 @router.post(
@@ -934,23 +960,48 @@ async def get_telemetry_coaching(request: TelemetryCoachingRequest):
 
     Compares driver's telemetry against a reference driver and generates
     specific, actionable coaching recommendations.
+
+    BULLETPROOF: Uses multi-layer failover (Snowflake → JSON → Cache)
+    to ensure data is ALWAYS available.
     """
     import pandas as pd
     import numpy as np
-    from pathlib import Path
+    from ..services.data_reliability_service import data_reliability_service, DataUnavailableError
 
-    # Load telemetry data
-    data_path = Path(__file__).parent.parent.parent.parent / "data"
-    telemetry_path = data_path / "telemetry" / f"{request.track_id}_r{request.race_num}_wide.csv"
-
-    if not telemetry_path.exists():
-        raise HTTPException(
-            status_code=404,
-            detail=f"Telemetry data not found for {request.track_id} race {request.race_num}"
+    # Use bulletproof data reliability service with automatic failover
+    try:
+        result = data_reliability_service.get_telemetry_data(
+            track_id=request.track_id,
+            race_num=request.race_num
         )
 
-    # Load telemetry
-    df = pd.read_csv(telemetry_path)
+        # Extract telemetry data
+        df_data = result["data"]
+
+        # Convert to DataFrame if it's a list (from JSON source)
+        if isinstance(df_data, list):
+            df = pd.DataFrame(df_data)
+        else:
+            df = df_data
+
+        if df.empty:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Telemetry data not found for {request.track_id} race {request.race_num}"
+            )
+
+        # Log data source for observability
+        logger.info(
+            f"Loaded telemetry from {result['source']} "
+            f"(health: {result['health']}, rows: {result['row_count']})"
+        )
+
+    except DataUnavailableError as e:
+        logger.critical(f"🚨 ALL DATA SOURCES FAILED: {e}")
+        raise HTTPException(
+            status_code=503,
+            detail="Service temporarily unavailable - all data sources failed"
+        )
 
     # Filter for both drivers
     driver_df = df[df['vehicle_number'] == request.driver_number].copy()

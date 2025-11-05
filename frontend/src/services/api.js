@@ -21,7 +21,7 @@ const API_BASE_URL = getApiBaseUrl();
  * Fetch all tracks
  */
 export async function getTracks() {
-  const response = await fetch(`${API_BASE_URL}/tracks`);
+  const response = await fetch(`${API_BASE_URL}/api/tracks`);
   if (!response.ok) throw new Error('Failed to fetch tracks');
   return response.json();
 }

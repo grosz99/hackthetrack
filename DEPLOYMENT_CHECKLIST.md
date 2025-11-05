@@ -1,143 +1,258 @@
-# Vercel Deployment Checklist
+# 🚀 Vercel Deployment Checklist
 
-## Pre-Deployment Checklist
+## ✅ Security & Credentials (COMPLETE FIRST)
 
-- [ ] All code changes committed to Git
-- [ ] Frontend builds successfully locally (`cd frontend && npm run build`)
-- [ ] Backend runs without errors locally (`cd backend && python main.py`)
-- [ ] Environment variables documented in backend/.env.example
-- [ ] Large files excluded in .vercelignore
-- [ ] Database file (circuit-fit.db) exists and is included
+- [ ] **Read SECURITY_ROTATION_GUIDE.md completely**
+- [ ] Rotate Anthropic API key (revoke old, generate new)
+- [ ] Rotate Snowflake password OR configure key-pair auth
+- [ ] Set ALL environment variables in Vercel
+- [ ] Verify `.env` and `rsa_key.*` files are in `.gitignore`
+- [ ] Run `git status` - should show NO secret files
+- [ ] Delete local `.env` file with old credentials
+- [ ] Test Snowflake connection with new credentials locally
 
-## Configuration Files Checklist
+## ✅ Code Fixes (COMPLETED ✓)
 
-- [ ] `/vercel.json` exists with correct routing
-- [ ] `/frontend/package.json` has `vercel-build` script
-- [ ] `/frontend/config/vite.config.js` has `base: '/'`
-- [ ] `/backend/api/index.py` exports handler correctly
-- [ ] `/backend/requirements.txt` has all dependencies with pinned versions
-- [ ] `/.vercelignore` excludes data/ and *.csv files
+- [x] Fix API route prefix in `getTracks()` function
+- [x] Add `scipy` and `cryptography` to requirements.txt
+- [x] Fix `/predict` endpoint to accept JSON body
+- [x] Update Snowflake service to query `TELEMETRY_DATA_ALL`
+- [x] Verify all processed CSV files have `track_id` and `race_num`
 
-## Deployment Steps
+## ✅ Pre-Deployment Tests
 
-1. [ ] Push code to GitHub
-   ```bash
-   git add .
-   git commit -m "fix: configure Vercel deployment"
-   git push origin master
-   ```
+- [ ] **Test Backend Locally**:
+  ```bash
+  cd backend
+  python -c "from app.services.snowflake_service_v2 import snowflake_service; print(snowflake_service.check_connection())"
+  python -c "from app.services.snowflake_service_v2 import snowflake_service; print(len(snowflake_service.get_drivers_with_telemetry()))"
+  ```
 
-2. [ ] Import repository to Vercel
-   - Go to https://vercel.com/new
-   - Select repository
-   - Framework: Other (custom config)
+- [ ] **Test Frontend Build**:
+  ```bash
+  cd frontend
+  npm run build
+  # Should complete without errors
+  ```
 
-3. [ ] Add environment variables
-   - ANTHROPIC_API_KEY (required)
-   - Scope: Production + Preview + Development
+- [ ] **Check Bundle Size**:
+  ```bash
+  cd frontend/dist
+  ls -lh
+  # assets/ folder should be < 10MB total
+  ```
 
-4. [ ] Click Deploy
-   - Wait 2-4 minutes for build
+## ✅ Vercel Configuration
 
-## Post-Deployment Verification
+### Environment Variables to Set:
 
-### Frontend Checks
-- [ ] Root loads: `https://your-app.vercel.app/`
-- [ ] Scout page loads: `https://your-app.vercel.app/scout`
-- [ ] Driver route loads: `https://your-app.vercel.app/scout/driver/1/overview`
-- [ ] No 404 errors on direct navigation to routes
-- [ ] React Router navigation works without refresh
+**Snowflake** (Required):
+```
+SNOWFLAKE_ACCOUNT=EOEPNYL-PR46214
+SNOWFLAKE_USER=hackthetrack_svc
+SNOWFLAKE_WAREHOUSE=COMPUTE_WH
+SNOWFLAKE_DATABASE=HACKTHETRACK
+SNOWFLAKE_SCHEMA=TELEMETRY
+SNOWFLAKE_ROLE=ACCOUNTADMIN
+USE_SNOWFLAKE=true
+```
 
-### Asset Checks
-- [ ] CSS loads (check DevTools > Network)
-- [ ] JavaScript loads (no errors in Console)
-- [ ] Images/SVGs load correctly
-- [ ] No 404s for any static assets
+**Choose auth method**:
+```
+SNOWFLAKE_PASSWORD=<new-password>
+OR
+SNOWFLAKE_PRIVATE_KEY=<paste-key-with-\n>
+```
 
-### API Checks
-- [ ] Health endpoint works: `curl https://your-app.vercel.app/api/health`
-- [ ] Root API works: `curl https://your-app.vercel.app/api/`
-- [ ] Drivers endpoint works: `curl https://your-app.vercel.app/api/drivers`
-- [ ] No CORS errors in browser console
+**Anthropic** (Required):
+```
+ANTHROPIC_API_KEY=<new-rotated-key>
+```
 
-### Backend Checks
-- [ ] Check function logs in Vercel dashboard
-- [ ] No serverless function errors
-- [ ] Database queries work correctly
-- [ ] API responses are correct format
+**Frontend** (Required):
+```
+FRONTEND_URL=https://your-domain.vercel.app
+```
 
-## Troubleshooting
+**Performance** (Optional):
+```
+SNOWFLAKE_LOGIN_TIMEOUT=5
+SNOWFLAKE_NETWORK_TIMEOUT=15
+SNOWFLAKE_MAX_RETRIES=2
+ENVIRONMENT=production
+```
 
-### If You See 404 Errors
+### Verify vercel.json Exists:
+- [ ] Check `vercel.json` has correct build and rewrite configuration
 
-1. Check catch-all route in vercel.json is LAST
-2. Verify route points to `/frontend/dist/index.html`
-3. Redeploy after fixing
+## ✅ Git Commit & Push
 
-### If Assets Don't Load
-
-1. Check `base: '/'` in vite.config.js
-2. Rebuild: `cd frontend && npm run build`
-3. Commit and push changes
-
-### If API Doesn't Work
-
-1. Check `/backend/api/index.py` exists
-2. Verify handler is exported
-3. Check function logs in dashboard
-4. Verify environment variables are set
-
-### If CORS Errors Appear
-
-1. Add Vercel domain to CORS in backend/main.py
-2. Redeploy
-
-## Rollback Plan
-
-If something goes wrong:
-
-### Option 1: Dashboard
-1. Go to Deployments
-2. Find previous working deployment
-3. Click "Promote to Production"
-
-### Option 2: Git
 ```bash
-git revert HEAD
+cd /Users/justingrosz/Documents/AI-Work/hackthetrack-master
+
+# Check what will be committed
+git status
+
+# Stage security improvements
+git add .gitignore backend/.gitignore backend/.env.example
+
+# Stage code fixes
+git add frontend/src/services/api.js
+git add backend/requirements.txt
+git add backend/app/api/routes.py
+git add backend/app/services/snowflake_service_v2.py
+
+# Commit
+git commit -m "fix(deployment): prepare for Vercel deployment
+
+- Fix API route prefix in getTracks()
+- Add scipy and cryptography dependencies
+- Fix /predict endpoint to accept JSON body
+- Update Snowflake service to query TELEMETRY_DATA_ALL
+- Enhance .gitignore to prevent credential exposure
+- Add comprehensive .env.example template
+
+SECURITY: All secrets managed via Vercel environment variables"
+
+# Push to main/master branch
 git push origin master
 ```
 
-## Success Criteria
+## ✅ Deploy to Vercel
+
+### Option A: Deploy via Vercel Dashboard
+
+1. Go to: https://vercel.com/new
+2. Import your Git repository
+3. Configure project:
+   - Framework Preset: `Vite`
+   - Root Directory: `./`
+   - Build Command: `cd frontend && npm install && npm run build`
+   - Output Directory: `frontend/dist`
+   - Install Command: `npm install`
+
+4. Add Environment Variables (from checklist above)
+
+5. Click "Deploy"
+
+### Option B: Deploy via CLI
+
+```bash
+# Install Vercel CLI
+npm i -g vercel
+
+# Login
+vercel login
+
+# Deploy
+cd /Users/justingrosz/Documents/AI-Work/hackthetrack-master
+vercel --prod
+
+# Follow prompts and set environment variables
+```
+
+## ✅ Post-Deployment Verification
+
+### Test Critical Endpoints:
+
+1. **Health Check**:
+   ```bash
+   curl https://your-app.vercel.app/api/health
+   # Should return 200 with Snowflake connection status
+   ```
+
+2. **Get Drivers**:
+   ```bash
+   curl https://your-app.vercel.app/api/telemetry/drivers
+   # Should return list of 35 drivers
+   ```
+
+3. **Get Track**:
+   ```bash
+   curl https://your-app.vercel.app/api/tracks/barber
+   # Should return Barber Motorsports Park data
+   ```
+
+4. **Get Telemetry** (requires track_id, race_num, driver_number):
+   ```bash
+   curl "https://your-app.vercel.app/api/telemetry/detailed?track_id=barber&race_num=1&driver_number=13"
+   # Should return telemetry data
+   ```
+
+### Test Frontend:
+
+1. Open: `https://your-app.vercel.app`
+2. Navigate to Scout Landing page
+3. Select a driver (e.g., Driver 13)
+4. Check each tab:
+   - [ ] Overview page loads
+   - [ ] RaceLog page loads
+   - [ ] Skills page loads
+   - [ ] Improve page loads
+5. Verify no console errors (F12 → Console)
+6. Check Network tab for API calls (should all be 200)
+
+## ✅ Monitor Deployment
+
+### Check Vercel Logs:
+
+1. Go to: Vercel Dashboard → Your Project → Deployments → Latest
+2. Click "View Function Logs"
+3. Monitor for errors:
+   - Snowflake connection errors
+   - API timeout errors
+   - CORS errors
+
+### Monitor Performance:
+
+- Function Execution Time (should be < 10s)
+- Cold Start Time (should be < 3s)
+- Error Rate (should be < 1%)
+
+## ✅ Rollback Plan (If Issues Occur)
+
+If deployment has critical issues:
+
+1. **Immediate Rollback**:
+   - Go to Vercel Dashboard → Deployments
+   - Find previous working deployment
+   - Click "..." → "Promote to Production"
+
+2. **Investigate Logs**:
+   ```bash
+   vercel logs <deployment-url>
+   ```
+
+3. **Common Issues**:
+   - **Snowflake timeout**: Reduce `SNOWFLAKE_NETWORK_TIMEOUT` to 10
+   - **CORS errors**: Check `FRONTEND_URL` environment variable
+   - **404 errors**: Verify `vercel.json` rewrites configuration
+   - **Build failure**: Check `package.json` scripts
+
+## ✅ Success Criteria
 
 Deployment is successful when:
-- [ ] All frontend routes load without 404
-- [ ] All static assets load without errors
-- [ ] All API endpoints return correct data
-- [ ] No CORS errors in browser
-- [ ] React Router navigation works correctly
+
+- [ ] Frontend loads at production URL
+- [ ] All API endpoints return 200 status codes
+- [ ] Driver data loads correctly
+- [ ] Telemetry data displays on Improve page
+- [ ] No errors in browser console
 - [ ] No errors in Vercel function logs
+- [ ] Page navigation works (Overview → RaceLog → Skills → Improve)
+- [ ] Snowflake connection is stable
 
-## Support Resources
+## 🎉 Post-Deployment
 
-- Vercel Docs: https://vercel.com/docs
-- Vercel Status: https://vercel-status.com
-- Project Logs: Dashboard > Deployments > [Your Deploy] > Logs
-- Function Logs: Dashboard > Project > Functions
+- [ ] Update team on deployment status
+- [ ] Share production URL with stakeholders
+- [ ] Monitor for 24 hours for any issues
+- [ ] Schedule credential rotation reminder (90 days)
+- [ ] Document any deployment issues encountered
+- [ ] Update README.md with production URL
 
 ---
 
-**Quick Command Reference:**
+**Estimated Time**: 2-3 hours (including security rotation and testing)
 
-```bash
-# Local build test
-cd frontend && npm run build && npm run preview
-
-# Deploy via CLI
-vercel --prod
-
-# Check logs
-vercel logs [deployment-url]
-
-# Rollback
-vercel rollback [deployment-url]
-```
+**Critical Path**: Security → Code Fixes → Test → Deploy → Verify
