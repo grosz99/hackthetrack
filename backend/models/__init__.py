@@ -25,6 +25,10 @@ from .models import (
     SimilarDriverMatch,
     ImprovementRecommendation,
     ImprovePredictionResponse,
+    TelemetryPoint,
+    CornerAnalysis,
+    TelemetryCoachingRequest,
+    TelemetryCoachingResponse,
 )
 
 __all__ = [
@@ -50,4 +54,8 @@ __all__ = [
     "SimilarDriverMatch",
     "ImprovementRecommendation",
     "ImprovePredictionResponse",
+    "TelemetryPoint",
+    "CornerAnalysis",
+    "TelemetryCoachingRequest",
+    "TelemetryCoachingResponse",
 ]

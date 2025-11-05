@@ -3,7 +3,8 @@ API routes for Racing Analytics platform.
 """
 
 from fastapi import APIRouter, HTTPException, Query
-from typing import List, Optional
+from typing import List, Optional, Dict
+import pandas as pd
 from models import (
     Track,
     Driver,
@@ -23,9 +24,13 @@ from models import (
     SimilarDriverMatch,
     ImprovementRecommendation,
     ImprovePredictionResponse,
+    TelemetryCoachingRequest,
+    TelemetryCoachingResponse,
+    CornerAnalysis,
 )
 from ..services.data_loader import data_loader
 from ..services.ai_strategy import ai_service
+from ..services.ai_telemetry_coach import ai_telemetry_coach
 
 # No prefix here - it's added by main.py when including the router
 router = APIRouter(tags=["racing"])
@@ -876,3 +881,259 @@ async def predict_with_adjusted_skills(driver_number: int, adjusted_skills: Adju
     )
 
     return response
+
+
+# ============================================================================
+# TELEMETRY COACHING ENDPOINT
+# ============================================================================
+
+
+@router.get(
+    "/telemetry/drivers",
+    summary="Get drivers with telemetry data"
+)
+async def get_telemetry_drivers():
+    """
+    Get a list of driver numbers that have telemetry data available.
+
+    Returns a deduplicated list of driver numbers across all tracks and races.
+    """
+    import pandas as pd
+    from pathlib import Path
+
+    data_path = Path(__file__).parent.parent.parent.parent / "data"
+    telemetry_path = data_path / "telemetry"
+
+    # Get all telemetry CSV files
+    driver_numbers = set()
+
+    for csv_file in telemetry_path.glob("*_wide.csv"):
+        try:
+            df = pd.read_csv(csv_file)
+            if 'vehicle_number' in df.columns:
+                driver_numbers.update(df['vehicle_number'].unique().tolist())
+        except Exception as e:
+            print(f"Error reading {csv_file}: {e}")
+            continue
+
+    return {
+        "drivers_with_telemetry": sorted([int(d) for d in driver_numbers if pd.notna(d)]),
+        "count": len(driver_numbers)
+    }
+
+
+@router.post(
+    "/telemetry/coaching",
+    response_model=TelemetryCoachingResponse,
+    summary="Get AI telemetry coaching",
+    description="Analyze telemetry and provide race engineer-style coaching advice"
+)
+async def get_telemetry_coaching(request: TelemetryCoachingRequest):
+    """
+    Analyze telemetry data and provide AI-powered coaching.
+
+    Compares driver's telemetry against a reference driver and generates
+    specific, actionable coaching recommendations.
+    """
+    import pandas as pd
+    import numpy as np
+    from pathlib import Path
+
+    # Load telemetry data
+    data_path = Path(__file__).parent.parent.parent.parent / "data"
+    telemetry_path = data_path / "telemetry" / f"{request.track_id}_r{request.race_num}_wide.csv"
+
+    if not telemetry_path.exists():
+        raise HTTPException(
+            status_code=404,
+            detail=f"Telemetry data not found for {request.track_id} race {request.race_num}"
+        )
+
+    # Load telemetry
+    df = pd.read_csv(telemetry_path)
+
+    # Filter for both drivers
+    driver_df = df[df['vehicle_number'] == request.driver_number].copy()
+    reference_df = df[df['vehicle_number'] == request.reference_driver_number].copy()
+
+    if driver_df.empty:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No telemetry data found for driver {request.driver_number}"
+        )
+
+    if reference_df.empty:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No telemetry data found for reference driver {request.reference_driver_number}"
+        )
+
+    # Get track info
+    track = data_loader.get_track(request.track_id)
+    track_name = track.name if track else request.track_id.title()
+
+    # Calculate overall time delta (simplified - using best laps)
+    driver_laps = driver_df[driver_df['lap'] >= 3]
+    reference_laps = reference_df[reference_df['lap'] >= 3]
+
+    driver_best_lap = None
+    reference_best_lap = None
+
+    if len(driver_laps) > 0:
+        lap_counts = driver_laps.groupby('lap')['speed'].count()
+        if len(lap_counts) > 0:
+            driver_best_lap = lap_counts.idxmax()
+
+    if len(reference_laps) > 0:
+        lap_counts = reference_laps.groupby('lap')['speed'].count()
+        if len(lap_counts) > 0:
+            reference_best_lap = lap_counts.idxmax()
+
+    # Calculate telemetry insights
+    telemetry_insights = _analyze_telemetry_patterns(driver_df, reference_df)
+
+    # Analyze corner performance (simplified - using speed differentials)
+    corner_analysis = _analyze_corners(driver_df, reference_df, track_name)
+
+    # Calculate total potential gain
+    total_time_delta = telemetry_insights.get('total_delta', 0)
+    potential_gain = sum(c.time_loss for c in corner_analysis)
+
+    # Generate AI coaching
+    coaching_text = ai_telemetry_coach.generate_coaching(
+        driver_number=request.driver_number,
+        reference_driver_number=request.reference_driver_number,
+        track_name=track_name,
+        telemetry_insights=telemetry_insights,
+        corner_analysis=[c.dict() for c in corner_analysis]
+    )
+
+    return TelemetryCoachingResponse(
+        driver_number=request.driver_number,
+        reference_driver_number=request.reference_driver_number,
+        track_name=track_name,
+        total_time_delta=total_time_delta,
+        potential_time_gain=potential_gain,
+        corner_analysis=corner_analysis,
+        ai_coaching=coaching_text,
+        telemetry_insights=telemetry_insights
+    )
+
+
+def _analyze_telemetry_patterns(driver_df: pd.DataFrame, reference_df: pd.DataFrame) -> Dict:
+    """Analyze overall telemetry patterns between drivers."""
+
+    insights = {}
+
+    # Braking pattern
+    if 'pbrake_f' in driver_df.columns and 'pbrake_f' in reference_df.columns:
+        driver_brake_avg = driver_df['pbrake_f'].mean()
+        reference_brake_avg = reference_df['pbrake_f'].mean()
+
+        if driver_brake_avg > reference_brake_avg:
+            insights['braking_pattern'] = f"You're using more brake pressure on average ({driver_brake_avg:.1f}% vs {reference_brake_avg:.1f}%). Consider trail braking technique."
+        else:
+            insights['braking_pattern'] = f"Your average brake pressure is lower ({driver_brake_avg:.1f}% vs {reference_brake_avg:.1f}%)."
+    else:
+        insights['braking_pattern'] = "Brake data not available"
+
+    # Throttle pattern
+    if 'aps' in driver_df.columns and 'aps' in reference_df.columns:
+        driver_throttle_avg = driver_df['aps'].mean()
+        reference_throttle_avg = reference_df['aps'].mean()
+
+        insights['throttle_pattern'] = f"Average throttle application: {driver_throttle_avg:.1f}% (reference: {reference_throttle_avg:.1f}%)"
+    else:
+        insights['throttle_pattern'] = "Throttle data not available"
+
+    # Speed profile
+    if 'speed' in driver_df.columns and 'speed' in reference_df.columns:
+        driver_speed_avg = float(driver_df['speed'].mean())
+        reference_speed_avg = float(reference_df['speed'].mean())
+        speed_delta = reference_speed_avg - driver_speed_avg
+
+        insights['speed_pattern'] = f"Average speed: {driver_speed_avg:.1f} km/h (reference: {reference_speed_avg:.1f} km/h, delta: {speed_delta:+.1f} km/h)"
+        insights['total_delta'] = f"{float(speed_delta / 10):.3f}"  # Convert to string
+    else:
+        insights['speed_pattern'] = "Speed data not available"
+        insights['total_delta'] = "0.000"
+
+    # Steering smoothness
+    if 'Steering_Angle' in driver_df.columns and 'Steering_Angle' in reference_df.columns:
+        driver_steering_std = float(driver_df['Steering_Angle'].std())
+        reference_steering_std = float(reference_df['Steering_Angle'].std())
+
+        if driver_steering_std > reference_steering_std * 1.1:
+            insights['steering_pattern'] = f"Your steering inputs are less smooth (std: {driver_steering_std:.2f} vs {reference_steering_std:.2f}). Focus on being smoother on entries."
+        else:
+            insights['steering_pattern'] = f"Steering smoothness is good (std: {driver_steering_std:.2f} vs {reference_steering_std:.2f})"
+    else:
+        insights['steering_pattern'] = "Steering data not available"
+
+    # Convert potential_gain to string as well
+    insights['potential_gain'] = f"{float(abs(float(insights.get('total_delta', '0')))):.3f}"
+
+    return insights
+
+
+def _analyze_corners(driver_df: pd.DataFrame, reference_df: pd.DataFrame, track_name: str) -> List[CornerAnalysis]:
+    """Analyze corner performance (simplified version)."""
+
+    corner_analysis = []
+
+    # Simplified: Use lap-based speed differentials as proxy for corners
+    # In production, you'd want actual corner location data
+
+    if 'speed' not in driver_df.columns or 'speed' not in reference_df.columns:
+        return corner_analysis
+
+    # Group by lap and find minimum speeds (corners)
+    driver_laps = driver_df.groupby('lap')
+    reference_laps = reference_df.groupby('lap')
+
+    # Find common laps
+    common_laps = set(driver_df['lap'].unique()) & set(reference_df['lap'].unique())
+
+    if not common_laps:
+        return corner_analysis
+
+    # For each common lap, estimate 3-5 "corners" based on speed minimums
+    for lap in sorted(common_laps)[:1]:  # Just analyze one representative lap
+        driver_lap_data = driver_df[driver_df['lap'] == lap].copy()
+        reference_lap_data = reference_df[reference_df['lap'] == lap].copy()
+
+        if len(driver_lap_data) < 10 or len(reference_lap_data) < 10:
+            continue
+
+        # Find local minima in speed (corners)
+        from scipy.signal import find_peaks
+
+        driver_speeds = driver_lap_data['speed'].values
+        reference_speeds = reference_lap_data['speed'].values
+
+        # Find valleys (inverted peaks)
+        peaks, _ = find_peaks(-driver_speeds, distance=50, prominence=5)
+
+        for i, peak_idx in enumerate(peaks[:5]):  # Limit to 5 corners
+            if peak_idx >= len(driver_speeds) or peak_idx >= len(reference_speeds):
+                continue
+
+            driver_apex_speed = driver_speeds[peak_idx]
+            reference_apex_speed = reference_speeds[min(peak_idx, len(reference_speeds) - 1)]
+
+            apex_delta = reference_apex_speed - driver_apex_speed
+            time_loss = abs(apex_delta) * 0.01  # Rough estimate: 1 km/h = 0.01s
+
+            focus_area = "Apex Speed" if apex_delta > 3 else "Brake Point" if apex_delta > 1 else "Throttle Application"
+
+            corner_analysis.append(CornerAnalysis(
+                corner_number=i + 1,
+                corner_name=f"Turn {i + 1}",
+                driver_apex_speed=float(driver_apex_speed),
+                reference_apex_speed=float(reference_apex_speed),
+                apex_speed_delta=float(apex_delta),
+                time_loss=float(time_loss),
+                focus_area=focus_area
+            ))
+
+    return sorted(corner_analysis, key=lambda x: x.time_loss, reverse=True)

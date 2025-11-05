@@ -1,12 +1,8 @@
 /**
- * Improve Page - Driver Skill Improvement Lab
+ * Improve Page - AI Telemetry Coaching Lab
  *
- * Allows drivers to adjust their skills and see:
- * - Who they'd be like with those adjusted skills
- * - What their predicted performance would be
- * - Specific recommendations for improvement
- *
- * Uses statistically validated prediction model with 1-point budget.
+ * Provides race engineer-style coaching using AI analysis of telemetry data.
+ * Compares driver performance vs winner/leader with specific, actionable advice.
  */
 
 import { useState, useEffect } from 'react';
@@ -14,35 +10,29 @@ import api from '../../services/api';
 import { useDriver } from '../../context/DriverContext';
 import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
+import ReactMarkdown from 'react-markdown';
 import './Improve.css';
 
-const POINTS_BUDGET = 1.0;
-
-// Map internal factor names to display names
-const FACTOR_DISPLAY_NAMES = {
-  'speed': 'Raw Speed',
-  'consistency': 'Consistency',
-  'racecraft': 'Racecraft',
-  'tire_management': 'Tire Management'
-};
-
-// Factor descriptions
-const FACTOR_DESCRIPTIONS = {
-  'speed': 'Raw Speed',
-  'consistency': 'Mental Focus',
-  'racecraft': 'Race Positioning',
-  'tire_management': 'Technical Skill'
-};
+// Available tracks with telemetry
+const TRACKS = [
+  { id: 'barber', name: 'Barber Motorsports Park' },
+  { id: 'cota', name: 'Circuit of the Americas' },
+  { id: 'roadamerica', name: 'Road America' },
+  { id: 'sebring', name: 'Sebring International Raceway' },
+  { id: 'sonoma', name: 'Sonoma Raceway' },
+  { id: 'vir', name: 'Virginia International Raceway' }
+];
 
 export default function Improve() {
   const { selectedDriverNumber, drivers } = useDriver();
 
   const [driverData, setDriverData] = useState(null);
-  const [currentSkills, setCurrentSkills] = useState(null);
-  const [adjustedSkills, setAdjustedSkills] = useState(null);
-  const [prediction, setPrediction] = useState(null);
+  const [selectedTrack, setSelectedTrack] = useState('barber');
+  const [selectedRace, setSelectedRace] = useState(1);
+  const [referenceDriver, setReferenceDriver] = useState(null);
+  const [coachingData, setCoachingData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState(false);
+  const [loadingCoaching, setLoadingCoaching] = useState(false);
   const [error, setError] = useState(null);
 
   // Load driver data
@@ -55,19 +45,11 @@ export default function Improve() {
         const response = await api.get(`/api/drivers/${selectedDriverNumber}`);
         setDriverData(response.data);
 
-        // Initialize current and adjusted skills
-        const skills = {
-          speed: response.data.speed.percentile,
-          consistency: response.data.consistency.percentile,
-          racecraft: response.data.racecraft.percentile,
-          tire_management: response.data.tire_management.percentile
-        };
-
-        setCurrentSkills(skills);
-        setAdjustedSkills({...skills});
-
-        // Get initial prediction
-        await fetchPrediction(skills);
+        // Auto-select a reference driver (first available driver that's not the user)
+        const otherDrivers = drivers.filter(d => d.number !== selectedDriverNumber);
+        if (otherDrivers.length > 0 && !referenceDriver) {
+          setReferenceDriver(otherDrivers[0].number);
+        }
 
       } catch (err) {
         console.error('Error fetching driver data:', err);
@@ -78,70 +60,36 @@ export default function Improve() {
     };
 
     fetchDriverData();
-  }, [selectedDriverNumber]);
+  }, [selectedDriverNumber, drivers, referenceDriver]);
 
-  // Fetch prediction from API
-  const fetchPrediction = async (skills) => {
+  // Load coaching when selections change
+  useEffect(() => {
+    if (selectedDriverNumber && referenceDriver && selectedTrack && selectedRace) {
+      loadCoaching();
+    }
+  }, [selectedDriverNumber, referenceDriver, selectedTrack, selectedRace]);
+
+  const loadCoaching = async () => {
     try {
-      setUpdating(true);
-      const response = await api.post(
-        `/api/drivers/${selectedDriverNumber}/improve/predict`,
-        skills
-      );
-      setPrediction(response.data);
+      setLoadingCoaching(true);
+      setError(null);
+
+      const response = await api.post('/api/telemetry/coaching', {
+        driver_number: selectedDriverNumber,
+        reference_driver_number: referenceDriver,
+        track_id: selectedTrack,
+        race_num: selectedRace
+      });
+
+      setCoachingData(response.data);
+
     } catch (err) {
-      console.error('Error fetching prediction:', err);
-      if (err.response?.data?.detail) {
-        setError(err.response.data.detail);
-      }
+      console.error('Error loading coaching:', err);
+      setError(err.response?.data?.detail || 'Failed to load coaching data. Ensure telemetry data exists for both drivers.');
     } finally {
-      setUpdating(false);
+      setLoadingCoaching(false);
     }
   };
-
-  // Adjust skill value
-  const adjustSkill = (factor, delta) => {
-    if (!adjustedSkills || !currentSkills) return;
-
-    const newValue = Math.max(0, Math.min(100, adjustedSkills[factor] + delta));
-    const newSkills = { ...adjustedSkills, [factor]: newValue };
-
-    // Calculate points used
-    const pointsUsed = Object.keys(newSkills).reduce((sum, key) => {
-      return sum + Math.abs(newSkills[key] - currentSkills[key]);
-    }, 0);
-
-    // Check budget
-    if (pointsUsed > POINTS_BUDGET) {
-      setError(`Cannot exceed ${POINTS_BUDGET} point budget`);
-      return;
-    }
-
-    setError(null);
-    setAdjustedSkills(newSkills);
-
-    // Debounce API call
-    clearTimeout(window.improvePredictionTimeout);
-    window.improvePredictionTimeout = setTimeout(() => {
-      fetchPrediction(newSkills);
-    }, 500);
-  };
-
-  // Reset to current skills
-  const resetSkills = () => {
-    if (!currentSkills) return;
-    setAdjustedSkills({...currentSkills});
-    setError(null);
-    fetchPrediction(currentSkills);
-  };
-
-  // Calculate points used and available
-  const pointsUsed = currentSkills && adjustedSkills
-    ? Object.keys(adjustedSkills).reduce((sum, key) => {
-        return sum + Math.abs(adjustedSkills[key] - currentSkills[key]);
-      }, 0)
-    : 0;
-  const pointsAvailable = POINTS_BUDGET - pointsUsed;
 
   if (loading) {
     return (
@@ -153,7 +101,7 @@ export default function Improve() {
     );
   }
 
-  if (!driverData || !currentSkills || !adjustedSkills) {
+  if (!driverData) {
     return (
       <div className="improve-page">
         <div className="error-container">
@@ -163,260 +111,264 @@ export default function Improve() {
     );
   }
 
-  const topDriver = prediction?.similar_drivers?.[0];
+  const track = TRACKS.find(t => t.id === selectedTrack);
+  const refDriver = drivers.find(d => d.number === referenceDriver);
 
   return (
     <div className="improve-page">
-      {/* Unified Header with Scout Context */}
+      {/* Unified Header */}
       <DashboardHeader driverData={driverData} pageName="Improve" />
 
       {/* Unified Navigation Tabs */}
       <DashboardTabs />
 
-      {/* OLD HEADER - Hidden */}
-      <div className="improve-header" style={{ display: 'none' }}>
-        <div className="header-content">
-          <div className="driver-number-display">
-            <span className="number-large">{selectedDriverNumber}</span>
-          </div>
-          <div className="driver-name-section">
-            <h1 className="driver-name">Driver #{selectedDriverNumber}</h1>
-            <div className="season-subtitle">Toyota Gazoo Series</div>
-          </div>
+      {/* Coaching Content */}
+      <div className="coaching-content">
 
-          {/* Driver Selector */}
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{
-              fontSize: '18px',
-              fontWeight: 700,
-              color: '#fff',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}>
-              Select Driver
-            </span>
+        {/* Selection Controls */}
+        <div className="coaching-controls">
+          <div className="control-card">
+            <label className="control-label">TRACK</label>
             <select
-              value={selectedDriverNumber}
-              onChange={(e) => console.log('Old selector - should not be used')}
-              style={{
-                padding: '12px 20px',
-                fontSize: '16px',
-                fontWeight: 700,
-                background: '#fff',
-                color: '#000',
-                border: '4px solid #e74c3c',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                outline: 'none',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 16px rgba(231, 76, 60, 0.3)',
-                minWidth: '200px',
-                fontFamily: 'Inter, sans-serif',
-                appearance: 'none',
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23e74c3c' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 16px center',
-                paddingRight: '48px'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 24px rgba(231, 76, 60, 0.4)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.3)';
-              }}
+              className="control-select"
+              value={selectedTrack}
+              onChange={(e) => setSelectedTrack(e.target.value)}
             >
-              {drivers.map((driver) => (
-                <option key={driver.number} value={driver.number}>
-                  {driver.name}
-                </option>
+              {TRACKS.map(t => (
+                <option key={t.id} value={t.id}>{t.name}</option>
               ))}
             </select>
           </div>
-        </div>
-      </div>
 
-      {/* OLD NAV TABS - Hidden */}
-      <div className="nav-tabs-container" style={{ display: 'none' }}>
-      </div>
-
-      {/* Main Content */}
-      <div className="improve-content">
-        {/* Left Side: Skill Adjustments */}
-        <div className="adjust-skills-section">
-          <div className="section-header-row">
-            <h2>Adjust Your Skills</h2>
-            <div className="points-budget">
-              <span className="budget-label">Available Points</span>
-              <span className="budget-value">{pointsAvailable.toFixed(1)}</span>
-            </div>
+          <div className="control-card">
+            <label className="control-label">RACE</label>
+            <select
+              className="control-select"
+              value={selectedRace}
+              onChange={(e) => setSelectedRace(parseInt(e.target.value))}
+            >
+              <option value={1}>Race 1</option>
+              <option value={2}>Race 2</option>
+            </select>
           </div>
 
-          {error && (
-            <div className="error-message">
-              {error}
+          <div className="control-card comparison-card">
+            <label className="control-label">COMPARE TO</label>
+
+            {/* Quick Picks - Most Common Comparisons */}
+            <div className="comparison-quick-picks">
+              <button
+                className={`quick-pick-btn ${referenceDriver === drivers.find(d => d.number !== selectedDriverNumber)?.number ? 'active' : ''}`}
+                onClick={() => {
+                  const nextDriver = drivers.find(d => d.number !== selectedDriverNumber);
+                  if (nextDriver) setReferenceDriver(nextDriver.number);
+                }}
+                title="Compare to race winner or top finisher"
+              >
+                <span className="quick-pick-label">Winner</span>
+              </button>
+
+              <button
+                className={`quick-pick-btn ${referenceDriver === drivers[1]?.number ? 'active' : ''}`}
+                onClick={() => {
+                  if (drivers[1]) setReferenceDriver(drivers[1].number);
+                }}
+                title="Compare to driver slightly faster than you"
+              >
+                <span className="quick-pick-label">Next Tier</span>
+              </button>
             </div>
-          )}
 
-          {/* Skill Sliders */}
-          <div className="skills-adjust-list">
-            {Object.keys(FACTOR_DISPLAY_NAMES).map((factor) => {
-              const displayName = FACTOR_DISPLAY_NAMES[factor];
-              const description = FACTOR_DESCRIPTIONS[factor];
-              const currentValue = adjustedSkills[factor];
-              const originalValue = currentSkills[factor];
-              const delta = currentValue - originalValue;
-
-              return (
-                <div key={factor} className="skill-adjust-item">
-                  <div className="skill-adjust-header">
-                    <div>
-                      <h3>{displayName}</h3>
-                      <p className="skill-description">{description}</p>
-                    </div>
-                    <div className="skill-value-display">
-                      {currentValue.toFixed(1)}
-                    </div>
-                  </div>
-
-                  <div className="skill-progress-bar">
-                    <div
-                      className="skill-progress-fill"
-                      style={{ width: `${currentValue}%` }}
-                    ></div>
-                  </div>
-
-                  <div className="skill-controls">
-                    <button
-                      className="skill-btn skill-btn-minus"
-                      onClick={() => adjustSkill(factor, -0.1)}
-                      disabled={updating}
-                    >
-                      −
-                    </button>
-                    <div className="skill-change-display">
-                      {delta > 0 && <span className="skill-increase">+{delta.toFixed(1)}</span>}
-                      {delta < 0 && <span className="skill-decrease">{delta.toFixed(1)}</span>}
-                      {delta === 0 && <span className="skill-unchanged">—</span>}
-                    </div>
-                    <button
-                      className="skill-btn skill-btn-plus"
-                      onClick={() => adjustSkill(factor, 0.1)}
-                      disabled={updating}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
+            {/* Advanced Selection */}
+            <details className="comparison-advanced">
+              <summary>Select specific driver</summary>
+              <select
+                className="control-select"
+                value={referenceDriver || ''}
+                onChange={(e) => setReferenceDriver(parseInt(e.target.value))}
+              >
+                <option value="">Select Driver</option>
+                {drivers
+                  .filter(d => d.number !== selectedDriverNumber)
+                  .map(d => (
+                    <option key={d.number} value={d.number}>
+                      {d.name || `Driver #${d.number}`}
+                    </option>
+                  ))}
+              </select>
+            </details>
           </div>
 
-          <button className="reset-btn" onClick={resetSkills} disabled={updating}>
-            Reset to Current
+          <button
+            className="analyze-button"
+            onClick={loadCoaching}
+            disabled={loadingCoaching || !referenceDriver}
+          >
+            {loadingCoaching ? 'Analyzing...' : 'Analyze Telemetry'}
           </button>
         </div>
 
-        {/* Right Side: Predictions & Recommendations */}
-        <div className="predictions-section">
-          {/* You'd Be Like... */}
-          {topDriver && (
-            <div className="similar-driver-card">
-              <h2>You'd Be Like...</h2>
+        {/* Error Display */}
+        {error && (
+          <div className="error-banner">
+            <strong>Error:</strong> {error}
+          </div>
+        )}
 
-              <div className="top-driver-info">
-                <div className="driver-match-header">
-                  <h3>{topDriver.driver_name}</h3>
-                  <div className="match-percentage">
-                    {topDriver.match_percentage.toFixed(0)}%
-                    <span className="match-label">Match</span>
+        {/* Loading State */}
+        {loadingCoaching && (
+          <div className="loading-state">
+            <div className="spinner"></div>
+            <p>Analyzing telemetry with AI race engineer...</p>
+            <p style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>
+              This may take 10-15 seconds as Claude analyzes the data
+            </p>
+          </div>
+        )}
+
+        {/* Coaching Results */}
+        {coachingData && !loadingCoaching && (
+          <div className="coaching-results">
+
+            {/* Hero Metric + Supporting Cards */}
+            <div className="metrics-hero-layout">
+              {/* Hero Metric - Potential Time Gain */}
+              <div className="metric-card hero">
+                <div className="metric-label">POTENTIAL TIME GAIN</div>
+                <div className="metric-value hero-value">
+                  {coachingData.potential_time_gain.toFixed(3)}
+                  <span className="metric-unit">s</span>
+                </div>
+                <div className="metric-subtitle">
+                  per lap vs Driver #{coachingData.reference_driver_number}
+                </div>
+              </div>
+
+              {/* Supporting Metrics */}
+              <div className="metrics-secondary">
+                <div className="metric-card">
+                  <div className="metric-label">LAP DELTA</div>
+                  <div className="metric-value">
+                    {coachingData.total_time_delta >= 0 ? '+' : ''}
+                    {coachingData.total_time_delta.toFixed(3)}s
+                  </div>
+                  <div className="metric-subtitle">
+                    {coachingData.total_time_delta >= 0
+                      ? `Driver #${coachingData.reference_driver_number} is faster`
+                      : `You are faster`}
                   </div>
                 </div>
 
-                {topDriver.key_strengths && topDriver.key_strengths.length > 0 && (
-                  <div className="key-strengths">
-                    <span className="strengths-label">Key Strengths:</span>
-                    <ul className="strengths-list">
-                      {topDriver.key_strengths.map((strength, idx) => (
-                        <li key={idx}>{strength}</li>
-                      ))}
-                    </ul>
+                <div className="metric-card">
+                  <div className="metric-label">TRACK</div>
+                  <div className="metric-value small">{track?.name || selectedTrack}</div>
+                  <div className="metric-subtitle">Race {selectedRace}</div>
+                </div>
+
+                <div className="metric-card">
+                  <div className="metric-label">FOCUS CORNERS</div>
+                  <div className="metric-value small">
+                    {coachingData.corner_analysis.filter(c => c.time_loss > 0.05).length}
                   </div>
-                )}
+                  <div className="metric-subtitle">Critical opportunities</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Corner Analysis Table */}
+            {coachingData.corner_analysis && coachingData.corner_analysis.length > 0 && (
+              <div className="corner-analysis-section">
+                <h2 className="section-title">Corner-by-Corner Breakdown</h2>
+
+                <div className="corner-table">
+                  <div className="corner-table-header">
+                    <div className="corner-col">CORNER</div>
+                    <div className="corner-col">YOUR APEX</div>
+                    <div className="corner-col">REFERENCE APEX</div>
+                    <div className="corner-col">DELTA</div>
+                    <div className="corner-col">TIME LOSS</div>
+                    <div className="corner-col">FOCUS AREA</div>
+                  </div>
+
+                  {coachingData.corner_analysis.map((corner, idx) => (
+                    <div
+                      key={idx}
+                      className={`corner-table-row ${corner.time_loss > 0.05 ? 'loss-row' : ''}`}
+                    >
+                      <div className="corner-col">
+                        <span className="corner-number">{corner.corner_number}</span>
+                        <span className="corner-name">{corner.corner_name}</span>
+                      </div>
+                      <div className="corner-col">{corner.driver_apex_speed.toFixed(1)} km/h</div>
+                      <div className="corner-col">{corner.reference_apex_speed.toFixed(1)} km/h</div>
+                      <div className={`corner-col ${corner.apex_speed_delta > 0 ? 'negative' : 'positive'}`}>
+                        {corner.apex_speed_delta >= 0 ? '+' : ''}
+                        {corner.apex_speed_delta.toFixed(1)} km/h
+                      </div>
+                      <div className="corner-col loss-value">
+                        {corner.time_loss.toFixed(3)}s
+                      </div>
+                      <div className="corner-col focus-area">
+                        {corner.focus_area}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* AI Coaching Panel */}
+            <div className="ai-coaching-section">
+              <div className="coaching-header">
+                <div className="coaching-title-row">
+                  <h2 className="section-title">Race Engineer Analysis</h2>
+                  <div className="coaching-meta">
+                    <span className="coaching-badge">AI-Powered Insights</span>
+                    <span className="coaching-comparison">
+                      #{selectedDriverNumber} vs #{coachingData.reference_driver_number}
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              {/* All Comparable Drivers */}
-              {prediction.similar_drivers && prediction.similar_drivers.length > 1 && (
-                <div className="all-comparisons">
-                  <h4>All Driver Comparisons:</h4>
-                  <div className="comparison-list">
-                    {prediction.similar_drivers.map((driver, idx) => (
-                      <div key={idx} className="comparison-item">
-                        <span className="comparison-name">{driver.driver_name}</span>
-                        <span className="comparison-match">{driver.match_percentage.toFixed(0)}%</span>
-                      </div>
-                    ))}
+              <div className="coaching-content-card">
+                <ReactMarkdown className="coaching-markdown">
+                  {coachingData.ai_coaching}
+                </ReactMarkdown>
+              </div>
+
+              {/* Telemetry Insights */}
+              {coachingData.telemetry_insights && (
+                <div className="telemetry-insights">
+                  <h3 className="insights-title">Telemetry Patterns</h3>
+                  <div className="insights-grid">
+                    {Object.entries(coachingData.telemetry_insights)
+                      .filter(([key]) => !['total_delta', 'potential_gain'].includes(key))
+                      .map(([key, value]) => (
+                        <div key={key} className="insight-card">
+                          <div className="insight-label">
+                            {key.replace('_pattern', '').replace('_', ' ').toUpperCase()}
+                          </div>
+                          <div className="insight-value">{value}</div>
+                        </div>
+                      ))}
                   </div>
                 </div>
               )}
             </div>
-          )}
 
-          {/* What to Work On */}
-          {prediction?.recommendations && prediction.recommendations.length > 0 && (
-            <div className="recommendations-card">
-              <h2>What to Work On</h2>
-              <p className="recommendations-subtitle">
-                Based on your weakest skills, here's where to focus your practice:
-              </p>
+          </div>
+        )}
 
-              <div className="recommendations-list">
-                {prediction.recommendations.slice(0, 2).map((rec, idx) => (
-                  <div key={idx} className="recommendation-item">
-                    <div className="recommendation-header">
-                      <div className="recommendation-priority">{rec.priority}</div>
-                      <div className="recommendation-title">
-                        <h3>{rec.display_name}</h3>
-                        <p className="recommendation-current">
-                          Current: {rec.current_percentile.toFixed(0)}th percentile
-                        </p>
-                      </div>
-                    </div>
+        {/* Empty State */}
+        {!coachingData && !loadingCoaching && !error && (
+          <div className="empty-state">
+            <h3>Select Track and Reference Driver</h3>
+            <p>Choose your configuration above and click "Analyze Telemetry" to get personalized coaching insights</p>
+          </div>
+        )}
 
-                    <div className="recommendation-focus">
-                      <h4>Primary Focus:</h4>
-                      <p>{rec.rationale}</p>
-                    </div>
-
-                    {rec.drills && rec.drills.length > 0 && (
-                      <div className="recommendation-drills">
-                        <h4>Recommended Drills:</h4>
-                        <ul>
-                          {rec.drills.slice(0, 3).map((drill, dIdx) => (
-                            <li key={dIdx}>{drill}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    <div className="recommendation-impact">
-                      {rec.impact_estimate}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
       </div>
-
-      {/* Updating overlay */}
-      {updating && (
-        <div className="updating-overlay">
-          <div className="updating-spinner"></div>
-        </div>
-      )}
     </div>
   );
 }

@@ -198,6 +198,54 @@ class FactorBreakdownResponse(BaseModel):
     weakest_area: str
 
 
+class TelemetryPoint(BaseModel):
+    """Single telemetry data point."""
+
+    distance: float  # Meters from start/finish
+    time: float  # Seconds
+    speed: float  # km/h
+    throttle: float  # 0-100%
+    brake: float  # 0-100%
+    steering: float  # degrees or -1 to 1
+    gear: Optional[int] = None
+
+
+class CornerAnalysis(BaseModel):
+    """Analysis of performance in a specific corner."""
+
+    corner_number: int
+    corner_name: str
+    driver_apex_speed: float
+    reference_apex_speed: float
+    apex_speed_delta: float
+    time_loss: float  # Seconds lost in this corner
+    focus_area: str  # "Brake Point", "Apex Speed", "Throttle Application"
+    driver_brake_point: Optional[float] = None  # Distance in meters
+    reference_brake_point: Optional[float] = None
+
+
+class TelemetryCoachingRequest(BaseModel):
+    """Request for AI telemetry coaching."""
+
+    driver_number: int
+    reference_driver_number: int
+    track_id: str
+    race_num: int
+
+
+class TelemetryCoachingResponse(BaseModel):
+    """AI coaching response with telemetry analysis."""
+
+    driver_number: int
+    reference_driver_number: int
+    track_name: str
+    total_time_delta: float
+    potential_time_gain: float
+    corner_analysis: List[CornerAnalysis]
+    ai_coaching: str  # Markdown-formatted coaching advice
+    telemetry_insights: Dict[str, str]  # Overall patterns (braking, throttle, etc.)
+
+
 class DriverFactorComparison(BaseModel):
     """Comparison data for one driver."""
 
