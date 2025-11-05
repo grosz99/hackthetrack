@@ -20,14 +20,8 @@ export const DriverProvider = ({ children }) => {
   useEffect(() => {
     const loadDrivers = async () => {
       try {
-        // First, get the list of drivers with telemetry data
-        const telemetryResponse = await api.get('/api/telemetry/drivers');
-        const driversWithTelemetry = telemetryResponse.data.drivers_with_telemetry || [];
-
-        // Then get all drivers and filter to only those with telemetry
         const response = await api.get('/api/drivers');
         const driversList = response.data
-          .filter(d => driversWithTelemetry.includes(d.driver_number))
           .sort((a, b) => a.driver_number - b.driver_number)
           .map(d => ({
             // Basic info
