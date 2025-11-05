@@ -1,1 +1,32 @@
 .vercel
+.env
+.env.local
+.env.*.local
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+venv_linux/
+ENV/
+env/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# RSA Keys
+*.p8
+*.pem
+rsa_key.p8
+rsa_key.pub
