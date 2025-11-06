@@ -3,15 +3,11 @@
  */
 
 // Determine API base URL based on environment
-// In production (Vercel), the serverless function handles /api/* routes
-// In development, use localhost backend which also has /api prefix
+// Always use VITE_API_URL environment variable
+// Production: Points to Railway backend (set in Vercel dashboard)
+// Development: Points to localhost backend
 const getApiBaseUrl = () => {
-  // Check if we're in production (Vercel deployment)
-  if (import.meta.env.PROD) {
-    return '';  // Empty string - routes already include /api prefix
-  }
-
-  // Development: use environment variable or default to localhost
+  // Always use environment variable, fallback to localhost for development
   return import.meta.env.VITE_API_URL || 'http://localhost:8000';
 };
 
