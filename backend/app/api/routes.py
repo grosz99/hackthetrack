@@ -3,6 +3,7 @@ API routes for Racing Analytics platform.
 """
 
 from fastapi import APIRouter, HTTPException, Query
+from pydantic import BaseModel, Field
 from typing import List, Optional, Dict
 import pandas as pd
 import logging
