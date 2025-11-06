@@ -1,0 +1,2750 @@
+{
+  "drivers": [
+    {
+      "number": 13,
+      "name": "Driver #13",
+      "overall_score": 67,
+      "grade": "Average",
+      "percentile": 67,
+      "races": 12,
+      "avg_finish": 2.75,
+      "factors": {
+        "consistency": {
+          "score": 66,
+          "z_score": -0.8172365219013411,
+          "percentile": 66,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 53,
+          "z_score": -0.1815840676029493,
+          "percentile": 53,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 67,
+          "z_score": -0.8788424346911153,
+          "percentile": 67,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 54,
+          "z_score": -0.2010261427455136,
+          "percentile": 54,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "cota",
+        "roadamerica",
+        "sonoma"
+      ],
+      "worst_tracks": [
+        "vir",
+        "sebring",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 100
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 100
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 100
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 99
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 98
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 93
+        }
+      ]
+    },
+    {
+      "number": 22,
+      "name": "Driver #22",
+      "overall_score": 65,
+      "grade": "Average",
+      "percentile": 65,
+      "races": 3,
+      "avg_finish": 3.6666666666666665,
+      "factors": {
+        "consistency": {
+          "score": 56,
+          "z_score": -0.3334758608177984,
+          "percentile": 56,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 49,
+          "z_score": 0.0088359276428381,
+          "percentile": 49,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 70,
+          "z_score": -1.0345836595634947,
+          "percentile": 70,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 48,
+          "z_score": 0.0814220003679754,
+          "percentile": 48,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "sonoma",
+        "cota"
+      ],
+      "worst_tracks": [
+        "roadamerica",
+        "vir",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 90
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 90
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 87
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 84
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 84
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 83
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "name": "Driver #7",
+      "overall_score": 64,
+      "grade": "Average",
+      "percentile": 64,
+      "races": 12,
+      "avg_finish": 4.666666666666667,
+      "factors": {
+        "consistency": {
+          "score": 62,
+          "z_score": -0.6292269061897081,
+          "percentile": 62,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 45,
+          "z_score": 0.2250690304214157,
+          "percentile": 45,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 66,
+          "z_score": -0.8137454521760813,
+          "percentile": 66,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 52,
+          "z_score": -0.1350422495543394,
+          "percentile": 52,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "cota",
+        "sonoma"
+      ],
+      "worst_tracks": [
+        "sebring",
+        "vir",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 94
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 92
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 91
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 89
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 89
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 84
+        }
+      ]
+    },
+    {
+      "number": 72,
+      "name": "Driver #72",
+      "overall_score": 63,
+      "grade": "Average",
+      "percentile": 63,
+      "races": 12,
+      "avg_finish": 5.416666666666667,
+      "factors": {
+        "consistency": {
+          "score": 60,
+          "z_score": -0.512377847119461,
+          "percentile": 60,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 46,
+          "z_score": 0.1947179899622273,
+          "percentile": 46,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 66,
+          "z_score": -0.8189939583753164,
+          "percentile": 66,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 49,
+          "z_score": 0.0155043030894774,
+          "percentile": 49,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "cota",
+        "sonoma",
+        "roadamerica"
+      ],
+      "worst_tracks": [
+        "sebring",
+        "vir",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 87
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 87
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 86
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 86
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 84
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 81
+        }
+      ]
+    },
+    {
+      "number": 46,
+      "name": "Driver #46",
+      "overall_score": 62,
+      "grade": "Average",
+      "percentile": 62,
+      "races": 11,
+      "avg_finish": 6.454545454545454,
+      "factors": {
+        "consistency": {
+          "score": 59,
+          "z_score": -0.4695974938705247,
+          "percentile": 59,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 46,
+          "z_score": 0.1518174166733348,
+          "percentile": 46,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 64,
+          "z_score": -0.7335660446264487,
+          "percentile": 64,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 49,
+          "z_score": 0.0163321804543071,
+          "percentile": 49,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "cota",
+        "roadamerica",
+        "sonoma"
+      ],
+      "worst_tracks": [
+        "sebring",
+        "vir",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 83
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 83
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 83
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 82
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 81
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 78
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "name": "Driver #16",
+      "overall_score": 62,
+      "grade": "Average",
+      "percentile": 62,
+      "races": 6,
+      "avg_finish": 7.833333333333333,
+      "factors": {
+        "consistency": {
+          "score": 67,
+          "z_score": -0.8791390605258625,
+          "percentile": 67,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 42,
+          "z_score": 0.3807419930330575,
+          "percentile": 42,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 59,
+          "z_score": -0.4821409269633243,
+          "percentile": 59,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 51,
+          "z_score": -0.0935941700912776,
+          "percentile": 51,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "cota",
+        "vir"
+      ],
+      "worst_tracks": [
+        "sonoma",
+        "sebring",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 92
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 89
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 88
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 85
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 81
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 80
+        }
+      ]
+    },
+    {
+      "number": 55,
+      "name": "Driver #55",
+      "overall_score": 60,
+      "grade": "Average",
+      "percentile": 60,
+      "races": 12,
+      "avg_finish": 7.333333333333333,
+      "factors": {
+        "consistency": {
+          "score": 57,
+          "z_score": -0.3592644420410376,
+          "percentile": 57,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 40,
+          "z_score": 0.4679171044598894,
+          "percentile": 40,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 64,
+          "z_score": -0.7054889353995811,
+          "percentile": 64,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 44,
+          "z_score": 0.2849688715265718,
+          "percentile": 44,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "cota",
+        "sonoma"
+      ],
+      "worst_tracks": [
+        "vir",
+        "roadamerica",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 76
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 73
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 73
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 73
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 72
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 70
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Driver #2",
+      "overall_score": 59,
+      "grade": "Developing",
+      "percentile": 59,
+      "races": 11,
+      "avg_finish": 8.272727272727273,
+      "factors": {
+        "consistency": {
+          "score": 57,
+          "z_score": -0.3634847050923525,
+          "percentile": 57,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 39,
+          "z_score": 0.512414226531607,
+          "percentile": 39,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 63,
+          "z_score": -0.6742801000680901,
+          "percentile": 63,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 44,
+          "z_score": 0.2847181972473656,
+          "percentile": 44,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "vir",
+        "cota"
+      ],
+      "worst_tracks": [
+        "roadamerica",
+        "sonoma",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 74
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 73
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 72
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 71
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 71
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 69
+        }
+      ]
+    },
+    {
+      "number": 71,
+      "name": "Driver #71",
+      "overall_score": 59,
+      "grade": "Developing",
+      "percentile": 59,
+      "races": 9,
+      "avg_finish": 9.22222222222222,
+      "factors": {
+        "consistency": {
+          "score": 57,
+          "z_score": -0.3538317997362615,
+          "percentile": 57,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 53,
+          "z_score": -0.1881123598757714,
+          "percentile": 53,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 56,
+          "z_score": -0.3016421398190467,
+          "percentile": 56,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 53,
+          "z_score": -0.1623086341583491,
+          "percentile": 53,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "cota",
+        "sonoma",
+        "roadamerica"
+      ],
+      "worst_tracks": [
+        "vir",
+        "sebring",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 73
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 73
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 72
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 70
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 69
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 68
+        }
+      ]
+    },
+    {
+      "number": 111,
+      "name": "Driver #111",
+      "overall_score": 58,
+      "grade": "Developing",
+      "percentile": 58,
+      "races": 4,
+      "avg_finish": 9.75,
+      "factors": {
+        "consistency": {
+          "score": 53,
+          "z_score": -0.1786868502751892,
+          "percentile": 53,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 56,
+          "z_score": -0.3082886190092084,
+          "percentile": 56,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 56,
+          "z_score": -0.3375653735733019,
+          "percentile": 56,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 49,
+          "z_score": 0.0410853378848778,
+          "percentile": 49,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sonoma",
+        "cota",
+        "sebring"
+      ],
+      "worst_tracks": [
+        "vir",
+        "barber",
+        "roadamerica"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 68
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 66
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 66
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 65
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 64
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 62
+        }
+      ]
+    },
+    {
+      "number": 78,
+      "name": "Driver #78",
+      "overall_score": 58,
+      "grade": "Developing",
+      "percentile": 58,
+      "races": 6,
+      "avg_finish": 10.166666666666666,
+      "factors": {
+        "consistency": {
+          "score": 60,
+          "z_score": -0.5187244761986719,
+          "percentile": 60,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 41,
+          "z_score": 0.4206891223492459,
+          "percentile": 41,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 57,
+          "z_score": -0.3571269132408219,
+          "percentile": 57,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 49,
+          "z_score": 0.0106223144621332,
+          "percentile": 49,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "vir",
+        "cota"
+      ],
+      "worst_tracks": [
+        "sonoma",
+        "sebring",
+        "barber"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 75
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 73
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 72
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 70
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 69
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 67
+        }
+      ]
+    },
+    {
+      "number": 98,
+      "name": "Driver #98",
+      "overall_score": 57,
+      "grade": "Developing",
+      "percentile": 57,
+      "races": 11,
+      "avg_finish": 9.909090909090908,
+      "factors": {
+        "consistency": {
+          "score": 47,
+          "z_score": 0.1067781789047858,
+          "percentile": 47,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 42,
+          "z_score": 0.399922478654367,
+          "percentile": 42,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 62,
+          "z_score": -0.6153173649376517,
+          "percentile": 62,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 50,
+          "z_score": -0.0287998781577855,
+          "percentile": 50,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "roadamerica",
+        "barber"
+      ],
+      "worst_tracks": [
+        "cota",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 66
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 64
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 61
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 61
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 61
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 58
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "name": "Driver #21",
+      "overall_score": 56,
+      "grade": "Developing",
+      "percentile": 56,
+      "races": 11,
+      "avg_finish": 11.0,
+      "factors": {
+        "consistency": {
+          "score": 49,
+          "z_score": 0.0223695157553366,
+          "percentile": 49,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 48,
+          "z_score": 0.0785965285397743,
+          "percentile": 48,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 57,
+          "z_score": -0.3599693685130516,
+          "percentile": 57,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 53,
+          "z_score": -0.1557530124970559,
+          "percentile": 53,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "sebring",
+        "cota"
+      ],
+      "worst_tracks": [
+        "sonoma",
+        "barber",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 63
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 62
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 61
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 61
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 60
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 57
+        }
+      ]
+    },
+    {
+      "number": 47,
+      "name": "Driver #47",
+      "overall_score": 55,
+      "grade": "Developing",
+      "percentile": 55,
+      "races": 10,
+      "avg_finish": 11.3,
+      "factors": {
+        "consistency": {
+          "score": 50,
+          "z_score": -0.026218588447953,
+          "percentile": 50,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 41,
+          "z_score": 0.4213636294328757,
+          "percentile": 41,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 56,
+          "z_score": -0.3415808403887645,
+          "percentile": 56,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 51,
+          "z_score": -0.0540434468456245,
+          "percentile": 51,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "sebring",
+        "cota"
+      ],
+      "worst_tracks": [
+        "barber",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 62
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 59
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 58
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 57
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 56
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 56
+        }
+      ]
+    },
+    {
+      "number": 88,
+      "name": "Driver #88",
+      "overall_score": 54,
+      "grade": "Developing",
+      "percentile": 54,
+      "races": 12,
+      "avg_finish": 12.833333333333334,
+      "factors": {
+        "consistency": {
+          "score": 47,
+          "z_score": 0.1286182738078675,
+          "percentile": 47,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 57,
+          "z_score": -0.3769623098802713,
+          "percentile": 57,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 50,
+          "z_score": -0.0410846778792044,
+          "percentile": 50,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 55,
+          "z_score": -0.2906011598039815,
+          "percentile": 55,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sonoma",
+        "cota",
+        "roadamerica"
+      ],
+      "worst_tracks": [
+        "barber",
+        "sebring",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 55
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 54
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 54
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 53
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 53
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 50
+        }
+      ]
+    },
+    {
+      "number": 41,
+      "name": "Driver #41",
+      "overall_score": 52,
+      "grade": "Developing",
+      "percentile": 52,
+      "races": 11,
+      "avg_finish": 14.0,
+      "factors": {
+        "consistency": {
+          "score": 44,
+          "z_score": 0.297825854983098,
+          "percentile": 44,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 49,
+          "z_score": 0.0151290631740261,
+          "percentile": 49,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 52,
+          "z_score": -0.1457856720107972,
+          "percentile": 52,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 49,
+          "z_score": 0.0409096815399095,
+          "percentile": 49,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "barber",
+        "sonoma"
+      ],
+      "worst_tracks": [
+        "cota",
+        "roadamerica",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 48
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 47
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 45
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 44
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 43
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 43
+        }
+      ]
+    },
+    {
+      "number": 113,
+      "name": "Driver #113",
+      "overall_score": 50,
+      "grade": "Developing",
+      "percentile": 50,
+      "races": 12,
+      "avg_finish": 14.416666666666666,
+      "factors": {
+        "consistency": {
+          "score": 44,
+          "z_score": 0.2627950319682029,
+          "percentile": 44,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 47,
+          "z_score": 0.1204708996663462,
+          "percentile": 47,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 49,
+          "z_score": 0.0128824278135278,
+          "percentile": 49,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 48,
+          "z_score": 0.0794070684100127,
+          "percentile": 48,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "barber",
+        "cota"
+      ],
+      "worst_tracks": [
+        "roadamerica",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 43
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 42
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 39
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 39
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 39
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 39
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Driver #3",
+      "overall_score": 50,
+      "grade": "Developing",
+      "percentile": 50,
+      "races": 12,
+      "avg_finish": 15.583333333333334,
+      "factors": {
+        "consistency": {
+          "score": 48,
+          "z_score": 0.0717808084265905,
+          "percentile": 48,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 61,
+          "z_score": -0.586978051766549,
+          "percentile": 61,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 42,
+          "z_score": 0.3587176639349771,
+          "percentile": 42,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 49,
+          "z_score": 0.0462301213073439,
+          "percentile": 49,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sonoma",
+        "barber",
+        "vir"
+      ],
+      "worst_tracks": [
+        "cota",
+        "sebring",
+        "roadamerica"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 43
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 42
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 42
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 41
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 40
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 36
+        }
+      ]
+    },
+    {
+      "number": 89,
+      "name": "Driver #89",
+      "overall_score": 50,
+      "grade": "Developing",
+      "percentile": 50,
+      "races": 7,
+      "avg_finish": 15.714285714285714,
+      "factors": {
+        "consistency": {
+          "score": 40,
+          "z_score": 0.4892347808676759,
+          "percentile": 40,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 36,
+          "z_score": 0.6708677620057013,
+          "percentile": 36,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 55,
+          "z_score": -0.2869216880638944,
+          "percentile": 55,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 51,
+          "z_score": -0.072812033095151,
+          "percentile": 51,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "roadamerica",
+        "barber"
+      ],
+      "worst_tracks": [
+        "cota",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 46
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 45
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 43
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 39
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 37
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 37
+        }
+      ]
+    },
+    {
+      "number": 31,
+      "name": "Driver #31",
+      "overall_score": 49,
+      "grade": "Developing",
+      "percentile": 49,
+      "races": 11,
+      "avg_finish": 15.0,
+      "factors": {
+        "consistency": {
+          "score": 39,
+          "z_score": 0.5327877002643405,
+          "percentile": 39,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 43,
+          "z_score": 0.3030493289917843,
+          "percentile": 43,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 54,
+          "z_score": -0.2064270894996507,
+          "percentile": 54,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 39,
+          "z_score": 0.54575051345692,
+          "percentile": 39,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "barber",
+        "sonoma"
+      ],
+      "worst_tracks": [
+        "vir",
+        "cota",
+        "roadamerica"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 41
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 36
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 32
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 32
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 28
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 25
+        }
+      ]
+    },
+    {
+      "number": 58,
+      "name": "Driver #58",
+      "overall_score": 49,
+      "grade": "Developing",
+      "percentile": 49,
+      "races": 4,
+      "avg_finish": 15.0,
+      "factors": {
+        "consistency": {
+          "score": 36,
+          "z_score": 0.6625883782717794,
+          "percentile": 36,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 61,
+          "z_score": -0.5603463766471205,
+          "percentile": 61,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 48,
+          "z_score": 0.0894080586453791,
+          "percentile": 48,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 47,
+          "z_score": 0.1046667242569269,
+          "percentile": 47,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "barber",
+        "sonoma"
+      ],
+      "worst_tracks": [
+        "cota",
+        "vir",
+        "roadamerica"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 37
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 36
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 34
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 29
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 28
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 23
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "name": "Driver #14",
+      "overall_score": 49,
+      "grade": "Developing",
+      "percentile": 49,
+      "races": 4,
+      "avg_finish": 18.0,
+      "factors": {
+        "consistency": {
+          "score": 48,
+          "z_score": 0.0704700303543972,
+          "percentile": 48,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 54,
+          "z_score": -0.2070186482516855,
+          "percentile": 54,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 40,
+          "z_score": 0.4741779975329573,
+          "percentile": 40,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 60,
+          "z_score": -0.5092809849737392,
+          "percentile": 60,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "cota",
+        "barber"
+      ],
+      "worst_tracks": [
+        "sonoma",
+        "vir",
+        "sebring"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 48
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 43
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 42
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 40
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 40
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 37
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "name": "Driver #5",
+      "overall_score": 48,
+      "grade": "Developing",
+      "percentile": 48,
+      "races": 10,
+      "avg_finish": 16.5,
+      "factors": {
+        "consistency": {
+          "score": 44,
+          "z_score": 0.2508939897960623,
+          "percentile": 44,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 55,
+          "z_score": -0.2808518314451361,
+          "percentile": 55,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 46,
+          "z_score": 0.1527805218978861,
+          "percentile": 46,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 33,
+          "z_score": 0.8076736163806624,
+          "percentile": 33,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "sebring",
+        "vir",
+        "barber"
+      ],
+      "worst_tracks": [
+        "sonoma",
+        "cota",
+        "roadamerica"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 36
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 35
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 34
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 33
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 27
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 15
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "name": "Driver #15",
+      "overall_score": 47,
+      "grade": "Developing",
+      "percentile": 47,
+      "races": 8,
+      "avg_finish": 15.125,
+      "factors": {
+        "consistency": {
+          "score": 51,
+          "z_score": -0.0986183122856227,
+          "percentile": 51,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 51,
+          "z_score": -0.0959355770054788,
+          "percentile": 51,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 40,
+          "z_score": 0.4802818610782192,
+          "percentile": 40,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 38,
+          "z_score": 0.5999750148441511,
+          "percentile": 38,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "vir",
+        "barber",
+        "sonoma"
+      ],
+      "worst_tracks": [
+        "sebring",
+        "cota",
+        "roadamerica"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 39
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 33
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 33
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 32
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 30
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 23
+        }
+      ]
+    },
+    {
+      "number": 51,
+      "name": "Driver #51",
+      "overall_score": 47,
+      "grade": "Developing",
+      "percentile": 47,
+      "races": 12,
+      "avg_finish": 17.833333333333332,
+      "factors": {
+        "consistency": {
+          "score": 40,
+          "z_score": 0.4915782359020617,
+          "percentile": 40,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 55,
+          "z_score": -0.2673303882443634,
+          "percentile": 55,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 41,
+          "z_score": 0.4387178667682386,
+          "percentile": 41,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 53,
+          "z_score": -0.1807756400351081,
+          "percentile": 53,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "barber",
+        "roadamerica",
+        "sebring"
+      ],
+      "worst_tracks": [
+        "cota",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 31
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 28
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 28
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 27
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 27
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 26
+        }
+      ]
+    },
+    {
+      "number": 93,
+      "name": "Driver #93",
+      "overall_score": 46,
+      "grade": "Developing",
+      "percentile": 46,
+      "races": 7,
+      "avg_finish": 18.571428571428573,
+      "factors": {
+        "consistency": {
+          "score": 44,
+          "z_score": 0.29604633820711,
+          "percentile": 44,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 52,
+          "z_score": -0.1205697758829014,
+          "percentile": 52,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 41,
+          "z_score": 0.4365831316375668,
+          "percentile": 41,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 44,
+          "z_score": 0.2957911246297247,
+          "percentile": 44,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "barber",
+        "vir",
+        "sebring"
+      ],
+      "worst_tracks": [
+        "sonoma",
+        "cota",
+        "roadamerica"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 29
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 29
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 28
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 26
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 24
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 21
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "name": "Driver #11",
+      "overall_score": 44,
+      "grade": "Developing",
+      "percentile": 44,
+      "races": 8,
+      "avg_finish": 20.75,
+      "factors": {
+        "consistency": {
+          "score": 45,
+          "z_score": 0.2106421742542211,
+          "percentile": 45,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 55,
+          "z_score": -0.2684815360022693,
+          "percentile": 55,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 33,
+          "z_score": 0.8339550147804355,
+          "percentile": 33,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 48,
+          "z_score": 0.0722339644801217,
+          "percentile": 48,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "barber",
+        "vir",
+        "cota"
+      ],
+      "worst_tracks": [
+        "sonoma",
+        "roadamerica",
+        "sebring"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 24
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 24
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 20
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 20
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 19
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 18
+        }
+      ]
+    },
+    {
+      "number": 73,
+      "name": "Driver #73",
+      "overall_score": 41,
+      "grade": "Developing",
+      "percentile": 41,
+      "races": 4,
+      "avg_finish": 23.5,
+      "factors": {
+        "consistency": {
+          "score": 42,
+          "z_score": 0.3635526299052218,
+          "percentile": 42,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 42,
+          "z_score": 0.3571753732003102,
+          "percentile": 42,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 29,
+          "z_score": 1.0316449921244442,
+          "percentile": 29,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 69,
+          "z_score": -0.9835412256162696,
+          "percentile": 69,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "barber",
+        "cota"
+      ],
+      "worst_tracks": [
+        "vir",
+        "sonoma",
+        "sebring"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 39
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 22
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 22
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 18
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 13
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 11
+        }
+      ]
+    },
+    {
+      "number": 86,
+      "name": "Driver #86",
+      "overall_score": 39,
+      "grade": "Developing",
+      "percentile": 39,
+      "races": 4,
+      "avg_finish": 22.0,
+      "factors": {
+        "consistency": {
+          "score": 40,
+          "z_score": 0.4610266595070842,
+          "percentile": 40,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 61,
+          "z_score": -0.560454082446095,
+          "percentile": 61,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 23,
+          "z_score": 1.308280471385434,
+          "percentile": 23,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 63,
+          "z_score": -0.6669422584545825,
+          "percentile": 63,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "barber",
+        "cota"
+      ],
+      "worst_tracks": [
+        "vir",
+        "sonoma",
+        "sebring"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 18
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 15
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 13
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 11
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 10
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 4
+        }
+      ]
+    },
+    {
+      "number": 80,
+      "name": "Driver #80",
+      "overall_score": 37,
+      "grade": "Developing",
+      "percentile": 37,
+      "races": 10,
+      "avg_finish": 21.2,
+      "factors": {
+        "consistency": {
+          "score": 31,
+          "z_score": 0.9122423782908752,
+          "percentile": 31,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 59,
+          "z_score": -0.4866733883415459,
+          "percentile": 59,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 27,
+          "z_score": 1.1209612826318156,
+          "percentile": 27,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 50,
+          "z_score": -0.0005255804596461,
+          "percentile": 50,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "barber",
+        "cota",
+        "roadamerica"
+      ],
+      "worst_tracks": [
+        "sebring",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 3
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 0
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 0
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 0
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "name": "Driver #12",
+      "overall_score": 35,
+      "grade": "Developing",
+      "percentile": 35,
+      "races": 5,
+      "avg_finish": 22.4,
+      "factors": {
+        "consistency": {
+          "score": 40,
+          "z_score": 0.4777160043930876,
+          "percentile": 40,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 59,
+          "z_score": -0.4747392871336788,
+          "percentile": 59,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 16,
+          "z_score": 1.6906696202108975,
+          "percentile": 16,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 52,
+          "z_score": -0.1020817382069968,
+          "percentile": 52,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "barber",
+        "cota",
+        "roadamerica"
+      ],
+      "worst_tracks": [
+        "sebring",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 0
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 0
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 0
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 0
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "name": "Driver #8",
+      "overall_score": 35,
+      "grade": "Developing",
+      "percentile": 35,
+      "races": 4,
+      "avg_finish": 23.75,
+      "factors": {
+        "consistency": {
+          "score": 46,
+          "z_score": 0.1616067899739151,
+          "percentile": 46,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 57,
+          "z_score": -0.3993792121857493,
+          "percentile": 57,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 13,
+          "z_score": 1.8089089565897425,
+          "percentile": 13,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 59,
+          "z_score": -0.4742119892929058,
+          "percentile": 59,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "vir",
+        "barber"
+      ],
+      "worst_tracks": [
+        "cota",
+        "sebring",
+        "sonoma"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 9
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 8
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 5
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 4
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 0
+        }
+      ]
+    },
+    {
+      "number": 57,
+      "name": "Driver #57",
+      "overall_score": 33,
+      "grade": "Developing",
+      "percentile": 33,
+      "races": 4,
+      "avg_finish": 24.0,
+      "factors": {
+        "consistency": {
+          "score": 43,
+          "z_score": 0.3270413513451545,
+          "percentile": 43,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 55,
+          "z_score": -0.2564330472835456,
+          "percentile": 55,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 9,
+          "z_score": 2.048827762492537,
+          "percentile": 9,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 66,
+          "z_score": -0.846499407509234,
+          "percentile": 66,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "roadamerica",
+        "barber",
+        "cota"
+      ],
+      "worst_tracks": [
+        "sebring",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 9
+        },
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 0
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 0
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 0
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "name": "Driver #18",
+      "overall_score": 30,
+      "grade": "Developing",
+      "percentile": 30,
+      "races": 6,
+      "avg_finish": 23.83333333333333,
+      "factors": {
+        "consistency": {
+          "score": 45,
+          "z_score": 0.2328685264286761,
+          "percentile": 45,
+          "trend": "stable"
+        },
+        "racecraft": {
+          "score": 52,
+          "z_score": -0.1472080608428549,
+          "percentile": 52,
+          "trend": "stable"
+        },
+        "raw_speed": {
+          "score": 6,
+          "z_score": 2.162478283964057,
+          "percentile": 6,
+          "trend": "stable"
+        },
+        "tire_mgmt": {
+          "score": 54,
+          "z_score": -0.2267050377076596,
+          "percentile": 54,
+          "trend": "stable"
+        }
+      },
+      "best_tracks": [
+        "barber",
+        "cota",
+        "roadamerica"
+      ],
+      "worst_tracks": [
+        "sebring",
+        "sonoma",
+        "vir"
+      ],
+      "circuit_fits": [
+        {
+          "track_id": "barber",
+          "track_name": "Barber Motorsports Park",
+          "fit_score": 0
+        },
+        {
+          "track_id": "cota",
+          "track_name": "Circuit of The Americas",
+          "fit_score": 0
+        },
+        {
+          "track_id": "roadamerica",
+          "track_name": "Road America",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sebring",
+          "track_name": "Sebring International",
+          "fit_score": 0
+        },
+        {
+          "track_id": "sonoma",
+          "track_name": "Sonoma Raceway",
+          "fit_score": 0
+        },
+        {
+          "track_id": "vir",
+          "track_name": "Virginia International Raceway",
+          "fit_score": 0
+        }
+      ]
+    }
+  ],
+  "tracks": [
+    {
+      "id": "barber",
+      "name": "Barber Motorsports Park",
+      "location": "Birmingham, AL",
+      "length": "2.38 miles",
+      "description": "High tire degradation, hard to pass",
+      "image": "/track_maps/barber.png",
+      "demands": {
+        "raw_speed": 5.325443789550014,
+        "consistency": 4.219060709226765,
+        "racecraft": 1.224864686140219,
+        "tire_mgmt": 2.0380614962452124
+      },
+      "r2": 0.9801068539942839
+    },
+    {
+      "id": "cota",
+      "name": "Circuit of The Americas",
+      "location": "Austin, TX",
+      "length": "3.41 miles",
+      "description": "Balanced track, rewards speed and consistency",
+      "image": "/track_maps/cota.png",
+      "demands": {
+        "raw_speed": 5.633089661097415,
+        "consistency": 6.100003095739769,
+        "racecraft": 1.3977195750047462,
+        "tire_mgmt": 3.1353508728371393
+      },
+      "r2": 0.9848138355173129
+    },
+    {
+      "id": "roadamerica",
+      "name": "Road America",
+      "location": "Elkhart Lake, WI",
+      "length": "4.05 miles",
+      "description": "Fast, flowing, rewards racecraft",
+      "image": null,
+      "demands": {
+        "raw_speed": 5.227565212088595,
+        "consistency": 6.063937418403009,
+        "racecraft": -0.3849402607093766,
+        "tire_mgmt": 5.4255221117794745
+      },
+      "r2": 0.963168313150738
+    },
+    {
+      "id": "sebring",
+      "name": "Sebring International",
+      "location": "Sebring, FL",
+      "length": "3.74 miles",
+      "description": "Power track, low degradation, rewards raw speed",
+      "image": null,
+      "demands": {
+        "raw_speed": 6.782258602230411,
+        "consistency": 3.8685677059454235,
+        "racecraft": 1.3124392424559224,
+        "tire_mgmt": 1.2173541817460958
+      },
+      "r2": 0.9973105558912916
+    },
+    {
+      "id": "sonoma",
+      "name": "Sonoma Raceway",
+      "location": "Sonoma, CA",
+      "length": "2.52 miles",
+      "description": "Technical, elevation changes",
+      "image": null,
+      "demands": {
+        "raw_speed": 6.202555226658032,
+        "consistency": 5.592000896270356,
+        "racecraft": 2.500600276774767,
+        "tire_mgmt": 1.9594005132751187
+      },
+      "r2": 0.9826869704424908
+    },
+    {
+      "id": "vir",
+      "name": "Virginia International Raceway",
+      "location": "Alton, VA",
+      "length": "3.27 miles",
+      "description": "Technical, balanced, tire mgmt doesn't matter",
+      "image": null,
+      "demands": {
+        "raw_speed": 4.560838510672493,
+        "consistency": 6.672591725495137,
+        "racecraft": 1.0581073515170345,
+        "tire_mgmt": 1.1419175512817912
+      },
+      "r2": 0.9582284282606731
+    }
+  ],
+  "factor_info": {
+    "raw_speed": {
+      "name": "Raw Speed",
+      "weight": "50%",
+      "color": "#FF4444",
+      "description": "Outright car pace - qualifying, best lap, sustained speed",
+      "icon": "\u26a1"
+    },
+    "consistency": {
+      "name": "Consistency",
+      "weight": "31%",
+      "color": "#4444FF",
+      "description": "Lap-to-lap consistency, braking repeatability, smoothness",
+      "icon": "\ud83c\udfaf"
+    },
+    "racecraft": {
+      "name": "Racecraft",
+      "weight": "16%",
+      "color": "#FF9900",
+      "description": "Ability to pass cars, gain positions during race",
+      "icon": "\u2694\ufe0f"
+    },
+    "tire_mgmt": {
+      "name": "Tire Management",
+      "weight": "10%",
+      "color": "#00CC66",
+      "description": "Ability to maintain pace over long stints, preserve tires",
+      "icon": "\ud83c\udfc1"
+    }
+  },
+  "model_stats": {
+    "r_squared": 0.895,
+    "cross_val_r_squared": 0.877,
+    "mae": 1.78,
+    "races_analyzed": 291
+  }
+}

@@ -167,7 +167,7 @@ class DataLoader:
 
     def _load_dashboard_data(self):
         """Load pre-calculated dashboard data from JSON."""
-        json_path = self.frontend_data_path / "dashboardData.json"
+        json_path = self.data_path / "dashboardData.json"
 
         if not json_path.exists():
             print(f"Warning: Dashboard data not found at {json_path}")
