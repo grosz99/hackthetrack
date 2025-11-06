@@ -1,19 +1,13 @@
-FROM python:3.12
+FROM python:3.12-slim
 
 WORKDIR /app
-
-# Install system dependencies for snowflake-connector-python
-RUN apt-get update && apt-get install -y \
-    cmake \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
+# Install Python dependencies using ONLY pre-built wheels (no compilation)
 RUN python -m pip install --upgrade pip && \
-    python -m pip install -r requirements.txt
+    python -m pip install --only-binary=:all: -r requirements.txt
 
 # Copy application code
 COPY . .
