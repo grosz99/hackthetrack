@@ -17,7 +17,8 @@ import sqlite3
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional
 from dataclasses import dataclass, asdict
-from scipy import stats
+# Using numpy-only implementation to reduce serverless function size
+from app.utils.numpy_stats import norm_ppf
 
 
 # Model coefficients from validated 4-factor model
@@ -153,8 +154,8 @@ class ImprovePredictor:
                 quantile = percentile / 100.0
                 # Clip to avoid inf at boundaries
                 quantile = np.clip(quantile, 0.001, 0.999)
-                # Inverse normal CDF (scipy.stats.norm.ppf)
-                z = stats.norm.ppf(quantile)
+                # Inverse normal CDF (using numpy-only implementation)
+                z = norm_ppf(quantile)
                 z_scores.append(z)
 
             z_scores = np.array(z_scores)

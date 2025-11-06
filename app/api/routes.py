@@ -790,9 +790,8 @@ async def predict_with_adjusted_skills(driver_number: int, adjusted_skills: Adju
         )
 
     # Simple z-score conversion (percentile to z-score)
-    def percentile_to_z(percentile):
-        from scipy import stats
-        return stats.norm.ppf(max(0.01, min(0.99, percentile / 100.0)))
+    # Using numpy-only implementation to reduce serverless function size
+    from app.utils.numpy_stats import percentile_to_z
 
     # Calculate prediction using adjusted skills
     adjusted_z_scores = {
@@ -1158,13 +1157,14 @@ def _analyze_corners(driver_df: pd.DataFrame, reference_df: pd.DataFrame, track_
             continue
 
         # Find local minima in speed (corners)
-        from scipy.signal import find_peaks
+        # Using numpy-only implementation to reduce serverless function size
+        from app.utils.numpy_stats import find_peaks_simple
 
         driver_speeds = driver_lap_data['speed'].values
         reference_speeds = reference_lap_data['speed'].values
 
         # Find valleys (inverted peaks)
-        peaks, _ = find_peaks(-driver_speeds, distance=50, prominence=5)
+        peaks, _ = find_peaks_simple(-driver_speeds, distance=50, prominence=5)
 
         for i, peak_idx in enumerate(peaks[:5]):  # Limit to 5 corners
             if peak_idx >= len(driver_speeds) or peak_idx >= len(reference_speeds):
