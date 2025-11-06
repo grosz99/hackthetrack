@@ -32,7 +32,7 @@ class DataLoader:
 
     def __init__(self):
         if not self._initialized:
-            self.base_path = Path(__file__).parent.parent.parent.parent
+            self.base_path = Path(__file__).parent.parent.parent
             self.data_path = self.base_path / "data"
             self.frontend_data_path = self.base_path / "frontend" / "src" / "data"
             self.db_path = self.base_path / "circuit-fit.db"
