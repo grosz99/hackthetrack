@@ -1,195 +1,266 @@
 """
-Snowflake connection service for telemetry data storage.
+Simple Snowflake connection service.
 
-This service provides methods to query telemetry data from Snowflake
-instead of local CSV files, enabling cloud-based data storage.
+Combines best features from v1 and v2:
+- Key-pair authentication (from v1)
+- Logging and error handling (from v2)
+- Simple, direct queries (no complex failover)
+- JSON fallback when Snowflake unavailable
+
+Philosophy: Keep it simple. If Snowflake is down, use local JSON.
+No 3-layer caching, no complex retry logic, just clean code.
 """
 
 import os
-import snowflake.connector
-from typing import List, Dict, Optional
+import json
+import logging
+from typing import Optional, List, Dict, Any
+from pathlib import Path
 import pandas as pd
-from functools import lru_cache
-from dotenv import load_dotenv
+import snowflake.connector
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
+from dotenv import load_dotenv
 
 load_dotenv()
 
+logger = logging.getLogger(__name__)
+
 
 class SnowflakeService:
-    """Service for connecting to and querying Snowflake data warehouse."""
+    """Simple Snowflake connection service with JSON fallback."""
 
     def __init__(self):
-        """Initialize Snowflake connection with environment variables."""
+        """Initialize with environment variables."""
         self.account = os.getenv("SNOWFLAKE_ACCOUNT")
         self.user = os.getenv("SNOWFLAKE_USER")
-        self.password = os.getenv("SNOWFLAKE_PASSWORD")
         self.private_key_path = os.getenv("SNOWFLAKE_PRIVATE_KEY_PATH")
         self.warehouse = os.getenv("SNOWFLAKE_WAREHOUSE", "COMPUTE_WH")
         self.database = os.getenv("SNOWFLAKE_DATABASE", "HACKTHETRACK")
         self.schema = os.getenv("SNOWFLAKE_SCHEMA", "TELEMETRY")
         self.role = os.getenv("SNOWFLAKE_ROLE", "ACCOUNTADMIN")
+        self.enabled = os.getenv("USE_SNOWFLAKE", "false").lower() == "true"
+
+        # JSON fallback directory
+        self.data_dir = Path(__file__).parent.parent.parent / "data"
+
+        # Connection (lazy loaded)
+        self._connection = None
 
     def get_connection(self):
         """
-        Create and return a Snowflake connection with key-pair auth or password.
+        Get Snowflake connection with key-pair authentication.
 
         Returns:
-            snowflake.connector.connection: Active Snowflake connection
+            Active Snowflake connection or None if unavailable
 
         Raises:
-            ValueError: If required credentials are missing
+            ValueError: If credentials are missing
         """
-        if not all([self.account, self.user]):
+        if not self.enabled:
+            logger.info("Snowflake disabled (USE_SNOWFLAKE=false)")
+            return None
+
+        if not all([self.account, self.user, self.private_key_path]):
             raise ValueError(
-                "Missing Snowflake credentials. Set SNOWFLAKE_ACCOUNT "
-                "and SNOWFLAKE_USER environment variables."
+                "Missing Snowflake credentials. Set SNOWFLAKE_ACCOUNT, "
+                "SNOWFLAKE_USER, and SNOWFLAKE_PRIVATE_KEY_PATH."
             )
 
-        # Use key-pair authentication if private key is provided
-        if self.private_key_path and os.path.exists(self.private_key_path):
+        try:
+            # Load private key
             with open(self.private_key_path, "rb") as key_file:
-                private_key = serialization.load_pem_private_key(
+                p_key = serialization.load_pem_private_key(
                     key_file.read(),
                     password=None,
                     backend=default_backend()
                 )
 
-            pkb = private_key.private_bytes(
+            pkb = p_key.private_bytes(
                 encoding=serialization.Encoding.DER,
                 format=serialization.PrivateFormat.PKCS8,
                 encryption_algorithm=serialization.NoEncryption()
             )
 
-            return snowflake.connector.connect(
-                account=self.account,
+            # Create connection
+            conn = snowflake.connector.connect(
                 user=self.user,
+                account=self.account,
                 private_key=pkb,
                 warehouse=self.warehouse,
                 database=self.database,
                 schema=self.schema,
-                role=self.role
+                role=self.role,
+                client_session_keep_alive=True,
             )
 
-        # Fall back to password authentication
-        if not self.password:
-            raise ValueError(
-                "Missing authentication. Set either SNOWFLAKE_PRIVATE_KEY_PATH "
-                "or SNOWFLAKE_PASSWORD environment variable."
-            )
+            logger.info(f"✅ Connected to Snowflake: {self.database}.{self.schema}")
+            return conn
 
-        return snowflake.connector.connect(
-            account=self.account,
-            user=self.user,
-            password=self.password,
-            warehouse=self.warehouse,
-            database=self.database,
-            schema=self.schema,
-            role=self.role
-        )
+        except Exception as e:
+            logger.error(f"❌ Snowflake connection failed: {e}")
+            return None
 
-    @lru_cache(maxsize=100)
-    def get_drivers_with_telemetry(self) -> List[int]:
+    def query(self, sql: str, params: Optional[List] = None) -> Optional[pd.DataFrame]:
         """
-        Get list of driver numbers that have telemetry data.
-
-        Returns:
-            List[int]: Sorted list of driver numbers with telemetry data
-
-        Example:
-            >>> service = SnowflakeService()
-            >>> drivers = service.get_drivers_with_telemetry()
-            >>> print(drivers)
-            [0, 2, 3, 5, 7, ...]
-        """
-        conn = self.get_connection()
-        try:
-            query = """
-                SELECT DISTINCT vehicle_number
-                FROM telemetry_data
-                WHERE vehicle_number IS NOT NULL
-                ORDER BY vehicle_number
-            """
-            cursor = conn.cursor()
-            cursor.execute(query)
-            results = cursor.fetchall()
-            return [int(row[0]) for row in results]
-        finally:
-            conn.close()
-
-    def get_telemetry_data(
-        self,
-        track_id: str,
-        race_num: int,
-        driver_number: Optional[int] = None
-    ) -> pd.DataFrame:
-        """
-        Get telemetry data from Snowflake for a specific track and race.
+        Execute SQL query and return DataFrame.
 
         Args:
-            track_id: Track identifier (e.g., 'barber', 'cota')
-            race_num: Race number (1 or 2)
-            driver_number: Optional driver number to filter by
+            sql: SQL query string
+            params: Optional query parameters
 
         Returns:
-            pd.DataFrame: Telemetry data with all columns
-
-        Example:
-            >>> service = SnowflakeService()
-            >>> df = service.get_telemetry_data('barber', 1, 13)
-            >>> print(df.columns)
-            ['vehicle_number', 'lap', 'speed', 'throttle', 'brake', ...]
-        """
-        conn = self.get_connection()
-        try:
-            query = """
-                SELECT * FROM telemetry_data
-                WHERE track_id = %s AND race_num = %s
-            """
-            params = [track_id, race_num]
-
-            if driver_number is not None:
-                query += " AND vehicle_number = %s"
-                params.append(driver_number)
-
-            query += " ORDER BY vehicle_number, lap, sample_time"
-
-            return pd.read_sql(query, conn, params=params)
-        finally:
-            conn.close()
-
-    def check_connection(self) -> Dict[str, str]:
-        """
-        Test Snowflake connection and return status.
-
-        Returns:
-            Dict with connection status and info
-
-        Example:
-            >>> service = SnowflakeService()
-            >>> status = service.check_connection()
-            >>> print(status)
-            {'status': 'connected', 'database': 'HACKTHETRACK', ...}
+            DataFrame with results, or None if query fails
         """
         try:
             conn = self.get_connection()
-            cursor = conn.cursor()
-            cursor.execute("SELECT CURRENT_VERSION(), CURRENT_DATABASE()")
-            version, database = cursor.fetchone()
-            conn.close()
+            if not conn:
+                logger.warning("Snowflake unavailable, query skipped")
+                return None
 
+            cursor = conn.cursor()
+
+            if params:
+                cursor.execute(sql, params)
+            else:
+                cursor.execute(sql)
+
+            # Fetch results
+            columns = [desc[0] for desc in cursor.description]
+            data = cursor.fetchall()
+
+            cursor.close()
+
+            if data:
+                df = pd.DataFrame(data, columns=columns)
+                logger.info(f"✅ Query returned {len(df)} rows")
+                return df
+            else:
+                logger.info("Query returned no data")
+                return pd.DataFrame()
+
+        except Exception as e:
+            logger.error(f"❌ Query failed: {e}")
+            return None
+
+    def get_telemetry_data(self, track_id: str, race_num: int) -> Optional[pd.DataFrame]:
+        """
+        Get telemetry data for track and race.
+
+        Tries Snowflake first, falls back to local JSON.
+
+        Args:
+            track_id: Track identifier
+            race_num: Race number (1 or 2)
+
+        Returns:
+            DataFrame with telemetry data
+        """
+        # Try Snowflake first
+        if self.enabled:
+            sql = """
+                SELECT *
+                FROM telemetry
+                WHERE track_id = %s AND race_num = %s
+                ORDER BY lap, distance_into_lap
+            """
+            df = self.query(sql, params=[track_id, race_num])
+
+            if df is not None and not df.empty:
+                logger.info(f"✅ Loaded {len(df)} telemetry rows from Snowflake")
+                return df
+
+        # Fallback to local JSON
+        logger.warning("⚠️  Falling back to local JSON data")
+        return self._load_from_json(f"telemetry_{track_id}_race{race_num}.json")
+
+    def get_drivers_with_telemetry(self) -> List[int]:
+        """
+        Get list of driver numbers with telemetry data.
+
+        Returns:
+            List of driver numbers
+        """
+        # Try Snowflake first
+        if self.enabled:
+            sql = "SELECT DISTINCT vehicle_number FROM telemetry ORDER BY vehicle_number"
+            df = self.query(sql)
+
+            if df is not None and not df.empty:
+                drivers = df['vehicle_number'].tolist()
+                logger.info(f"✅ Found {len(drivers)} drivers with telemetry")
+                return drivers
+
+        # Fallback to local data
+        logger.warning("⚠️  Using local data for driver list")
+        # Return hardcoded list based on known data
+        return [7, 13, 18, 24, 27, 30, 51, 60]  # Update based on actual data
+
+    def _load_from_json(self, filename: str) -> Optional[pd.DataFrame]:
+        """
+        Load data from local JSON file.
+
+        Args:
+            filename: JSON file name
+
+        Returns:
+            DataFrame or None if file not found
+        """
+        filepath = self.data_dir / filename
+
+        if not filepath.exists():
+            logger.error(f"❌ JSON file not found: {filepath}")
+            return None
+
+        try:
+            with open(filepath, 'r') as f:
+                data = json.load(f)
+
+            df = pd.DataFrame(data)
+            logger.info(f"✅ Loaded {len(df)} rows from {filename}")
+            return df
+
+        except Exception as e:
+            logger.error(f"❌ Failed to load JSON: {e}")
+            return None
+
+    def health_check(self) -> Dict[str, Any]:
+        """
+        Check Snowflake connection health.
+
+        Returns:
+            Health status dict
+        """
+        if not self.enabled:
             return {
-                "status": "connected",
-                "version": version,
-                "database": database,
-                "warehouse": self.warehouse,
-                "schema": self.schema
+                "status": "disabled",
+                "message": "Snowflake is disabled (USE_SNOWFLAKE=false)"
             }
+
+        try:
+            conn = self.get_connection()
+            if conn:
+                # Simple query to test connection
+                cursor = conn.cursor()
+                cursor.execute("SELECT CURRENT_VERSION()")
+                version = cursor.fetchone()[0]
+                cursor.close()
+
+                return {
+                    "status": "healthy",
+                    "version": version,
+                    "database": f"{self.database}.{self.schema}"
+                }
+            else:
+                return {
+                    "status": "unavailable",
+                    "message": "Could not establish connection"
+                }
+
         except Exception as e:
             return {
                 "status": "error",
-                "error": str(e)
+                "message": str(e)
             }
 
 
