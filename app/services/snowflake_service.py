@@ -17,10 +17,18 @@ import logging
 from typing import Optional, List, Dict, Any
 from pathlib import Path
 import pandas as pd
-import snowflake.connector
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import serialization
 from dotenv import load_dotenv
+
+# Optional Snowflake imports - gracefully handle if not installed
+try:
+    import snowflake.connector
+    from cryptography.hazmat.backends import default_backend
+    from cryptography.hazmat.primitives import serialization
+    SNOWFLAKE_AVAILABLE = True
+except ImportError:
+    SNOWFLAKE_AVAILABLE = False
+    logger = logging.getLogger(__name__)
+    logger.warning("Snowflake connector not available - using JSON fallback only")
 
 load_dotenv()
 
@@ -64,6 +72,10 @@ class SnowflakeService:
         Raises:
             ValueError: If credentials are missing
         """
+        if not SNOWFLAKE_AVAILABLE:
+            logger.warning("Snowflake connector not installed")
+            return None
+
         if not self.enabled:
             logger.info("Snowflake disabled (USE_SNOWFLAKE=false)")
             return None
