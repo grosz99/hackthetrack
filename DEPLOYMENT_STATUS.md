@@ -67,20 +67,44 @@ ENVIRONMENT=production
 DEBUG=false
 ```
 
-#### D. Upload RSA Private Key
-1. In Railway, go to **Settings** → **Files**
-2. Upload your `rsa_key.p8` file
-3. Note the path (should match SNOWFLAKE_PRIVATE_KEY_PATH)
+#### D. Handle Snowflake RSA Key
 
-#### E. Get Railway URL
-1. Go to **Settings** → **Networking**
-2. Click **"Generate Domain"** (if not already generated)
-3. Copy the URL (e.g., `https://hackthetrack-production.up.railway.app`)
+**Option 1: Use Snowflake Password Instead** (Easier for Railway)
+- In Railway Variables, add:
+  ```bash
+  SNOWFLAKE_PASSWORD=your-snowflake-password
+  ```
+- Remove or leave blank: `SNOWFLAKE_PRIVATE_KEY_PATH`
+- Backend will auto-detect and use password auth
+
+**Option 2: Use Base64-Encoded Key** (More Secure)
+- Encode your RSA key to base64:
+  ```bash
+  cat rsa_key.p8 | base64
+  ```
+- In Railway Variables, add:
+  ```bash
+  SNOWFLAKE_PRIVATE_KEY_BASE64=<paste the base64 output>
+  ```
+- Backend will decode and use this key
+
+**Option 3: Disable Snowflake** (Use JSON fallback only)
+- In Railway Variables, set:
+  ```bash
+  USE_SNOWFLAKE=false
+  ```
+- Backend will use local JSON data files only
+
+#### E. Get Railway Deployment URL
+1. After deployment completes, Railway auto-generates a public URL
+2. Look for the URL in the deployment logs or at the top of your service
+3. Format: `https://your-service-name.up.railway.app`
 4. **SAVE THIS URL** - you need it for Vercel
 
 #### F. Verify Backend Health
+Once deployed, test the health endpoint:
 ```bash
-curl https://your-railway-url.railway.app/api/health
+curl https://your-railway-url.up.railway.app/api/health
 ```
 
 Expected response:
