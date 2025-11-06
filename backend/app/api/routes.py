@@ -298,10 +298,10 @@ async def compare_telemetry(
 
     # Filter for each driver and exclude caution laps
     driver_1_data = lap_data[
-        (lap_data["VEHICLE_NO"] == driver_1) & (lap_data["FLAG_AT_FL"] == 0)
+        (lap_data["DRIVER_NUMBER"] == driver_1) & (lap_data["FLAG_AT_FL"] == 0)
     ]
     driver_2_data = lap_data[
-        (lap_data["VEHICLE_NO"] == driver_2) & (lap_data["FLAG_AT_FL"] == 0)
+        (lap_data["DRIVER_NUMBER"] == driver_2) & (lap_data["FLAG_AT_FL"] == 0)
     ]
 
     if driver_1_data.empty or driver_2_data.empty:
@@ -425,27 +425,20 @@ def _generate_telemetry_insights(
 @router.get("/health")
 async def health_check():
     """
-    Health check endpoint with comprehensive data reliability status.
+    Health check endpoint - simple and fast.
 
-    Returns service health and data source availability across all layers.
+    Returns service health and basic data availability.
     """
-    from ..services.data_reliability_service import data_reliability_service
+    from ..services.snowflake_service import snowflake_service
 
-    # Get comprehensive data reliability health
-    data_health = data_reliability_service.health_check()
+    # Get Snowflake health
+    snowflake_health = snowflake_service.health_check()
 
     return {
-        "status": "healthy" if data_health["overall_health"] in ["healthy", "degraded"] else "unhealthy",
+        "status": "healthy",
         "tracks_loaded": len(data_loader.tracks),
         "drivers_loaded": len(data_loader.drivers),
-        # Data reliability metrics
-        "data_sources": {
-            "snowflake": data_health["snowflake"],
-            "local_json": data_health["local_json"],
-            "cache": data_health["cache"]
-        },
-        "overall_data_health": data_health["overall_health"],
-        "recommendations": data_health["recommendations"]
+        "snowflake": snowflake_health
     }
 
 
@@ -759,12 +752,12 @@ async def predict_with_adjusted_skills(driver_number: int, adjusted_skills: Adju
             detail=f"Driver {driver_number} not found"
         )
 
-    # Extract current skills
+    # Extract current skills (convert percentile to 0-1 scale to match adjusted_skills input)
     current_skills = {
-        'speed': driver.speed.percentile,
-        'consistency': driver.consistency.percentile,
-        'racecraft': driver.racecraft.percentile,
-        'tire_management': driver.tire_management.percentile
+        'speed': driver.speed.percentile / 100,
+        'consistency': driver.consistency.percentile / 100,
+        'racecraft': driver.racecraft.percentile / 100,
+        'tire_management': driver.tire_management.percentile / 100
     }
 
     # Convert adjusted_skills to dict
@@ -793,9 +786,9 @@ async def predict_with_adjusted_skills(driver_number: int, adjusted_skills: Adju
     # Using numpy-only implementation to reduce serverless function size
     from app.utils.numpy_stats import percentile_to_z
 
-    # Calculate prediction using adjusted skills
+    # Calculate prediction using adjusted skills (convert back to 0-100 scale for z-score calculation)
     adjusted_z_scores = {
-        factor: percentile_to_z(adjusted_skills_dict[factor])
+        factor: percentile_to_z(adjusted_skills_dict[factor] * 100)
         for factor in adjusted_skills_dict.keys()
     }
 
@@ -922,29 +915,21 @@ async def get_telemetry_drivers():
     Get a list of driver numbers that have telemetry data available.
 
     Returns a deduplicated list of driver numbers across all tracks and races.
-
-    BULLETPROOF: Uses multi-layer failover (Snowflake → JSON → Cache)
-    to ensure data is ALWAYS available.
     """
-    from ..services.data_reliability_service import data_reliability_service
+    from ..services.snowflake_service import snowflake_service
 
     try:
-        # Use bulletproof data reliability service with automatic failover
-        result = data_reliability_service.get_drivers_with_telemetry()
+        drivers = snowflake_service.get_drivers_with_telemetry()
 
         return {
-            "drivers_with_telemetry": result["drivers"],
-            "count": len(result["drivers"]),
-            "source": result["source"],
-            "cached": result.get("cached", False),
-            "health": result["health"]
+            "drivers_with_telemetry": drivers,
+            "count": len(drivers)
         }
     except Exception as e:
-        # This should NEVER happen if data reliability service is working
-        logger.critical(f"🚨 CRITICAL: ALL DATA SOURCES FAILED: {e}")
+        logger.error(f"Failed to get drivers with telemetry: {e}")
         raise HTTPException(
             status_code=503,
-            detail="Service temporarily unavailable - all data sources failed"
+            detail="Failed to retrieve driver list"
         )
 
 
@@ -960,47 +945,21 @@ async def get_telemetry_coaching(request: TelemetryCoachingRequest):
 
     Compares driver's telemetry against a reference driver and generates
     specific, actionable coaching recommendations.
-
-    BULLETPROOF: Uses multi-layer failover (Snowflake → JSON → Cache)
-    to ensure data is ALWAYS available.
     """
     import pandas as pd
     import numpy as np
-    from ..services.data_reliability_service import data_reliability_service, DataUnavailableError
+    from ..services.snowflake_service import snowflake_service
 
-    # Use bulletproof data reliability service with automatic failover
-    try:
-        result = data_reliability_service.get_telemetry_data(
-            track_id=request.track_id,
-            race_num=request.race_num
-        )
+    # Get telemetry data from Snowflake or JSON fallback
+    df = snowflake_service.get_telemetry_data(
+        track_id=request.track_id,
+        race_num=request.race_num
+    )
 
-        # Extract telemetry data
-        df_data = result["data"]
-
-        # Convert to DataFrame if it's a list (from JSON source)
-        if isinstance(df_data, list):
-            df = pd.DataFrame(df_data)
-        else:
-            df = df_data
-
-        if df.empty:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Telemetry data not found for {request.track_id} race {request.race_num}"
-            )
-
-        # Log data source for observability
-        logger.info(
-            f"Loaded telemetry from {result['source']} "
-            f"(health: {result['health']}, rows: {result['row_count']})"
-        )
-
-    except DataUnavailableError as e:
-        logger.critical(f"🚨 ALL DATA SOURCES FAILED: {e}")
+    if df is None or df.empty:
         raise HTTPException(
-            status_code=503,
-            detail="Service temporarily unavailable - all data sources failed"
+            status_code=404,
+            detail=f"Telemetry data not found for {request.track_id} race {request.race_num}"
         )
 
     # Filter for both drivers

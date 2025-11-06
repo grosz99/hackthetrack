@@ -305,14 +305,20 @@ class DataLoader:
         if results_path.exists():
             for csv_file in results_path.glob("*.csv"):
                 track_race = csv_file.stem  # e.g., "barber_r1_provisional_results"
-                self.race_results[track_race] = pd.read_csv(csv_file)
+                # CSV files use semicolon delimiter, strip whitespace from column names
+                df = pd.read_csv(csv_file, delimiter=';')
+                df.columns = df.columns.str.strip()  # Remove leading/trailing whitespace
+                self.race_results[track_race] = df
 
         # Load lap analysis (endurance data)
         analysis_path = self.data_path / "race_results" / "analysis_endurance"
         if analysis_path.exists():
             for csv_file in analysis_path.glob("*.csv"):
                 track_race = csv_file.stem  # e.g., "barber_r1_analysis_endurance"
-                self.lap_analysis[track_race] = pd.read_csv(csv_file)
+                # CSV files use semicolon delimiter, strip whitespace from column names
+                df = pd.read_csv(csv_file, delimiter=';')
+                df.columns = df.columns.str.strip()  # Remove leading/trailing whitespace
+                self.lap_analysis[track_race] = df
 
     def get_track(self, track_id: str) -> Optional[Track]:
         """Get track by ID."""
