@@ -1,17 +1,37 @@
-# Large data files - exclude raw CSV data at root level
-/data/
-*.csv
+# ============================================================================
+# VERCEL DEPLOYMENT EXCLUSIONS
+# Critical for keeping serverless function under 250MB limit
+# ============================================================================
 
-# IMPORTANT: These JSON files MUST be included for deployment
-!frontend/src/data/dashboardData.json      # 64KB - driver/track data
-!backend/data/driver_factors.json          # 204KB - factor analysis data
-!backend/data/driver_season_stats.json     # 11KB - pre-calculated season stats
-!backend/data/driver_race_results.json     # 288KB - race-by-race results
+# ============================================================================
+# BACKEND - Exclude all non-production files from serverless function
+# ============================================================================
 
-# SQLite database NO LONGER NEEDED (replaced with JSON)
+# Tests and test infrastructure (260KB + dependencies)
+backend/tests/
+backend/pytest.ini
+backend/conftest.py
+backend/.pytest_cache/
 
-# Python
+# Development scripts (38KB - not needed in production)
+backend/scripts/
+backend/*.sql
+
+# Documentation files (98KB - not needed in production)
+backend/*.md
+backend/DEPLOYMENT_*.md
+backend/SNOWFLAKE_*.md
+backend/EXECUTIVE_SUMMARY.md
+backend/VALIDATION_*.md
+backend/ZERO_FAILURE_ARCHITECTURE.md
+
+# Development configuration
+backend/.claude/
+backend/requirements-dev.txt
+
+# Python development files
 backend/venv/
+backend/venv_linux/
 backend/__pycache__/
 **/__pycache__/
 *.pyc
@@ -24,34 +44,91 @@ backend/__pycache__/
 dist/
 build/
 .pytest_cache/
+.mypy_cache/
+.ruff_cache/
 
-# Node
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# Database files (not needed - using Snowflake)
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
 
-# Environment
+# RSA Keys (loaded from environment variables)
+*.p8
+*.pem
+backend/rsa_key.p8
+backend/rsa_key.pub
+
+# ============================================================================
+# DATA FILES - Include only essential JSON, exclude everything else
+# ============================================================================
+
+# Exclude all CSV files
+*.csv
+
+# Exclude large data directories
+/data/
+
+# IMPORTANT: Include essential JSON data files for API
+!frontend/src/data/dashboardData.json      # 64KB - driver/track data
+!backend/data/driver_factors.json          # 204KB - factor analysis data
+!backend/data/driver_season_stats.json     # 11KB - pre-calculated season stats
+!backend/data/driver_race_results.json     # 288KB - race-by-race results
+
+# ============================================================================
+# ENVIRONMENT AND SECRETS
+# ============================================================================
 .env
 .env.local
 .env.*.local
 backend/.env
 
-# IDE
+# ============================================================================
+# IDE AND EDITOR FILES
+# ============================================================================
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
-Thumbs.db
 
-# Logs
+# ============================================================================
+# NODE/FRONTEND (already built - exclude source)
+# ============================================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Frontend source is built - only dist/ needed
+frontend/src/
+frontend/public/
+frontend/index.html
+frontend/vite.config.js
+frontend/tailwind.config.js
+frontend/postcss.config.js
+frontend/.eslintrc.cjs
+
+# ============================================================================
+# GIT AND VERSION CONTROL
+# ============================================================================
+.git/
+.gitignore
+.gitattributes
+
+# ============================================================================
+# LOGS
+# ============================================================================
 *.log
 backend/backend.log
 
-# Git
-.git/
-.gitignore
+# ============================================================================
+# ROOT LEVEL DOCUMENTATION (not needed for deployment)
+# ============================================================================
+/*.md
+!README.md
+BUILD_COMPLETE.md
+CREATE_SERVICE_ACCOUNT.md
+IMPROVE_TAB_*.md
+SNOWFLAKE_*.md
