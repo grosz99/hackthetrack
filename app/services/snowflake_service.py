@@ -34,7 +34,9 @@ class SnowflakeService:
         """Initialize with environment variables."""
         self.account = os.getenv("SNOWFLAKE_ACCOUNT")
         self.user = os.getenv("SNOWFLAKE_USER")
-        self.private_key_path = os.getenv("SNOWFLAKE_PRIVATE_KEY_PATH")
+        self.password = os.getenv("SNOWFLAKE_PASSWORD")  # For password auth
+        self.private_key_path = os.getenv("SNOWFLAKE_PRIVATE_KEY_PATH")  # For key file
+        self.private_key_base64 = os.getenv("SNOWFLAKE_PRIVATE_KEY_BASE64")  # For Railway
         self.warehouse = os.getenv("SNOWFLAKE_WAREHOUSE", "COMPUTE_WH")
         self.database = os.getenv("SNOWFLAKE_DATABASE", "HACKTHETRACK")
         self.schema = os.getenv("SNOWFLAKE_SCHEMA", "TELEMETRY")
@@ -49,7 +51,12 @@ class SnowflakeService:
 
     def get_connection(self):
         """
-        Get Snowflake connection with key-pair authentication.
+        Get Snowflake connection with multiple authentication methods.
+
+        Supports:
+        1. Password auth (SNOWFLAKE_PASSWORD)
+        2. Base64-encoded RSA key (SNOWFLAKE_PRIVATE_KEY_BASE64) - for Railway
+        3. RSA key file path (SNOWFLAKE_PRIVATE_KEY_PATH)
 
         Returns:
             Active Snowflake connection or None if unavailable
@@ -61,41 +68,94 @@ class SnowflakeService:
             logger.info("Snowflake disabled (USE_SNOWFLAKE=false)")
             return None
 
-        if not all([self.account, self.user, self.private_key_path]):
-            raise ValueError(
-                "Missing Snowflake credentials. Set SNOWFLAKE_ACCOUNT, "
-                "SNOWFLAKE_USER, and SNOWFLAKE_PRIVATE_KEY_PATH."
-            )
+        if not self.account or not self.user:
+            raise ValueError("Missing SNOWFLAKE_ACCOUNT and SNOWFLAKE_USER")
 
         try:
-            # Load private key
-            with open(self.private_key_path, "rb") as key_file:
+            # Method 1: Password authentication (simplest for Railway)
+            if self.password:
+                logger.info("Using password authentication")
+                conn = snowflake.connector.connect(
+                    user=self.user,
+                    password=self.password,
+                    account=self.account,
+                    warehouse=self.warehouse,
+                    database=self.database,
+                    schema=self.schema,
+                    role=self.role,
+                    client_session_keep_alive=True,
+                )
+                logger.info(f"✅ Connected to Snowflake: {self.database}.{self.schema}")
+                return conn
+
+            # Method 2: Base64-encoded private key (Railway-friendly)
+            if self.private_key_base64:
+                import base64
+                logger.info("Using base64-encoded RSA key authentication")
+
+                # Decode base64 key
+                key_bytes = base64.b64decode(self.private_key_base64)
                 p_key = serialization.load_pem_private_key(
-                    key_file.read(),
+                    key_bytes,
                     password=None,
                     backend=default_backend()
                 )
 
-            pkb = p_key.private_bytes(
-                encoding=serialization.Encoding.DER,
-                format=serialization.PrivateFormat.PKCS8,
-                encryption_algorithm=serialization.NoEncryption()
-            )
+                pkb = p_key.private_bytes(
+                    encoding=serialization.Encoding.DER,
+                    format=serialization.PrivateFormat.PKCS8,
+                    encryption_algorithm=serialization.NoEncryption()
+                )
 
-            # Create connection
-            conn = snowflake.connector.connect(
-                user=self.user,
-                account=self.account,
-                private_key=pkb,
-                warehouse=self.warehouse,
-                database=self.database,
-                schema=self.schema,
-                role=self.role,
-                client_session_keep_alive=True,
-            )
+                conn = snowflake.connector.connect(
+                    user=self.user,
+                    account=self.account,
+                    private_key=pkb,
+                    warehouse=self.warehouse,
+                    database=self.database,
+                    schema=self.schema,
+                    role=self.role,
+                    client_session_keep_alive=True,
+                )
+                logger.info(f"✅ Connected to Snowflake: {self.database}.{self.schema}")
+                return conn
 
-            logger.info(f"✅ Connected to Snowflake: {self.database}.{self.schema}")
-            return conn
+            # Method 3: Private key file path (original method)
+            if self.private_key_path:
+                logger.info("Using RSA key file authentication")
+
+                with open(self.private_key_path, "rb") as key_file:
+                    p_key = serialization.load_pem_private_key(
+                        key_file.read(),
+                        password=None,
+                        backend=default_backend()
+                    )
+
+                pkb = p_key.private_bytes(
+                    encoding=serialization.Encoding.DER,
+                    format=serialization.PrivateFormat.PKCS8,
+                    encryption_algorithm=serialization.NoEncryption()
+                )
+
+                conn = snowflake.connector.connect(
+                    user=self.user,
+                    account=self.account,
+                    private_key=pkb,
+                    warehouse=self.warehouse,
+                    database=self.database,
+                    schema=self.schema,
+                    role=self.role,
+                    client_session_keep_alive=True,
+                )
+                logger.info(f"✅ Connected to Snowflake: {self.database}.{self.schema}")
+                return conn
+
+            # No authentication method provided
+            raise ValueError(
+                "No Snowflake authentication method provided. "
+                "Set one of: SNOWFLAKE_PASSWORD, SNOWFLAKE_PRIVATE_KEY_BASE64, "
+                "or SNOWFLAKE_PRIVATE_KEY_PATH"
+            )
 
         except Exception as e:
             logger.error(f"❌ Snowflake connection failed: {e}")
