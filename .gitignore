@@ -2,7 +2,9 @@
 data/raw_telemetry/*.csv
 data/processed_telemetry/*.csv
 data/telemetry/*.csv
+data/telemetry/**/*.csv
 data/Telemetry/*.csv
+data/Telemetry/**/*.csv
 data/lap_timing/*.csv
 data/race_results/**/*.csv
 *.db
