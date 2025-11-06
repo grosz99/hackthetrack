@@ -82,7 +82,7 @@ class DataLoader:
 
     def _load_driver_factors_json(self):
         """Load driver factors from JSON export (replaces SQLite)."""
-        json_path = self.base_path / "backend" / "data" / "driver_factors.json"
+        json_path = self.base_path / "data" / "driver_factors.json"
 
         if not json_path.exists():
             print(f"Warning: Driver factors JSON not found at {json_path}")
@@ -102,7 +102,7 @@ class DataLoader:
 
     def _load_season_stats_json(self):
         """Load pre-calculated season statistics from JSON."""
-        json_path = self.base_path / "backend" / "data" / "driver_season_stats.json"
+        json_path = self.base_path / "data" / "driver_season_stats.json"
 
         if not json_path.exists():
             print(f"Warning: Season stats JSON not found at {json_path}")
@@ -121,7 +121,7 @@ class DataLoader:
 
     def _load_race_results_json(self):
         """Load race-by-race results from JSON."""
-        json_path = self.base_path / "backend" / "data" / "driver_race_results.json"
+        json_path = self.base_path / "data" / "driver_race_results.json"
 
         if not json_path.exists():
             print(f"Warning: Race results JSON not found at {json_path}")
