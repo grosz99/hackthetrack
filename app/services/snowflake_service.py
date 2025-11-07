@@ -234,7 +234,7 @@ class SnowflakeService:
                 SELECT *
                 FROM HACKTHETRACK.TELEMETRY.TELEMETRY_DATA_ALL
                 WHERE TRACK_ID = %s AND RACE_NUM = %s
-                ORDER BY LAP, DISTANCE_INTO_LAP
+                ORDER BY LAP, LAPTRIGGER_LAPDIST_DLS
             """
             df = self.query(sql, params=[track_id, race_num])
 
