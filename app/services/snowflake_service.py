@@ -233,8 +233,8 @@ class SnowflakeService:
             sql = """
                 SELECT *
                 FROM HACKTHETRACK.TELEMETRY.TELEMETRY_DATA_ALL
-                WHERE track_id = %s AND race_num = %s
-                ORDER BY lap, distance_into_lap
+                WHERE TRACK_ID = %s AND RACE_NUM = %s
+                ORDER BY LAP, DISTANCE_INTO_LAP
             """
             df = self.query(sql, params=[track_id, race_num])
 
