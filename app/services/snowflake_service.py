@@ -232,7 +232,7 @@ class SnowflakeService:
         if self.enabled:
             sql = """
                 SELECT *
-                FROM telemetry_data_all
+                FROM HACKTHETRACK.TELEMETRY.TELEMETRY_DATA_ALL
                 WHERE track_id = %s AND race_num = %s
                 ORDER BY lap, distance_into_lap
             """
@@ -255,7 +255,7 @@ class SnowflakeService:
         """
         # Try Snowflake first
         if self.enabled:
-            sql = "SELECT DISTINCT vehicle_number FROM telemetry_data_all ORDER BY vehicle_number"
+            sql = "SELECT DISTINCT vehicle_number FROM HACKTHETRACK.TELEMETRY.TELEMETRY_DATA_ALL ORDER BY vehicle_number"
             df = self.query(sql)
 
             if df is not None and not df.empty:
