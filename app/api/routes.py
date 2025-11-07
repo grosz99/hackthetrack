@@ -299,10 +299,10 @@ async def compare_telemetry(
     # Filter for each driver and exclude caution laps (FCY = Full Course Yellow)
     # FLAG_AT_FL values: "GF" = Green Flag (normal lap), "FCY" = caution lap
     driver_1_data = lap_data[
-        (lap_data["DRIVER_NUMBER"] == driver_1) & (lap_data["FLAG_AT_FL"] == "GF")
+        (lap_data["VEHICLE_NUMBER"] == driver_1) & (lap_data["FLAG_AT_FL"] == "GF")
     ]
     driver_2_data = lap_data[
-        (lap_data["DRIVER_NUMBER"] == driver_2) & (lap_data["FLAG_AT_FL"] == "GF")
+        (lap_data["VEHICLE_NUMBER"] == driver_2) & (lap_data["FLAG_AT_FL"] == "GF")
     ]
 
     if driver_1_data.empty or driver_2_data.empty:
