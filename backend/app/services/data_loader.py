@@ -337,7 +337,13 @@ class DataLoader:
         return list(self.drivers.values())
 
     def get_lap_data(self, track_id: str, race_num: int = 1) -> Optional[pd.DataFrame]:
-        """Get lap analysis data for a specific track and race."""
+        """
+        Get lap summary data for a specific track and race from CSV files.
+
+        Returns lap-by-lap summary with LAP_TIME, sector times, and flag status.
+        This is different from get_telemetry_data() which returns high-frequency
+        telemetry points from Snowflake.
+        """
         key = f"{track_id}_r{race_num}_analysis_endurance"
         return self.lap_analysis.get(key)
 

@@ -298,6 +298,7 @@ async def compare_telemetry(
 
     # Filter for each driver and exclude caution laps (FCY = Full Course Yellow)
     # FLAG_AT_FL values: "GF" = Green Flag (normal lap), "FCY" = caution lap
+    # Note: CSV files use DRIVER_NUMBER, Snowflake uses VEHICLE_NUMBER
     driver_1_data = lap_data[
         (lap_data["DRIVER_NUMBER"] == driver_1) & (lap_data["FLAG_AT_FL"] == "GF")
     ]
