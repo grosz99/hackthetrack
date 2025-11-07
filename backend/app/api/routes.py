@@ -31,6 +31,14 @@ from models import (
     TelemetryCoachingRequest,
     TelemetryCoachingResponse,
     CornerAnalysis,
+    # 2K-Style Models
+    DriverTier,
+    RadarChartData,
+    DriverProfile2K,
+    SkillAdjustment,
+    TrainingDrill,
+    TrainingPlan,
+    WhatIfScenario,
 )
 from ..services.data_loader import data_loader
 from ..services.ai_strategy import ai_service
@@ -1150,3 +1158,531 @@ def _analyze_corners(driver_df: pd.DataFrame, reference_df: pd.DataFrame, track_
             ))
 
     return sorted(corner_analysis, key=lambda x: x.time_loss, reverse=True)
+
+
+# ============================================================================
+# 2K-STYLE DRIVER DEVELOPMENT ENDPOINTS
+# ============================================================================
+
+
+@router.get(
+    "/drivers/{driver_number}/profile-2k",
+    response_model=DriverProfile2K,
+    summary="Get 2K-style driver profile",
+    description="Get driver profile with tier classification, radar chart, and archetype"
+)
+async def get_driver_profile_2k(driver_number: int):
+    """
+    Get 2K-style driver profile with tier (S/A/B/C/D) and radar chart.
+
+    Returns driver rating, tier classification, skill radar chart, and archetype
+    (e.g., 'Speed Demon', 'Consistent Finisher').
+    """
+    # Get driver data
+    driver = data_loader.get_driver(driver_number)
+    if not driver:
+        raise HTTPException(status_code=404, detail=f"Driver {driver_number} not found")
+
+    # Get season stats
+    season_stats = data_loader.get_season_stats(driver_number)
+    if not season_stats:
+        raise HTTPException(status_code=404, detail=f"No season stats for driver {driver_number}")
+
+    # Calculate tier based on overall score
+    tier_info = _calculate_driver_tier(driver, data_loader.get_all_drivers())
+
+    # Create radar chart data
+    radar_data = RadarChartData(
+        speed=driver.speed.percentile,
+        consistency=driver.consistency.percentile,
+        racecraft=driver.racecraft.percentile,
+        tire_management=driver.tire_management.percentile
+    )
+
+    # Determine archetype
+    archetype = _determine_driver_archetype(driver)
+
+    return DriverProfile2K(
+        driver_number=driver_number,
+        driver_name=driver.driver_name or f"Driver #{driver_number}",
+        tier=tier_info,
+        current_skills=radar_data,
+        season_stats=season_stats,
+        archetype=archetype
+    )
+
+
+@router.post(
+    "/drivers/{driver_number}/what-if",
+    response_model=WhatIfScenario,
+    summary="Run what-if scenario",
+    description="Adjust driver skills by small percentages and see predicted outcomes"
+)
+async def run_what_if_scenario(
+    driver_number: int,
+    adjustments: List[SkillAdjustment]
+):
+    """
+    Run what-if scenario: adjust skills by 1-10% and see predicted outcomes.
+
+    Shows predicted finish, similar driver match, and training plan to achieve
+    the adjusted skill levels. Perfect for "if I improve my consistency by 5%,
+    where would I finish?" type questions.
+    """
+    # Get current driver
+    driver = data_loader.get_driver(driver_number)
+    if not driver:
+        raise HTTPException(status_code=404, detail=f"Driver {driver_number} not found")
+
+    # Apply skill adjustments
+    adjusted_skills_dict = {
+        'speed': driver.speed.percentile,
+        'consistency': driver.consistency.percentile,
+        'racecraft': driver.racecraft.percentile,
+        'tire_management': driver.tire_management.percentile
+    }
+
+    scenario_description = []
+    for adj in adjustments:
+        current_value = adjusted_skills_dict[adj.factor]
+        new_value = min(100, max(0, current_value + adj.adjustment_percent))
+        adjusted_skills_dict[adj.factor] = new_value
+        scenario_description.append(f"{adj.factor.replace('_', ' ').title()} {adj.adjustment_percent:+.1f}%")
+
+    scenario_name = ", ".join(scenario_description)
+
+    # Create adjusted skills for prediction
+    adjusted_skills = AdjustedSkills(
+        speed=adjusted_skills_dict['speed'] / 100,  # Convert to 0-1 scale for prediction
+        consistency=adjusted_skills_dict['consistency'] / 100,
+        racecraft=adjusted_skills_dict['racecraft'] / 100,
+        tire_management=adjusted_skills_dict['tire_management'] / 100
+    )
+
+    # Use existing improve/predict endpoint logic
+    improve_response = await predict_with_adjusted_skills(driver_number, adjusted_skills)
+
+    # Get best similar driver match
+    similar_driver = improve_response.similar_drivers[0] if improve_response.similar_drivers else None
+    if not similar_driver:
+        raise HTTPException(status_code=500, detail="Could not find similar driver match")
+
+    # Calculate position change
+    current_avg_finish = driver.stats.average_finish
+    predicted_finish = improve_response.prediction.predicted_finish
+    position_change = int(current_avg_finish - predicted_finish)
+
+    # Generate training plan for the most improved skill
+    if adjustments:
+        primary_adjustment = max(adjustments, key=lambda a: abs(a.adjustment_percent))
+        training_plan = await _generate_training_plan(
+            driver_number,
+            primary_adjustment.factor,
+            adjusted_skills_dict[primary_adjustment.factor]
+        )
+    else:
+        training_plan = None
+
+    # Create radar chart for adjusted skills
+    adjusted_radar = RadarChartData(
+        speed=adjusted_skills_dict['speed'],
+        consistency=adjusted_skills_dict['consistency'],
+        racecraft=adjusted_skills_dict['racecraft'],
+        tire_management=adjusted_skills_dict['tire_management']
+    )
+
+    return WhatIfScenario(
+        scenario_name=scenario_name,
+        adjusted_skills=adjusted_radar,
+        predicted_finish=predicted_finish,
+        predicted_position_change=position_change,
+        similar_driver_match=similar_driver,
+        training_plan=training_plan
+    )
+
+
+@router.post(
+    "/drivers/{driver_number}/training-plan",
+    response_model=TrainingPlan,
+    summary="Generate AI training plan",
+    description="Get personalized training plan to improve specific skill"
+)
+async def generate_training_plan(
+    driver_number: int,
+    target_skill: str = Query(..., pattern="^(speed|consistency|racecraft|tire_management)$"),
+    target_improvement_percent: float = Query(..., ge=1, le=20, description="Target improvement in percentage points")
+):
+    """
+    Generate AI-powered training plan for skill improvement.
+
+    Uses Claude AI to generate specific drills, exercises, and coaching advice
+    to help driver improve in target skill area.
+    """
+    # Get driver
+    driver = data_loader.get_driver(driver_number)
+    if not driver:
+        raise HTTPException(status_code=404, detail=f"Driver {driver_number} not found")
+
+    # Get current skill level
+    skill_map = {
+        'speed': driver.speed.percentile,
+        'consistency': driver.consistency.percentile,
+        'racecraft': driver.racecraft.percentile,
+        'tire_management': driver.tire_management.percentile
+    }
+    current_level = skill_map[target_skill]
+    target_level = min(100, current_level + target_improvement_percent)
+
+    return await _generate_training_plan(driver_number, target_skill, target_level)
+
+
+# Helper functions for 2K-style endpoints
+
+def _calculate_driver_tier(driver: Driver, all_drivers: List[Driver]) -> DriverTier:
+    """Calculate driver tier (S/A/B/C/D) based on overall score."""
+    overall_score = driver.overall_score
+
+    # Tier thresholds (based on percentile distribution)
+    # S: Top 10% (90-100)
+    # A: Next 20% (70-90)
+    # B: Middle 40% (30-70)
+    # C: Next 20% (10-30)
+    # D: Bottom 10% (0-10)
+
+    # Calculate percentile rank
+    scores = sorted([d.overall_score for d in all_drivers], reverse=True)
+    rank = scores.index(overall_score) + 1
+    total_drivers = len(scores)
+    percentile = ((total_drivers - rank) / total_drivers) * 100
+
+    if percentile >= 90:
+        tier = "S"
+        threshold_range = (90, 100)
+    elif percentile >= 70:
+        tier = "A"
+        threshold_range = (70, 90)
+    elif percentile >= 30:
+        tier = "B"
+        threshold_range = (30, 70)
+    elif percentile >= 10:
+        tier = "C"
+        threshold_range = (10, 30)
+    else:
+        tier = "D"
+        threshold_range = (0, 10)
+
+    # Count drivers in tier
+    tier_drivers = [d for d in all_drivers if _get_tier_letter(d, all_drivers) == tier]
+    tier_scores = sorted([d.overall_score for d in tier_drivers], reverse=True)
+    rank_in_tier = tier_scores.index(overall_score) + 1 if overall_score in tier_scores else 1
+
+    # Next tier threshold
+    next_tier_threshold = None
+    if tier != "S":
+        next_tier_map = {"A": 90, "B": 70, "C": 30, "D": 10}
+        if tier in next_tier_map:
+            next_tier_threshold = next_tier_map[tier]
+
+    return DriverTier(
+        tier=tier,
+        overall_rating=int(overall_score),
+        rank_in_tier=rank_in_tier,
+        total_in_tier=len(tier_drivers),
+        next_tier_threshold=next_tier_threshold
+    )
+
+
+def _get_tier_letter(driver: Driver, all_drivers: List[Driver]) -> str:
+    """Helper to get tier letter for a driver."""
+    scores = sorted([d.overall_score for d in all_drivers], reverse=True)
+    rank = scores.index(driver.overall_score) + 1
+    total_drivers = len(scores)
+    percentile = ((total_drivers - rank) / total_drivers) * 100
+
+    if percentile >= 90:
+        return "S"
+    elif percentile >= 70:
+        return "A"
+    elif percentile >= 30:
+        return "B"
+    elif percentile >= 10:
+        return "C"
+    else:
+        return "D"
+
+
+def _determine_driver_archetype(driver: Driver) -> str:
+    """Determine driver archetype based on skill strengths."""
+    skills = {
+        'speed': driver.speed.percentile,
+        'consistency': driver.consistency.percentile,
+        'racecraft': driver.racecraft.percentile,
+        'tire_management': driver.tire_management.percentile
+    }
+
+    # Find strongest and weakest skills
+    strongest = max(skills, key=skills.get)
+    strength_value = skills[strongest]
+
+    # Determine archetype
+    if strength_value >= 85:
+        if strongest == 'speed':
+            return "Speed Demon"
+        elif strongest == 'consistency':
+            return "Consistent Finisher"
+        elif strongest == 'racecraft':
+            return "Wheel-to-Wheel Specialist"
+        elif strongest == 'tire_management':
+            return "Strategic Tactician"
+
+    # Balanced drivers
+    skill_values = list(skills.values())
+    if max(skill_values) - min(skill_values) < 15:
+        return "All-Rounder"
+
+    # Default archetypes
+    if strongest == 'speed':
+        return "Raw Speed"
+    elif strongest == 'consistency':
+        return "Point Scorer"
+    elif strongest == 'racecraft':
+        return "Battler"
+    else:
+        return "Tire Whisperer"
+
+
+async def _generate_training_plan(
+    driver_number: int,
+    target_skill: str,
+    target_level: float
+) -> TrainingPlan:
+    """Generate AI-powered training plan using Claude."""
+    driver = data_loader.get_driver(driver_number)
+    if not driver:
+        raise HTTPException(status_code=404, detail=f"Driver {driver_number} not found")
+
+    skill_map = {
+        'speed': driver.speed.percentile,
+        'consistency': driver.consistency.percentile,
+        'racecraft': driver.racecraft.percentile,
+        'tire_management': driver.tire_management.percentile
+    }
+    current_level = skill_map[target_skill]
+
+    # Generate AI coaching using the existing AI service
+    prompt = f"""Generate a detailed training plan for a racing driver to improve their {target_skill.replace('_', ' ')}.
+
+Current skill level: {current_level:.1f}/100
+Target skill level: {target_level:.1f}/100
+Improvement needed: {target_level - current_level:.1f} points
+
+Provide:
+1. 4-5 specific training drills with difficulty levels
+2. Estimated time to achieve improvement
+3. Key focus areas
+4. Coaching summary
+
+Format as JSON with drills array containing: drill_name, description, focus_area, duration, difficulty, expected_improvement"""
+
+    try:
+        # Use AI strategy service for generation
+        ai_response, _ = ai_service.get_strategy_insights(
+            message=prompt,
+            driver=driver,
+            track=None,
+            history=[]
+        )
+
+        # Parse AI response and create training drills
+        # For now, create structured drills based on skill type
+        drills = _create_skill_specific_drills(target_skill, current_level, target_level)
+
+        # Estimate time based on improvement magnitude
+        improvement = target_level - current_level
+        if improvement <= 5:
+            estimated_time = "2-4 weeks"
+        elif improvement <= 10:
+            estimated_time = "1-2 months"
+        else:
+            estimated_time = "3-6 months"
+
+        return TrainingPlan(
+            target_skill=target_skill.replace('_', ' ').title(),
+            current_level=current_level,
+            target_level=target_level,
+            estimated_time=estimated_time,
+            drills=drills,
+            ai_coaching_summary=ai_response
+        )
+
+    except Exception as e:
+        logger.error(f"Failed to generate training plan: {e}")
+        # Fallback to structured drills without AI summary
+        drills = _create_skill_specific_drills(target_skill, current_level, target_level)
+        improvement = target_level - current_level
+        estimated_time = "2-4 weeks" if improvement <= 5 else "1-2 months" if improvement <= 10 else "3-6 months"
+
+        return TrainingPlan(
+            target_skill=target_skill.replace('_', ' ').title(),
+            current_level=current_level,
+            target_level=target_level,
+            estimated_time=estimated_time,
+            drills=drills,
+            ai_coaching_summary=f"Focus on improving {target_skill.replace('_', ' ')} through consistent practice and the drills below."
+        )
+
+
+def _create_skill_specific_drills(skill: str, current_level: float, target_level: float) -> List[TrainingDrill]:
+    """Create skill-specific training drills."""
+    improvement = target_level - current_level
+
+    # Determine difficulty based on current level
+    if current_level < 40:
+        difficulty = "Beginner"
+    elif current_level < 65:
+        difficulty = "Intermediate"
+    elif current_level < 85:
+        difficulty = "Advanced"
+    else:
+        difficulty = "Expert"
+
+    drill_library = {
+        'speed': [
+            TrainingDrill(
+                drill_name="Hotlap Time Attack",
+                description="Practice qualifying-style single laps focusing on maximum attack. Use fresh tires and low fuel.",
+                focus_area="Peak Performance",
+                duration="30 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Brake Point Optimization",
+                description="Work with engineer to find the absolute limit on brake markers. Focus on the three heaviest braking zones.",
+                focus_area="Braking Technique",
+                duration="45 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Minimum Corner Speed Analysis",
+                description="Use telemetry to compare your minimum corner speeds vs fastest driver. Work on carrying more speed through apex.",
+                focus_area="Corner Speed",
+                duration="1 hour",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Throttle Application Drill",
+                description="Focus on getting to full throttle earlier. Practice smooth but aggressive throttle application.",
+                focus_area="Throttle Technique",
+                duration="30 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+        ],
+        'consistency': [
+            TrainingDrill(
+                drill_name="Pace Management Stint",
+                description="Run 10-lap stints focusing on hitting the same lap time (±0.2s) every lap. No heroics, just consistency.",
+                focus_area="Lap Time Repeatability",
+                duration="1 hour",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Reference Point Discipline",
+                description="Identify 5 key reference points per lap and hit them exactly every lap. Use video review to verify.",
+                focus_area="Reference Points",
+                duration="45 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Traffic Navigation",
+                description="Practice maintaining pace while navigating through slower traffic. Focus on not losing rhythm.",
+                focus_area="Traffic Management",
+                duration="30 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Mental Reset Exercise",
+                description="Practice recovering from mistakes. After an error, focus on getting back to baseline within 2 laps.",
+                focus_area="Mental Consistency",
+                duration="30 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+        ],
+        'racecraft': [
+            TrainingDrill(
+                drill_name="Overtaking Scenarios",
+                description="Practice different overtaking techniques: outbraking, late apex, switchback, slipstream pass.",
+                focus_area="Passing Technique",
+                duration="45 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Defensive Driving",
+                description="Work on defensive lines that protect position without giving up too much time. Learn one-move rule.",
+                focus_area="Position Defense",
+                duration="30 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Wheel-to-Wheel Awareness",
+                description="Practice maintaining awareness of cars alongside. Use practice starts to work on first-lap positioning.",
+                focus_area="Spatial Awareness",
+                duration="45 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Strategic Decision Making",
+                description="Study race scenarios with engineer: when to push, when to conserve, when to pit. Run strategy simulations.",
+                focus_area="Race Strategy",
+                duration="1 hour",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+        ],
+        'tire_management': [
+            TrainingDrill(
+                drill_name="Tire Save Stint",
+                description="Practice extending tire life by 20% over normal stint length. Focus on smooth inputs and managing wheelspin.",
+                focus_area="Tire Longevity",
+                duration="1.5 hours",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Thermal Management",
+                description="Work on keeping tires in optimal temperature window. Practice heating up cold tires and cooling overheated tires.",
+                focus_area="Tire Temperature",
+                duration="45 minutes",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Degradation Analysis",
+                description="Monitor tire degradation lap-by-lap using telemetry. Learn to feel when tires are going off and adjust driving style.",
+                focus_area="Tire Wear Awareness",
+                duration="1 hour",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+            TrainingDrill(
+                drill_name="Setup Optimization",
+                description="Work with engineer on setup changes that reduce tire wear: camber, toe, diff settings, ride height.",
+                focus_area="Car Setup",
+                duration="2 hours",
+                difficulty=difficulty,
+                expected_improvement=f"+{improvement/4:.1f} percentile points"
+            ),
+        ]
+    }
+
+    return drill_library.get(skill, drill_library['speed'])[:4]  # Return top 4 drills

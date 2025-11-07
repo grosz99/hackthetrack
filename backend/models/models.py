@@ -323,3 +323,75 @@ class ImprovePredictionResponse(BaseModel):
     prediction: PredictionWithUncertainty
     similar_drivers: List[SimilarDriverMatch]
     recommendations: List[ImprovementRecommendation]
+
+
+# 2K-Style Driver Development Models
+
+class DriverTier(BaseModel):
+    """Driver tier classification (2K-style)."""
+
+    tier: str = Field(..., pattern="^(S|A|B|C|D)$", description="Tier: S (Elite), A (Great), B (Good), C (Average), D (Developing)")
+    overall_rating: int = Field(..., ge=0, le=100, description="Overall rating 0-100")
+    rank_in_tier: int = Field(..., description="Rank within this tier")
+    total_in_tier: int = Field(..., description="Total drivers in this tier")
+    next_tier_threshold: Optional[float] = Field(None, description="Score needed for next tier")
+
+
+class RadarChartData(BaseModel):
+    """Radar chart data for skill visualization."""
+
+    speed: float = Field(..., ge=0, le=100)
+    consistency: float = Field(..., ge=0, le=100)
+    racecraft: float = Field(..., ge=0, le=100)
+    tire_management: float = Field(..., ge=0, le=100)
+
+
+class DriverProfile2K(BaseModel):
+    """2K-style driver profile with tier and radar chart."""
+
+    driver_number: int
+    driver_name: str
+    tier: DriverTier
+    current_skills: RadarChartData
+    season_stats: SeasonStats
+    archetype: str = Field(..., description="Driver archetype: 'Speed Demon', 'Consistent Finisher', etc.")
+
+
+class SkillAdjustment(BaseModel):
+    """1% skill adjustment for what-if scenarios."""
+
+    factor: str = Field(..., pattern="^(speed|consistency|racecraft|tire_management)$")
+    adjustment_percent: float = Field(..., ge=-10, le=10, description="Adjustment in percentage points (-10 to +10)")
+
+
+class TrainingDrill(BaseModel):
+    """Specific training drill recommendation."""
+
+    drill_name: str
+    description: str
+    focus_area: str
+    duration: str
+    difficulty: str = Field(..., pattern="^(Beginner|Intermediate|Advanced|Expert)$")
+    expected_improvement: str
+
+
+class TrainingPlan(BaseModel):
+    """AI-generated training plan for skill improvement."""
+
+    target_skill: str
+    current_level: float
+    target_level: float
+    estimated_time: str
+    drills: List[TrainingDrill]
+    ai_coaching_summary: str
+
+
+class WhatIfScenario(BaseModel):
+    """What-if scenario result showing predicted outcomes."""
+
+    scenario_name: str
+    adjusted_skills: RadarChartData
+    predicted_finish: float
+    predicted_position_change: int
+    similar_driver_match: SimilarDriverMatch
+    training_plan: TrainingPlan
