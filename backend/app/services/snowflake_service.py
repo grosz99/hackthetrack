@@ -259,7 +259,9 @@ class SnowflakeService:
             df = self.query(sql)
 
             if df is not None and not df.empty:
-                drivers = df['vehicle_number'].tolist()
+                # Snowflake returns column names in UPPERCASE
+                column_name = 'VEHICLE_NUMBER' if 'VEHICLE_NUMBER' in df.columns else 'vehicle_number'
+                drivers = df[column_name].tolist()
                 logger.info(f"✅ Found {len(drivers)} drivers with telemetry")
                 return drivers
 
