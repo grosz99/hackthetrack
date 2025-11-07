@@ -337,11 +337,17 @@ class DataLoader:
         return list(self.drivers.values())
 
     def get_lap_data(self, track_id: str, race_num: int = 1) -> Optional[pd.DataFrame]:
-        """Get lap analysis data for a specific track and race from Snowflake."""
-        # Use Snowflake service to get telemetry data
+        """Get lap analysis data for a specific track and race."""
+        # Try Snowflake first
         from .snowflake_service import SnowflakeService
         snowflake_service = SnowflakeService()
-        return snowflake_service.get_telemetry_data(track_id, race_num)
+        df = snowflake_service.get_telemetry_data(track_id, race_num)
+        if df is not None:
+            return df
+
+        # Fallback to CSV
+        key = f"{track_id}_r{race_num}_analysis_endurance"
+        return self.lap_analysis.get(key)
 
     def calculate_circuit_fit(
         self, driver_number: int, track_id: str
