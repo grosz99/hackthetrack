@@ -60,6 +60,11 @@ class DataLoader:
         """Load all data sources into memory."""
         print("Loading racing data...")
 
+        # Load pre-calculated season stats and race results from JSON FIRST
+        # (needed by dashboard data loader)
+        self._load_season_stats_json()
+        self._load_race_results_json()
+
         # Load dashboard data (pre-calculated driver/track data)
         self._load_dashboard_data()
 
@@ -71,10 +76,6 @@ class DataLoader:
 
         # Load race results and lap analysis
         self._load_race_data()
-
-        # Load pre-calculated season stats and race results from JSON
-        self._load_season_stats_json()
-        self._load_race_results_json()
 
         print(f"Data loaded: {len(self.tracks)} tracks, {len(self.drivers)} drivers")
         print(f"Season stats loaded: {len(self.season_stats_lookup)} drivers")
@@ -222,6 +223,12 @@ class DataLoader:
             races = driver_data.get("races", 0)
             avg_finish = driver_data.get("avg_finish", 0)
 
+            # Get season stats from lookup for wins, top10, dnfs
+            season_stats = self.season_stats_lookup.get(driver_num, {})
+            wins = season_stats.get("wins", 0)
+            top10 = season_stats.get("top10", 0)
+            dnfs = season_stats.get("dnfs", 0)
+
             # Calculate overall score using validated weighted coefficients
             # Coefficients from statistical validation (see routes.py lines 740-746)
             # Speed: 46.6%, Consistency: 29.1%, Racecraft: 14.9%, Tire Mgmt: 9.5%
@@ -267,6 +274,9 @@ class DataLoader:
                     average_finish=avg_finish,
                     best_finish=int(avg_finish) if avg_finish else 1,  # Approximate
                     worst_finish=int(avg_finish) + 5 if avg_finish else 20,  # Approximate
+                    wins=wins,
+                    top10=top10,
+                    dnfs=dnfs,
                 ),
                 circuit_fits={},  # Will be calculated on demand
             )
