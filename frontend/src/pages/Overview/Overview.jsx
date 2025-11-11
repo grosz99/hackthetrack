@@ -5,7 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
-import { NavLink, useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
          ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
          Legend, ResponsiveContainer } from 'recharts';
@@ -14,6 +14,8 @@ import { useDriver } from '../../context/DriverContext';
 import { useScout } from '../../context/ScoutContext';
 import { classifyDriver } from '../../utils/classification';
 import ClassificationBadge from '../../components/ClassificationBadge/ClassificationBadge';
+import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
+import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import './Overview.css';
 
 export default function Overview() {
@@ -149,157 +151,11 @@ export default function Overview() {
 
   return (
     <div className="driver-overview">
-      {/* Back to Rankings Button */}
-      <div style={{
-        marginBottom: '24px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '16px'
-      }}>
-        <button
-          onClick={() => navigate('/rankings')}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '12px 24px',
-            background: '#e74c3c',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '8px',
-            fontSize: '16px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            textTransform: 'uppercase',
-            letterSpacing: '0.5px'
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.background = '#c0392b';
-            e.currentTarget.style.transform = 'translateX(-4px)';
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.background = '#e74c3c';
-            e.currentTarget.style.transform = 'translateX(0)';
-          }}
-        >
-          <span style={{ fontSize: '20px' }}>←</span>
-          <span>Back to Rankings</span>
-        </button>
-        <div style={{
-          fontSize: '14px',
-          fontWeight: 600,
-          color: '#666',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px'
-        }}>
-          <span style={{ color: '#e74c3c' }}>Rankings</span>
-          <span>›</span>
-          <span style={{ color: '#fff' }}>Driver #{seasonStats.driver_number}</span>
-          <span>›</span>
-          <span style={{ color: '#fff' }}>Overview</span>
-        </div>
-      </div>
-
-      {/* Header Section */}
-      <div className="driver-header">
-        <div className="header-content">
-          <div className="driver-number-display">
-            <span className="number-large">{seasonStats.driver_number}</span>
-          </div>
-          <div className="driver-name-section">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '8px' }}>
-              <h1 className="driver-name" style={{ margin: 0 }}>Driver #{seasonStats.driver_number}</h1>
-              {classification && (
-                <ClassificationBadge classification={classification} size="large" />
-              )}
-            </div>
-            <div className="season-subtitle">Toyota Gazoo Series</div>
-          </div>
-
-          {/* Driver Selector */}
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '16px' }}>
-            <span style={{
-              fontSize: '18px',
-              fontWeight: 700,
-              color: '#fff',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}>
-              Select Driver
-            </span>
-            <select
-              value={selectedDriverNumber}
-              onChange={(e) => setSelectedDriverNumber(Number(e.target.value))}
-              style={{
-                padding: '12px 20px',
-                fontSize: '16px',
-                fontWeight: 700,
-                background: '#fff',
-                color: '#000',
-                border: '4px solid #e74c3c',
-                borderRadius: '12px',
-                cursor: 'pointer',
-                outline: 'none',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 4px 16px rgba(231, 76, 60, 0.3)',
-                minWidth: '200px',
-                fontFamily: 'Inter, sans-serif',
-                appearance: 'none',
-                backgroundImage: `url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%23e74c3c' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'right 16px center',
-                paddingRight: '48px'
-              }}
-              onMouseOver={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 24px rgba(231, 76, 60, 0.4)';
-              }}
-              onMouseOut={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.3)';
-              }}
-            >
-              {drivers.map((driver) => (
-                <option key={driver.number} value={driver.number}>
-                  {driver.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      </div>
+      {/* Unified Header with Scout Context */}
+      <DashboardHeader driverData={driverData} pageName="Overview" />
 
       {/* Navigation Tabs - Full Width Below Header */}
-      <div className="nav-tabs-container">
-        <div className="nav-tabs">
-          <NavLink
-            to={`/driver/${selectedDriverNumber}/overview`}
-            className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-          >
-            Overview
-          </NavLink>
-          <NavLink
-            to={`/driver/${selectedDriverNumber}/race-log`}
-            className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-          >
-            Race Log
-          </NavLink>
-          <NavLink
-            to={`/driver/${selectedDriverNumber}/skills`}
-            className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-          >
-            Skills
-          </NavLink>
-          <NavLink
-            to={`/driver/${selectedDriverNumber}/improve`}
-            className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
-          >
-            Improve
-          </NavLink>
-        </div>
-      </div>
+      <DashboardTabs />
 
       {/* Top Section - Compact Tiles + Race Chart */}
       <div style={{ display: 'flex', gap: '24px', marginBottom: '48px' }}>

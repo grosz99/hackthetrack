@@ -38,8 +38,9 @@ export default function DashboardHeader({ driverData, pageName }) {
 
   return (
     <>
-      {/* Scout Breadcrumb - Only show when navigated from scout */}
-      {isFromScout && (
+      {/* Breadcrumb Navigation */}
+      {isFromScout ? (
+        /* Scout Breadcrumb - Show when navigated from scout */
         <div className="scout-breadcrumb">
           <button
             onClick={() => navigate('/scout')}
@@ -50,6 +51,24 @@ export default function DashboardHeader({ driverData, pageName }) {
           </button>
           <div className="breadcrumb-trail">
             <span className="trail-scout">Scout Portal</span>
+            <span className="trail-separator">›</span>
+            <span className="trail-driver">Driver #{selectedDriverNumber}</span>
+            <span className="trail-separator">›</span>
+            <span className="trail-page">{pageName}</span>
+          </div>
+        </div>
+      ) : (
+        /* Rankings Breadcrumb - Show when navigated from rankings */
+        <div className="scout-breadcrumb">
+          <button
+            onClick={() => navigate('/rankings')}
+            className="back-to-scout-btn"
+          >
+            <span className="arrow">←</span>
+            <span>Back to Rankings</span>
+          </button>
+          <div className="breadcrumb-trail">
+            <span className="trail-scout">Rankings</span>
             <span className="trail-separator">›</span>
             <span className="trail-driver">Driver #{selectedDriverNumber}</span>
             <span className="trail-separator">›</span>
