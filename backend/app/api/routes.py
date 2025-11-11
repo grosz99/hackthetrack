@@ -83,12 +83,6 @@ async def get_all_drivers(
     if not drivers:
         raise HTTPException(status_code=404, detail="No drivers found")
 
-    # Add season stats to each driver
-    for driver in drivers:
-        season_stats = data_loader.get_season_stats(driver.driver_number)
-        if season_stats:
-            driver.stats = season_stats
-
     if track_id:
         # Add circuit fit calculations for the specified track
         for driver in drivers:
