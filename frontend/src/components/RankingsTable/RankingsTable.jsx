@@ -37,10 +37,13 @@ export default function RankingsTable({ drivers = [] }) {
     const top10 = stats.top_10 || stats.top10 || 0;
     const dnfs = stats.dnfs || 0;
 
-    // Removed debug log for production
+    // Handle both 'name' and 'driver_name' fields
+    const driverName = driver.name || driver.driver_name || `Driver #${driver.number || driver.driver_number}`;
 
     return {
       ...driver,
+      name: driverName,
+      number: driver.number || driver.driver_number,
       overall_score: driver.overall_score || getOverallScore(driver),
       wins,
       top10,

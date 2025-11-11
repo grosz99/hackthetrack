@@ -56,7 +56,7 @@ class Driver(BaseModel):
     consistency: FactorScore
     racecraft: FactorScore
     tire_management: FactorScore
-    stats: DriverStats
+    stats: Optional[SeasonStats] = None
     circuit_fits: Dict[str, float] = {}
 
 
