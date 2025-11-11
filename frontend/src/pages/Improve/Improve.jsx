@@ -10,7 +10,6 @@ import api from '../../services/api';
 import { useDriver } from '../../context/DriverContext';
 import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
-import ReactMarkdown from 'react-markdown';
 import './Improve.css';
 
 // Available tracks with telemetry
@@ -108,7 +107,6 @@ export default function Improve() {
   }
 
   const track = TRACKS.find(t => t.id === selectedTrack);
-  const refDriver = drivers.find(d => d.number === referenceDriver);
 
   return (
     <div className="improve-page">
