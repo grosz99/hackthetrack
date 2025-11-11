@@ -31,26 +31,28 @@ export default function RankingsTable({ drivers = [] }) {
 
   // Add ranking and stats to drivers
   const enrichedDrivers = drivers.map(driver => {
-    // Get stats from driver object or stats property
-    const stats = driver.stats || driver || {};
-    const wins = stats.wins || 0;
-    const top10 = stats.top_10 || stats.top10 || 0;
-    const dnfs = stats.dnfs || 0;
+    // Get stats from driver object
+    const stats = driver.stats || {};
 
-    // Handle both 'name' and 'driver_name' fields
-    const driverName = driver.name || driver.driver_name || `Driver #${driver.number || driver.driver_number}`;
+    // Extract factor scores (these are objects with score/percentile/z_score)
+    const speedScore = driver.speed?.score || driver.speed?.percentile || 0;
+    const racecraftScore = driver.racecraft?.score || driver.racecraft?.percentile || 0;
+    const tireMgmtScore = driver.tire_management?.score || driver.tire_management?.percentile || 0;
+
+    // Handle driver name
+    const driverName = driver.driver_name || driver.name || `Driver #${driver.driver_number || driver.number}`;
 
     return {
       ...driver,
       name: driverName,
-      number: driver.number || driver.driver_number,
+      number: driver.driver_number || driver.number,
       overall_score: driver.overall_score || getOverallScore(driver),
-      wins,
-      top10,
-      dnfs,
-      cornering: driver.racecraft || 0,  // Map to design mockup names
-      tire_mgmt: driver.tire_management || 0,
-      raw_speed: driver.speed || 0,
+      wins: stats.wins || 0,
+      top10: stats.top10 || 0,
+      dnfs: stats.dnfs || 0,
+      cornering: racecraftScore,
+      tire_mgmt: tireMgmtScore,
+      raw_speed: speedScore,
     };
   });
 
