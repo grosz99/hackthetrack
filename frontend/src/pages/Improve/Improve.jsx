@@ -1,8 +1,6 @@
 /**
- * Improve Page - AI Telemetry Coaching Lab
- *
- * Provides race engineer-style coaching using AI analysis of telemetry data.
- * Compares driver performance vs winner/leader with specific, actionable advice.
+ * Improve Page - Achievements, Training Programs, and Performance Analysis
+ * Design matches mockup with 3 main sections
  */
 
 import { useState, useEffect } from 'react';
@@ -12,83 +10,128 @@ import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import './Improve.css';
 
-// Available tracks with telemetry
-const TRACKS = [
-  { id: 'barber', name: 'Barber Motorsports Park' },
-  { id: 'cota', name: 'Circuit of the Americas' },
-  { id: 'roadamerica', name: 'Road America' },
-  { id: 'sebring', name: 'Sebring International Raceway' },
-  { id: 'sonoma', name: 'Sonoma Raceway' },
-  { id: 'vir', name: 'Virginia International Raceway' }
+// Mock achievements data (TODO: Move to backend)
+const ACHIEVEMENTS = [
+  { id: 'speed_demon', name: 'Speed Demon', description: 'Reach 80+ Speed', unlocked: false },
+  { id: 'corner_master', name: 'Corner Master', description: 'Reach 80+ Cornering', unlocked: false },
+  { id: 'consistent_driver', name: 'Consistent Driver', description: 'Reach 70+ Consistency', unlocked: false },
+  { id: 'rain_master', name: 'Rain Master', description: 'Reach 75+ Wet Weather', unlocked: false },
+  { id: 'elite_racer', name: 'Elite Racer', description: 'Overall Rating 85+', unlocked: false },
+  { id: 'all_rounder', name: 'All-Rounder', description: 'All skills above 70', unlocked: false }
+];
+
+// Mock training programs (TODO: Move to backend)
+const TRAINING_PROGRAMS = [
+  {
+    id: 'precision_driving',
+    name: 'Precision Driving',
+    duration: '2 weeks',
+    xp: 500,
+    skills: ['Cornering', 'Braking'],
+    recommended: true
+  },
+  {
+    id: 'race_strategy',
+    name: 'Race Strategy',
+    duration: '3 weeks',
+    xp: 750,
+    skills: ['Racecraft', 'Consistency']
+  },
+  {
+    id: 'wet_weather',
+    name: 'Wet Weather Specialist',
+    duration: '1 week',
+    xp: 400,
+    skills: ['Wet Weather']
+  },
+  {
+    id: 'speed_aggression',
+    name: 'Speed & Aggression',
+    duration: '2 weeks',
+    xp: 600,
+    skills: ['Top Speed', 'Overtaking']
+  }
 ];
 
 export default function Improve() {
   const { selectedDriverNumber, drivers } = useDriver();
 
   const [driverData, setDriverData] = useState(null);
-  const [selectedTrack, setSelectedTrack] = useState('barber');
-  const [selectedRace, setSelectedRace] = useState(1);
   const [coachingData, setCoachingData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [loadingCoaching, setLoadingCoaching] = useState(false);
   const [error, setError] = useState(null);
 
-  // Load driver data
+  // Load driver data and coaching
   useEffect(() => {
-    const fetchDriverData = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        const response = await api.get(`/api/drivers/${selectedDriverNumber}`);
-        setDriverData(response.data);
+        // Get driver data
+        const driverResponse = await api.get(`/api/drivers/${selectedDriverNumber}`);
+        setDriverData(driverResponse.data);
+
+        // Get telemetry coaching for Barber
+        const coachingResponse = await api.get(
+          `/api/drivers/${selectedDriverNumber}/telemetry-coaching`,
+          {
+            params: {
+              track_id: 'barber',
+              race_num: 1
+            }
+          }
+        );
+        setCoachingData(coachingResponse.data);
 
       } catch (err) {
-        console.error('Error fetching driver data:', err);
-        setError('Failed to load driver data');
+        console.error('Error loading data:', err);
+        setError('Failed to load performance data');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchDriverData();
+    fetchData();
   }, [selectedDriverNumber]);
 
-  // Load coaching when selections change
-  useEffect(() => {
-    if (selectedDriverNumber && selectedTrack && selectedRace) {
-      loadCoaching();
-    }
-  }, [selectedDriverNumber, selectedTrack, selectedRace]);
+  // Calculate top strengths from driver data
+  const getTopStrengths = () => {
+    if (!driverData) return [];
 
-  const loadCoaching = async () => {
-    try {
-      setLoadingCoaching(true);
-      setError(null);
+    const factors = [
+      { name: 'Cornering', value: driverData.racecraft?.score || 0 },
+      { name: 'Racecraft', value: driverData.racecraft?.score || 0 },
+      { name: 'Speed', value: driverData.speed?.score || 0 },
+      { name: 'Consistency', value: driverData.consistency?.score || 0 },
+      { name: 'Tire Management', value: driverData.tire_management?.score || 0 }
+    ];
 
-      const response = await api.get(
-        `/api/drivers/${selectedDriverNumber}/telemetry-coaching`,
-        {
-          params: {
-            track_id: selectedTrack,
-            race_num: selectedRace
-          }
-        }
-      );
+    return factors
+      .filter(f => f.value >= 70)
+      .sort((a, b) => b.value - a.value)
+      .slice(0, 2);
+  };
 
-      setCoachingData(response.data);
+  // Calculate priority areas from coaching data
+  const getPriorityAreas = () => {
+    if (!coachingData || !coachingData.factor_breakdown) return [];
 
-    } catch (err) {
-      console.error('Error loading coaching:', err);
-      setError(err.response?.data?.detail || 'Failed to load coaching data for this track.');
-    } finally {
-      setLoadingCoaching(false);
-    }
+    return Object.entries(coachingData.factor_breakdown)
+      .map(([factor, count]) => ({
+        name: factor,
+        value: 100 - (count * 10), // Convert to score (more issues = lower score)
+        points: count * 10
+      }))
+      .sort((a, b) => b.points - a.points)
+      .slice(0, 2);
   };
 
   if (loading) {
     return (
       <div className="improve-page">
+        <DashboardHeader driverData={driverData} pageName="Improve" />
+        <DashboardTabs />
         <div className="loading-container">
           <div className="loading-text">Loading...</div>
         </div>
@@ -96,17 +139,8 @@ export default function Improve() {
     );
   }
 
-  if (!driverData) {
-    return (
-      <div className="improve-page">
-        <div className="error-container">
-          <div className="error-text">{error || 'No data available'}</div>
-        </div>
-      </div>
-    );
-  }
-
-  const track = TRACKS.find(t => t.id === selectedTrack);
+  const topStrengths = getTopStrengths();
+  const priorityAreas = getPriorityAreas();
 
   return (
     <div className="improve-page">
@@ -116,156 +150,125 @@ export default function Improve() {
       {/* Unified Navigation Tabs */}
       <DashboardTabs />
 
-      {/* Coaching Content */}
-      <div className="coaching-content">
+      {/* Main Content Grid */}
+      <div className="improve-grid">
 
-        {/* Selection Controls */}
-        <div className="coaching-controls">
-          <div className="control-card">
-            <label className="control-label">TRACK</label>
-            <select
-              className="control-select"
-              value={selectedTrack}
-              onChange={(e) => setSelectedTrack(e.target.value)}
-            >
-              {TRACKS.map(t => (
-                <option key={t.id} value={t.id}>{t.name}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="control-card">
-            <label className="control-label">RACE</label>
-            <select
-              className="control-select"
-              value={selectedRace}
-              onChange={(e) => setSelectedRace(parseInt(e.target.value))}
-            >
-              <option value={1}>Race 1</option>
-              <option value={2}>Race 2</option>
-            </select>
-          </div>
-
-          <button
-            className="analyze-button"
-            onClick={loadCoaching}
-            disabled={loadingCoaching}
-          >
-            {loadingCoaching ? 'Loading...' : 'Analyze Performance'}
-          </button>
-        </div>
-
-        {/* Error Display */}
-        {error && (
-          <div className="error-banner">
-            <strong>Error:</strong> {error}
-          </div>
-        )}
-
-        {/* Loading State */}
-        {loadingCoaching && (
-          <div className="loading-state">
-            <div className="spinner"></div>
-            <p>Analyzing telemetry with AI race engineer...</p>
-            <p style={{ fontSize: '14px', color: '#666', marginTop: '8px' }}>
-              This may take 10-15 seconds as Claude analyzes the data
-            </p>
-          </div>
-        )}
-
-        {/* Performance Analysis Results */}
-        {coachingData && !loadingCoaching && (
-          <div className="performance-analysis">
-
-            {/* Team Principal's Note */}
-            <div className="team-note">
-              <div className="team-note-header">Team Principal's Note</div>
-              <div className="team-note-content">
-                Focus on <strong>{coachingData.summary.primary_weakness}</strong> - you're {coachingData.summary.corners_need_work}/{coachingData.summary.total_corners} corners off pace at {track?.name}
-              </div>
+        {/* ACHIEVEMENTS SECTION */}
+        <section className="achievements-section">
+          <div className="section-header">
+            <h2>ACHIEVEMENTS</h2>
+            <div className="badge-count">
+              <span className="count-number">0</span>
+              <span className="count-label">BADGES</span>
             </div>
+          </div>
 
-            {/* Priority Areas (Red Bars) */}
-            <div className="priority-areas-section">
-              <h3 className="section-title">⚠️ Priority Areas</h3>
+          <div className="achievements-grid">
+            {ACHIEVEMENTS.map(achievement => (
+              <div key={achievement.id} className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}`}>
+                <div className="achievement-icon">
+                  {achievement.unlocked ? '🏆' : '🔒'}
+                </div>
+                <div className="achievement-name">{achievement.name}</div>
+                <div className="achievement-desc">{achievement.description}</div>
+              </div>
+            ))}
+          </div>
+        </section>
 
-              {coachingData.key_insights.map((insight, idx) => (
-                <div key={idx} className="priority-item">
-                  <div className="priority-bar">
-                    <div
-                      className="priority-fill"
-                      style={{width: `${Math.min(100, (idx + 1) * 20)}%`}}
-                    ></div>
+        {/* TRAINING PROGRAMS SECTION */}
+        <section className="training-section">
+          <div className="section-header">
+            <h2>TRAINING PROGRAMS</h2>
+            <p className="section-subtitle">Complete programs to earn XP and improve skills</p>
+          </div>
+
+          <div className="programs-list">
+            {TRAINING_PROGRAMS.map(program => (
+              <div key={program.id} className="program-card">
+                <div className="program-header">
+                  <h3>{program.name}</h3>
+                  {program.recommended && <span className="recommended-badge">RECOMMENDED</span>}
+                </div>
+                <div className="program-details">
+                  <span>{program.duration}</span>
+                  <span>+{program.xp} XP</span>
+                </div>
+                <div className="program-skills">
+                  {program.skills.map(skill => (
+                    <span key={skill} className="skill-tag">{skill}</span>
+                  ))}
+                </div>
+                <button className="program-button">
+                  {program.recommended ? 'Start Training' : 'View Program'}
+                </button>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* PERFORMANCE ANALYSIS SECTION */}
+        <section className="performance-section">
+          <div className="section-header">
+            <h2>PERFORMANCE ANALYSIS</h2>
+            <p className="section-subtitle">Focus areas for maximum improvement</p>
+          </div>
+
+          {error && (
+            <div className="error-message">{error}</div>
+          )}
+
+          {coachingData && (
+            <>
+              {/* Team Principal's Note */}
+              <div className="team-note">
+                <div className="note-icon">💡</div>
+                <div className="note-content">
+                  <h3>Team Principal's Note</h3>
+                  <p>
+                    {coachingData.summary.primary_weakness ?
+                      `Focus on ${coachingData.summary.primary_weakness} - you're ${coachingData.summary.corners_need_work}/${coachingData.summary.total_corners} corners off pace at Barber` :
+                      "Strong development! You're showing real potential. Continue building your weaker skills."
+                    }
+                  </p>
+                </div>
+              </div>
+
+              {/* Priority Areas */}
+              <div className="priority-areas">
+                <h3>⚠️ Priority Areas</h3>
+                {priorityAreas.map(area => (
+                  <div key={area.name} className="priority-item">
+                    <div className="priority-header">
+                      <span className="priority-name">{area.name}</span>
+                      <span className="priority-score">{area.value}</span>
+                    </div>
+                    <div className="priority-bar">
+                      <div
+                        className="priority-fill"
+                        style={{width: `${area.value}%`}}
+                      ></div>
+                    </div>
+                    <div className="priority-text">+{area.points} points to reach competitive level</div>
                   </div>
-                  <div className="priority-text">{insight}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Top Strengths (Green Checkmarks) */}
-            <div className="top-strengths-section">
-              <h3 className="section-title">✓ Top Strengths</h3>
-
-              <div className="strengths-grid">
-                {coachingData.detailed_comparisons
-                  .filter(c => c.insight.includes('similar to fastest'))
-                  .map((corner, idx) => (
-                    <div key={idx} className="strength-badge">
-                      <span className="strength-corner">Turn {corner.corner_num}</span>
-                      <span className="strength-text">Similar to fastest driver ✓</span>
-                    </div>
-                  ))}
+                ))}
               </div>
-            </div>
 
-            {/* Factor Breakdown */}
-            {coachingData.factor_breakdown && (
-              <div className="factor-breakdown-section">
-                <h3 className="section-title">Performance Factor Breakdown</h3>
-                <div className="factor-grid">
-                  {Object.entries(coachingData.factor_breakdown).map(([factor, count]) => (
-                    <div key={factor} className="factor-card">
-                      <div className="factor-name">{factor}</div>
-                      <div className="factor-count">{count} corners</div>
+              {/* Top Strengths */}
+              {topStrengths.length > 0 && (
+                <div className="top-strengths">
+                  <h3>✓ Top Strengths</h3>
+                  {topStrengths.map(strength => (
+                    <div key={strength.name} className="strength-item">
+                      <span className="strength-name">{strength.name}</span>
+                      <span className="strength-score">{Math.round(strength.value)}</span>
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-
-            {/* Detailed Corner Analysis */}
-            {coachingData.detailed_comparisons && (
-              <div className="detailed-analysis-section">
-                <h3 className="section-title">Detailed Corner Analysis</h3>
-
-                <div className="corners-list">
-                  {coachingData.detailed_comparisons.map((corner, idx) => (
-                    <div key={idx} className={`corner-detail ${corner.insight.includes('similar') ? 'corner-good' : 'corner-needs-work'}`}>
-                      <div className="corner-header">
-                        <span className="corner-number">Turn {corner.corner_num}</span>
-                        <span className={`corner-factor ${corner.factor.toLowerCase()}`}>{corner.factor}</span>
-                      </div>
-                      <div className="corner-insight">{corner.insight}</div>
-                      <div className="corner-metrics">
-                        <span>Speed Delta: {corner.speed_delta_mph > 0 ? '+' : ''}{corner.speed_delta_mph.toFixed(1)} mph</span>
-                        <span>Brake Delta: {corner.brake_delta_m > 0 ? '+' : ''}{corner.brake_delta_m.toFixed(0)}m</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!coachingData && !loadingCoaching && !error && (
-          <div className="empty-state">
-            <h3>Select Track and Reference Driver</h3>
-            <p>Choose your configuration above and click "Analyze Telemetry" to get personalized coaching insights</p>
-          </div>
-        )}
+              )}
+            </>
+          )}
+        </section>
 
       </div>
     </div>
