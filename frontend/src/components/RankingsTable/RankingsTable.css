@@ -1,92 +1,97 @@
-/* Rankings Table Container */
+/* Rankings Table - Design System Match */
+
+/* Container */
 .rankings-table-container {
   width: 100%;
-  padding: 2rem;
-  background: var(--bg-primary, #0a0a0a);
+  padding: 0;
+  background: #0a0a0a;
   min-height: 100vh;
 }
 
-/* Header */
+/* Header Section */
 .rankings-header {
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  background: #ffffff;
+  border: 4px solid #e74c3c;
+  border-radius: 16px;
+  padding: 32px;
+  margin: 24px;
+  margin-bottom: 24px;
 }
 
 .rankings-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--color-danger, #E74C3C);
-  margin: 0 0 0.5rem 0;
-  letter-spacing: 0.5px;
+  font-size: 32px;
+  font-weight: 900;
+  color: #e74c3c;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .rankings-subtitle {
-  font-size: 1rem;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: 14px;
+  color: #666;
   margin: 0;
+  font-weight: 600;
 }
 
 /* Table Wrapper */
 .table-wrapper {
-  overflow-x: auto;
-  background: var(--bg-secondary, #1a1a1a);
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  border: 4px solid #e74c3c;
+  border-radius: 16px;
+  margin: 0 24px 24px 24px;
+  overflow: hidden;
 }
 
 /* Rankings Table */
 .rankings-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
 }
 
 .rankings-table thead {
-  background: var(--bg-tertiary, #2a2a2a);
-  position: sticky;
-  top: 0;
-  z-index: 10;
+  background: #f8f9fa;
+  border-bottom: 4px solid #e74c3c;
 }
 
 .rankings-table th {
-  padding: 1rem;
+  padding: 20px 16px;
   text-align: left;
-  font-weight: 600;
-  font-size: 0.8rem;
-  letter-spacing: 0.5px;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.7));
-  border-bottom: 2px solid var(--border-color, rgba(255, 255, 255, 0.1));
+  font-weight: 900;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: #e74c3c;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
 .rankings-table th.sortable {
   cursor: pointer;
   user-select: none;
-  transition: color 0.2s ease;
+  transition: background-color 0.2s ease;
 }
 
 .rankings-table th.sortable:hover {
-  color: var(--color-danger, #E74C3C);
+  background-color: #e0e0e0;
 }
 
 /* Table Body */
 .rankings-table tbody tr {
-  border-bottom: 1px solid var(--border-color, rgba(255, 255, 255, 0.05));
+  border-bottom: 2px solid #f0f0f0;
+  transition: background-color 0.2s ease;
 }
 
 .driver-row {
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .driver-row:hover {
-  background-color: rgba(255, 255, 255, 0.05) !important;
+  background-color: #fff9f0 !important;
 }
 
 .rankings-table td {
-  padding: 1.25rem 1rem;
-  color: var(--text-primary, #ffffff);
+  padding: 20px 16px;
+  color: #000;
   vertical-align: middle;
 }
 
@@ -95,58 +100,63 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  font-weight: 700;
-  font-size: 1.1rem;
-  background: var(--bg-tertiary, #3a3a3a);
-  color: var(--text-primary, #ffffff);
+  font-weight: 900;
+  font-size: 20px;
+  background: #f8f9fa;
+  border: 3px solid #e0e0e0;
+  color: #000;
 }
 
 .rank-badge.rank-1 {
   background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border-color: #FFA500;
   color: #1a1a1a;
-  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
 }
 
 .rank-badge.rank-2 {
   background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
+  border-color: #A8A8A8;
   color: #1a1a1a;
-  box-shadow: 0 4px 15px rgba(192, 192, 192, 0.4);
+  box-shadow: 0 4px 12px rgba(192, 192, 192, 0.4);
 }
 
 .rank-badge.rank-3 {
   background: linear-gradient(135deg, #CD7F32 0%, #B8860B 100%);
+  border-color: #B8860B;
   color: #1a1a1a;
-  box-shadow: 0 4px 15px rgba(205, 127, 50, 0.4);
+  box-shadow: 0 4px 12px rgba(205, 127, 50, 0.4);
 }
 
 /* Driver Info */
 .driver-info {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .driver-number-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 38px;
-  height: 38px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
-  background: var(--color-danger, #E74C3C);
+  background: #e74c3c;
   color: white;
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: 900;
+  font-size: 18px;
   flex-shrink: 0;
+  border: 3px solid #c0392b;
 }
 
 .driver-name {
-  font-weight: 500;
-  font-size: 1rem;
-  color: var(--text-primary, #ffffff);
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
 }
 
 /* Score Cell */
@@ -159,35 +169,37 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 50px;
-  padding: 0.5rem 0.75rem;
-  background: var(--color-danger, #E74C3C);
+  min-width: 60px;
+  padding: 8px 12px;
+  background: #e74c3c;
   color: white;
-  font-weight: 700;
-  font-size: 1.15rem;
-  border-radius: 6px;
+  font-weight: 900;
+  font-size: 20px;
+  border-radius: 8px;
+  border: 3px solid #c0392b;
 }
 
 /* Factor Cell with Progress Bar */
 .factor-cell {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 8px;
   min-width: 100px;
 }
 
 .factor-value {
-  font-weight: 600;
-  font-size: 1rem;
-  color: var(--text-primary, #ffffff);
+  font-weight: 900;
+  font-size: 16px;
+  color: #000;
 }
 
 .progress-bar-container {
   width: 100%;
-  height: 8px;
-  background: var(--bg-tertiary, rgba(255, 255, 255, 0.1));
-  border-radius: 4px;
+  height: 12px;
+  background: #f0f0f0;
+  border-radius: 6px;
   overflow: hidden;
+  border: 2px solid #e0e0e0;
 }
 
 .progress-bar {
@@ -198,104 +210,114 @@
 
 /* Stat Value */
 .stat-value {
-  font-weight: 500;
-  font-size: 1rem;
-  color: var(--text-primary, #ffffff);
+  font-weight: 700;
+  font-size: 16px;
+  color: #000;
 }
 
 /* No Drivers Message */
 .no-drivers {
-  padding: 4rem 2rem;
+  padding: 64px 32px;
   text-align: center;
-  color: var(--text-secondary, rgba(255, 255, 255, 0.5));
+  color: #666;
 }
 
 .no-drivers p {
-  font-size: 1.2rem;
+  font-size: 18px;
+  font-weight: 600;
   margin: 0;
-}
-
-/* CSS Variables (fallbacks if not defined in global) */
-:root {
-  --bg-primary: #0a0a0a;
-  --bg-secondary: #1a1a1a;
-  --bg-tertiary: #2a2a2a;
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-  --color-danger: #E74C3C;
-  --color-success: #2ECC71;
-  --color-warning: #F39C12;
 }
 
 /* Responsive Design */
 @media (max-width: 1200px) {
   .rankings-table {
-    font-size: 0.85rem;
+    font-size: 14px;
   }
 
   .rankings-table th {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.75rem;
+    padding: 16px 12px;
+    font-size: 11px;
   }
 
   .rankings-table td {
-    padding: 1rem 0.5rem;
+    padding: 16px 12px;
   }
 
   .factor-cell {
     min-width: 80px;
   }
+
+  .rank-badge {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+  }
+
+  .driver-number-badge {
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 768px) {
   .rankings-table-container {
-    padding: 1rem;
+    padding: 0;
+  }
+
+  .rankings-header {
+    margin: 16px;
+    padding: 24px;
   }
 
   .rankings-title {
-    font-size: 1.8rem;
+    font-size: 24px;
   }
 
   .rankings-subtitle {
-    font-size: 0.9rem;
+    font-size: 12px;
   }
 
   .table-wrapper {
-    border-radius: 8px;
+    margin: 0 16px 16px 16px;
+    border-radius: 12px;
   }
 
   .rankings-table {
-    font-size: 0.8rem;
+    font-size: 13px;
   }
 
   .rank-badge {
-    width: 36px;
-    height: 36px;
-    font-size: 0.95rem;
+    width: 38px;
+    height: 38px;
+    font-size: 16px;
   }
 
   .driver-number-badge {
-    width: 32px;
-    height: 32px;
-    font-size: 0.9rem;
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
   }
 
   .driver-name {
-    font-size: 0.9rem;
+    font-size: 14px;
   }
 
   .score-value {
-    min-width: 45px;
-    padding: 0.4rem 0.6rem;
-    font-size: 1rem;
+    min-width: 50px;
+    padding: 6px 10px;
+    font-size: 16px;
   }
 
   .factor-value {
-    font-size: 0.9rem;
+    font-size: 14px;
   }
 
   .progress-bar-container {
-    height: 6px;
+    height: 10px;
+  }
+
+  .stat-value {
+    font-size: 14px;
   }
 }
