@@ -29,7 +29,6 @@ export default function Improve() {
   const [driverData, setDriverData] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState('barber');
   const [selectedRace, setSelectedRace] = useState(1);
-  const [referenceDriver, setReferenceDriver] = useState(null);
   const [coachingData, setCoachingData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [loadingCoaching, setLoadingCoaching] = useState(false);
@@ -45,12 +44,6 @@ export default function Improve() {
         const response = await api.get(`/api/drivers/${selectedDriverNumber}`);
         setDriverData(response.data);
 
-        // Auto-select a reference driver (first available driver that's not the user)
-        const otherDrivers = drivers.filter(d => d.number !== selectedDriverNumber);
-        if (otherDrivers.length > 0 && !referenceDriver) {
-          setReferenceDriver(otherDrivers[0].number);
-        }
-
       } catch (err) {
         console.error('Error fetching driver data:', err);
         setError('Failed to load driver data');
@@ -60,32 +53,35 @@ export default function Improve() {
     };
 
     fetchDriverData();
-  }, [selectedDriverNumber, drivers, referenceDriver]);
+  }, [selectedDriverNumber]);
 
   // Load coaching when selections change
   useEffect(() => {
-    if (selectedDriverNumber && referenceDriver && selectedTrack && selectedRace) {
+    if (selectedDriverNumber && selectedTrack && selectedRace) {
       loadCoaching();
     }
-  }, [selectedDriverNumber, referenceDriver, selectedTrack, selectedRace]);
+  }, [selectedDriverNumber, selectedTrack, selectedRace]);
 
   const loadCoaching = async () => {
     try {
       setLoadingCoaching(true);
       setError(null);
 
-      const response = await api.post('/api/telemetry/coaching', {
-        driver_number: selectedDriverNumber,
-        reference_driver_number: referenceDriver,
-        track_id: selectedTrack,
-        race_num: selectedRace
-      });
+      const response = await api.get(
+        `/api/drivers/${selectedDriverNumber}/telemetry-coaching`,
+        {
+          params: {
+            track_id: selectedTrack,
+            race_num: selectedRace
+          }
+        }
+      );
 
       setCoachingData(response.data);
 
     } catch (err) {
       console.error('Error loading coaching:', err);
-      setError(err.response?.data?.detail || 'Failed to load coaching data. Ensure telemetry data exists for both drivers.');
+      setError(err.response?.data?.detail || 'Failed to load coaching data for this track.');
     } finally {
       setLoadingCoaching(false);
     }
@@ -152,59 +148,12 @@ export default function Improve() {
             </select>
           </div>
 
-          <div className="control-card comparison-card">
-            <label className="control-label">COMPARE TO</label>
-
-            {/* Quick Picks - Most Common Comparisons */}
-            <div className="comparison-quick-picks">
-              <button
-                className={`quick-pick-btn ${referenceDriver === drivers.find(d => d.number !== selectedDriverNumber)?.number ? 'active' : ''}`}
-                onClick={() => {
-                  const nextDriver = drivers.find(d => d.number !== selectedDriverNumber);
-                  if (nextDriver) setReferenceDriver(nextDriver.number);
-                }}
-                title="Compare to race winner or top finisher"
-              >
-                <span className="quick-pick-label">Winner</span>
-              </button>
-
-              <button
-                className={`quick-pick-btn ${referenceDriver === drivers[1]?.number ? 'active' : ''}`}
-                onClick={() => {
-                  if (drivers[1]) setReferenceDriver(drivers[1].number);
-                }}
-                title="Compare to driver slightly faster than you"
-              >
-                <span className="quick-pick-label">Next Tier</span>
-              </button>
-            </div>
-
-            {/* Advanced Selection */}
-            <details className="comparison-advanced">
-              <summary>Select specific driver</summary>
-              <select
-                className="control-select"
-                value={referenceDriver || ''}
-                onChange={(e) => setReferenceDriver(parseInt(e.target.value))}
-              >
-                <option value="">Select Driver</option>
-                {drivers
-                  .filter(d => d.number !== selectedDriverNumber)
-                  .map(d => (
-                    <option key={d.number} value={d.number}>
-                      {d.name || `Driver #${d.number}`}
-                    </option>
-                  ))}
-              </select>
-            </details>
-          </div>
-
           <button
             className="analyze-button"
             onClick={loadCoaching}
-            disabled={loadingCoaching || !referenceDriver}
+            disabled={loadingCoaching}
           >
-            {loadingCoaching ? 'Analyzing...' : 'Analyze Telemetry'}
+            {loadingCoaching ? 'Loading...' : 'Analyze Performance'}
           </button>
         </div>
 
@@ -226,136 +175,88 @@ export default function Improve() {
           </div>
         )}
 
-        {/* Coaching Results */}
+        {/* Performance Analysis Results */}
         {coachingData && !loadingCoaching && (
-          <div className="coaching-results">
+          <div className="performance-analysis">
 
-            {/* Hero Metric + Supporting Cards */}
-            <div className="metrics-hero-layout">
-              {/* Hero Metric - Potential Time Gain */}
-              <div className="metric-card hero">
-                <div className="metric-label">POTENTIAL TIME GAIN</div>
-                <div className="metric-value hero-value">
-                  {coachingData.potential_time_gain.toFixed(3)}
-                  <span className="metric-unit">s</span>
-                </div>
-                <div className="metric-subtitle">
-                  per lap vs Driver #{coachingData.reference_driver_number}
-                </div>
-              </div>
-
-              {/* Supporting Metrics */}
-              <div className="metrics-secondary">
-                <div className="metric-card">
-                  <div className="metric-label">LAP DELTA</div>
-                  <div className="metric-value">
-                    {coachingData.total_time_delta >= 0 ? '+' : ''}
-                    {coachingData.total_time_delta.toFixed(3)}s
-                  </div>
-                  <div className="metric-subtitle">
-                    {coachingData.total_time_delta >= 0
-                      ? `Driver #${coachingData.reference_driver_number} is faster`
-                      : `You are faster`}
-                  </div>
-                </div>
-
-                <div className="metric-card">
-                  <div className="metric-label">TRACK</div>
-                  <div className="metric-value small">{track?.name || selectedTrack}</div>
-                  <div className="metric-subtitle">Race {selectedRace}</div>
-                </div>
-
-                <div className="metric-card">
-                  <div className="metric-label">FOCUS CORNERS</div>
-                  <div className="metric-value small">
-                    {coachingData.corner_analysis.filter(c => c.time_loss > 0.05).length}
-                  </div>
-                  <div className="metric-subtitle">Critical opportunities</div>
-                </div>
+            {/* Team Principal's Note */}
+            <div className="team-note">
+              <div className="team-note-header">Team Principal's Note</div>
+              <div className="team-note-content">
+                Focus on <strong>{coachingData.summary.primary_weakness}</strong> - you're {coachingData.summary.corners_need_work}/{coachingData.summary.total_corners} corners off pace at {track?.name}
               </div>
             </div>
 
-            {/* Corner Analysis Table */}
-            {coachingData.corner_analysis && coachingData.corner_analysis.length > 0 && (
-              <div className="corner-analysis-section">
-                <h2 className="section-title">Corner-by-Corner Breakdown</h2>
+            {/* Priority Areas (Red Bars) */}
+            <div className="priority-areas-section">
+              <h3 className="section-title">⚠️ Priority Areas</h3>
 
-                <div className="corner-table">
-                  <div className="corner-table-header">
-                    <div className="corner-col">CORNER</div>
-                    <div className="corner-col">YOUR APEX</div>
-                    <div className="corner-col">REFERENCE APEX</div>
-                    <div className="corner-col">DELTA</div>
-                    <div className="corner-col">TIME LOSS</div>
-                    <div className="corner-col">FOCUS AREA</div>
-                  </div>
-
-                  {coachingData.corner_analysis.map((corner, idx) => (
+              {coachingData.key_insights.map((insight, idx) => (
+                <div key={idx} className="priority-item">
+                  <div className="priority-bar">
                     <div
-                      key={idx}
-                      className={`corner-table-row ${corner.time_loss > 0.05 ? 'loss-row' : ''}`}
-                    >
-                      <div className="corner-col">
-                        <span className="corner-number">{corner.corner_number}</span>
-                        <span className="corner-name">{corner.corner_name}</span>
-                      </div>
-                      <div className="corner-col">{corner.driver_apex_speed.toFixed(1)} km/h</div>
-                      <div className="corner-col">{corner.reference_apex_speed.toFixed(1)} km/h</div>
-                      <div className={`corner-col ${corner.apex_speed_delta > 0 ? 'negative' : 'positive'}`}>
-                        {corner.apex_speed_delta >= 0 ? '+' : ''}
-                        {corner.apex_speed_delta.toFixed(1)} km/h
-                      </div>
-                      <div className="corner-col loss-value">
-                        {corner.time_loss.toFixed(3)}s
-                      </div>
-                      <div className="corner-col focus-area">
-                        {corner.focus_area}
-                      </div>
+                      className="priority-fill"
+                      style={{width: `${Math.min(100, (idx + 1) * 20)}%`}}
+                    ></div>
+                  </div>
+                  <div className="priority-text">{insight}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Top Strengths (Green Checkmarks) */}
+            <div className="top-strengths-section">
+              <h3 className="section-title">✓ Top Strengths</h3>
+
+              <div className="strengths-grid">
+                {coachingData.detailed_comparisons
+                  .filter(c => c.insight.includes('similar to fastest'))
+                  .map((corner, idx) => (
+                    <div key={idx} className="strength-badge">
+                      <span className="strength-corner">Turn {corner.corner_num}</span>
+                      <span className="strength-text">Similar to fastest driver ✓</span>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            {/* Factor Breakdown */}
+            {coachingData.factor_breakdown && (
+              <div className="factor-breakdown-section">
+                <h3 className="section-title">Performance Factor Breakdown</h3>
+                <div className="factor-grid">
+                  {Object.entries(coachingData.factor_breakdown).map(([factor, count]) => (
+                    <div key={factor} className="factor-card">
+                      <div className="factor-name">{factor}</div>
+                      <div className="factor-count">{count} corners</div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {/* AI Coaching Panel */}
-            <div className="ai-coaching-section">
-              <div className="coaching-header">
-                <div className="coaching-title-row">
-                  <h2 className="section-title">Race Engineer Analysis</h2>
-                  <div className="coaching-meta">
-                    <span className="coaching-badge">AI-Powered Insights</span>
-                    <span className="coaching-comparison">
-                      #{selectedDriverNumber} vs #{coachingData.reference_driver_number}
-                    </span>
-                  </div>
+            {/* Detailed Corner Analysis */}
+            {coachingData.detailed_comparisons && (
+              <div className="detailed-analysis-section">
+                <h3 className="section-title">Detailed Corner Analysis</h3>
+
+                <div className="corners-list">
+                  {coachingData.detailed_comparisons.map((corner, idx) => (
+                    <div key={idx} className={`corner-detail ${corner.insight.includes('similar') ? 'corner-good' : 'corner-needs-work'}`}>
+                      <div className="corner-header">
+                        <span className="corner-number">Turn {corner.corner_num}</span>
+                        <span className={`corner-factor ${corner.factor.toLowerCase()}`}>{corner.factor}</span>
+                      </div>
+                      <div className="corner-insight">{corner.insight}</div>
+                      <div className="corner-metrics">
+                        <span>Speed Delta: {corner.speed_delta_mph > 0 ? '+' : ''}{corner.speed_delta_mph.toFixed(1)} mph</span>
+                        <span>Brake Delta: {corner.brake_delta_m > 0 ? '+' : ''}{corner.brake_delta_m.toFixed(0)}m</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-
-              <div className="coaching-content-card">
-                <ReactMarkdown className="coaching-markdown">
-                  {coachingData.ai_coaching}
-                </ReactMarkdown>
-              </div>
-
-              {/* Telemetry Insights */}
-              {coachingData.telemetry_insights && (
-                <div className="telemetry-insights">
-                  <h3 className="insights-title">Telemetry Patterns</h3>
-                  <div className="insights-grid">
-                    {Object.entries(coachingData.telemetry_insights)
-                      .filter(([key]) => !['total_delta', 'potential_gain'].includes(key))
-                      .map(([key, value]) => (
-                        <div key={key} className="insight-card">
-                          <div className="insight-label">
-                            {key.replace('_pattern', '').replace('_', ' ').toUpperCase()}
-                          </div>
-                          <div className="insight-value">{value}</div>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              )}
-            </div>
+            )}
 
           </div>
         )}

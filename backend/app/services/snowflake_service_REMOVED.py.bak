@@ -246,6 +246,79 @@ class SnowflakeService:
         logger.warning("⚠️  Falling back to local JSON data")
         return self._load_from_json(f"telemetry_{track_id}_race{race_num}.json")
 
+    def get_telemetry_data_filtered(
+        self,
+        track_id: str,
+        race_num: int,
+        driver_numbers: List[int],
+        green_flag_only: bool = True
+    ) -> Optional[pd.DataFrame]:
+        """
+        Get telemetry data filtered by specific drivers (memory-safe).
+
+        This method loads ONLY the specified drivers' data, preventing memory
+        crashes from loading millions of rows. Critical for Heroku deployment.
+
+        Args:
+            track_id: Track identifier (e.g., 'barber', 'cota')
+            race_num: Race number (1 or 2)
+            driver_numbers: List of driver numbers to load (e.g., [7, 13])
+            green_flag_only: If True, filter for green flag laps only (default: True)
+
+        Returns:
+            DataFrame with filtered telemetry data, or None if query fails
+
+        Example:
+            >>> df = snowflake_service.get_telemetry_data_filtered('barber', 1, [7, 13])
+            >>> # Returns ~1,000-2,000 rows instead of 1.5M rows
+        """
+        if not self.enabled:
+            logger.warning("⚠️  Snowflake disabled, cannot use filtered queries")
+            return None
+
+        if not driver_numbers:
+            logger.warning("⚠️  No driver numbers provided for filtering")
+            return None
+
+        try:
+            # Build placeholders for IN clause
+            placeholders = ', '.join(['%s'] * len(driver_numbers))
+
+            # Build SQL with optional green flag filter
+            green_flag_clause = "AND FLAG_AT_FL = 'GF'" if green_flag_only else ""
+
+            sql = f"""
+                SELECT *
+                FROM HACKTHETRACK.TELEMETRY.TELEMETRY_DATA_ALL
+                WHERE TRACK_ID = %s
+                  AND RACE_NUM = %s
+                  AND VEHICLE_NUMBER IN ({placeholders})
+                  {green_flag_clause}
+                ORDER BY VEHICLE_NUMBER, LAP, LAPTRIGGER_LAPDIST_DLS
+            """
+
+            # Build params list: [track_id, race_num, driver1, driver2, ...]
+            params = [track_id, race_num] + driver_numbers
+
+            df = self.query(sql, params=params)
+
+            if df is not None and not df.empty:
+                logger.info(
+                    f"✅ Loaded {len(df)} telemetry rows for {len(driver_numbers)} drivers "
+                    f"(track={track_id}, race={race_num})"
+                )
+                return df
+            else:
+                logger.warning(
+                    f"⚠️  No telemetry data found for drivers {driver_numbers} "
+                    f"at {track_id} race {race_num}"
+                )
+                return None
+
+        except Exception as e:
+            logger.error(f"❌ Filtered telemetry query failed: {e}")
+            return None
+
     def get_drivers_with_telemetry(self) -> List[int]:
         """
         Get list of driver numbers with telemetry data.

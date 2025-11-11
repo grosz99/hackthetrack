@@ -1,0 +1,946 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "last_updated": "2025-11-10",
+    "detection_method": "manual_reference",
+    "notes": "Corner locations are approximate and should be refined using auto-detection validation"
+  },
+  "tracks": {
+    "barber": {
+      "name": "Barber Motorsports Park",
+      "location": "Leeds, Alabama",
+      "track_length_m": 3850,
+      "direction": "clockwise",
+      "total_corners": 17,
+      "corners": [
+        {
+          "number": 1,
+          "name": "Turn 1",
+          "type": "right",
+          "distance_start_m": 0,
+          "distance_apex_m": 80,
+          "distance_exit_m": 150,
+          "speed_classification": "high",
+          "typical_gear": 3,
+          "notes": "High-speed right-hander after main straight"
+        },
+        {
+          "number": 2,
+          "name": "Turn 2",
+          "type": "left",
+          "distance_start_m": 450,
+          "distance_apex_m": 520,
+          "distance_exit_m": 600,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Downhill left"
+        },
+        {
+          "number": 3,
+          "name": "Turn 3",
+          "type": "right",
+          "distance_start_m": 650,
+          "distance_apex_m": 700,
+          "distance_exit_m": 750,
+          "speed_classification": "medium",
+          "typical_gear": 2,
+          "notes": "Tight right following Turn 2"
+        },
+        {
+          "number": 4,
+          "name": "Turn 4",
+          "type": "left",
+          "distance_start_m": 900,
+          "distance_apex_m": 980,
+          "distance_exit_m": 1050,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Downhill left-hander"
+        },
+        {
+          "number": 5,
+          "name": "Turn 5",
+          "type": "right",
+          "distance_start_m": 1200,
+          "distance_apex_m": 1250,
+          "distance_exit_m": 1300,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight right hairpin"
+        },
+        {
+          "number": 6,
+          "name": "Turn 6",
+          "type": "left",
+          "distance_start_m": 1450,
+          "distance_apex_m": 1500,
+          "distance_exit_m": 1550,
+          "speed_classification": "medium",
+          "typical_gear": 2,
+          "notes": "Uphill left"
+        },
+        {
+          "number": 7,
+          "name": "Turn 7",
+          "type": "right",
+          "distance_start_m": 1700,
+          "distance_apex_m": 1760,
+          "distance_exit_m": 1820,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right-hander"
+        },
+        {
+          "number": 8,
+          "name": "Turn 8",
+          "type": "left",
+          "distance_start_m": 1950,
+          "distance_apex_m": 2000,
+          "distance_exit_m": 2050,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight left hairpin"
+        },
+        {
+          "number": 9,
+          "name": "Turn 9",
+          "type": "right",
+          "distance_start_m": 2200,
+          "distance_apex_m": 2250,
+          "distance_exit_m": 2300,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 10,
+          "name": "Turn 10",
+          "type": "left",
+          "distance_start_m": 2450,
+          "distance_apex_m": 2500,
+          "distance_exit_m": 2550,
+          "speed_classification": "medium",
+          "typical_gear": 2,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 11,
+          "name": "Turn 11",
+          "type": "right",
+          "distance_start_m": 2650,
+          "distance_apex_m": 2700,
+          "distance_exit_m": 2750,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight right"
+        },
+        {
+          "number": 12,
+          "name": "Turn 12",
+          "type": "left",
+          "distance_start_m": 2850,
+          "distance_apex_m": 2900,
+          "distance_exit_m": 2950,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 13,
+          "name": "Turn 13",
+          "type": "right",
+          "distance_start_m": 3050,
+          "distance_apex_m": 3100,
+          "distance_exit_m": 3150,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 14,
+          "name": "Turn 14",
+          "type": "left",
+          "distance_start_m": 3250,
+          "distance_apex_m": 3300,
+          "distance_exit_m": 3350,
+          "speed_classification": "medium",
+          "typical_gear": 2,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 15,
+          "name": "Turn 15",
+          "type": "right",
+          "distance_start_m": 3450,
+          "distance_apex_m": 3500,
+          "distance_exit_m": 3550,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right onto back straight"
+        },
+        {
+          "number": 16,
+          "name": "Turn 16",
+          "type": "left",
+          "distance_start_m": 3600,
+          "distance_apex_m": 3630,
+          "distance_exit_m": 3660,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left kink"
+        },
+        {
+          "number": 17,
+          "name": "Turn 17",
+          "type": "right",
+          "distance_start_m": 3700,
+          "distance_apex_m": 3750,
+          "distance_exit_m": 3800,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right kink onto main straight"
+        }
+      ]
+    },
+    "cota": {
+      "name": "Circuit of The Americas",
+      "location": "Austin, Texas",
+      "track_length_m": 5513,
+      "direction": "counterclockwise",
+      "total_corners": 20,
+      "corners": [
+        {
+          "number": 1,
+          "name": "Turn 1",
+          "type": "left",
+          "distance_start_m": 0,
+          "distance_apex_m": 100,
+          "distance_exit_m": 200,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Uphill left hairpin"
+        },
+        {
+          "number": 2,
+          "name": "Turn 2",
+          "type": "right",
+          "distance_start_m": 350,
+          "distance_apex_m": 400,
+          "distance_exit_m": 450,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 3,
+          "name": "Turn 3",
+          "type": "left",
+          "distance_start_m": 550,
+          "distance_apex_m": 600,
+          "distance_exit_m": 650,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left"
+        },
+        {
+          "number": 4,
+          "name": "Turn 4",
+          "type": "right",
+          "distance_start_m": 700,
+          "distance_apex_m": 750,
+          "distance_exit_m": 800,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right"
+        },
+        {
+          "number": 5,
+          "name": "Turn 5",
+          "type": "left",
+          "distance_start_m": 850,
+          "distance_apex_m": 900,
+          "distance_exit_m": 950,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left"
+        },
+        {
+          "number": 6,
+          "name": "Turn 6",
+          "type": "right",
+          "distance_start_m": 1000,
+          "distance_apex_m": 1050,
+          "distance_exit_m": 1100,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right"
+        },
+        {
+          "number": 7,
+          "name": "Turn 7",
+          "type": "left",
+          "distance_start_m": 1150,
+          "distance_apex_m": 1200,
+          "distance_exit_m": 1250,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left"
+        },
+        {
+          "number": 8,
+          "name": "Turn 8",
+          "type": "right",
+          "distance_start_m": 1300,
+          "distance_apex_m": 1350,
+          "distance_exit_m": 1400,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right"
+        },
+        {
+          "number": 9,
+          "name": "Turn 9",
+          "type": "left",
+          "distance_start_m": 1450,
+          "distance_apex_m": 1500,
+          "distance_exit_m": 1550,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left"
+        },
+        {
+          "number": 10,
+          "name": "Turn 10",
+          "type": "right",
+          "distance_start_m": 1600,
+          "distance_apex_m": 1650,
+          "distance_exit_m": 1700,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right"
+        },
+        {
+          "number": 11,
+          "name": "Turn 11",
+          "type": "left",
+          "distance_start_m": 2200,
+          "distance_apex_m": 2280,
+          "distance_exit_m": 2360,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight left hairpin"
+        },
+        {
+          "number": 12,
+          "name": "Turn 12",
+          "type": "right",
+          "distance_start_m": 2900,
+          "distance_apex_m": 2950,
+          "distance_exit_m": 3000,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 13,
+          "name": "Turn 13",
+          "type": "left",
+          "distance_start_m": 3100,
+          "distance_apex_m": 3150,
+          "distance_exit_m": 3200,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 14,
+          "name": "Turn 14",
+          "type": "right",
+          "distance_start_m": 3300,
+          "distance_apex_m": 3350,
+          "distance_exit_m": 3400,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 15,
+          "name": "Turn 15",
+          "type": "left",
+          "distance_start_m": 3800,
+          "distance_apex_m": 3850,
+          "distance_exit_m": 3900,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Slow left hairpin"
+        },
+        {
+          "number": 16,
+          "name": "Turn 16",
+          "type": "right",
+          "distance_start_m": 4100,
+          "distance_apex_m": 4150,
+          "distance_exit_m": 4200,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 17,
+          "name": "Turn 17",
+          "type": "left",
+          "distance_start_m": 4350,
+          "distance_apex_m": 4400,
+          "distance_exit_m": 4450,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 18,
+          "name": "Turn 18",
+          "type": "right",
+          "distance_start_m": 4600,
+          "distance_apex_m": 4650,
+          "distance_exit_m": 4700,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 19,
+          "name": "Turn 19",
+          "type": "left",
+          "distance_start_m": 4900,
+          "distance_apex_m": 4950,
+          "distance_exit_m": 5000,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 20,
+          "name": "Turn 20",
+          "type": "right",
+          "distance_start_m": 5200,
+          "distance_apex_m": 5250,
+          "distance_exit_m": 5300,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right onto main straight"
+        }
+      ]
+    },
+    "roadamerica": {
+      "name": "Road America",
+      "location": "Elkhart Lake, Wisconsin",
+      "track_length_m": 6515,
+      "direction": "clockwise",
+      "total_corners": 14,
+      "corners": [
+        {
+          "number": 1,
+          "name": "Turn 1",
+          "type": "right",
+          "distance_start_m": 0,
+          "distance_apex_m": 80,
+          "distance_exit_m": 160,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander after main straight"
+        },
+        {
+          "number": 2,
+          "name": "Turn 2",
+          "type": "left",
+          "distance_start_m": 400,
+          "distance_apex_m": 450,
+          "distance_exit_m": 500,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 3,
+          "name": "Turn 3 (Moraine Sweep)",
+          "type": "right",
+          "distance_start_m": 750,
+          "distance_apex_m": 850,
+          "distance_exit_m": 950,
+          "speed_classification": "high",
+          "typical_gear": 5,
+          "notes": "Fast sweeping right"
+        },
+        {
+          "number": 4,
+          "name": "Turn 4",
+          "type": "left",
+          "distance_start_m": 1100,
+          "distance_apex_m": 1150,
+          "distance_exit_m": 1200,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 5,
+          "name": "Turn 5 (The Carousel)",
+          "type": "right",
+          "distance_start_m": 1800,
+          "distance_apex_m": 1900,
+          "distance_exit_m": 2000,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Long sweeping right carousel"
+        },
+        {
+          "number": 6,
+          "name": "Turn 6 (The Kink)",
+          "type": "left",
+          "distance_start_m": 2400,
+          "distance_apex_m": 2450,
+          "distance_exit_m": 2500,
+          "speed_classification": "high",
+          "typical_gear": 6,
+          "notes": "Very fast left kink"
+        },
+        {
+          "number": 7,
+          "name": "Turn 7",
+          "type": "right",
+          "distance_start_m": 3100,
+          "distance_apex_m": 3150,
+          "distance_exit_m": 3200,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 8,
+          "name": "Turn 8 (Hurry Downs)",
+          "type": "left",
+          "distance_start_m": 3400,
+          "distance_apex_m": 3450,
+          "distance_exit_m": 3500,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight downhill left hairpin"
+        },
+        {
+          "number": 9,
+          "name": "Turn 9",
+          "type": "right",
+          "distance_start_m": 3750,
+          "distance_apex_m": 3800,
+          "distance_exit_m": 3850,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 10,
+          "name": "Turn 10",
+          "type": "left",
+          "distance_start_m": 4200,
+          "distance_apex_m": 4250,
+          "distance_exit_m": 4300,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 11,
+          "name": "Turn 11",
+          "type": "right",
+          "distance_start_m": 4700,
+          "distance_apex_m": 4750,
+          "distance_exit_m": 4800,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 12,
+          "name": "Turn 12 (Canada Corner)",
+          "type": "left",
+          "distance_start_m": 5400,
+          "distance_apex_m": 5450,
+          "distance_exit_m": 5500,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight left hairpin"
+        },
+        {
+          "number": 13,
+          "name": "Turn 13",
+          "type": "right",
+          "distance_start_m": 5900,
+          "distance_apex_m": 5950,
+          "distance_exit_m": 6000,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 14,
+          "name": "Turn 14 (Billy Mitchell)",
+          "type": "left",
+          "distance_start_m": 6200,
+          "distance_apex_m": 6250,
+          "distance_exit_m": 6300,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left onto main straight"
+        }
+      ]
+    },
+    "sonoma": {
+      "name": "Sonoma Raceway",
+      "location": "Sonoma, California",
+      "track_length_m": 4000,
+      "direction": "clockwise",
+      "total_corners": 12,
+      "corners": [
+        {
+          "number": 1,
+          "name": "Turn 1",
+          "type": "right",
+          "distance_start_m": 0,
+          "distance_apex_m": 70,
+          "distance_exit_m": 140,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander after main straight"
+        },
+        {
+          "number": 2,
+          "name": "Turn 2",
+          "type": "left",
+          "distance_start_m": 500,
+          "distance_apex_m": 550,
+          "distance_exit_m": 600,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight uphill left hairpin"
+        },
+        {
+          "number": 3,
+          "name": "Turn 3",
+          "type": "right",
+          "distance_start_m": 850,
+          "distance_apex_m": 900,
+          "distance_exit_m": 950,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 4,
+          "name": "Turn 4",
+          "type": "left",
+          "distance_start_m": 1100,
+          "distance_apex_m": 1150,
+          "distance_exit_m": 1200,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left"
+        },
+        {
+          "number": 5,
+          "name": "Turn 5",
+          "type": "right",
+          "distance_start_m": 1400,
+          "distance_apex_m": 1450,
+          "distance_exit_m": 1500,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 6,
+          "name": "Turn 6",
+          "type": "left",
+          "distance_start_m": 1750,
+          "distance_apex_m": 1800,
+          "distance_exit_m": 1850,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight left hairpin"
+        },
+        {
+          "number": 7,
+          "name": "Turn 7",
+          "type": "right",
+          "distance_start_m": 2200,
+          "distance_apex_m": 2260,
+          "distance_exit_m": 2320,
+          "speed_classification": "high",
+          "typical_gear": 5,
+          "notes": "Fast downhill right"
+        },
+        {
+          "number": 8,
+          "name": "Turn 8",
+          "type": "left",
+          "distance_start_m": 2600,
+          "distance_apex_m": 2650,
+          "distance_exit_m": 2700,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 9,
+          "name": "Turn 9",
+          "type": "right",
+          "distance_start_m": 2950,
+          "distance_apex_m": 3000,
+          "distance_exit_m": 3050,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight right hairpin"
+        },
+        {
+          "number": 10,
+          "name": "Turn 10",
+          "type": "left",
+          "distance_start_m": 3300,
+          "distance_apex_m": 3350,
+          "distance_exit_m": 3400,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 11,
+          "name": "Turn 11",
+          "type": "right",
+          "distance_start_m": 3600,
+          "distance_apex_m": 3650,
+          "distance_exit_m": 3700,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right onto back straight"
+        },
+        {
+          "number": 12,
+          "name": "Turn 12",
+          "type": "left",
+          "distance_start_m": 3850,
+          "distance_apex_m": 3900,
+          "distance_exit_m": 3950,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left onto main straight"
+        }
+      ]
+    },
+    "vir": {
+      "name": "Virginia International Raceway",
+      "location": "Alton, Virginia",
+      "track_length_m": 5263,
+      "direction": "clockwise",
+      "total_corners": 18,
+      "corners": [
+        {
+          "number": 1,
+          "name": "Turn 1",
+          "type": "right",
+          "distance_start_m": 0,
+          "distance_apex_m": 80,
+          "distance_exit_m": 160,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right after main straight"
+        },
+        {
+          "number": 2,
+          "name": "Turn 2",
+          "type": "left",
+          "distance_start_m": 350,
+          "distance_apex_m": 400,
+          "distance_exit_m": 450,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 3,
+          "name": "Turn 3",
+          "type": "right",
+          "distance_start_m": 600,
+          "distance_apex_m": 650,
+          "distance_exit_m": 700,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 4,
+          "name": "Turn 4",
+          "type": "left",
+          "distance_start_m": 850,
+          "distance_apex_m": 900,
+          "distance_exit_m": 950,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 5,
+          "name": "Turn 5",
+          "type": "right",
+          "distance_start_m": 1100,
+          "distance_apex_m": 1150,
+          "distance_exit_m": 1200,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 6,
+          "name": "Turn 6",
+          "type": "left",
+          "distance_start_m": 1400,
+          "distance_apex_m": 1450,
+          "distance_exit_m": 1500,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight left hairpin"
+        },
+        {
+          "number": 7,
+          "name": "Turn 7",
+          "type": "right",
+          "distance_start_m": 1700,
+          "distance_apex_m": 1750,
+          "distance_exit_m": 1800,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 8,
+          "name": "Turn 8",
+          "type": "left",
+          "distance_start_m": 2000,
+          "distance_apex_m": 2050,
+          "distance_exit_m": 2100,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 9,
+          "name": "Turn 9",
+          "type": "right",
+          "distance_start_m": 2300,
+          "distance_apex_m": 2350,
+          "distance_exit_m": 2400,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 10,
+          "name": "Turn 10",
+          "type": "left",
+          "distance_start_m": 2600,
+          "distance_apex_m": 2650,
+          "distance_exit_m": 2700,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left"
+        },
+        {
+          "number": 11,
+          "name": "Turn 11",
+          "type": "right",
+          "distance_start_m": 2900,
+          "distance_apex_m": 2950,
+          "distance_exit_m": 3000,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 12,
+          "name": "Turn 12",
+          "type": "left",
+          "distance_start_m": 3200,
+          "distance_apex_m": 3250,
+          "distance_exit_m": 3300,
+          "speed_classification": "low",
+          "typical_gear": 2,
+          "notes": "Tight left"
+        },
+        {
+          "number": 13,
+          "name": "Turn 13",
+          "type": "right",
+          "distance_start_m": 3500,
+          "distance_apex_m": 3550,
+          "distance_exit_m": 3600,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 14,
+          "name": "Turn 14",
+          "type": "left",
+          "distance_start_m": 3800,
+          "distance_apex_m": 3850,
+          "distance_exit_m": 3900,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left"
+        },
+        {
+          "number": 15,
+          "name": "Turn 15",
+          "type": "right",
+          "distance_start_m": 4100,
+          "distance_apex_m": 4150,
+          "distance_exit_m": 4200,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Right-hander"
+        },
+        {
+          "number": 16,
+          "name": "Turn 16",
+          "type": "left",
+          "distance_start_m": 4400,
+          "distance_apex_m": 4450,
+          "distance_exit_m": 4500,
+          "speed_classification": "medium",
+          "typical_gear": 3,
+          "notes": "Left-hander"
+        },
+        {
+          "number": 17,
+          "name": "Turn 17",
+          "type": "right",
+          "distance_start_m": 4700,
+          "distance_apex_m": 4750,
+          "distance_exit_m": 4800,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast right"
+        },
+        {
+          "number": 18,
+          "name": "Turn 18",
+          "type": "left",
+          "distance_start_m": 5000,
+          "distance_apex_m": 5050,
+          "distance_exit_m": 5100,
+          "speed_classification": "high",
+          "typical_gear": 4,
+          "notes": "Fast left onto main straight"
+        }
+      ]
+    }
+  }
+}

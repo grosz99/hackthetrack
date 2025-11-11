@@ -4,6 +4,8 @@ import { ScoutProvider } from './context/ScoutContext'
 
 // Import pages
 import ScoutLanding from './pages/ScoutLanding/ScoutLanding'
+import Rankings from './pages/Rankings/Rankings'
+import TestRankings from './pages/TestRankings'
 import Overview from './pages/Overview/Overview'
 import RaceLog from './pages/RaceLog/RaceLog'
 import Skills from './pages/Skills/Skills'
@@ -18,8 +20,10 @@ function App() {
             <main>
               <Routes>
                 {/* Scout Portal - New entry point */}
-                <Route path="/" element={<Navigate to="/scout" replace />} />
+                <Route path="/" element={<Navigate to="/test" replace />} />
+                <Route path="/test" element={<TestRankings />} />
                 <Route path="/scout" element={<ScoutLanding />} />
+                <Route path="/rankings" element={<Rankings />} />
 
                 {/* Scout-specific driver routes */}
                 <Route path="/scout/driver/:driverNumber/overview" element={<Overview />} />

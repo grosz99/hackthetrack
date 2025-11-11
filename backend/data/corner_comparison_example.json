@@ -1,0 +1,51 @@
+{
+  "track": "barber",
+  "race": 1,
+  "corner_number": 1,
+  "driver_a": 7,
+  "driver_b": 13,
+  "driver_a_metrics": {
+    "number": 1,
+    "distance_start_m": 188.0,
+    "distance_apex_m": 507.0,
+    "distance_exit_m": 612.0,
+    "entry_speed_kmh": NaN,
+    "apex_speed_kmh": 113.99,
+    "exit_speed_kmh": NaN,
+    "lateral_g_max": 1.741,
+    "steering_angle_max_deg": 71.3,
+    "steering_smoothness": 42.314675463281546,
+    "corner_time_s": 12.961,
+    "braking_point_m": 111.0,
+    "brake_pressure_max_bar": NaN,
+    "throttle_application_point_m": 507.0
+  },
+  "driver_b_metrics": {
+    "number": 1,
+    "distance_start_m": 202.0,
+    "distance_apex_m": 1108.0,
+    "distance_exit_m": 1156.0,
+    "entry_speed_kmh": NaN,
+    "apex_speed_kmh": 71.5,
+    "exit_speed_kmh": NaN,
+    "lateral_g_max": 1.814,
+    "steering_angle_max_deg": 119.9,
+    "steering_smoothness": 42.73635592163092,
+    "corner_time_s": 27.029,
+    "braking_point_m": 108.0,
+    "brake_pressure_max_bar": NaN,
+    "throttle_application_point_m": 1108.0
+  },
+  "differences": {
+    "braking_point_m": -3.0,
+    "entry_speed_kmh": NaN,
+    "apex_speed_kmh": -42.489999999999995,
+    "exit_speed_kmh": NaN,
+    "corner_time_s": 14.068,
+    "throttle_application_point_m": 601.0
+  },
+  "coaching_insights": [
+    "Apex speed is 42.5 km/h lower for driver 13 (114.0 vs 71.5)",
+    "Driver 13 is 14.07s slower through the corner (12.96s vs 27.03s)"
+  ]
+}
