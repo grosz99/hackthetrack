@@ -31,28 +31,16 @@ export default function RankingsTable({ drivers = [] }) {
 
   // Add ranking and stats to drivers
   const enrichedDrivers = drivers.map(driver => {
-    // Get stats from driver object
-    const stats = driver.stats || {};
-
-    // Extract factor scores (these are objects with score/percentile/z_score)
-    const speedScore = driver.speed?.score || driver.speed?.percentile || 0;
-    const racecraftScore = driver.racecraft?.score || driver.racecraft?.percentile || 0;
-    const tireMgmtScore = driver.tire_management?.score || driver.tire_management?.percentile || 0;
-
-    // Handle driver name
-    const driverName = driver.driver_name || driver.name || `Driver #${driver.driver_number || driver.number}`;
-
+    // DriverContext already flattens the data, so we can use it directly
+    // It maps: driver_number -> number, driver_name -> name, speed.score -> speed, etc.
     return {
       ...driver,
-      name: driverName,
-      number: driver.driver_number || driver.number,
+      // These are already in correct format from DriverContext
       overall_score: driver.overall_score || getOverallScore(driver),
-      wins: stats.wins || 0,
-      top10: stats.top10 || 0,
-      dnfs: stats.dnfs || 0,
-      cornering: racecraftScore,
-      tire_mgmt: tireMgmtScore,
-      raw_speed: speedScore,
+      cornering: driver.racecraft || 0,  // Already the score value
+      tire_mgmt: driver.tire_management || 0,  // Already the score value
+      raw_speed: driver.speed || 0,  // Already the score value
+      // Stats are already mapped: wins, top10, dnfs
     };
   });
 
