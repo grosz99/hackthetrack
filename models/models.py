@@ -2,6 +2,8 @@
 Pydantic models for Racing Analytics API.
 """
 
+from __future__ import annotations
+
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict
 
@@ -56,7 +58,7 @@ class Driver(BaseModel):
     consistency: FactorScore
     racecraft: FactorScore
     tire_management: FactorScore
-    stats: Optional[SeasonStats] = None
+    stats: Optional["SeasonStats"] = None
     circuit_fits: Dict[str, float] = {}
 
 
