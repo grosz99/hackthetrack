@@ -157,7 +157,7 @@ export default function RankingsTable({ drivers = [] }) {
                 {/* Overall Score */}
                 <td>
                   <div className="score-cell">
-                    <span className="score-value">{driver.overall_score}</span>
+                    <span className="score-value">{Math.round(driver.overall_score)}</span>
                   </div>
                 </td>
 
