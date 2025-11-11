@@ -22,25 +22,25 @@ export default function DashboardTabs() {
     <div className="dashboard-nav-tabs-container">
       <div className="dashboard-nav-tabs">
         <NavLink
-          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/overview` : "/overview"}
+          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/overview` : `/driver/${selectedDriverNumber}/overview`}
           className={({ isActive }) => `dashboard-tab ${isActive ? 'active' : ''}`}
         >
           Overview
         </NavLink>
         <NavLink
-          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/race-log` : "/race-log"}
+          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/race-log` : `/driver/${selectedDriverNumber}/race-log`}
           className={({ isActive }) => `dashboard-tab ${isActive ? 'active' : ''}`}
         >
           Race Log
         </NavLink>
         <NavLink
-          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/skills` : "/skills"}
+          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/skills` : `/driver/${selectedDriverNumber}/skills`}
           className={({ isActive }) => `dashboard-tab ${isActive ? 'active' : ''}`}
         >
           Skills
         </NavLink>
         <NavLink
-          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/improve` : "/improve"}
+          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/improve` : `/driver/${selectedDriverNumber}/improve`}
           className={({ isActive }) => `dashboard-tab ${isActive ? 'active' : ''}`}
         >
           Improve

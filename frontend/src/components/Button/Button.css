@@ -1,0 +1,196 @@
+/**
+ * Button Component Styles
+ * Using CSS variables for consistent theming
+ */
+
+/* ===========================
+   BASE BUTTON STYLES
+   =========================== */
+
+.button {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+
+  /* Typography */
+  font-family: var(--font-primary);
+  font-weight: var(--font-bold);
+  text-decoration: none;
+  text-align: center;
+
+  /* Appearance */
+  border: none;
+  outline: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  /* Transitions */
+  transition: all var(--transition-base);
+
+  /* Prevent text selection */
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ===========================
+   BUTTON SIZES
+   =========================== */
+
+.button-small {
+  padding: var(--spacing-2) var(--spacing-4);
+  font-size: var(--text-sm);
+  border-radius: var(--radius-md);
+  min-height: 32px;
+}
+
+.button-medium {
+  padding: var(--spacing-3) var(--spacing-6);
+  font-size: var(--text-base);
+  border-radius: var(--radius-md);
+  min-height: 40px;
+}
+
+.button-large {
+  padding: var(--spacing-4) var(--spacing-8);
+  font-size: var(--text-lg);
+  border-radius: var(--radius-lg);
+  min-height: 48px;
+}
+
+/* ===========================
+   BUTTON VARIANTS
+   =========================== */
+
+/* Primary - Racing Red */
+.button-primary {
+  background: var(--color-primary);
+  color: var(--color-white);
+  box-shadow: var(--shadow-primary);
+}
+
+.button-primary:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  box-shadow: var(--shadow-primary-hover);
+  transform: translateY(-2px);
+}
+
+.button-primary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-primary);
+}
+
+/* Secondary - Dark Background */
+.button-secondary {
+  background: var(--color-dark-2);
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+
+.button-secondary:hover:not(:disabled) {
+  background: var(--color-dark-3);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.button-secondary:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+/* Outline - Transparent with Border */
+.button-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  box-shadow: none;
+}
+
+.button-outline:hover:not(:disabled) {
+  background: var(--color-primary-pale);
+  transform: translateY(-2px);
+}
+
+.button-outline:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Ghost - Minimal Style */
+.button-ghost {
+  background: transparent;
+  color: var(--color-gray-700);
+  box-shadow: none;
+}
+
+.button-ghost:hover:not(:disabled) {
+  background: var(--color-gray-100);
+  color: var(--color-primary);
+}
+
+.button-ghost:active:not(:disabled) {
+  background: var(--color-gray-200);
+}
+
+/* Danger - Warning Red */
+.button-danger {
+  background: var(--color-danger);
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+
+.button-danger:hover:not(:disabled) {
+  background: #b71c1c;
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-2px);
+}
+
+.button-danger:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+/* ===========================
+   BUTTON MODIFIERS
+   =========================== */
+
+.button-full-width {
+  width: 100%;
+}
+
+/* Icon spacing */
+.button-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===========================
+   RESPONSIVE DESIGN
+   =========================== */
+
+@media (max-width: 768px) {
+  .button-large {
+    padding: var(--spacing-3) var(--spacing-6);
+    font-size: var(--text-base);
+    min-height: 44px;
+  }
+
+  .button-medium {
+    padding: var(--spacing-2) var(--spacing-4);
+    font-size: var(--text-sm);
+    min-height: 36px;
+  }
+
+  .button-small {
+    padding: var(--spacing-1) var(--spacing-3);
+    font-size: var(--text-xs);
+    min-height: 28px;
+  }
+}
