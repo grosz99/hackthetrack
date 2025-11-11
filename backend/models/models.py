@@ -46,6 +46,9 @@ class DriverStats(BaseModel):
     average_finish: float
     best_finish: int
     worst_finish: int
+    wins: int = 0
+    top10: int = 0
+    dnfs: int = 0
 
 
 class Driver(BaseModel):
@@ -58,7 +61,7 @@ class Driver(BaseModel):
     consistency: FactorScore
     racecraft: FactorScore
     tire_management: FactorScore
-    stats: Optional["SeasonStats"] = None
+    stats: DriverStats
     circuit_fits: Dict[str, float] = {}
 
 
