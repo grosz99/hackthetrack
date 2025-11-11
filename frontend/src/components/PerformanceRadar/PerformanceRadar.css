@@ -1,0 +1,20 @@
+.performance-radar {
+  background: var(--bg-secondary, #1a1a1a);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.radar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-danger, #E74C3C);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.5px;
+}
+
+.radar-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-secondary, rgba(255, 255, 255, 0.6));
+  margin: 0 0 1.5rem 0;
+}
