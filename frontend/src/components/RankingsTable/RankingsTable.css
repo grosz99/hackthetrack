@@ -16,21 +16,21 @@
 }
 
 .rankings-title {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 900;
   color: #000;
   margin: 0 0 8px 0;
   text-transform: uppercase;
-  letter-spacing: -1px;
+  letter-spacing: -0.5px;
   font-family: 'Inter', sans-serif;
 }
 
 .rankings-subtitle {
-  font-size: 16px;
+  font-size: 14px;
   color: #666;
   margin: 0;
   font-weight: 600;
-  letter-spacing: -0.3px;
+  letter-spacing: -0.2px;
 }
 
 /* Table Wrapper */
