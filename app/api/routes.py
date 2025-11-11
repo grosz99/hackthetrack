@@ -138,6 +138,133 @@ async def get_driver_race_results(driver_number: int):
     return results
 
 
+@router.get("/drivers/{driver_number}/match")
+async def get_similar_drivers(
+    driver_number: int,
+    adjusted_skills: Optional[dict] = None,
+    top_n: int = Query(5, ge=1, le=10, description="Number of similar drivers to return")
+):
+    """
+    Find similar drivers based on 4-factor profile using cosine similarity.
+
+    This endpoint supports two modes:
+    1. **Current Profile Mode** (no adjusted_skills): Finds drivers similar to current profile
+    2. **Adjusted Profile Mode** (with adjusted_skills): Finds drivers matching hypothetical adjusted profile
+
+    Args:
+        driver_number: Target driver number
+        adjusted_skills: Optional dict with adjusted factor values (0-100 scale)
+                        Format: {"speed": 85, "consistency": 75, "racecraft": 80, "tire_management": 70}
+        top_n: Number of similar drivers to return (default: 5)
+
+    Returns:
+        List of similar drivers with match percentage and shared attributes
+
+    Algorithm:
+        Uses cosine similarity on 4-factor vectors for robust matching.
+        Formula: similarity = (A · B) / (||A|| × ||B||)
+        Where A and B are 4-dimensional vectors [speed, consistency, racecraft, tire_mgmt]
+    """
+    import numpy as np
+
+    # Get target driver
+    driver = data_loader.get_driver(driver_number)
+    if not driver:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Driver {driver_number} not found"
+        )
+
+    # Build target vector (either current or adjusted profile)
+    if adjusted_skills:
+        # Use adjusted skills from slider
+        target_vector = np.array([
+            adjusted_skills.get('speed', driver.speed.percentile),
+            adjusted_skills.get('consistency', driver.consistency.percentile),
+            adjusted_skills.get('racecraft', driver.racecraft.percentile),
+            adjusted_skills.get('tire_management', driver.tire_management.percentile)
+        ])
+    else:
+        # Use current driver profile
+        target_vector = np.array([
+            driver.speed.percentile,
+            driver.consistency.percentile,
+            driver.racecraft.percentile,
+            driver.tire_management.percentile
+        ])
+
+    # Get all other drivers
+    all_drivers = data_loader.get_all_drivers()
+    similarities = []
+
+    for other_driver in all_drivers:
+        if other_driver.driver_number == driver_number:
+            continue
+
+        # Build comparison vector
+        other_vector = np.array([
+            other_driver.speed.percentile,
+            other_driver.consistency.percentile,
+            other_driver.racecraft.percentile,
+            other_driver.tire_management.percentile
+        ])
+
+        # Calculate cosine similarity
+        dot_product = np.dot(target_vector, other_vector)
+        magnitude_target = np.linalg.norm(target_vector)
+        magnitude_other = np.linalg.norm(other_vector)
+
+        if magnitude_target == 0 or magnitude_other == 0:
+            cosine_sim = 0
+        else:
+            cosine_sim = dot_product / (magnitude_target * magnitude_other)
+
+        # Convert to 0-100 percentage
+        match_percentage = round(cosine_sim * 100, 1)
+
+        # Identify shared strengths (factors within 10 points)
+        shared_attributes = []
+        factor_pairs = [
+            ('speed', driver.speed.percentile if not adjusted_skills else adjusted_skills.get('speed'), other_driver.speed.percentile),
+            ('consistency', driver.consistency.percentile if not adjusted_skills else adjusted_skills.get('consistency'), other_driver.consistency.percentile),
+            ('racecraft', driver.racecraft.percentile if not adjusted_skills else adjusted_skills.get('racecraft'), other_driver.racecraft.percentile),
+            ('tire_management', driver.tire_management.percentile if not adjusted_skills else adjusted_skills.get('tire_management'), other_driver.tire_management.percentile)
+        ]
+
+        for factor_name, target_val, other_val in factor_pairs:
+            if abs(target_val - other_val) <= 10:
+                # Both strong in this factor (both > 70)
+                if target_val >= 70 and other_val >= 70:
+                    shared_attributes.append(f"High {factor_name.replace('_', ' ')}")
+                # Both moderate/weak (similar but < 70)
+                elif abs(target_val - other_val) <= 5:
+                    shared_attributes.append(f"Similar {factor_name.replace('_', ' ')}")
+
+        similarities.append({
+            'driver_number': other_driver.driver_number,
+            'driver_name': other_driver.driver_name,
+            'match_percentage': match_percentage,
+            'shared_attributes': shared_attributes[:3],  # Top 3 shared attributes
+            'overall_score': other_driver.overall_score,
+            'factors': {
+                'speed': other_driver.speed.percentile,
+                'consistency': other_driver.consistency.percentile,
+                'racecraft': other_driver.racecraft.percentile,
+                'tire_management': other_driver.tire_management.percentile
+            }
+        })
+
+    # Sort by match percentage descending
+    similarities.sort(key=lambda x: x['match_percentage'], reverse=True)
+
+    # Return top N matches
+    return {
+        'target_driver': driver_number,
+        'adjusted_profile': adjusted_skills is not None,
+        'similar_drivers': similarities[:top_n]
+    }
+
+
 # ============================================================================
 # PREDICTION ENDPOINTS
 # ============================================================================
@@ -286,24 +413,31 @@ async def compare_telemetry(
     Compare lap-by-lap telemetry between two drivers.
 
     Returns sector times, lap times, and delta analysis.
+    Uses CSV data files (Snowflake removed to simplify deployment).
     """
-    # Get lap data
+    # Load from CSV data files
     lap_data = data_loader.get_lap_data(track_id, race_num)
 
-    if lap_data is None:
+    if lap_data is None or lap_data.empty:
         raise HTTPException(
             status_code=404,
             detail=f"No lap data found for {track_id} race {race_num}",
         )
 
-    # Filter for each driver and exclude caution laps (FCY = Full Course Yellow)
+    # Filter for each driver (green flag laps only)
     # FLAG_AT_FL values: "GF" = Green Flag (normal lap), "FCY" = caution lap
-    driver_1_data = lap_data[
-        (lap_data["VEHICLE_NUMBER"] == driver_1) & (lap_data["FLAG_AT_FL"] == "GF")
-    ]
-    driver_2_data = lap_data[
-        (lap_data["VEHICLE_NUMBER"] == driver_2) & (lap_data["FLAG_AT_FL"] == "GF")
-    ]
+    if "FLAG_AT_FL" in lap_data.columns:
+        # Apply green flag filter
+        driver_1_data = lap_data[
+            (lap_data["VEHICLE_NUMBER"] == driver_1) & (lap_data["FLAG_AT_FL"] == "GF")
+        ]
+        driver_2_data = lap_data[
+            (lap_data["VEHICLE_NUMBER"] == driver_2) & (lap_data["FLAG_AT_FL"] == "GF")
+        ]
+    else:
+        # No flag data available, use all laps
+        driver_1_data = lap_data[lap_data["VEHICLE_NUMBER"] == driver_1]
+        driver_2_data = lap_data[lap_data["VEHICLE_NUMBER"] == driver_2]
 
     if driver_1_data.empty or driver_2_data.empty:
         raise HTTPException(
@@ -430,16 +564,13 @@ async def health_check():
 
     Returns service health and basic data availability.
     """
-    from ..services.snowflake_service import snowflake_service
-
-    # Get Snowflake health
-    snowflake_health = snowflake_service.health_check()
+    # Snowflake removed - using JSON files only
 
     return {
         "status": "healthy",
         "tracks_loaded": len(data_loader.tracks),
         "drivers_loaded": len(data_loader.drivers),
-        "snowflake": snowflake_health
+        "data_source": "JSON files"
     }
 
 
@@ -916,236 +1047,86 @@ async def get_telemetry_drivers():
     Get a list of driver numbers that have telemetry data available.
 
     Returns a deduplicated list of driver numbers across all tracks and races.
+    Uses pre-calculated JSON data.
     """
-    from ..services.snowflake_service import snowflake_service
+    # Get all drivers from the main drivers list
+    drivers = [d.number for d in data_loader.drivers]
 
-    try:
-        drivers = snowflake_service.get_drivers_with_telemetry()
+    return {
+        "drivers_with_telemetry": drivers,
+        "count": len(drivers)
+    }
 
-        return {
-            "drivers_with_telemetry": drivers,
-            "count": len(drivers)
-        }
-    except Exception as e:
-        logger.error(f"Failed to get drivers with telemetry: {e}")
+
+# DEPRECATED: Old telemetry coaching POST endpoint removed
+# New endpoint: GET /api/drivers/{id}/telemetry-coaching (uses pre-calculated JSON)
+
+
+# ============================================================================
+# TELEMETRY COACHING ENDPOINT (JSON-based)
+# ============================================================================
+
+
+@router.get("/drivers/{driver_number}/telemetry-coaching")
+async def get_telemetry_coaching(
+    driver_number: int,
+    track_id: str = Query(..., description="Track identifier (e.g., 'barber')"),
+    race_num: int = Query(1, description="Race number (1 or 2)")
+):
+    """
+    Get turn-by-turn telemetry coaching insights for a driver at a specific track.
+
+    Returns pre-calculated insights comparing driver to fastest driver at that track.
+    Includes:
+    - Summary of corner performance
+    - Key coaching insights (top 5)
+    - Factor breakdown (which factors need work)
+    - Detailed corner-by-corner analysis
+
+    Example:
+        GET /api/drivers/7/telemetry-coaching?track_id=barber&race_num=1
+    """
+    import json
+    from pathlib import Path
+
+    # Load pre-calculated insights
+    insights_file = Path(__file__).parent.parent.parent / "data" / "telemetry_coaching_insights.json"
+
+    if not insights_file.exists():
         raise HTTPException(
             status_code=503,
-            detail="Failed to retrieve driver list"
+            detail="Telemetry insights not available. Run generate_telemetry_insights.py first."
         )
 
+    with open(insights_file, 'r') as f:
+        all_insights = json.load(f)
 
-@router.post(
-    "/telemetry/coaching",
-    response_model=TelemetryCoachingResponse,
-    summary="Get AI telemetry coaching",
-    description="Analyze telemetry and provide race engineer-style coaching advice"
-)
-async def get_telemetry_coaching(request: TelemetryCoachingRequest):
-    """
-    Analyze telemetry data and provide AI-powered coaching.
+    # Get insights for this track/race/driver
+    track_race_key = f"{track_id}_r{race_num}"
 
-    Compares driver's telemetry against a reference driver and generates
-    specific, actionable coaching recommendations.
-    """
-    import pandas as pd
-    import numpy as np
-    from ..services.snowflake_service import snowflake_service
-
-    # Get telemetry data from Snowflake or JSON fallback
-    df = snowflake_service.get_telemetry_data(
-        track_id=request.track_id,
-        race_num=request.race_num
-    )
-
-    if df is None or df.empty:
+    if track_race_key not in all_insights:
         raise HTTPException(
             status_code=404,
-            detail=f"Telemetry data not found for {request.track_id} race {request.race_num}"
+            detail=f"No telemetry data available for {track_id} race {race_num}"
         )
 
-    # Filter for both drivers
-    driver_df = df[df['vehicle_number'] == request.driver_number].copy()
-    reference_df = df[df['vehicle_number'] == request.reference_driver_number].copy()
+    driver_key = str(driver_number)
 
-    if driver_df.empty:
+    if driver_key not in all_insights[track_race_key]:
         raise HTTPException(
             status_code=404,
-            detail=f"No telemetry data found for driver {request.driver_number}"
+            detail=f"No telemetry insights for driver #{driver_number} at {track_id} R{race_num}"
         )
 
-    if reference_df.empty:
-        raise HTTPException(
-            status_code=404,
-            detail=f"No telemetry data found for reference driver {request.reference_driver_number}"
-        )
+    insights = all_insights[track_race_key][driver_key]
 
-    # Get track info
-    track = data_loader.get_track(request.track_id)
-    track_name = track.name if track else request.track_id.title()
-
-    # Calculate overall time delta (simplified - using best laps)
-    driver_laps = driver_df[driver_df['lap'] >= 3]
-    reference_laps = reference_df[reference_df['lap'] >= 3]
-
-    driver_best_lap = None
-    reference_best_lap = None
-
-    if len(driver_laps) > 0:
-        lap_counts = driver_laps.groupby('lap')['speed'].count()
-        if len(lap_counts) > 0:
-            driver_best_lap = lap_counts.idxmax()
-
-    if len(reference_laps) > 0:
-        lap_counts = reference_laps.groupby('lap')['speed'].count()
-        if len(lap_counts) > 0:
-            reference_best_lap = lap_counts.idxmax()
-
-    # Calculate telemetry insights
-    telemetry_insights = _analyze_telemetry_patterns(driver_df, reference_df)
-
-    # Analyze corner performance (simplified - using speed differentials)
-    corner_analysis = _analyze_corners(driver_df, reference_df, track_name)
-
-    # Calculate total potential gain
-    total_time_delta = telemetry_insights.get('total_delta', 0)
-    potential_gain = sum(c.time_loss for c in corner_analysis)
-
-    # Generate AI coaching
-    coaching_text = ai_telemetry_coach.generate_coaching(
-        driver_number=request.driver_number,
-        reference_driver_number=request.reference_driver_number,
-        track_name=track_name,
-        telemetry_insights=telemetry_insights,
-        corner_analysis=[c.dict() for c in corner_analysis]
-    )
-
-    return TelemetryCoachingResponse(
-        driver_number=request.driver_number,
-        reference_driver_number=request.reference_driver_number,
-        track_name=track_name,
-        total_time_delta=total_time_delta,
-        potential_time_gain=potential_gain,
-        corner_analysis=corner_analysis,
-        ai_coaching=coaching_text,
-        telemetry_insights=telemetry_insights
-    )
-
-
-def _analyze_telemetry_patterns(driver_df: pd.DataFrame, reference_df: pd.DataFrame) -> Dict:
-    """Analyze overall telemetry patterns between drivers."""
-
-    insights = {}
-
-    # Braking pattern
-    if 'pbrake_f' in driver_df.columns and 'pbrake_f' in reference_df.columns:
-        driver_brake_avg = driver_df['pbrake_f'].mean()
-        reference_brake_avg = reference_df['pbrake_f'].mean()
-
-        if driver_brake_avg > reference_brake_avg:
-            insights['braking_pattern'] = f"You're using more brake pressure on average ({driver_brake_avg:.1f}% vs {reference_brake_avg:.1f}%). Consider trail braking technique."
-        else:
-            insights['braking_pattern'] = f"Your average brake pressure is lower ({driver_brake_avg:.1f}% vs {reference_brake_avg:.1f}%)."
-    else:
-        insights['braking_pattern'] = "Brake data not available"
-
-    # Throttle pattern
-    if 'aps' in driver_df.columns and 'aps' in reference_df.columns:
-        driver_throttle_avg = driver_df['aps'].mean()
-        reference_throttle_avg = reference_df['aps'].mean()
-
-        insights['throttle_pattern'] = f"Average throttle application: {driver_throttle_avg:.1f}% (reference: {reference_throttle_avg:.1f}%)"
-    else:
-        insights['throttle_pattern'] = "Throttle data not available"
-
-    # Speed profile
-    if 'speed' in driver_df.columns and 'speed' in reference_df.columns:
-        driver_speed_avg = float(driver_df['speed'].mean())
-        reference_speed_avg = float(reference_df['speed'].mean())
-        speed_delta = reference_speed_avg - driver_speed_avg
-
-        insights['speed_pattern'] = f"Average speed: {driver_speed_avg:.1f} km/h (reference: {reference_speed_avg:.1f} km/h, delta: {speed_delta:+.1f} km/h)"
-        insights['total_delta'] = f"{float(speed_delta / 10):.3f}"  # Convert to string
-    else:
-        insights['speed_pattern'] = "Speed data not available"
-        insights['total_delta'] = "0.000"
-
-    # Steering smoothness
-    if 'Steering_Angle' in driver_df.columns and 'Steering_Angle' in reference_df.columns:
-        driver_steering_std = float(driver_df['Steering_Angle'].std())
-        reference_steering_std = float(reference_df['Steering_Angle'].std())
-
-        if driver_steering_std > reference_steering_std * 1.1:
-            insights['steering_pattern'] = f"Your steering inputs are less smooth (std: {driver_steering_std:.2f} vs {reference_steering_std:.2f}). Focus on being smoother on entries."
-        else:
-            insights['steering_pattern'] = f"Steering smoothness is good (std: {driver_steering_std:.2f} vs {reference_steering_std:.2f})"
-    else:
-        insights['steering_pattern'] = "Steering data not available"
-
-    # Convert potential_gain to string as well
-    insights['potential_gain'] = f"{float(abs(float(insights.get('total_delta', '0')))):.3f}"
-
-    return insights
-
-
-def _analyze_corners(driver_df: pd.DataFrame, reference_df: pd.DataFrame, track_name: str) -> List[CornerAnalysis]:
-    """Analyze corner performance (simplified version)."""
-
-    corner_analysis = []
-
-    # Simplified: Use lap-based speed differentials as proxy for corners
-    # In production, you'd want actual corner location data
-
-    if 'speed' not in driver_df.columns or 'speed' not in reference_df.columns:
-        return corner_analysis
-
-    # Group by lap and find minimum speeds (corners)
-    driver_laps = driver_df.groupby('lap')
-    reference_laps = reference_df.groupby('lap')
-
-    # Find common laps
-    common_laps = set(driver_df['lap'].unique()) & set(reference_df['lap'].unique())
-
-    if not common_laps:
-        return corner_analysis
-
-    # For each common lap, estimate 3-5 "corners" based on speed minimums
-    for lap in sorted(common_laps)[:1]:  # Just analyze one representative lap
-        driver_lap_data = driver_df[driver_df['lap'] == lap].copy()
-        reference_lap_data = reference_df[reference_df['lap'] == lap].copy()
-
-        if len(driver_lap_data) < 10 or len(reference_lap_data) < 10:
-            continue
-
-        # Find local minima in speed (corners)
-        # Using numpy-only implementation to reduce serverless function size
-        from app.utils.numpy_stats import find_peaks_simple
-
-        driver_speeds = driver_lap_data['speed'].values
-        reference_speeds = reference_lap_data['speed'].values
-
-        # Find valleys (inverted peaks)
-        peaks, _ = find_peaks_simple(-driver_speeds, distance=50, prominence=5)
-
-        for i, peak_idx in enumerate(peaks[:5]):  # Limit to 5 corners
-            if peak_idx >= len(driver_speeds) or peak_idx >= len(reference_speeds):
-                continue
-
-            driver_apex_speed = driver_speeds[peak_idx]
-            reference_apex_speed = reference_speeds[min(peak_idx, len(reference_speeds) - 1)]
-
-            apex_delta = reference_apex_speed - driver_apex_speed
-            time_loss = abs(apex_delta) * 0.01  # Rough estimate: 1 km/h = 0.01s
-
-            focus_area = "Apex Speed" if apex_delta > 3 else "Brake Point" if apex_delta > 1 else "Throttle Application"
-
-            corner_analysis.append(CornerAnalysis(
-                corner_number=i + 1,
-                corner_name=f"Turn {i + 1}",
-                driver_apex_speed=float(driver_apex_speed),
-                reference_apex_speed=float(reference_apex_speed),
-                apex_speed_delta=float(apex_delta),
-                time_loss=float(time_loss),
-                focus_area=focus_area
-            ))
-
-    return sorted(corner_analysis, key=lambda x: x.time_loss, reverse=True)
+    return {
+        "driver_number": driver_number,
+        "track_id": track_id,
+        "race_num": race_num,
+        "target_driver": insights["target_driver"],
+        "summary": insights["summary"],
+        "key_insights": insights["key_insights"],
+        "factor_breakdown": insights["factor_breakdown"],
+        "detailed_comparisons": insights["detailed_comparisons"]
+    }

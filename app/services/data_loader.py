@@ -222,13 +222,15 @@ class DataLoader:
             races = driver_data.get("races", 0)
             avg_finish = driver_data.get("avg_finish", 0)
 
-            # Calculate overall score as average of the 4 factor scores
+            # Calculate overall score using validated weighted coefficients
+            # Coefficients from statistical validation (see routes.py lines 740-746)
+            # Speed: 46.6%, Consistency: 29.1%, Racecraft: 14.9%, Tire Mgmt: 9.5%
             overall_score = (
-                factor_scores["speed"]["score"] +
-                factor_scores["consistency"]["score"] +
-                factor_scores["racecraft"]["score"] +
-                factor_scores["tire_management"]["score"]
-            ) / 4
+                factor_scores["speed"]["score"] * 0.466 +
+                factor_scores["consistency"]["score"] * 0.291 +
+                factor_scores["racecraft"]["score"] * 0.149 +
+                factor_scores["tire_management"]["score"] * 0.095
+            )
 
             self.drivers[driver_num] = Driver(
                 driver_number=driver_num,
