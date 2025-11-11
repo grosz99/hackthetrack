@@ -28,8 +28,7 @@ export default function Overview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Detect scout context
-  const isFromScout = location.pathname.startsWith('/scout/driver/');
+  // Classification for driver
   const classification = driverData ? classifyDriver(driverData) : null;
 
   // Sync route params with DriverContext
@@ -150,60 +149,58 @@ export default function Overview() {
 
   return (
     <div className="driver-overview">
-      {/* Scout Breadcrumb - Only show when navigated from scout */}
-      {isFromScout && (
-        <div style={{
-          marginBottom: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '16px'
-        }}>
-          <button
-            onClick={() => navigate('/scout')}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '12px 24px',
-              background: '#e74c3c',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '8px',
-              fontSize: '16px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              transition: 'all 0.2s ease',
-              textTransform: 'uppercase',
-              letterSpacing: '0.5px'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.background = '#c0392b';
-              e.currentTarget.style.transform = 'translateX(-4px)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.background = '#e74c3c';
-              e.currentTarget.style.transform = 'translateX(0)';
-            }}
-          >
-            <span style={{ fontSize: '20px' }}>←</span>
-            <span>Back to Scout Portal</span>
-          </button>
-          <div style={{
-            fontSize: '14px',
-            fontWeight: 600,
-            color: '#666',
+      {/* Back to Rankings Button */}
+      <div style={{
+        marginBottom: '24px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '16px'
+      }}>
+        <button
+          onClick={() => navigate('/rankings')}
+          style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '8px'
-          }}>
-            <span style={{ color: '#e74c3c' }}>Scout Portal</span>
-            <span>›</span>
-            <span style={{ color: '#fff' }}>Driver #{seasonStats.driver_number}</span>
-            <span>›</span>
-            <span style={{ color: '#fff' }}>Overview</span>
-          </div>
+            gap: '8px',
+            padding: '12px 24px',
+            background: '#e74c3c',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '16px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            textTransform: 'uppercase',
+            letterSpacing: '0.5px'
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.background = '#c0392b';
+            e.currentTarget.style.transform = 'translateX(-4px)';
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.background = '#e74c3c';
+            e.currentTarget.style.transform = 'translateX(0)';
+          }}
+        >
+          <span style={{ fontSize: '20px' }}>←</span>
+          <span>Back to Rankings</span>
+        </button>
+        <div style={{
+          fontSize: '14px',
+          fontWeight: 600,
+          color: '#666',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
+          <span style={{ color: '#e74c3c' }}>Rankings</span>
+          <span>›</span>
+          <span style={{ color: '#fff' }}>Driver #{seasonStats.driver_number}</span>
+          <span>›</span>
+          <span style={{ color: '#fff' }}>Overview</span>
         </div>
-      )}
+      </div>
 
       {/* Header Section */}
       <div className="driver-header">
@@ -214,7 +211,7 @@ export default function Overview() {
           <div className="driver-name-section">
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '8px' }}>
               <h1 className="driver-name" style={{ margin: 0 }}>Driver #{seasonStats.driver_number}</h1>
-              {isFromScout && classification && (
+              {classification && (
                 <ClassificationBadge classification={classification} size="large" />
               )}
             </div>
@@ -278,25 +275,25 @@ export default function Overview() {
       <div className="nav-tabs-container">
         <div className="nav-tabs">
           <NavLink
-            to={isFromScout ? `/scout/driver/${routeDriverNumber || selectedDriverNumber}/overview` : "/overview"}
+            to={`/driver/${selectedDriverNumber}/overview`}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Overview
           </NavLink>
           <NavLink
-            to={isFromScout ? `/scout/driver/${routeDriverNumber || selectedDriverNumber}/race-log` : "/race-log"}
+            to={`/driver/${selectedDriverNumber}/race-log`}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Race Log
           </NavLink>
           <NavLink
-            to={isFromScout ? `/scout/driver/${routeDriverNumber || selectedDriverNumber}/skills` : "/skills"}
+            to={`/driver/${selectedDriverNumber}/skills`}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Skills
           </NavLink>
           <NavLink
-            to={isFromScout ? `/scout/driver/${routeDriverNumber || selectedDriverNumber}/improve` : "/improve"}
+            to={`/driver/${selectedDriverNumber}/improve`}
             className={({ isActive }) => `tab ${isActive ? 'active' : ''}`}
           >
             Improve
@@ -396,7 +393,7 @@ export default function Overview() {
             {/* Expand to Race Logs Button */}
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
               <NavLink
-                to={isFromScout ? `/scout/driver/${selectedDriverNumber}/race-log` : "/race-log"}
+                to={`/driver/${selectedDriverNumber}/race-log`}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -637,7 +634,7 @@ export default function Overview() {
         {/* Expand to Skills Button */}
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
           <NavLink
-            to={isFromScout ? `/scout/driver/${selectedDriverNumber}/skills` : "/skills"}
+            to={`/driver/${selectedDriverNumber}/skills`}
             style={{
               display: 'flex',
               alignItems: 'center',
