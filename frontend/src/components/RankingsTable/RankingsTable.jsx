@@ -80,7 +80,7 @@ export default function RankingsTable({ drivers = [] }) {
   };
 
   const handleDriverClick = (driverNumber) => {
-    navigate(`/scout/driver/${driverNumber}/overview`);
+    navigate(`/driver/${driverNumber}/overview`);
   };
 
   const getPercentileColor = (value) => {
