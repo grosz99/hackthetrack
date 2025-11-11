@@ -19,8 +19,8 @@ function App() {
           <div className="app min-h-screen bg-bg-primary">
             <main>
               <Routes>
-                {/* Scout Portal - New entry point */}
-                <Route path="/" element={<Navigate to="/test" replace />} />
+                {/* Rankings - Main entry point */}
+                <Route path="/" element={<Navigate to="/rankings" replace />} />
                 <Route path="/test" element={<TestRankings />} />
                 <Route path="/scout" element={<ScoutLanding />} />
                 <Route path="/rankings" element={<Rankings />} />
