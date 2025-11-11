@@ -158,10 +158,10 @@
   border: 3px solid #c0392b;
 }
 
-.driver-name {
+.rankings-table .driver-name {
   font-weight: 700;
   font-size: 16px;
-  color: #000;
+  color: #000 !important;
 }
 
 /* Score Cell */
@@ -298,8 +298,9 @@
     font-size: 14px;
   }
 
-  .driver-name {
+  .rankings-table .driver-name {
     font-size: 14px;
+    color: #000 !important;
   }
 
   .score-value {
