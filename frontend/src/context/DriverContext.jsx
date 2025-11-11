@@ -41,6 +41,9 @@ export const DriverProvider = ({ children }) => {
             avg_finish: d.stats?.average_finish || 0,
             best_finish: d.stats?.best_finish || 0,
             worst_finish: d.stats?.worst_finish || 0,
+            wins: d.stats?.wins || 0,
+            top10: d.stats?.top10 || 0,
+            dnfs: d.stats?.dnfs || 0,
 
             // Factor details (for classification)
             factors: {
