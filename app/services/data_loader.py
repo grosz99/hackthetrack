@@ -5,7 +5,6 @@ Loads CSV files and dashboard JSON into memory for fast access.
 
 import pandas as pd
 import json
-import sqlite3
 from pathlib import Path
 from typing import Dict, List, Optional
 from models import (
@@ -35,7 +34,6 @@ class DataLoader:
             self.base_path = Path(__file__).parent.parent.parent
             self.data_path = self.base_path / "data"
             self.frontend_data_path = self.base_path / "frontend" / "src" / "data"
-            self.db_path = self.base_path / "circuit-fit.db"
 
             self.tracks: Dict[str, Track] = {}
             self.drivers: Dict[int, Driver] = {}
@@ -424,12 +422,6 @@ class DataLoader:
         )
 
         return max(1, predicted)  # Ensure minimum position is 1
-
-    def _get_db_connection(self) -> sqlite3.Connection:
-        """Get database connection."""
-        conn = sqlite3.connect(str(self.db_path))
-        conn.row_factory = sqlite3.Row
-        return conn
 
     def get_season_stats(self, driver_number: int) -> Optional[SeasonStats]:
         """
