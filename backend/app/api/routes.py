@@ -760,7 +760,8 @@ async def get_factor_breakdown(factor_name: str, driver_number: int):
             "display_name": var_data["display_name"],
             "normalized_value": var_data["normalized_value"],
             "percentile": var_data["percentile"],
-            "weight": var_data["weight"]
+            "loading": var_data.get("loading", var_data.get("weight", 0)),  # Support both old and new format
+            "description": var_data.get("description", "")
         })
 
     return {
