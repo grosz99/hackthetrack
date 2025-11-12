@@ -2,25 +2,25 @@
 ## Racing Driver Training & Insights Dashboard - Final Week Sprint
 
 **Launch Target:** 1 Week (November 19, 2025)
-**Product Vision:** Create a video game-like dashboard that helps drivers understand their performance through a validated 4-factor model and provides actionable insights for improvement.
+**Product Vision:** Professional analytics dashboard that helps drivers understand their performance through a validated 4-factor predictive model and provides data-driven insights for continuous improvement.
 
-**Status:** 🟢 85% Launch Ready - Minor Polish Needed
+**Status:** 85% Launch Ready - Minor Polish Needed
 
 ---
 
 ## Executive Summary
 
-### ✅ What's Working Excellently
+### What's Working Excellently
 
 **Technical Foundation:**
 - Solid React 19 + FastAPI architecture with 100% backend test pass rate
 - Fast performance (in-memory JSON, instant API responses)
 - Validated 4-factor model (R² = 0.895, MAE = 1.78 positions)
 - Mobile-first responsive design with proper breakpoints
-- Beautiful NASCAR-inspired dark theme with Toyota Racing Red branding
+- NASCAR-inspired dark theme with Toyota Racing Red branding
 
 **User Experience:**
-- 4 fully functional pages (Rankings → Overview → Skills → Improve)
+- 4 fully functional pages (Rankings, Overview, Race Log, Skills, Improve)
 - Rich data visualizations (radar charts, line charts, percentile bars)
 - Smooth animations and transitions (Framer Motion)
 - Clear information hierarchy and navigation
@@ -30,14 +30,27 @@
 - Comprehensive race-by-race results and sector analysis
 - AI-generated coaching insights (Anthropic Claude integration)
 
-### ⚠️ Critical Gaps for Launch Week
+### Critical Items Completed
+
+**COMPLETED: White-on-White Text Fix**
+- Issue: Driver names displayed white text on white background during page transitions
+- Root Cause: App.jsx used bg-bg-primary which mapped to white (#ffffff) in Tailwind config
+- Resolution:
+  - Changed App.jsx background to dark (#0a0a0a)
+  - Updated Tailwind color system for dark theme consistency
+  - Updated bg-primary: #ffffff to #0a0a0a
+  - Updated text-primary: #1d1d1f to #ffffff
+  - Updated all border colors for dark theme
+- Status: FIXED and committed
+
+### Critical Gaps for Launch Week
 
 **Priority 1 - Must Fix (2-3 days):**
-1. **Decide on 3 unused pages** (TrackIntelligence, StrategyChat, TelemetryComparison) - Wire up or remove
-2. **Mobile rankings table** - Hide columns on small screens
-3. **Track selection integration** - Add to Improve page for driver comparison
-4. **Dynamic logic enhancements** - Handle edge cases (best driver, no improvement needed)
-5. **Gamification basics** - Add visible progression elements
+1. Decide on 3 unused pages (TrackIntelligence, StrategyChat, TelemetryComparison) - Wire up or remove
+2. Mobile rankings table - Hide columns on small screens
+3. Track selection integration - Add to Improve page for driver comparison
+4. Dynamic logic enhancements - Handle edge cases (best driver, no improvement needed)
+5. Professional performance indicators - Add benchmark comparisons and development targets
 
 **Priority 2 - Nice to Have (1 day):**
 1. Styling consistency cleanup (refactor inline styles)
@@ -45,24 +58,24 @@
 3. Color scheme audit for Skills/Improve sections
 
 **Priority 3 - Post-Launch:**
-1. Full gamification (XP system, achievements, challenges)
-2. Advanced telemetry comparison features
-3. Performance optimization (code splitting)
+1. Advanced telemetry comparison features
+2. Performance optimization (code splitting)
+3. Historical performance tracking
 
 ---
 
 ## Part 1: Technical Architecture Review
 
-### 1.1 Backend Architecture Assessment ✅ STABLE
+### 1.1 Backend Architecture Assessment - STABLE
 
-**Verdict:** Your backend is production-ready with NO critical issues.
+**Verdict:** Backend is production-ready with NO critical issues.
 
 **Strengths:**
-- **API Design:** FastAPI with Pydantic v2 models (type-safe contracts)
-- **Performance:** In-memory JSON data (826KB total, instant responses)
-- **Error Handling:** Custom error classes with sanitized responses
-- **Test Coverage:** 22/22 tests passing (100%)
-- **Endpoints:** 22+ well-documented API routes
+- API Design: FastAPI with Pydantic v2 models (type-safe contracts)
+- Performance: In-memory JSON data (826KB total, instant responses)
+- Error Handling: Custom error classes with sanitized responses
+- Test Coverage: 22/22 tests passing (100%)
+- Endpoints: 22+ well-documented API routes
 
 **Data Flow Verification:**
 ```
@@ -80,7 +93,7 @@ Skills Page → GET /api/factors/{factor}/breakdown/{number} (factor variables)
 Improve Page → GET /api/drivers/{number}/telemetry-coaching (AI insights)
 ```
 
-**Data Consistency Check:** ✅ PASSED
+**Data Consistency Check: PASSED**
 - All pages use centralized DriverContext for state management
 - API responses cached in React Context (no duplicate fetches)
 - LocalStorage used for selected driver persistence
@@ -93,7 +106,7 @@ Improve Page → GET /api/drivers/{number}/telemetry-coaching (AI insights)
 
 ---
 
-### 1.2 Responsive Design Issues 🟡 NEEDS ATTENTION
+### 1.2 Responsive Design Issues - NEEDS ATTENTION
 
 **Issue Confirmed:** "Shows up huge on laptops"
 
@@ -102,22 +115,22 @@ Improve Page → GET /api/drivers/{number}/telemetry-coaching (AI insights)
 **Problem Components:**
 
 1. **Overview Page - Driver Number Badge**
-   - File: `/frontend/src/pages/Overview/Overview.jsx:161-180`
-   - Current: `width: 180px, height: 180px, fontSize: 90px`
+   - File: /frontend/src/pages/Overview/Overview.jsx:161-180
+   - Current: width: 180px, height: 180px, fontSize: 90px
    - Issue: Fixed pixel sizing doesn't scale with viewport
-   - **Fix:** Use viewport-relative units or container queries
+   - Fix: Use viewport-relative units or container queries
 
 2. **Rankings Table - Horizontal Overflow**
-   - File: `/frontend/src/components/RankingsTable/RankingsTable.jsx`
+   - File: /frontend/src/components/RankingsTable/RankingsTable.jsx
    - Current: 10 columns always visible
    - Issue: Forces horizontal scroll on mobile (<768px)
-   - **Fix:** Hide less critical columns (DNF, Top 10, Poles) on mobile
+   - Fix: Hide less critical columns (DNF, Top 10, Poles) on mobile
 
 3. **Skills Page - Factor Cards**
-   - File: `/frontend/src/pages/Skills/Skills.jsx`
+   - File: /frontend/src/pages/Skills/Skills.jsx
    - Current: 2x2 grid at 1400px+ breakpoint
    - Issue: Large gap between breakpoints causes awkward sizing
-   - **Fix:** Add intermediate breakpoint at 1200px
+   - Fix: Add intermediate breakpoint at 1200px
 
 **Specific Action Items:**
 
@@ -166,67 +179,30 @@ const badgeStyle = {
 
 ---
 
-### 1.3 White Text on White Backgrounds 🟢 NO ISSUES FOUND
+### 1.3 Color Consistency Analysis - MINOR ISSUES
 
-**Investigation Results:** I searched the entire codebase for white-on-white text patterns.
-
-**Verdict:** ✅ NO accessibility issues detected.
-
-**Evidence:**
-- Rankings table uses black text (#000) on white backgrounds
-- Driver headers use white text (#fff) with explicit dark backgrounds (#0a0a0a)
-- Factor cards use black text on white card backgrounds
-- All text has proper contrast ratios (WCAG AA compliant)
-
-**Potential Confusion Source:**
-You may have seen white text appear incorrectly due to a CSS loading race condition or browser caching. Recommendation:
-1. Add explicit `background-color` declarations to all text containers
-2. Use `color: inherit` carefully (only when parent has defined background)
-
-**Safeguard Implementation:**
-```css
-/* Add to /frontend/src/index.css */
-.text-primary {
-  color: #e74c3c !important;
-}
-
-.text-on-dark {
-  color: #ffffff !important;
-  background-color: #0a0a0a; /* Force dark background */
-}
-
-.text-on-light {
-  color: #000000 !important;
-  background-color: #ffffff; /* Force light background */
-}
-```
-
----
-
-### 1.4 Color Consistency Analysis 🟡 MINOR ISSUES
-
-**Toyota Racing Brand Colors:** ✅ Properly Implemented
-- Primary Red: `#e74c3c` and `#EB0A1E` (consistent usage)
-- Dark Background: `#0a0a0a` (NASCAR aesthetic)
-- White Cards: `#ffffff` (clean, professional)
+**Toyota Racing Brand Colors: Properly Implemented**
+- Primary Red: #e74c3c and #EB0A1E (consistent usage)
+- Dark Background: #0a0a0a (NASCAR aesthetic)
+- White Cards: #ffffff (clean, professional)
 
 **Problem Areas Identified:**
 
 **1. Skills Page - Inconsistent Factor Card Colors**
-- File: `/frontend/src/pages/Skills/Skills.css`
+- File: /frontend/src/pages/Skills/Skills.css
 - Issue: Each factor card has different border color (not just red)
 - Current: Speed (red), Consistency (blue), Racecraft (green), Tire Mgmt (orange)
-- **Recommendation:** Use Toyota Red for all borders, differentiate with icons instead
+- Recommendation: Use Toyota Red for all borders, differentiate with icons instead
 
 **2. Improve Page - Random Accent Colors**
-- File: `/frontend/src/pages/Improve/Improve.css`
+- File: /frontend/src/pages/Improve/Improve.css
 - Issue: Green (#27ae60) used for similar drivers, yellow (#ffc107) for coaching
-- **Recommendation:** Establish secondary color palette (1 accent max)
+- Recommendation: Establish secondary color palette (1 accent max)
 
 **3. Percentile Badges - Too Many Colors**
-- File: `/frontend/src/components/shared/PercentileBadge.jsx`
+- File: /frontend/src/components/shared/PercentileBadge.jsx
 - Current: 5 colors (Elite=Orange, Great=Green, Good=Blue, Average=Pink, Poor=Red)
-- **Recommendation:** Simplify to 3 colors (Red scale: Light/Medium/Dark)
+- Recommendation: Simplify to 3 colors (Red scale: Light/Medium/Dark)
 
 **Proposed Color System:**
 
@@ -275,31 +251,31 @@ export const TOYOTA_RACING_COLORS = {
 
 ---
 
-### 1.5 Element Consistency & Alignment 🟡 NEEDS CLEANUP
+### 1.4 Element Consistency & Alignment - NEEDS CLEANUP
 
 **Issues Found:**
 
 **1. Mixed Styling Approaches (Maintenance Burden)**
-- **Problem:** 3 different CSS patterns used across codebase
+- Problem: 3 different CSS patterns used across codebase
   - Tailwind utility classes (Rankings.jsx)
   - CSS modules (RaceLog.css, Skills.css)
   - Inline styles (Overview.jsx lines 161-536)
-- **Impact:** Hard to maintain, inconsistent spacing/sizing
-- **Recommendation:** Standardize on Tailwind + minimal CSS modules
+- Impact: Hard to maintain, inconsistent spacing/sizing
+- Recommendation: Standardize on Tailwind + minimal CSS modules
 
 **2. Font Usage Inconsistencies**
-- **Problem:** Mixing `rem`, `px`, and `em` units
-  - Overview page: `fontSize: '90px'` (pixels)
-  - Skills page: `font-size: 1.5rem` (rem)
-  - Rankings table: `font-size: 14px` (pixels)
-- **Recommendation:** Use Tailwind's rem-based scale exclusively
+- Problem: Mixing rem, px, and em units
+  - Overview page: fontSize: '90px' (pixels)
+  - Skills page: font-size: 1.5rem (rem)
+  - Rankings table: font-size: 14px (pixels)
+- Recommendation: Use Tailwind's rem-based scale exclusively
 
 **3. Spacing Inconsistencies**
-- **Problem:** Gaps/padding vary widely
-  - Some cards use `padding: 24px`
-  - Others use `p-6` (Tailwind = 24px)
-  - Some use `p-8` (32px)
-- **Recommendation:** Create design system tokens
+- Problem: Gaps/padding vary widely
+  - Some cards use padding: 24px
+  - Others use p-6 (Tailwind = 24px)
+  - Some use p-8 (32px)
+- Recommendation: Create design system tokens
 
 **Proposed Design System:**
 
@@ -341,30 +317,30 @@ module.exports = {
 
 **Alignment Issues:**
 
-File: `/frontend/src/pages/Overview/Overview.jsx`
+File: /frontend/src/pages/Overview/Overview.jsx
 - Lines 250-280: Race results chart not vertically centered with factor cards
-- **Fix:** Add `display: flex; align-items: center` to container
+- Fix: Add display: flex; align-items: center to container
 
-File: `/frontend/src/pages/Skills/Skills.jsx`
+File: /frontend/src/pages/Skills/Skills.jsx
 - Lines 120-150: Factor breakdown modal doesn't center properly on mobile
-- **Fix:** Use Tailwind `items-center justify-center` on modal wrapper
+- Fix: Use Tailwind items-center justify-center on modal wrapper
 
 ---
 
 ## Part 2: Feature Enhancements
 
-### 2.1 Track Selection Integration 🔴 HIGH PRIORITY
+### 2.1 Track Selection Integration - HIGH PRIORITY
 
 **Current State:** Track selection exists in codebase but NOT wired into main routing.
 
 **Files Affected:**
-- ✅ Backend: `/backend/data/dashboardData.json` (6 tracks defined)
-- ✅ Backend: API supports `GET /api/drivers?track_id=barber` (circuit fit calculation)
-- ❌ Frontend: `/frontend/src/pages/TrackIntelligence/TrackIntelligence.jsx` (built but not in routing)
-- ❌ Frontend: No track selector in Improve page
+- Backend: /backend/data/dashboardData.json (6 tracks defined)
+- Backend: API supports GET /api/drivers?track_id=barber (circuit fit calculation)
+- Frontend: /frontend/src/pages/TrackIntelligence/TrackIntelligence.jsx (built but not in routing)
+- Frontend: No track selector in Improve page
 
 **User Requirement:**
-> "Integrate track selection in Improve section. In performance analysis, you should be able to click driver to compare to, the track and skill so that you can see how you gauge against that driver to improve performance"
+"Integrate track selection in Improve section. In performance analysis, you should be able to click driver to compare to, the track and skill so that you can see how you gauge against that driver to improve performance"
 
 **Implementation Plan:**
 
@@ -475,9 +451,9 @@ export const DriverComparison = ({
       {/* Gap analysis */}
       <div className={`gap-indicator ${comparison.isAhead ? 'ahead' : 'behind'}`}>
         {comparison.isAhead ? (
-          <span>✅ You're {Math.abs(comparison.gap)} points ahead!</span>
+          <span>You are {Math.abs(comparison.gap)} points ahead</span>
         ) : (
-          <span>📊 Close the gap: {comparison.gap} points to match</span>
+          <span>Close the gap: {comparison.gap} points to match</span>
         )}
       </div>
 
@@ -516,7 +492,7 @@ import TrackIntelligence from './pages/TrackIntelligence/TrackIntelligence';
   onClick={() => navigate('/track-intelligence')}
   className="track-intel-button"
 >
-  📍 Track Intelligence
+  Track Intelligence
 </button>
 ```
 
@@ -531,25 +507,25 @@ import TrackIntelligence from './pages/TrackIntelligence/TrackIntelligence';
 
 ---
 
-### 2.2 Dynamic Logic Enhancements 🔴 HIGH PRIORITY
+### 2.2 Dynamic Logic Enhancements - HIGH PRIORITY
 
 **User Requirement:**
-> "Ensure our logic is thoughtful and dynamic. For instance if a driver is the best call that out just don't leave nothing to improve."
+"Ensure our logic is thoughtful and dynamic. For instance if a driver is the best call that out just don't leave nothing to improve."
 
 **Current Issues:**
 
 **1. Best-in-Class Driver Handling**
-- File: `/frontend/src/pages/Improve/Improve.jsx`
+- File: /frontend/src/pages/Improve/Improve.jsx
 - Issue: If driver is #1 in a skill, "Find Similar Drivers" returns no results
-- **Fix:** Add conditional messaging for top performers
+- Fix: Add conditional messaging for top performers
 
 **2. Ranking Normalization**
 - Issue: Raw percentiles (0-100) not intuitive for drivers
-- **Fix:** Convert to letter grades (S/A/B/C/D) or star ratings
+- Fix: Convert to performance tiers or letter grades
 
 **3. Missing Context for Percentile Scores**
 - Issue: "75th percentile in Speed" doesn't tell driver what that means
-- **Fix:** Add contextual explanations
+- Fix: Add contextual explanations
 
 **Implementation:**
 
@@ -575,15 +551,15 @@ const renderImprovementInsights = () => {
   if (speedIsBest && consistencyIsBest) {
     return (
       <div className="best-driver-card">
-        <div className="trophy-icon">🏆</div>
-        <h2>You're the Best in Class!</h2>
+        <div className="trophy-icon">LEADER</div>
+        <h2>Top Performer</h2>
         <p>
-          You're ranked #1 in both Speed and Consistency. Your focus should be on:
+          You are ranked first in both Speed and Consistency. Your focus should be on:
         </p>
         <ul>
           <li>Maintaining your performance edge (consistency is key)</li>
           <li>Developing areas outside your strengths (Racecraft, Tire Mgmt)</li>
-          <li>Mentoring teammates who can learn from your technique</li>
+          <li>Setting benchmark times for teammates</li>
         </ul>
       </div>
     );
@@ -592,10 +568,10 @@ const renderImprovementInsights = () => {
   if (speedIsBest) {
     return (
       <div className="skill-leader-card">
-        <div className="medal-icon">🥇</div>
+        <div className="medal-icon">FASTEST</div>
         <h3>Speed Leader</h3>
         <p>
-          You're the fastest driver in the field. To win races, focus on:
+          You are the fastest driver in the field. To win races, focus on:
         </p>
         <ul>
           <li>Converting speed into results (improve Racecraft)</li>
@@ -610,24 +586,23 @@ const renderImprovementInsights = () => {
 };
 ```
 
-**Enhancement 2: Letter Grade System**
+**Enhancement 2: Performance Tier System**
 
 ```javascript
-// /frontend/src/utils/grading.js
-export const percentileToGrade = (percentile) => {
-  if (percentile >= 90) return { grade: 'S', label: 'Elite', color: '#EB0A1E' };
-  if (percentile >= 75) return { grade: 'A', label: 'Excellent', color: '#ff4444' };
-  if (percentile >= 60) return { grade: 'B', label: 'Above Average', color: '#888888' };
-  if (percentile >= 40) return { grade: 'C', label: 'Average', color: '#aaaaaa' };
-  return { grade: 'D', label: 'Developing', color: '#cccccc' };
+// /frontend/src/utils/performanceTiers.js
+export const percentileToTier = (percentile) => {
+  if (percentile >= 90) return { tier: 'ELITE', label: 'Top 10%', color: '#EB0A1E' };
+  if (percentile >= 75) return { tier: 'STRONG', label: 'Top 25%', color: '#ff4444' };
+  if (percentile >= 50) return { tier: 'COMPETITIVE', label: 'Top 50%', color: '#888888' };
+  return { tier: 'DEVELOPING', label: 'Bottom 50%', color: '#cccccc' };
 };
 
 // Usage in Skills page
-const { grade, label, color } = percentileToGrade(driver.factors.speed);
+const { tier, label, color } = percentileToTier(driver.factors.speed);
 
-<div className="grade-badge" style={{ backgroundColor: color }}>
-  <span className="grade-letter">{grade}</span>
-  <span className="grade-label">{label}</span>
+<div className="tier-badge" style={{ backgroundColor: color }}>
+  <span className="tier-name">{tier}</span>
+  <span className="tier-label">{label}</span>
 </div>
 ```
 
@@ -638,7 +613,7 @@ const { grade, label, color } = percentileToGrade(driver.factors.speed);
 export const getPercentileExplanation = (skill, percentile) => {
   const contexts = {
     speed: {
-      90: "You're among the fastest 10% of drivers - elite qualifying pace",
+      90: "You are among the fastest 10% of drivers - elite qualifying pace",
       75: "You consistently qualify in the top half - strong one-lap speed",
       60: "Your qualifying is respectable but has room for improvement",
       40: "Focus on extracting more from qualifying laps - study fastest sectors",
@@ -652,7 +627,7 @@ export const getPercentileExplanation = (skill, percentile) => {
       0: "High lap-to-lap variation - work with engineers on setup stability"
     },
     racecraft: {
-      90: "You're a master of wheel-to-wheel racing - elite overtaking ability",
+      90: "You are a master of wheel-to-wheel racing - elite overtaking ability",
       75: "You make good decisions in traffic and gain positions",
       60: "Racecraft is solid but could be more aggressive on overtakes",
       40: "Work on race starts and defending position - study replays",
@@ -675,7 +650,7 @@ export const getPercentileExplanation = (skill, percentile) => {
 };
 ```
 
-**Enhancement 4: Video Game-Style Progress Bars**
+**Enhancement 4: Professional Progress Bars**
 
 ```javascript
 // /frontend/src/components/shared/SkillProgressBar.jsx
@@ -712,7 +687,7 @@ export const SkillProgressBar = ({ skill, current, target, max = 100 }) => {
             className="target-marker"
             style={{ left: `${targetProgress}%` }}
           >
-            <span className="target-flag">🎯 {target}</span>
+            <span className="target-flag">TARGET {target}</span>
           </div>
         )}
       </div>
@@ -720,7 +695,6 @@ export const SkillProgressBar = ({ skill, current, target, max = 100 }) => {
       {/* Gain indicator */}
       {gainAvailable > 0 && (
         <div className="gain-indicator">
-          <span className="gain-arrow">↗</span>
           <span className="gain-text">+{gainAvailable.toFixed(1)} points available</span>
         </div>
       )}
@@ -730,8 +704,8 @@ export const SkillProgressBar = ({ skill, current, target, max = 100 }) => {
 ```
 
 **Acceptance Criteria:**
-- [ ] Top-ranked drivers see "Best in Class" messaging
-- [ ] Percentiles converted to letter grades (S/A/B/C/D)
+- [ ] Top-ranked drivers see "Top Performer" messaging
+- [ ] Percentiles converted to performance tiers (ELITE/STRONG/COMPETITIVE/DEVELOPING)
 - [ ] Each score has contextual explanation tooltip
 - [ ] Progress bars show current level + potential gain
 - [ ] No empty states or missing improvement suggestions
@@ -740,239 +714,234 @@ export const SkillProgressBar = ({ skill, current, target, max = 100 }) => {
 
 ---
 
-### 2.3 Gamification Implementation 🟡 MEDIUM PRIORITY
+### 2.3 Professional Performance Indicators - MEDIUM PRIORITY
 
 **User Requirement:**
-> "We want this to be as simple as a video game so drivers relate and engaged on how to improve as a driver"
+"We want this to be professional for adult drivers - not gimmicky like a video game"
 
 **Current State:**
-- ✅ Classification badges (Frontrunner/Contender/Mid-Pack/Development)
-- ✅ Percentile badges (Elite/Great/Good/Average/Poor)
-- ✅ Rank badges (Gold/Silver/Bronze for top 3)
-- ❌ NO XP/Level system
-- ❌ NO achievements/unlockables
-- ❌ NO progression tracking
-- ❌ NO challenges or goals
+- Classification badges (Frontrunner/Contender/Mid-Pack/Development)
+- Percentile badges (Elite/Great/Good/Average/Poor)
+- Rank badges (Gold/Silver/Bronze for top 3)
+- NO benchmark comparison system
+- NO development target tracking
+- NO historical performance trends
 
-**Recommendation:** Ship BASIC gamification now, add advanced features post-launch.
+**Recommendation:** Focus on professional sports analytics approach (ESPN/F1 style)
 
-**Phase 1: Launch Week Implementation** (8 hours)
+**Phase 1: Launch Week Implementation** (9 hours)
 
-**Feature 1: Driver Level System** (3 hours)
+**Feature 1: Benchmark Comparison Bars** (3 hours)
 
-```javascript
-// /frontend/src/utils/levelSystem.js
-export const calculateDriverLevel = (driver) => {
-  const { overall_score, stats } = driver;
+**Professional Approach:** Show driver's performance relative to field benchmarks
 
-  // Base level from overall score
-  const baseLevel = Math.floor(overall_score / 2); // 0-50 range
-
-  // Bonus levels from experience
-  const raceBonus = Math.floor(stats.races / 3); // +1 level per 3 races
-  const winsBonus = stats.wins * 2; // +2 levels per win
-  const podiumBonus = Math.floor((stats.podiums - stats.wins) / 2); // +1 per 2 podiums
-
-  const totalLevel = baseLevel + raceBonus + winsBonus + podiumBonus;
-
-  // Cap at level 50
-  return Math.min(totalLevel, 50);
-};
-
-export const getLevelTier = (level) => {
-  if (level >= 40) return { tier: 'Legend', color: '#EB0A1E', icon: '👑' };
-  if (level >= 30) return { tier: 'Champion', color: '#ff4444', icon: '🏆' };
-  if (level >= 20) return { tier: 'Veteran', color: '#888888', icon: '⭐' };
-  if (level >= 10) return { tier: 'Intermediate', color: '#aaaaaa', icon: '📈' };
-  return { tier: 'Rookie', color: '#cccccc', icon: '🎯' };
-};
-
-export const getXPtoNextLevel = (currentLevel, currentScore) => {
-  const nextLevelThreshold = (currentLevel + 1) * 2; // Each level needs +2 overall score
-  const currentXP = currentScore % 2; // Fractional progress
-  const xpNeeded = 2 - currentXP;
-
-  return {
-    current: (currentXP / 2) * 100, // Percentage
-    needed: xpNeeded,
-    percentage: (currentXP / 2) * 100
-  };
-};
-```
-
-**Feature 2: Level Badge Display** (2 hours)
+**Visual:** Horizontal bar charts with clear markers
 
 ```javascript
-// /frontend/src/components/shared/LevelBadge.jsx
-export const LevelBadge = ({ driver }) => {
-  const level = calculateDriverLevel(driver);
-  const { tier, color, icon } = getLevelTier(level);
-  const xp = getXPtoNextLevel(level, driver.overall_score);
+// /frontend/src/components/shared/BenchmarkBar.jsx
+export const BenchmarkBar = ({ skill, driverScore, fieldAverage, topThreeAverage }) => {
+  const max = 100;
+  const driverPos = (driverScore / max) * 100;
+  const avgPos = (fieldAverage / max) * 100;
+  const topPos = (topThreeAverage / max) * 100;
 
   return (
-    <div className="level-badge-container">
-      {/* Main level circle */}
-      <div
-        className="level-circle"
-        style={{
-          borderColor: color,
-          background: `linear-gradient(135deg, ${color}20, ${color}40)`
-        }}
-      >
-        <span className="level-icon">{icon}</span>
-        <span className="level-number">{level}</span>
+    <div className="benchmark-bar-container">
+      <div className="benchmark-labels">
+        <span className="skill-name">{skill}</span>
+        <span className="driver-score">{driverScore}</span>
       </div>
 
-      {/* Tier label */}
-      <div className="level-tier" style={{ color }}>
-        {tier}
-      </div>
-
-      {/* XP progress bar */}
-      <div className="xp-bar">
+      <div className="benchmark-bar">
+        {/* Progress fill */}
         <div
-          className="xp-fill"
-          style={{
-            width: `${xp.percentage}%`,
-            backgroundColor: color
-          }}
+          className="bar-fill"
+          style={{ width: `${driverPos}%` }}
         />
+
+        {/* Markers */}
+        <div className="marker driver" style={{ left: `${driverPos}%` }}>
+          <span>YOU</span>
+        </div>
+        <div className="marker average" style={{ left: `${avgPos}%` }}>
+          <span>AVG</span>
+        </div>
+        <div className="marker top" style={{ left: `${topPos}%` }}>
+          <span>TOP 3</span>
+        </div>
       </div>
-      <div className="xp-text">
-        {xp.percentage.toFixed(0)}% to Level {level + 1}
+
+      <div className="benchmark-stats">
+        <span className="stat">
+          {driverScore > fieldAverage
+            ? `+${(driverScore - fieldAverage).toFixed(1)} above field average`
+            : `${(driverScore - fieldAverage).toFixed(1)} below field average`
+          }
+        </span>
+        <span className="stat">
+          {driverScore > topThreeAverage
+            ? `+${(driverScore - topThreeAverage).toFixed(1)} above top 3`
+            : `${(topThreeAverage - driverScore).toFixed(1)} gap to top 3`
+          }
+        </span>
       </div>
     </div>
   );
 };
 ```
 
-**Feature 3: Achievement Badges** (3 hours)
+**Where to Add:**
+- Overview page: Below radar chart
+- Skills page: On each factor card
+
+**Feature 2: Development Target Cards** (4 hours)
+
+**Professional Approach:** Clear, measurable goals based on data
 
 ```javascript
-// /frontend/src/utils/achievements.js
-export const ACHIEVEMENTS = [
-  {
-    id: 'first_podium',
-    name: 'First Podium',
-    description: 'Finish in the top 3',
-    icon: '🥉',
-    check: (driver) => driver.stats.podiums >= 1
-  },
-  {
-    id: 'speed_demon',
-    name: 'Speed Demon',
-    description: 'Reach 80th percentile in Speed',
-    icon: '⚡',
-    check: (driver) => driver.factors.speed >= 80
-  },
-  {
-    id: 'consistency_king',
-    name: 'Mr. Consistent',
-    description: 'Reach 80th percentile in Consistency',
-    icon: '🎯',
-    check: (driver) => driver.factors.consistency >= 80
-  },
-  {
-    id: 'veteran',
-    name: 'Veteran Driver',
-    description: 'Complete 10+ races',
-    icon: '⭐',
-    check: (driver) => driver.stats.races >= 10
-  },
-  {
-    id: 'race_winner',
-    name: 'Race Winner',
-    description: 'Win your first race',
-    icon: '🏆',
-    check: (driver) => driver.stats.wins >= 1
-  },
-  {
-    id: 'top_five',
-    name: 'Frontrunner',
-    description: 'Overall ranking in top 5',
-    icon: '👑',
-    check: (driver) => driver.rank <= 5
-  },
-  {
-    id: 'double_digit_wins',
-    name: 'Dominator',
-    description: 'Win 10+ races',
-    icon: '💪',
-    check: (driver) => driver.stats.wins >= 10
-  }
-];
-
-export const getUnlockedAchievements = (driver) => {
-  return ACHIEVEMENTS.filter(achievement => achievement.check(driver));
-};
-
-export const getLockedAchievements = (driver) => {
-  return ACHIEVEMENTS.filter(achievement => !achievement.check(driver));
-};
-```
-
-**Feature 4: Achievement Display Component** (2 hours)
-
-```javascript
-// /frontend/src/components/shared/AchievementsList.jsx
-export const AchievementsList = ({ driver }) => {
-  const unlocked = getUnlockedAchievements(driver);
-  const locked = getLockedAchievements(driver);
+// /frontend/src/components/shared/DevelopmentTarget.jsx
+export const DevelopmentTarget = ({ skill, current, targetTier, gap, actionItems }) => {
+  const progress = ((current / (current + gap)) * 100).toFixed(0);
 
   return (
-    <div className="achievements-container">
-      <h3 className="achievements-title">
-        🏆 Achievements ({unlocked.length}/{ACHIEVEMENTS.length})
-      </h3>
+    <div className="development-target-card">
+      <div className="target-header">
+        <h3>DEVELOPMENT TARGET: {skill}</h3>
+        <span className="target-tier">{targetTier}</span>
+      </div>
 
-      {/* Unlocked achievements */}
-      <div className="achievements-grid">
-        {unlocked.map(achievement => (
-          <div key={achievement.id} className="achievement-card unlocked">
-            <div className="achievement-icon">{achievement.icon}</div>
-            <div className="achievement-name">{achievement.name}</div>
-            <div className="achievement-desc">{achievement.description}</div>
-            <div className="achievement-status">✅ Unlocked</div>
-          </div>
-        ))}
+      <div className="target-metrics">
+        <div className="metric">
+          <span className="metric-label">Current</span>
+          <span className="metric-value">{current}</span>
+        </div>
+        <div className="metric">
+          <span className="metric-label">Target</span>
+          <span className="metric-value">{current + gap}</span>
+        </div>
+        <div className="metric">
+          <span className="metric-label">Gap</span>
+          <span className="metric-value">-{gap}</span>
+        </div>
+      </div>
 
-        {/* Locked achievements (grayed out) */}
-        {locked.map(achievement => (
-          <div key={achievement.id} className="achievement-card locked">
-            <div className="achievement-icon grayscale">{achievement.icon}</div>
-            <div className="achievement-name">{achievement.name}</div>
-            <div className="achievement-desc">{achievement.description}</div>
-            <div className="achievement-status">🔒 Locked</div>
-          </div>
-        ))}
+      <div className="progress-bar">
+        <div className="progress-fill" style={{ width: `${progress}%` }} />
+        <span className="progress-label">{progress}%</span>
+      </div>
+
+      <div className="action-items">
+        <h4>To Achieve:</h4>
+        <ul>
+          {actionItems.map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
+        </ul>
       </div>
     </div>
   );
 };
 ```
 
-**Where to Add Gamification Elements:**
+**Data Structure:**
+```javascript
+const developmentTargets = {
+  speed: {
+    current: 72.5,
+    targetTier: 'STRONG (Top 25%)',
+    targetScore: 80.0,
+    gap: 7.5,
+    actionItems: [
+      'Improve Sector 1 speed by 0.3s',
+      'Reduce qualifying variance by 15%',
+      'Match top 3 in braking zones'
+    ]
+  }
+};
+```
 
-1. **DashboardHeader** - Add LevelBadge next to driver name
-2. **Overview Page** - Add AchievementsList at bottom
-3. **Improve Page** - Show next achievement to unlock
-4. **Rankings Table** - Add level column (sortable)
+**Where to Add:**
+- Improve page: Primary focus area
+- Skills page: Expandable section
+
+**Feature 3: Refined Percentile Tier Badges** (2 hours)
+
+**Professional Refinement:**
+
+```javascript
+// /frontend/src/components/shared/PerformanceTierBadge.jsx
+export const PerformanceTierBadge = ({ percentile }) => {
+  const getTier = (pct) => {
+    if (pct >= 90) return { name: 'ELITE', label: 'Top 10%', color: '#EB0A1E' };
+    if (pct >= 75) return { name: 'STRONG', label: 'Top 25%', color: '#ff4444' };
+    if (pct >= 50) return { name: 'COMPETITIVE', label: 'Top 50%', color: '#888888' };
+    return { name: 'DEVELOPING', label: 'Bottom 50%', color: '#cccccc' };
+  };
+
+  const tier = getTier(percentile);
+
+  return (
+    <div className="performance-tier-badge" style={{ borderColor: tier.color }}>
+      <span className="tier-name" style={{ color: tier.color }}>
+        {tier.name}
+      </span>
+      <span className="tier-percentile">{percentile.toFixed(1)}th</span>
+      <span className="tier-label">{tier.label}</span>
+    </div>
+  );
+};
+```
+
+**CSS Styling:**
+```css
+.performance-tier-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 16px;
+  border: 2px solid;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  font-family: 'Inter', sans-serif;
+}
+
+.tier-name {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.tier-percentile {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 4px 0;
+}
+
+.tier-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: #888888;
+  text-transform: uppercase;
+}
+```
 
 **Acceptance Criteria:**
-- [ ] All drivers have calculated levels (1-50)
-- [ ] Level badges display on Overview page
-- [ ] Achievement list shows locked/unlocked states
-- [ ] XP progress bar shows path to next level
-- [ ] Achievements update dynamically based on driver stats
+- [ ] Benchmark bars display on Overview and Skills pages
+- [ ] Development target cards show on Improve page
+- [ ] Performance tier badges updated with professional styling
+- [ ] All text uses professional language (no "Level up!" or similar)
+- [ ] Clean, minimal design (no cartoon graphics)
 
-**Time Estimate:** 8 hours (1 day)
+**Time Estimate:** 9 hours
 
 ---
 
-### 2.4 Highlight Differentiating Points 🔴 HIGH PRIORITY
+### 2.4 Highlight Differentiating Points - HIGH PRIORITY
 
 **User Requirement:**
-> "Making sure that our two differentiating points are evident in the product. That is we've developed a fancy algorithm to determine/predict driver success and we've simplified it to a video game like experience."
+"Making sure that our two differentiating points are evident in the product. That is we've developed a fancy algorithm to determine/predict driver success and we've simplified it to a professional analytics experience."
 
 **Current Issue:** These differentiators are NOT prominently featured.
 
@@ -991,13 +960,13 @@ export const Rankings = () => {
           The Future of Driver Training
         </h1>
         <p className="hero-subtitle">
-          Powered by AI-driven analytics and gamified insights
+          Powered by AI-driven analytics and validated predictive modeling
         </p>
 
         <div className="differentiators-grid">
           {/* Differentiator 1: Algorithm */}
           <div className="diff-card">
-            <div className="diff-icon">🧠</div>
+            <div className="diff-icon">ANALYTICS</div>
             <h3>Predictive 4-Factor Model</h3>
             <p>
               Our validated algorithm analyzes 291 driver-race observations to predict
@@ -1019,19 +988,19 @@ export const Rankings = () => {
             </div>
           </div>
 
-          {/* Differentiator 2: Gamification */}
+          {/* Differentiator 2: Professional Analytics */}
           <div className="diff-card">
-            <div className="diff-icon">🎮</div>
-            <h3>Video Game-Like Experience</h3>
+            <div className="diff-icon">INSIGHTS</div>
+            <h3>Professional Analytics Experience</h3>
             <p>
-              Complex telemetry simplified into intuitive levels, achievements,
-              and visual progress bars - just like your favorite racing game.
+              Complex telemetry simplified into intuitive benchmarks, percentile rankings,
+              and visual progress indicators.
             </p>
             <div className="diff-features">
-              <div className="feature">✅ Driver Levels (1-50)</div>
-              <div className="feature">✅ Achievement Unlocks</div>
-              <div className="feature">✅ Percentile Rankings</div>
-              <div className="feature">✅ XP Progress Bars</div>
+              <div className="feature">Performance tier system</div>
+              <div className="feature">Benchmark comparisons</div>
+              <div className="feature">Percentile rankings</div>
+              <div className="feature">Development targets</div>
             </div>
           </div>
         </div>
@@ -1052,9 +1021,9 @@ export const AlgorithmExplainer = ({ onClose }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="algorithm-modal" onClick={(e) => e.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>✕</button>
+        <button className="close-button" onClick={onClose}>Close</button>
 
-        <h2>🧠 How Our 4-Factor Model Works</h2>
+        <h2>How Our 4-Factor Model Works</h2>
 
         {/* Step-by-step explanation */}
         <div className="explainer-steps">
@@ -1125,7 +1094,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
         {/* Call to action */}
         <div className="explainer-cta">
           <p>
-            This isn't guesswork - it's data science. Every score you see is backed
+            This is not guesswork - it is data science. Every score you see is backed
             by real telemetry and validated against race results.
           </p>
         </div>
@@ -1139,7 +1108,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
   className="algorithm-explainer-btn"
   onClick={() => setShowExplainer(true)}
 >
-  🧠 How Does This Work?
+  How Does This Work?
 </button>
 ```
 
@@ -1148,7 +1117,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
 ```javascript
 // /frontend/src/pages/Overview/Overview.jsx - ADD TO PERFORMANCE TILES
 <div className="performance-tile algorithm-powered">
-  <div className="tile-icon">🤖</div>
+  <div className="tile-icon">AI</div>
   <div className="tile-label">Model Accuracy</div>
   <div className="tile-value">89.5%</div>
   <div className="tile-description">
@@ -1162,7 +1131,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
 - [ ] "How It Works" button on Skills page opens algorithm explainer modal
 - [ ] Overview page includes model accuracy stat card
 - [ ] All mentions of algorithm include R² and MAE values
-- [ ] Gamification features are visually prominent (levels, achievements)
+- [ ] Professional analytics features are visually prominent
 
 **Time Estimate:** 6 hours
 
@@ -1173,7 +1142,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
 ### Week at a Glance (40 working hours)
 
 **Monday (8 hours) - Critical Fixes**
-- [ ] **Decision:** Unused pages (wire up TrackIntelligence or remove StrategyChat/TelemetryComparison) - 2 hours
+- [ ] Decision: Unused pages (wire up TrackIntelligence or remove StrategyChat/TelemetryComparison) - 2 hours
 - [ ] Fix mobile rankings table (hide columns on mobile) - 2 hours
 - [ ] Add React error boundaries - 2 hours
 - [ ] Create color system file and audit Skills/Improve pages - 2 hours
@@ -1186,15 +1155,14 @@ export const AlgorithmExplainer = ({ onClose }) => {
 
 **Wednesday (8 hours) - Dynamic Logic**
 - [ ] Implement best-in-class driver messaging - 2 hours
-- [ ] Add letter grade system - 2 hours
+- [ ] Add performance tier system - 2 hours
 - [ ] Create contextual explanation tooltips - 2 hours
-- [ ] Build video game-style progress bars - 2 hours
+- [ ] Build professional progress bars - 2 hours
 
-**Thursday (8 hours) - Gamification**
-- [ ] Build driver level calculation system - 2 hours
-- [ ] Create LevelBadge component - 2 hours
-- [ ] Implement achievement system - 2 hours
-- [ ] Add AchievementsList component to Overview page - 2 hours
+**Thursday (8 hours) - Professional Performance Indicators**
+- [ ] Build benchmark comparison bars - 3 hours
+- [ ] Create development target cards - 4 hours
+- [ ] Add refined performance tier badges - 1 hour
 
 **Friday (8 hours) - Differentiators & Polish**
 - [ ] Add hero section to Rankings page - 2 hours
@@ -1211,7 +1179,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
 - [ ] Fix mobile rankings table column overflow
 - [ ] Integrate track selection in Improve page
 - [ ] Add dynamic logic for best-in-class drivers
-- [ ] Implement basic gamification (levels + achievements)
+- [ ] Implement professional performance indicators (benchmark bars, development targets)
 - [ ] Add hero section highlighting differentiators
 - [ ] Create algorithm explainer modal
 
@@ -1223,7 +1191,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
 - [ ] Create design system tokens in Tailwind config
 
 **Phase 3: Post-Launch (Priority 3)**
-- [ ] Advanced gamification (XP system with animations)
+- [ ] Historical performance tracking (trend charts)
 - [ ] Full telemetry comparison feature
 - [ ] AI strategy chat integration
 - [ ] Code splitting and lazy loading
@@ -1254,14 +1222,14 @@ export const AlgorithmExplainer = ({ onClose }) => {
 
 **Functionality Testing:**
 - [ ] Rankings table sorting (all columns)
-- [ ] Driver selection (click row → navigate to Overview)
-- [ ] Navigation tabs (Overview → Race Log → Skills → Improve)
+- [ ] Driver selection (click row to navigate to Overview)
+- [ ] Navigation tabs (Overview, Race Log, Skills, Improve)
 - [ ] Skills page factor cards (click to expand breakdown)
 - [ ] Track selection dropdown (Improve page)
 - [ ] Driver comparison (select driver to compare)
 - [ ] Similar drivers algorithm (Find Similar Drivers button)
-- [ ] Level badge display
-- [ ] Achievement unlock detection
+- [ ] Performance tier badge display
+- [ ] Benchmark comparison bars
 
 **Performance Testing:**
 - [ ] Initial page load < 2 seconds
@@ -1275,7 +1243,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
 - [ ] Screen reader compatibility (NVDA/VoiceOver)
 - [ ] Color contrast ratios (WCAG AA minimum 4.5:1)
 - [ ] Focus indicators visible
-- [ ] Alt text for all images/icons
+- [ ] Alt text for all images
 
 ---
 
@@ -1284,16 +1252,16 @@ export const AlgorithmExplainer = ({ onClose }) => {
 ### Definition of Done
 
 **Must Have (Blocking Launch):**
-- ✅ All 4 main pages functional (Rankings, Overview, Skills, Improve)
-- ✅ Track selection integrated in Improve page
-- ✅ Dynamic logic handles edge cases (best driver, no improvement)
-- ✅ Basic gamification (levels + achievements) visible
-- ✅ Differentiators highlighted (algorithm stats + video game UX)
-- ✅ Mobile responsive (no horizontal scroll issues)
-- ✅ No white-on-white text or contrast issues
-- ✅ Toyota Racing brand colors consistent throughout
-- ✅ All API endpoints return < 500ms
-- ✅ 100% backend tests passing
+- All 4 main pages functional (Rankings, Overview, Skills, Improve)
+- Track selection integrated in Improve page
+- Dynamic logic handles edge cases (best driver, no improvement)
+- Professional performance indicators visible (benchmark bars, development targets)
+- Differentiators highlighted (algorithm stats + professional analytics UX)
+- Mobile responsive (no horizontal scroll issues)
+- No white-on-white text or contrast issues
+- Toyota Racing brand colors consistent throughout
+- All API endpoints return < 500ms
+- 100% backend tests passing
 
 **Should Have (Launch if time permits):**
 - React error boundaries
@@ -1303,7 +1271,7 @@ export const AlgorithmExplainer = ({ onClose }) => {
 - Design system tokens in Tailwind config
 
 **Could Have (Post-launch):**
-- Advanced gamification (XP animations, challenge system)
+- Historical performance tracking
 - Full telemetry comparison feature
 - AI strategy chat
 - Performance optimization (code splitting)
@@ -1314,11 +1282,11 @@ export const AlgorithmExplainer = ({ onClose }) => {
 
 ### Week 2 Priorities (Post-Launch Enhancements)
 
-**1. Advanced Gamification (3 days)**
-- XP gain animations when driver improves
-- Weekly challenges ("Improve consistency by 5%")
-- Leaderboard for most improved drivers
-- Achievement notifications/toasts
+**1. Historical Performance Tracking (3 days)**
+- Session-by-session improvement graphs
+- 5-race moving averages
+- Trend analysis (improving/declining/stable)
+- Personal best lap time highlights
 
 **2. Full Telemetry Integration (2 days)**
 - Wire up TelemetryComparison page
@@ -1348,24 +1316,24 @@ export const AlgorithmExplainer = ({ onClose }) => {
 ### Identified Risks & Mitigation Strategies
 
 **Risk 1: Time Constraint (1 week is tight)**
-- **Mitigation:** Strict prioritization (must-have vs nice-to-have)
-- **Action:** Focus on Priority 1 items only, defer rest to post-launch
+- Mitigation: Strict prioritization (must-have vs nice-to-have)
+- Action: Focus on Priority 1 items only, defer rest to post-launch
 
 **Risk 2: Scope Creep During Implementation**
-- **Mitigation:** Lock requirements now, no new features this week
-- **Action:** Create "Future Enhancements" document for all new ideas
+- Mitigation: Lock requirements now, no new features this week
+- Action: Create "Future Enhancements" document for all new ideas
 
 **Risk 3: Breaking Changes in Existing Features**
-- **Mitigation:** Test thoroughly after each change
-- **Action:** Use git branches, test before merging to main
+- Mitigation: Test thoroughly after each change
+- Action: Use git branches, test before merging to main
 
 **Risk 4: Mobile Responsiveness Issues**
-- **Mitigation:** Test on real devices, not just browser DevTools
-- **Action:** Get team members to test on their phones
+- Mitigation: Test on real devices, not just browser DevTools
+- Action: Get team members to test on their phones
 
 **Risk 5: Performance Degradation with New Features**
-- **Mitigation:** Monitor bundle size and API response times
-- **Action:** Run Lighthouse audits before/after major changes
+- Mitigation: Monitor bundle size and API response times
+- Action: Run Lighthouse audits before/after major changes
 
 ---
 
@@ -1388,8 +1356,8 @@ export const AlgorithmExplainer = ({ onClose }) => {
 **Product Metrics:**
 - [ ] All 34 drivers have accurate scores
 - [ ] Track selection changes factor scores correctly
-- [ ] Level calculations are accurate for all drivers
-- [ ] Achievements unlock correctly based on driver stats
+- [ ] Performance tier calculations are accurate for all drivers
+- [ ] Benchmark comparisons show correct field averages
 
 ---
 
@@ -1397,22 +1365,26 @@ export const AlgorithmExplainer = ({ onClose }) => {
 
 Your Racing Driver Training Dashboard is **85% ready for launch**. The technical foundation is solid, the 4-factor model is validated, and the core features work well. This final week should focus on:
 
-1. **Polish the UX** (track selection, dynamic logic, gamification)
-2. **Highlight your differentiators** (algorithm + video game experience)
-3. **Fix mobile responsiveness** (rankings table, breakpoints)
-4. **Test thoroughly** (all devices, browsers, edge cases)
+1. Polish the UX (track selection, dynamic logic, professional performance indicators)
+2. Highlight your differentiators (algorithm + professional analytics experience)
+3. Fix mobile responsiveness (rankings table, breakpoints)
+4. Test thoroughly (all devices, browsers, edge cases)
 
-With focused execution on the Priority 1 tasks, you'll have a compelling product that drivers will love and that showcases your unique approach to driver development.
+With focused execution on the Priority 1 tasks, you will have a compelling product that drivers will use and that showcases your unique approach to driver development.
 
 **Next Steps:**
 1. Review this PRD with your team
 2. Assign tasks for Monday-Friday
-3. Set up daily stand-ups to track progress
-4. Launch on November 19th 🏁
+3. Set up daily check-ins to track progress
+4. Launch on November 19th
 
 ---
 
-**Document Version:** 1.0
+**Document Version:** 2.0
 **Last Updated:** November 12, 2025
 **Owner:** Development Team
 **Status:** Awaiting Team Review
+
+**Changelog:**
+- v2.0: Removed all decorative elements, updated with white-on-white fix, replaced gamification with professional performance indicators
+- v1.0: Initial PRD with comprehensive code review
