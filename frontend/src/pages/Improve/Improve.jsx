@@ -1,6 +1,6 @@
 /**
- * Improve Page - Achievements, Training Programs, and Performance Analysis
- * Design matches mockup with 3 main sections
+ * Improve Page - Skill Development and Performance Analysis
+ * Match skills with similar drivers and track performance improvement areas
  */
 
 import { useState, useEffect } from 'react';
@@ -10,49 +10,6 @@ import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import SkillSliders from './components/SkillSliders';
 import './Improve.css';
-
-// Mock achievements data (TODO: Move to backend)
-const ACHIEVEMENTS = [
-  { id: 'speed_demon', name: 'Speed Demon', description: 'Reach 80+ Speed', unlocked: false },
-  { id: 'corner_master', name: 'Corner Master', description: 'Reach 80+ Cornering', unlocked: false },
-  { id: 'consistent_driver', name: 'Consistent Driver', description: 'Reach 70+ Consistency', unlocked: false },
-  { id: 'rain_master', name: 'Rain Master', description: 'Reach 75+ Wet Weather', unlocked: false },
-  { id: 'elite_racer', name: 'Elite Racer', description: 'Overall Rating 85+', unlocked: false },
-  { id: 'all_rounder', name: 'All-Rounder', description: 'All skills above 70', unlocked: false }
-];
-
-// Mock training programs (TODO: Move to backend)
-const TRAINING_PROGRAMS = [
-  {
-    id: 'precision_driving',
-    name: 'Precision Driving',
-    duration: '2 weeks',
-    xp: 500,
-    skills: ['Cornering', 'Braking'],
-    recommended: true
-  },
-  {
-    id: 'race_strategy',
-    name: 'Race Strategy',
-    duration: '3 weeks',
-    xp: 750,
-    skills: ['Racecraft', 'Consistency']
-  },
-  {
-    id: 'wet_weather',
-    name: 'Wet Weather Specialist',
-    duration: '1 week',
-    xp: 400,
-    skills: ['Wet Weather']
-  },
-  {
-    id: 'speed_aggression',
-    name: 'Speed & Aggression',
-    duration: '2 weeks',
-    xp: 600,
-    skills: ['Top Speed', 'Overtaking']
-  }
-];
 
 export default function Improve() {
   const { selectedDriverNumber, drivers } = useDriver();
@@ -301,60 +258,6 @@ export default function Improve() {
             </div>
           </section>
         )}
-
-        {/* ACHIEVEMENTS SECTION */}
-        <section className="achievements-section">
-          <div className="section-header">
-            <h2>ACHIEVEMENTS</h2>
-            <div className="badge-count">
-              <span className="count-number">0</span>
-              <span className="count-label">BADGES</span>
-            </div>
-          </div>
-
-          <div className="achievements-grid">
-            {ACHIEVEMENTS.map(achievement => (
-              <div key={achievement.id} className={`achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}`}>
-                <div className="achievement-icon">
-                  {achievement.unlocked ? 'UNLOCKED' : 'LOCKED'}
-                </div>
-                <div className="achievement-name">{achievement.name}</div>
-                <div className="achievement-desc">{achievement.description}</div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* TRAINING PROGRAMS SECTION */}
-        <section className="training-section">
-          <div className="section-header">
-            <h2>TRAINING PROGRAMS</h2>
-            <p className="section-subtitle">Complete programs to earn XP and improve skills</p>
-          </div>
-
-          <div className="programs-list">
-            {TRAINING_PROGRAMS.map(program => (
-              <div key={program.id} className="program-card">
-                <div className="program-header">
-                  <h3>{program.name}</h3>
-                  {program.recommended && <span className="recommended-badge">RECOMMENDED</span>}
-                </div>
-                <div className="program-details">
-                  <span>{program.duration}</span>
-                  <span>+{program.xp} XP</span>
-                </div>
-                <div className="program-skills">
-                  {program.skills.map(skill => (
-                    <span key={skill} className="skill-tag">{skill}</span>
-                  ))}
-                </div>
-                <button className="program-button">
-                  {program.recommended ? 'Start Training' : 'View Program'}
-                </button>
-              </div>
-            ))}
-          </div>
-        </section>
 
         {/* PERFORMANCE ANALYSIS SECTION */}
         <section className="performance-section">
