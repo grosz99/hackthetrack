@@ -699,6 +699,190 @@ async def get_factor_stats(factor_name: str):
     }
 
 
+@router.get("/factors/{factor_name}/breakdown/{driver_number}")
+async def get_factor_breakdown(factor_name: str, driver_number: int):
+    """
+    Get detailed factor breakdown for a specific driver.
+
+    Returns underlying variables, weights, and values that compose the factor score.
+
+    Args:
+        factor_name: One of speed, consistency, racecraft, tire_management
+        driver_number: Driver number
+
+    Returns:
+        Factor breakdown with variables, explanation, and driver's values
+    """
+    import json
+    from pathlib import Path
+
+    # Validate factor name
+    valid_factors = ["speed", "consistency", "racecraft", "tire_management"]
+    if factor_name not in valid_factors:
+        raise ValidationError(
+            f"Invalid factor. Must be one of: {', '.join(valid_factors)}"
+        )
+
+    # Load factor breakdowns
+    breakdowns_path = Path(__file__).parent.parent.parent / "data" / "factor_breakdowns.json"
+
+    if not breakdowns_path.exists():
+        raise HTTPException(
+            status_code=503,
+            detail="Factor breakdowns not available. Run export_factor_breakdowns.py first."
+        )
+
+    with open(breakdowns_path, 'r') as f:
+        breakdowns_data = json.load(f)
+
+    # Get factor definition
+    factor_def = breakdowns_data["factor_definitions"].get(factor_name)
+    if not factor_def:
+        raise NotFoundError(f"Factor definition not found for {factor_name}")
+
+    # Get driver breakdown
+    driver_breakdown = breakdowns_data["driver_breakdowns"].get(str(driver_number))
+    if not driver_breakdown:
+        raise NotFoundError(f"Driver {driver_number} not found in breakdowns")
+
+    factor_variables = driver_breakdown.get(factor_name)
+    if not factor_variables:
+        raise NotFoundError(f"No {factor_name} data for driver {driver_number}")
+
+    # Format response to match frontend expectations
+    variables = []
+    for var_config in factor_def["variables"]:
+        var_name = var_config["name"]
+        var_data = factor_variables[var_name]
+
+        variables.append({
+            "name": var_name,
+            "display_name": var_data["display_name"],
+            "normalized_value": var_data["normalized_value"],
+            "percentile": var_data["percentile"],
+            "weight": var_data["weight"]
+        })
+
+    return {
+        "factor_name": factor_name,
+        "explanation": factor_def["explanation"],
+        "variables": variables
+    }
+
+
+@router.get("/factors/{factor_name}/comparison/{driver_number}")
+async def get_factor_comparison(factor_name: str, driver_number: int):
+    """
+    Compare driver's factor performance with top 3 drivers.
+
+    Shows how the driver stacks up against top performers in this factor,
+    with variable-level breakdown.
+
+    Args:
+        factor_name: One of speed, consistency, racecraft, tire_management
+        driver_number: Driver number
+
+    Returns:
+        Comparison data with user driver and top 3 drivers
+    """
+    import json
+    from pathlib import Path
+
+    # Validate factor name
+    valid_factors = ["speed", "consistency", "racecraft", "tire_management"]
+    if factor_name not in valid_factors:
+        raise ValidationError(
+            f"Invalid factor. Must be one of: {', '.join(valid_factors)}"
+        )
+
+    # Load factor breakdowns
+    breakdowns_path = Path(__file__).parent.parent.parent / "data" / "factor_breakdowns.json"
+
+    if not breakdowns_path.exists():
+        raise HTTPException(
+            status_code=503,
+            detail="Factor breakdowns not available"
+        )
+
+    with open(breakdowns_path, 'r') as f:
+        breakdowns_data = json.load(f)
+
+    # Get all drivers' factor scores for ranking
+    all_drivers = data_loader.get_all_drivers()
+    driver_scores = []
+
+    for driver in all_drivers:
+        factor_obj = getattr(driver, factor_name, None)
+        if factor_obj and hasattr(factor_obj, 'percentile'):
+            driver_scores.append({
+                'driver_number': driver.driver_number,
+                'driver_name': driver.driver_name,
+                'percentile': factor_obj.percentile,
+                'score': factor_obj.score
+            })
+
+    # Sort by percentile descending
+    driver_scores.sort(key=lambda x: x['percentile'], reverse=True)
+
+    # Get top 3 drivers
+    top_3_drivers = driver_scores[:3]
+
+    # Get user driver
+    user_driver = next((d for d in driver_scores if d['driver_number'] == driver_number), None)
+    if not user_driver:
+        raise NotFoundError(f"Driver {driver_number} not found")
+
+    # Build comparison response
+    def build_driver_comparison(driver_info):
+        """Helper to build driver comparison data."""
+        driver_breakdown = breakdowns_data["driver_breakdowns"].get(str(driver_info['driver_number']))
+        if not driver_breakdown:
+            return None
+
+        factor_variables = driver_breakdown.get(factor_name, {})
+
+        variables_dict = {}
+        for var_name, var_data in factor_variables.items():
+            variables_dict[var_name] = var_data["percentile"]
+
+        return {
+            "driver_number": driver_info['driver_number'],
+            "driver_name": driver_info['driver_name'],
+            "percentile": driver_info['percentile'],
+            "variables": variables_dict
+        }
+
+    user_comparison = build_driver_comparison(user_driver)
+    top_comparisons = [build_driver_comparison(d) for d in top_3_drivers]
+    top_comparisons = [c for c in top_comparisons if c is not None]
+
+    # Generate insights
+    insights = []
+    if user_driver['percentile'] >= 75:
+        insights.append(f"You're in the top 25% of drivers for {factor_name.replace('_', ' ')}!")
+    elif user_driver['percentile'] >= 50:
+        insights.append(f"You're above average in {factor_name.replace('_', ' ')}.")
+    else:
+        insights.append(f"{factor_name.replace('_', ' ').title()} is an area for improvement.")
+
+    # Find user's rank
+    user_rank = next((i + 1 for i, d in enumerate(driver_scores) if d['driver_number'] == driver_number), None)
+    if user_rank:
+        insights.append(f"You rank #{user_rank} out of {len(driver_scores)} drivers in {factor_name.replace('_', ' ')}.")
+
+    # Gap to leader
+    if top_3_drivers and user_driver['percentile'] < top_3_drivers[0]['percentile']:
+        gap = top_3_drivers[0]['percentile'] - user_driver['percentile']
+        insights.append(f"You're {gap:.1f} percentile points behind the leader in this factor.")
+
+    return {
+        "factor_name": factor_name,
+        "user_driver": user_comparison,
+        "top_drivers": top_comparisons,
+        "insights": insights
+    }
+
+
 # ============================================================================
 # IMPROVE (POTENTIAL) PAGE ENDPOINTS
 # ============================================================================

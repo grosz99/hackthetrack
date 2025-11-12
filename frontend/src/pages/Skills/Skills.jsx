@@ -116,18 +116,34 @@ export default function Skills() {
     console.log('[Skills] Factor clicked:', factorName);
     setSelectedFactor(factorName);
     setLoadingBreakdown(true);
+    setError(null);
 
     try {
-      // Factor breakdown endpoints have been removed (SQLite dependency eliminated)
-      // This feature is temporarily disabled until we implement a JSON-based solution
-      console.log('[Skills] Factor breakdown feature temporarily unavailable');
+      // Convert display name to API format (e.g., "Raw Speed" -> "speed")
+      const factorNameMap = {
+        'Consistency': 'consistency',
+        'Racecraft': 'racecraft',
+        'Raw Speed': 'speed',
+        'Tire Management': 'tire_management'
+      };
 
-      // Show user-friendly message
-      setFactorBreakdown(null);
-      setFactorComparison(null);
-      setError(`${factorName} breakdown feature is currently being updated. Check back soon!`);
+      const apiFactorName = factorNameMap[factorName] || factorName.toLowerCase().replace(' ', '_');
+
+      console.log('[Skills] Fetching breakdown for factor:', apiFactorName);
+
+      // Fetch breakdown and comparison data in parallel
+      const [breakdownResponse, comparisonResponse] = await Promise.all([
+        api.get(`/api/factors/${apiFactorName}/breakdown/${selectedDriverNumber}`),
+        api.get(`/api/factors/${apiFactorName}/comparison/${selectedDriverNumber}`)
+      ]);
+
+      console.log('[Skills] Breakdown data:', breakdownResponse.data);
+      console.log('[Skills] Comparison data:', comparisonResponse.data);
+
+      setFactorBreakdown(breakdownResponse.data);
+      setFactorComparison(comparisonResponse.data);
     } catch (err) {
-      console.error('[Skills] Error:', err);
+      console.error('[Skills] Error loading factor breakdown:', err);
       setFactorBreakdown(null);
       setFactorComparison(null);
       setError(`Failed to load ${factorName} breakdown. Please try again later.`);
