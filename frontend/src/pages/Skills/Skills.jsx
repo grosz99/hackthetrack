@@ -119,7 +119,7 @@ export default function Skills() {
   ];
 
   const handleFactorClick = async (factorName) => {
-    console.log('Factor clicked:', factorName);
+    console.log('[Skills] Factor clicked:', factorName);
     setSelectedFactor(factorName);
     setLoadingBreakdown(true);
 
@@ -133,25 +133,38 @@ export default function Skills() {
       };
 
       const apiFactorName = factorMap[factorName];
-      console.log('Fetching factor data for:', apiFactorName);
+      const breakdownUrl = `/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}`;
+      const comparisonUrl = `/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}/comparison`;
+
+      console.log('[Skills] Fetching factor data:', {
+        apiFactorName,
+        breakdownUrl,
+        comparisonUrl,
+        driverNumber: selectedDriverNumber
+      });
 
       // Fetch both breakdown and comparison data
       const [breakdownResponse, comparisonResponse] = await Promise.all([
-        api.get(`/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}`),
-        api.get(`/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}/comparison`)
+        api.get(breakdownUrl),
+        api.get(comparisonUrl)
       ]);
 
-      console.log('Factor breakdown received:', breakdownResponse.data);
-      console.log('Factor comparison received:', comparisonResponse.data);
+      console.log('[Skills] Factor breakdown received:', breakdownResponse.data);
+      console.log('[Skills] Factor comparison received:', comparisonResponse.data);
 
       setFactorBreakdown(breakdownResponse.data);
       setFactorComparison(comparisonResponse.data);
     } catch (err) {
-      console.error('Error fetching factor breakdown:', err);
-      console.error('Error details:', err.response?.data || err.message);
+      console.error('[Skills] Error fetching factor breakdown:', err);
+      console.error('[Skills] Error response:', err.response);
+      console.error('[Skills] Error status:', err.response?.status);
+      console.error('[Skills] Error data:', err.response?.data);
+      console.error('[Skills] Request URL:', err.config?.url);
+
       // Set error state to show user-friendly message
       setFactorBreakdown(null);
       setFactorComparison(null);
+      setError(`Failed to load ${factorName} breakdown. ${err.response?.status === 404 ? 'Endpoint not found.' : 'Please try again.'}`);
     } finally {
       setLoadingBreakdown(false);
     }
