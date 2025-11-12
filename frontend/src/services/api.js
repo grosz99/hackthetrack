@@ -136,25 +136,68 @@ export async function checkHealth() {
 
 /**
  * Default export - Axios-like interface for backward compatibility
+ * Mimics Axios error structure for consistent error handling
  */
 const api = {
   get: async (url) => {
-    const response = await fetch(`${API_BASE_URL}${url}`);
-    if (!response.ok) throw new Error(`Failed to fetch ${url}`);
-    const data = await response.json();
-    return { data };
+    try {
+      const response = await fetch(`${API_BASE_URL}${url}`);
+      if (!response.ok) {
+        // Create axios-like error with response details
+        const error = new Error(`Failed to fetch ${url}`);
+        error.response = {
+          status: response.status,
+          statusText: response.statusText,
+          data: await response.json().catch(() => null)
+        };
+        error.config = { url: `${API_BASE_URL}${url}` };
+        throw error;
+      }
+      const data = await response.json();
+      return { data };
+    } catch (err) {
+      // If error already has response (from above), re-throw
+      if (err.response) throw err;
+
+      // Otherwise, wrap network/parse errors
+      const error = new Error(err.message);
+      error.response = { status: 0, statusText: 'Network Error', data: null };
+      error.config = { url: `${API_BASE_URL}${url}` };
+      throw error;
+    }
   },
   post: async (url, body) => {
-    const response = await fetch(`${API_BASE_URL}${url}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-    if (!response.ok) throw new Error(`Failed to post to ${url}`);
-    const data = await response.json();
-    return { data };
+    try {
+      const response = await fetch(`${API_BASE_URL}${url}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      });
+      if (!response.ok) {
+        // Create axios-like error with response details
+        const error = new Error(`Failed to post to ${url}`);
+        error.response = {
+          status: response.status,
+          statusText: response.statusText,
+          data: await response.json().catch(() => null)
+        };
+        error.config = { url: `${API_BASE_URL}${url}`, method: 'POST' };
+        throw error;
+      }
+      const data = await response.json();
+      return { data };
+    } catch (err) {
+      // If error already has response (from above), re-throw
+      if (err.response) throw err;
+
+      // Otherwise, wrap network/parse errors
+      const error = new Error(err.message);
+      error.response = { status: 0, statusText: 'Network Error', data: null };
+      error.config = { url: `${API_BASE_URL}${url}`, method: 'POST' };
+      throw error;
+    }
   },
 };
 
