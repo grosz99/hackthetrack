@@ -69,3 +69,7 @@ tmp/
 temp/
 *.tmp
 .vercel
+
+# Telemetry data - too large for Git (3.2GB)
+# Stored externally - see DATA_MANAGEMENT.md
+data/telemetry/
