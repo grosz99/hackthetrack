@@ -36,6 +36,19 @@ export default function DashboardHeader({ driverData, pageName }) {
     }
   }, [routeDriverNumber, selectedDriverNumber, setSelectedDriverNumber]);
 
+  // Handle driver change - update context AND navigate
+  const handleDriverChange = (newDriverNumber) => {
+    setSelectedDriverNumber(newDriverNumber);
+
+    // Determine current page from pathname
+    const currentPage = location.pathname.split('/').pop();
+    const validPages = ['overview', 'race-log', 'skills', 'improve'];
+    const page = validPages.includes(currentPage) ? currentPage : 'overview';
+
+    // Navigate to same page with new driver
+    navigate(`/driver/${newDriverNumber}/${page}`);
+  };
+
   return (
     <>
       {/* Breadcrumb Navigation */}
@@ -98,7 +111,7 @@ export default function DashboardHeader({ driverData, pageName }) {
             <span className="selector-label">Select Driver</span>
             <select
               value={selectedDriverNumber}
-              onChange={(e) => setSelectedDriverNumber(Number(e.target.value))}
+              onChange={(e) => handleDriverChange(Number(e.target.value))}
               className="driver-selector"
             >
               {drivers.map((driver) => (

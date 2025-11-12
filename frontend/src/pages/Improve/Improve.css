@@ -1,12 +1,20 @@
 /* Improve Page - Design System Match */
 
 .improve-page {
-  padding: 32px 40px;
+  padding: 24px 32px;
   background: #0a0a0a;
   min-height: 100vh;
   width: 100%;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
+}
+
+/* Container constraint for content */
+.improve-page > * {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Main Grid Layout - 2 columns */
@@ -15,6 +23,295 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   padding: 0;
+  align-items: stretch;
+}
+
+/* Make sections same height */
+.improve-grid > section {
+  min-height: 800px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Skill Sliders Section - Left column */
+.skill-sliders-section {
+  grid-column: 1;
+}
+
+/* Similar Drivers Loading - Right column */
+.similar-drivers-loading {
+  grid-column: 2;
+  background: #ffffff;
+  border: 4px solid #3498db;
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.similar-drivers-loading .loading-text {
+  font-size: 24px;
+  font-weight: 900;
+  color: #3498db;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Similar Drivers Section - Right column */
+.similar-drivers-section {
+  grid-column: 2;
+  background: #ffffff;
+  border: 4px solid #27ae60;
+  border-radius: 16px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Improvement Prediction Banner */
+.improvement-prediction {
+  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+  border: 4px solid #27ae60;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.improvement-prediction h4 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1b5e20;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.improvement-stats {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat-box {
+  flex: 1;
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 900;
+  font-family: var(--font-mono);
+}
+
+.stat-value.current {
+  color: #e74c3c;
+}
+
+.stat-value.predicted {
+  color: #27ae60;
+}
+
+.stat-arrow {
+  font-size: 24px;
+  color: #27ae60;
+}
+
+.improvement-delta {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 12px;
+  background: #27ae60;
+  color: white;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.similar-drivers-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 4px solid #27ae60;
+}
+
+.similar-drivers-header h3 {
+  font-size: 24px;
+  font-weight: 900;
+  color: #27ae60;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.similar-drivers-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Similar Drivers Grid - 3 cards stacked vertically */
+.similar-drivers-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  overflow-y: auto;
+  flex: 1;
+  max-height: calc(100% - 300px);
+}
+
+.similar-drivers-grid::-webkit-scrollbar {
+  width: 8px;
+}
+
+.similar-drivers-grid::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.similar-drivers-grid::-webkit-scrollbar-thumb {
+  background: #27ae60;
+  border-radius: 4px;
+}
+
+.similar-drivers-grid::-webkit-scrollbar-thumb:hover {
+  background: #229954;
+}
+
+.similar-driver-card {
+  background: #f8f9fa;
+  border: 3px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.similar-driver-card:hover {
+  border-color: #27ae60;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+}
+
+.rank-badge {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #27ae60;
+  color: white;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.similar-driver-card .match-score {
+  font-size: 28px;
+  font-weight: 900;
+  color: #27ae60;
+  font-family: var(--font-mono);
+  margin-bottom: 16px;
+}
+
+.similar-driver-card .driver-info {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.similar-driver-card .driver-info h4 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #000;
+  margin: 0 0 4px 0;
+}
+
+.similar-driver-card .driver-info p {
+  font-size: 14px;
+  font-weight: 700;
+  color: #666;
+  margin: 0;
+}
+
+.avg-finish {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
+  border: 3px solid #ffc107;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.avg-finish .label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f57f17;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.avg-finish .value {
+  font-size: 24px;
+  font-weight: 900;
+  color: #f57f17;
+  font-family: var(--font-mono);
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.skill-item {
+  background: #ffffff;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.skill-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.skill-value {
+  font-size: 18px;
+  font-weight: 900;
+  color: #27ae60;
 }
 
 /* Achievements Section - Spans full width */
@@ -265,14 +562,6 @@
   border-radius: 12px;
   padding: 20px;
   margin-bottom: 24px;
-  display: flex;
-  gap: 16px;
-  align-items: start;
-}
-
-.note-icon {
-  font-size: 32px;
-  flex-shrink: 0;
 }
 
 .note-content h3 {
@@ -400,9 +689,37 @@
 }
 
 /* Responsive Design */
+
+/* Desktop optimization for larger screens */
+@media (min-width: 1400px) {
+  .improve-page {
+    padding: 32px 48px;
+  }
+
+  .improve-grid {
+    gap: 32px;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  .season-performance-card,
+  .similar-drivers-section,
+  .achievements-section,
+  .training-section,
+  .performance-section {
+    padding: 40px;
+  }
+}
+
 @media (max-width: 1200px) {
   .improve-grid {
     grid-template-columns: 1fr;
+  }
+
+  .skill-sliders-section,
+  .similar-drivers-section,
+  .similar-drivers-loading {
+    grid-column: 1;
   }
 
   .achievements-section {

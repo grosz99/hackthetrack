@@ -120,12 +120,45 @@
 }
 
 /* Factor Cards Grid - 2x2 on right */
+/* Factor Cards Container */
+.factor-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+/* Instructions for clicking tiles */
+.factor-cards-instructions {
+  background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
+  border: 3px solid #ffc107;
+  border-radius: 12px;
+  padding: 20px 24px;
+  text-align: center;
+}
+
+.instructions-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #f57f17;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.instructions-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2d5016;
+  margin: 0;
+}
+
 .factor-cards-grid-new {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   gap: 20px;
-  height: 100%;
+  flex: 1;
 }
 
 .factor-card-large {
