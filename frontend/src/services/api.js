@@ -3,12 +3,19 @@
  */
 
 // Determine API base URL based on environment
-// Always use VITE_API_URL environment variable
-// Production: Points to Railway backend (set in Vercel dashboard)
+// Production: Points to Heroku backend
 // Development: Points to localhost backend
 const getApiBaseUrl = () => {
-  // Always use environment variable, fallback to localhost for development
-  return import.meta.env.VITE_API_URL || 'http://localhost:8000';
+  // Use environment variable if set, otherwise use production Heroku URL
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+
+  // Default to Heroku production backend
+  // (in development, set VITE_API_URL=http://localhost:8000 in .env.local)
+  return window.location.hostname === 'localhost'
+    ? 'http://localhost:8000'
+    : 'https://hackthetrack-api-ae28ad6f804d.herokuapp.com';
 };
 
 const API_BASE_URL = getApiBaseUrl();
