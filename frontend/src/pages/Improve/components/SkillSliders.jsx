@@ -3,7 +3,7 @@
  * Interactive sliders to set target skill levels with 1% increments
  */
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './SkillSliders.css';
 
@@ -15,15 +15,20 @@ const SKILLS = [
 ];
 
 export default function SkillSliders({ currentSkills, onTargetChange, onFindSimilar }) {
-  // Debug: Log current skills to see what we're getting
-  console.log('SkillSliders received currentSkills:', currentSkills);
-
-  const [targetSkills, setTargetSkills] = useState({
-    speed: Math.round(currentSkills.speed || 0),
-    consistency: Math.round(currentSkills.consistency || 0),
-    racecraft: Math.round(currentSkills.racecraft || 0),
-    tire_management: Math.round(currentSkills.tire_management || 0)
+  // Initialize target skills to current skills (clamped to valid range)
+  const getInitialTargets = () => ({
+    speed: Math.min(100, Math.max(0, Math.round(currentSkills.speed || 0))),
+    consistency: Math.min(100, Math.max(0, Math.round(currentSkills.consistency || 0))),
+    racecraft: Math.min(100, Math.max(0, Math.round(currentSkills.racecraft || 0))),
+    tire_management: Math.min(100, Math.max(0, Math.round(currentSkills.tire_management || 0)))
   });
+
+  const [targetSkills, setTargetSkills] = useState(getInitialTargets());
+
+  // Reset target skills when current skills change (e.g., driver changes)
+  useEffect(() => {
+    setTargetSkills(getInitialTargets());
+  }, [currentSkills.speed, currentSkills.consistency, currentSkills.racecraft, currentSkills.tire_management]);
 
   // Calculate total increase across all skills
   const getTotalIncrease = (skills = targetSkills) => {
@@ -39,10 +44,17 @@ export default function SkillSliders({ currentSkills, onTargetChange, onFindSimi
   const handleSliderChange = (skill, value) => {
     const newValue = Math.min(100, Math.max(0, parseInt(value, 10)));
     const current = Math.round(currentSkills[skill] || 0);
-    const proposedIncrease = Math.max(0, newValue - current);
+
+    // Can't go below current value
+    if (newValue < current) {
+      return;
+    }
+
+    const proposedIncrease = newValue - current;
 
     // Calculate what the total would be with this change
-    const otherSkillsIncrease = getTotalIncrease() - getGap(skill);
+    const currentGap = getGap(skill);
+    const otherSkillsIncrease = getTotalIncrease() - currentGap;
     const newTotal = otherSkillsIncrease + proposedIncrease;
 
     // Only allow if within budget
@@ -50,6 +62,15 @@ export default function SkillSliders({ currentSkills, onTargetChange, onFindSimi
       const updated = { ...targetSkills, [skill]: newValue };
       setTargetSkills(updated);
       onTargetChange(updated);
+    } else {
+      // Clamp to maximum allowed value
+      const availableBudget = MAX_TOTAL_INCREASE - otherSkillsIncrease;
+      const maxAllowedValue = current + availableBudget;
+      if (maxAllowedValue > current) {
+        const updated = { ...targetSkills, [skill]: maxAllowedValue };
+        setTargetSkills(updated);
+        onTargetChange(updated);
+      }
     }
   };
 
