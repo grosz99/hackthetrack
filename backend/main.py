@@ -2,15 +2,25 @@
 Main FastAPI application for Racing Analytics platform.
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 import os
+import logging
 
 from app.api.routes import router
+from app.utils.errors import AppError
 
 # Load environment variables
 load_dotenv()
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # Create FastAPI app
 app = FastAPI(
@@ -55,6 +65,27 @@ app.add_middleware(
 
 # Include API routes with /api prefix
 app.include_router(router, prefix="/api")
+
+
+# Error handlers
+@app.exception_handler(AppError)
+async def app_error_handler(request: Request, exc: AppError):
+    """Handle custom application errors."""
+    logger.error(f"{exc.status_code}: {exc.message} [{request.url.path}]")
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"error": exc.message, "path": str(request.url.path)}
+    )
+
+
+@app.exception_handler(Exception)
+async def general_error_handler(request: Request, exc: Exception):
+    """Handle unexpected errors without exposing internal details."""
+    logger.exception(f"Unhandled error: {exc}")
+    return JSONResponse(
+        status_code=500,
+        content={"error": "Internal server error", "path": str(request.url.path)}
+    )
 
 
 @app.get("/")
