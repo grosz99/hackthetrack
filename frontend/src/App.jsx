@@ -16,7 +16,7 @@ function App() {
     <Router>
       <DriverProvider>
         <ScoutProvider>
-          <div className="app min-h-screen bg-bg-primary">
+          <div className="app min-h-screen bg-[#0a0a0a]">
             <main>
               <Routes>
                 {/* Rankings - Main landing page */}
