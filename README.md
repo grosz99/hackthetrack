@@ -253,45 +253,62 @@ npm test
 
 ## 📦 Deployment
 
-### Backend (Railway/Fly.io/Heroku)
+### Current Production URLs
+- **Frontend**: Auto-deployed to Vercel (https://circuit-fbtth1gml-justin-groszs-projects.vercel.app)
+- **Backend API**: Heroku (https://hackthetrack-api-ae28ad6f804d.herokuapp.com)
 
-1. **Set environment variables** in your hosting platform:
-   - `ANTHROPIC_API_KEY`
-   - `PORT` (usually auto-set by platform)
+### Data Architecture
+**Single Source of Truth**: JSON files in `backend/data/`
+- `dashboardData.json` - Driver/track overview
+- `driver_factors.json` - Factor scores for all 34 drivers
+- `driver_season_stats.json` - Season statistics
+- `driver_race_results.json` - Race-by-race results
 
-2. **Deploy**:
+All data is loaded into memory on startup. **No database queries** - responses are instant!
+
+### Backend Deployment (Heroku)
+
+1. **Set environment variables** on Heroku:
    ```bash
-   # Railway
-   railway up
-
-   # Fly.io
-   fly deploy
-
-   # Heroku
-   git push heroku main
+   heroku config:set ANTHROPIC_API_KEY=your_key -a hackthetrack-api
+   heroku config:set CORS_ALLOW_ALL=true -a hackthetrack-api
    ```
 
-### Frontend (Vercel/Netlify)
+2. **Deploy using git subtree** (backend is in subdirectory):
+   ```bash
+   git subtree push --prefix backend heroku master
 
-1. **Build the frontend**:
+   # Or force push if needed:
+   git push heroku `git subtree split --prefix backend master`:master --force
+   ```
+
+3. **Verify deployment**:
+   ```bash
+   heroku logs --tail -a hackthetrack-api
+   curl https://hackthetrack-api-ae28ad6f804d.herokuapp.com/api/health
+   ```
+
+### Frontend Deployment (Vercel)
+
+**Automatic deployment** on push to master branch. No manual steps needed!
+
+1. **Environment variable** (set in Vercel dashboard):
+   - `VITE_API_URL=https://hackthetrack-api-ae28ad6f804d.herokuapp.com/api`
+
+2. **Manual deployment** (if needed):
    ```bash
    cd frontend
    npm run build
-   ```
-
-2. **Deploy to Vercel**:
-   ```bash
    vercel deploy
    ```
 
-   Set environment variable:
-   - `VITE_API_URL` = your deployed backend URL
+### Data Updates
 
-3. **Or deploy to Netlify**:
-   - Connect your GitHub repo
-   - Set build command: `npm run build`
-   - Set publish directory: `dist`
-   - Add environment variable: `VITE_API_URL`
+To update driver/track data:
+1. Edit JSON files in `backend/data/`
+2. Commit and push to GitHub
+3. Deploy to Heroku (restarts and loads new data automatically)
+4. No frontend changes needed - data flows through API
 
 ---
 
@@ -301,13 +318,39 @@ npm test
 - **FastAPI**: Modern Python API framework
 - **Anthropic SDK**: Claude 3.5 Sonnet integration
 - **Pandas**: Data manipulation and analysis
-- **Pydantic**: Data validation and settings
+- **Pydantic v2**: Data validation and settings
+- **Custom error handling**: Structured logging with sanitized responses
 
 ### Frontend
 - **React 19**: UI framework
 - **React Router v7**: Client-side routing
 - **Recharts**: Data visualization
 - **Vite**: Build tool and dev server
+
+### API Endpoints
+
+#### Efficient Endpoints (Recommended for Skills Page)
+```
+GET /api/factors/{factor}/stats
+```
+Returns aggregated factor statistics (200 bytes):
+- `top_3_average`: Average of top 3 drivers
+- `league_average`: Average across all drivers
+- `min`, `max`, `count`: Basic statistics
+
+**Use this instead of loading all drivers** for statistics!
+
+#### Standard Endpoints
+```
+GET /api/health                # Health check + data counts
+GET /api/drivers               # All drivers (40KB)
+GET /api/drivers/{number}      # Single driver (2KB)
+GET /api/tracks                # All tracks
+GET /api/drivers/{num}/season  # Season stats
+GET /api/drivers/{num}/results # Race results
+GET /api/predict               # Circuit fit prediction
+GET /api/chat                  # AI strategy chat
+```
 
 ---
 
