@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import { useDriver } from '../../context/DriverContext';
 import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
@@ -11,6 +12,7 @@ import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import './RaceLog.css';
 
 export default function RaceLog() {
+  const navigate = useNavigate();
   const { selectedDriverNumber, drivers } = useDriver();
   const [raceResults, setRaceResults] = useState([]);
   const [driverData, setDriverData] = useState(null);
@@ -161,6 +163,20 @@ export default function RaceLog() {
             </div>
             <div className="average-label">Avg Position Gain</div>
           </div>
+        </div>
+      </div>
+
+      {/* Navigation to Skills */}
+      <div className="skills-navigation-cta">
+        <div className="cta-content">
+          <h4>Want to understand what's driving these results?</h4>
+          <p>View detailed skill breakdowns and performance factors</p>
+          <button
+            className="nav-to-skills-btn"
+            onClick={() => navigate(`/driver/${selectedDriverNumber}/skills`)}
+          >
+            View Skills Breakdown
+          </button>
         </div>
       </div>
 

@@ -1,0 +1,329 @@
+/**
+ * SkillSliders Component Styles
+ * Using CSS variables for consistency
+ */
+
+.skill-sliders {
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-8);
+  border: 4px solid var(--color-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.sliders-header {
+  margin-bottom: var(--spacing-6);
+  text-align: center;
+}
+
+.sliders-header h3 {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-black);
+  color: var(--color-black);
+  margin: 0 0 var(--spacing-2) 0;
+}
+
+.sliders-subtitle {
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
+  margin: 0 0 var(--spacing-3) 0;
+}
+
+/* Budget Indicator */
+.budget-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  background: var(--color-gray-100);
+  border-radius: var(--radius-lg);
+  margin-top: var(--spacing-3);
+}
+
+.budget-label {
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--color-gray-700);
+}
+
+.budget-value {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-black);
+  font-family: var(--font-mono);
+  color: var(--color-success);
+  transition: all var(--transition-base);
+}
+
+.budget-value.budget-depleted {
+  color: var(--color-primary);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Sliders Container */
+.sliders-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+/* Skill Row */
+.skill-slider-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+  padding: var(--spacing-4);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-base);
+}
+
+.skill-slider-row:hover {
+  background: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+
+/* Skill Header */
+.skill-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-3);
+}
+
+.skill-icon {
+  font-size: var(--text-2xl);
+}
+
+.skill-label {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-black);
+  flex: 1;
+}
+
+.skill-values {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  font-family: var(--font-mono);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+}
+
+.current-value {
+  color: var(--color-gray-600);
+}
+
+.arrow {
+  color: var(--color-gray-400);
+  font-size: var(--text-base);
+}
+
+.target-value {
+  color: var(--color-black);
+  transition: all var(--transition-base);
+}
+
+.target-value.has-change {
+  color: var(--color-primary);
+}
+
+.gap-indicator {
+  font-size: var(--text-sm);
+  color: var(--color-success);
+  background: var(--color-success-dark);
+  color: var(--color-white);
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--radius-sm);
+}
+
+/* Slider Controls */
+.slider-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-4);
+}
+
+.slider-track-container {
+  flex: 1;
+  position: relative;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.slider-track {
+  position: absolute;
+  width: 100%;
+  height: 12px;
+  background: var(--color-gray-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.slider-fill {
+  position: absolute;
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-light));
+  transition: width var(--transition-base);
+}
+
+.current-marker {
+  position: absolute;
+  width: 4px;
+  height: 24px;
+  background: var(--color-gray-700);
+  border-radius: var(--radius-sm);
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+}
+
+.slider-input {
+  position: absolute;
+  width: 100%;
+  height: 40px;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}
+
+.slider-input::-webkit-slider-thumb {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.slider-input::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* Increment Buttons */
+.increment-buttons {
+  display: flex;
+  gap: var(--spacing-2);
+}
+
+.increment-btn {
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  font-family: var(--font-mono);
+  background: var(--color-white);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+  min-width: 50px;
+}
+
+.increment-btn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: var(--color-white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-primary);
+}
+
+.increment-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.increment-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Footer */
+.sliders-footer {
+  text-align: center;
+  padding-top: var(--spacing-6);
+  border-top: 2px solid var(--color-gray-200);
+}
+
+.find-similar-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-4) var(--spacing-8);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  box-shadow: var(--shadow-primary);
+}
+
+.find-similar-btn:hover:not(:disabled) {
+  background: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-primary-hover);
+}
+
+.find-similar-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.find-similar-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-icon {
+  font-size: var(--text-xl);
+}
+
+.helper-text {
+  margin-top: var(--spacing-3);
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .skill-sliders {
+    padding: var(--spacing-6);
+  }
+
+  .skill-header {
+    flex-wrap: wrap;
+  }
+
+  .skill-values {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .slider-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-3);
+  }
+
+  .increment-buttons {
+    justify-content: center;
+  }
+
+  .find-similar-btn {
+    width: 100%;
+  }
+}

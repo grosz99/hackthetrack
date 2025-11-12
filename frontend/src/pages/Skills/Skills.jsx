@@ -30,6 +30,11 @@ export default function Skills() {
         setLoading(true);
         setError(null);
 
+        // Clear factor selection when driver changes
+        setSelectedFactor(null);
+        setFactorBreakdown(null);
+        setFactorComparison(null);
+
         // Fetch current driver data and all drivers to find top 3
         const [driverResponse, allDriversResponse] = await Promise.all([
           api.get(`/api/drivers/${selectedDriverNumber}`),
@@ -202,7 +207,14 @@ export default function Skills() {
         </div>
 
         {/* Factor Cards Grid - 2x2 on right side */}
-        <div className="factor-cards-grid-new">
+        <div className="factor-cards-container">
+          <div className="factor-cards-instructions">
+            <h3 className="instructions-title">Skill Factor Breakdown</h3>
+            <p className="instructions-text">
+              Click any skill tile below to see detailed breakdowns and comparisons with top drivers
+            </p>
+          </div>
+          <div className="factor-cards-grid-new">
           {/* Consistency Card */}
           <div
             className={`factor-card-large ${selectedFactor === 'Consistency' ? 'selected' : ''}`}
@@ -293,6 +305,7 @@ export default function Skills() {
             <div className="factor-description">
               Ability to preserve tires and maintain pace over long stints
             </div>
+          </div>
           </div>
         </div>
       </div>

@@ -12,9 +12,18 @@ export const useDriver = () => {
 };
 
 export const DriverProvider = ({ children }) => {
-  const [selectedDriverNumber, setSelectedDriverNumber] = useState(13);
+  // Get initial driver from localStorage or default to 13
+  const [selectedDriverNumber, setSelectedDriverNumber] = useState(() => {
+    const saved = localStorage.getItem('selectedDriverNumber');
+    return saved ? parseInt(saved, 10) : 13;
+  });
   const [drivers, setDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Save to localStorage whenever selectedDriverNumber changes
+  useEffect(() => {
+    localStorage.setItem('selectedDriverNumber', selectedDriverNumber.toString());
+  }, [selectedDriverNumber]);
 
   // Load all drivers on mount
   useEffect(() => {
