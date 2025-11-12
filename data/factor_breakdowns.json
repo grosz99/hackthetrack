@@ -1,0 +1,2877 @@
+{
+  "version": "1.0",
+  "description": "Factor breakdowns with underlying variables for each driver",
+  "driver_count": 34,
+  "factor_definitions": {
+    "speed": {
+      "explanation": "Raw Speed measures your ability to extract maximum pace from the car in qualifying and race conditions. It combines straight-line speed, cornering velocity, and optimal racing line execution.",
+      "variables": [
+        {
+          "name": "sector_1_speed",
+          "display_name": "Sector 1 Speed",
+          "weight": 0.35
+        },
+        {
+          "name": "sector_2_speed",
+          "display_name": "Sector 2 Speed",
+          "weight": 0.35
+        },
+        {
+          "name": "sector_3_speed",
+          "display_name": "Sector 3 Speed",
+          "weight": 0.3
+        }
+      ]
+    },
+    "consistency": {
+      "explanation": "Consistency measures lap-to-lap predictability and ability to maintain pace throughout a stint. Consistent drivers minimize variation, maximize tire life, and build confidence in race strategy.",
+      "variables": [
+        {
+          "name": "lap_time_variance",
+          "display_name": "Lap Time Stability",
+          "weight": 0.4
+        },
+        {
+          "name": "sector_variance",
+          "display_name": "Sector Consistency",
+          "weight": 0.35
+        },
+        {
+          "name": "stint_degradation",
+          "display_name": "Pace Maintenance",
+          "weight": 0.25
+        }
+      ]
+    },
+    "racecraft": {
+      "explanation": "Racecraft measures overtaking ability, defensive driving, and performance in traffic. Strong racecraft enables position gains, successful battles, and maintaining position under pressure.",
+      "variables": [
+        {
+          "name": "overtakes_completed",
+          "display_name": "Overtaking Success",
+          "weight": 0.4
+        },
+        {
+          "name": "position_defense",
+          "display_name": "Defensive Ability",
+          "weight": 0.35
+        },
+        {
+          "name": "traffic_navigation",
+          "display_name": "Traffic Management",
+          "weight": 0.25
+        }
+      ]
+    },
+    "tire_management": {
+      "explanation": "Tire Management measures ability to preserve tire life while maintaining competitive pace. Good tire management enables longer stints, flexible strategy, and strong late-race pace.",
+      "variables": [
+        {
+          "name": "deg_rate",
+          "display_name": "Degradation Control",
+          "weight": 0.45
+        },
+        {
+          "name": "stint_consistency",
+          "display_name": "Stint Stability",
+          "weight": 0.3
+        },
+        {
+          "name": "late_pace",
+          "display_name": "Late Stint Pace",
+          "weight": 0.25
+        }
+      ]
+    }
+  },
+  "driver_breakdowns": {
+    "2": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 88.58,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 85.29
+        },
+        "sector_2_speed": {
+          "normalized_value": 70.15,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 70.59
+        },
+        "sector_3_speed": {
+          "normalized_value": 77.37,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 79.41
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 58.62,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 64.71
+        },
+        "sector_variance": {
+          "normalized_value": 74.03,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 94.12
+        },
+        "stint_degradation": {
+          "normalized_value": 72.29,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 91.18
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 57.91,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 70.59
+        },
+        "position_defense": {
+          "normalized_value": 33.73,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 14.71
+        },
+        "traffic_navigation": {
+          "normalized_value": 43.76,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 47.06
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 54.89,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 55.88
+        },
+        "stint_consistency": {
+          "normalized_value": 59.23,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 88.24
+        },
+        "late_pace": {
+          "normalized_value": 67.39,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 82.35
+        }
+      }
+    },
+    "3": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 30.28,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 26.47
+        },
+        "sector_2_speed": {
+          "normalized_value": 35.45,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 32.35
+        },
+        "sector_3_speed": {
+          "normalized_value": 48.64,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 47.06
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 63.22,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 73.53
+        },
+        "sector_variance": {
+          "normalized_value": 53.39,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 58.82
+        },
+        "stint_degradation": {
+          "normalized_value": 64.29,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 82.35
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 75.4,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 91.18
+        },
+        "position_defense": {
+          "normalized_value": 51.35,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 55.88
+        },
+        "traffic_navigation": {
+          "normalized_value": 75.41,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 91.18
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 45.93,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 38.24
+        },
+        "stint_consistency": {
+          "normalized_value": 34.99,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 23.53
+        },
+        "late_pace": {
+          "normalized_value": 29.38,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 14.71
+        }
+      }
+    },
+    "5": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 49.01,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 44.12
+        },
+        "sector_2_speed": {
+          "normalized_value": 30.39,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 26.47
+        },
+        "sector_3_speed": {
+          "normalized_value": 23.04,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 26.47
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 28.2,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 14.71
+        },
+        "sector_variance": {
+          "normalized_value": 50.7,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 50.0
+        },
+        "stint_degradation": {
+          "normalized_value": 43.34,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 41.18
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 56.0,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 67.65
+        },
+        "position_defense": {
+          "normalized_value": 54.0,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 61.76
+        },
+        "traffic_navigation": {
+          "normalized_value": 48.84,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 50.0
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 75.93,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 97.06
+        },
+        "stint_consistency": {
+          "normalized_value": 58.95,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 82.35
+        },
+        "late_pace": {
+          "normalized_value": 64.44,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 76.47
+        }
+      }
+    },
+    "7": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 96.6,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 97.06
+        },
+        "sector_2_speed": {
+          "normalized_value": 90.28,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 94.12
+        },
+        "sector_3_speed": {
+          "normalized_value": 97.64,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 94.12
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 68.9,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 79.41
+        },
+        "sector_variance": {
+          "normalized_value": 72.71,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 85.29
+        },
+        "stint_degradation": {
+          "normalized_value": 52.9,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 55.88
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 59.11,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 73.53
+        },
+        "position_defense": {
+          "normalized_value": 60.52,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 76.47
+        },
+        "traffic_navigation": {
+          "normalized_value": 53.37,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 55.88
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 55.1,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 58.82
+        },
+        "stint_consistency": {
+          "normalized_value": 49.82,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 55.88
+        },
+        "late_pace": {
+          "normalized_value": 54.69,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 61.76
+        }
+      }
+    },
+    "8": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 15.88,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 14.71
+        },
+        "sector_2_speed": {
+          "normalized_value": 7.75,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 8.82
+        },
+        "sector_3_speed": {
+          "normalized_value": 7.86,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 2.94
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 33.8,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 23.53
+        },
+        "sector_variance": {
+          "normalized_value": 35.39,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 17.65
+        },
+        "stint_degradation": {
+          "normalized_value": 55.21,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 64.71
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 49.0,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 50.0
+        },
+        "position_defense": {
+          "normalized_value": 47.85,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 44.12
+        },
+        "traffic_navigation": {
+          "normalized_value": 34.76,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 23.53
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 34.49,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 17.65
+        },
+        "stint_consistency": {
+          "normalized_value": 17.39,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 2.94
+        },
+        "late_pace": {
+          "normalized_value": 23.83,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 8.82
+        }
+      }
+    },
+    "11": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 38.52,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 32.35
+        },
+        "sector_2_speed": {
+          "normalized_value": 28.03,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 23.53
+        },
+        "sector_3_speed": {
+          "normalized_value": 25.89,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 29.41
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 59.62,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 67.65
+        },
+        "sector_variance": {
+          "normalized_value": 64.77,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 70.59
+        },
+        "stint_degradation": {
+          "normalized_value": 63.55,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 79.41
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 38.45,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 23.53
+        },
+        "position_defense": {
+          "normalized_value": 32.06,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 5.88
+        },
+        "traffic_navigation": {
+          "normalized_value": 39.61,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 26.47
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 50.28,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 47.06
+        },
+        "stint_consistency": {
+          "normalized_value": 48.21,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 50.0
+        },
+        "late_pace": {
+          "normalized_value": 70.05,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 88.24
+        }
+      }
+    },
+    "12": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 16.24,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 17.65
+        },
+        "sector_2_speed": {
+          "normalized_value": 0,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 0.0
+        },
+        "sector_3_speed": {
+          "normalized_value": 9.78,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 11.76
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 46.41,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 41.18
+        },
+        "sector_variance": {
+          "normalized_value": 62.12,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 67.65
+        },
+        "stint_degradation": {
+          "normalized_value": 48.73,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 47.06
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 33.12,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 8.82
+        },
+        "position_defense": {
+          "normalized_value": 32.32,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 8.82
+        },
+        "traffic_navigation": {
+          "normalized_value": 41.25,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 35.29
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 47.53,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 41.18
+        },
+        "stint_consistency": {
+          "normalized_value": 57.27,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 73.53
+        },
+        "late_pace": {
+          "normalized_value": 66.68,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 79.41
+        }
+      }
+    },
+    "13": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 90.62,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 91.18
+        },
+        "sector_2_speed": {
+          "normalized_value": 85.22,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 85.29
+        },
+        "sector_3_speed": {
+          "normalized_value": 100,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 97.06
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 80.95,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 91.18
+        },
+        "sector_variance": {
+          "normalized_value": 68.01,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 79.41
+        },
+        "stint_degradation": {
+          "normalized_value": 65.93,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 88.24
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 64.41,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 79.41
+        },
+        "position_defense": {
+          "normalized_value": 79.88,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 94.12
+        },
+        "traffic_navigation": {
+          "normalized_value": 84.71,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 97.06
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 65.04,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 85.29
+        },
+        "stint_consistency": {
+          "normalized_value": 53.41,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 67.65
+        },
+        "late_pace": {
+          "normalized_value": 62.66,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 73.53
+        }
+      }
+    },
+    "14": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 49.19,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 47.06
+        },
+        "sector_2_speed": {
+          "normalized_value": 35.18,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 29.41
+        },
+        "sector_3_speed": {
+          "normalized_value": 48.92,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 50.0
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 53.24,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 55.88
+        },
+        "sector_variance": {
+          "normalized_value": 27.8,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 8.82
+        },
+        "stint_degradation": {
+          "normalized_value": 49.17,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 50.0
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 52.49,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 61.76
+        },
+        "position_defense": {
+          "normalized_value": 48.19,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 47.06
+        },
+        "traffic_navigation": {
+          "normalized_value": 40.17,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 29.41
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 39.38,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 29.41
+        },
+        "stint_consistency": {
+          "normalized_value": 23.18,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 11.76
+        },
+        "late_pace": {
+          "normalized_value": 32.77,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 29.41
+        }
+      }
+    },
+    "15": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 30.14,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 23.53
+        },
+        "sector_2_speed": {
+          "normalized_value": 45.14,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 38.24
+        },
+        "sector_3_speed": {
+          "normalized_value": 43.19,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 44.12
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 46.97,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 44.12
+        },
+        "sector_variance": {
+          "normalized_value": 53.83,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 61.76
+        },
+        "stint_degradation": {
+          "normalized_value": 43.64,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 44.12
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 60.11,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 76.47
+        },
+        "position_defense": {
+          "normalized_value": 59.21,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 70.59
+        },
+        "traffic_navigation": {
+          "normalized_value": 42.78,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 44.12
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 65.3,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 88.24
+        },
+        "stint_consistency": {
+          "normalized_value": 64.43,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 94.12
+        },
+        "late_pace": {
+          "normalized_value": 50.77,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 55.88
+        }
+      }
+    },
+    "16": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 91.85,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 94.12
+        },
+        "sector_2_speed": {
+          "normalized_value": 85.15,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 82.35
+        },
+        "sector_3_speed": {
+          "normalized_value": 92.62,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 91.18
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 83.0,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 94.12
+        },
+        "sector_variance": {
+          "normalized_value": 66.8,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 73.53
+        },
+        "stint_degradation": {
+          "normalized_value": 75.88,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 94.12
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 42.84,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 35.29
+        },
+        "position_defense": {
+          "normalized_value": 70.21,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 91.18
+        },
+        "traffic_navigation": {
+          "normalized_value": 68.86,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 88.24
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 54.3,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 52.94
+        },
+        "stint_consistency": {
+          "normalized_value": 38.49,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 26.47
+        },
+        "late_pace": {
+          "normalized_value": 30.97,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 20.59
+        }
+      }
+    },
+    "17": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 45.57,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 38.24
+        },
+        "sector_2_speed": {
+          "normalized_value": 47.64,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 50.0
+        },
+        "sector_3_speed": {
+          "normalized_value": 22.05,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 23.53
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 49.35,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 50.0
+        },
+        "sector_variance": {
+          "normalized_value": 36.72,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 23.53
+        },
+        "stint_degradation": {
+          "normalized_value": 57.18,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 67.65
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 35.31,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 14.71
+        },
+        "position_defense": {
+          "normalized_value": 16.13,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 0.0
+        },
+        "traffic_navigation": {
+          "normalized_value": 26.45,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 2.94
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 57.85,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 67.65
+        },
+        "stint_consistency": {
+          "normalized_value": 49.52,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 52.94
+        },
+        "late_pace": {
+          "normalized_value": 67.8,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 85.29
+        }
+      }
+    },
+    "18": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 4.74,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 5.88
+        },
+        "sector_2_speed": {
+          "normalized_value": 0.91,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 2.94
+        },
+        "sector_3_speed": {
+          "normalized_value": 8.1,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 5.88
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 54.99,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 58.82
+        },
+        "sector_variance": {
+          "normalized_value": 39.03,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 41.18
+        },
+        "stint_degradation": {
+          "normalized_value": 42.17,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 35.29
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 47.56,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 47.06
+        },
+        "position_defense": {
+          "normalized_value": 37.56,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 29.41
+        },
+        "traffic_navigation": {
+          "normalized_value": 31.91,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 17.65
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 38.15,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 26.47
+        },
+        "stint_consistency": {
+          "normalized_value": 25.46,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 14.71
+        },
+        "late_pace": {
+          "normalized_value": 28.31,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 11.76
+        }
+      }
+    },
+    "21": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 67.31,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 70.59
+        },
+        "sector_2_speed": {
+          "normalized_value": 74.82,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 76.47
+        },
+        "sector_3_speed": {
+          "normalized_value": 63.91,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 58.82
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 41.73,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 35.29
+        },
+        "sector_variance": {
+          "normalized_value": 36.91,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 26.47
+        },
+        "stint_degradation": {
+          "normalized_value": 53.02,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 58.82
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 39.07,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 29.41
+        },
+        "position_defense": {
+          "normalized_value": 59.54,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 73.53
+        },
+        "traffic_navigation": {
+          "normalized_value": 58.54,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 67.65
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 29.7,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 14.71
+        },
+        "stint_consistency": {
+          "normalized_value": 33.67,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 20.59
+        },
+        "late_pace": {
+          "normalized_value": 46.26,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 52.94
+        }
+      }
+    },
+    "31": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 53.86,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 55.88
+        },
+        "sector_2_speed": {
+          "normalized_value": 51.4,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 55.88
+        },
+        "sector_3_speed": {
+          "normalized_value": 75.35,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 73.53
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 34.6,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 26.47
+        },
+        "sector_variance": {
+          "normalized_value": 31.78,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 11.76
+        },
+        "stint_degradation": {
+          "normalized_value": 41.42,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 29.41
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 52.36,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 58.82
+        },
+        "position_defense": {
+          "normalized_value": 33.73,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 14.71
+        },
+        "traffic_navigation": {
+          "normalized_value": 30.67,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 5.88
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 59.57,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 76.47
+        },
+        "stint_consistency": {
+          "normalized_value": 59.07,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 85.29
+        },
+        "late_pace": {
+          "normalized_value": 60.28,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 70.59
+        }
+      }
+    },
+    "41": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 59.13,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 61.76
+        },
+        "sector_2_speed": {
+          "normalized_value": 57.46,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 61.76
+        },
+        "sector_3_speed": {
+          "normalized_value": 67.21,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 64.71
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 25.64,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 8.82
+        },
+        "sector_variance": {
+          "normalized_value": 34.42,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 14.71
+        },
+        "stint_degradation": {
+          "normalized_value": 31.81,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 14.71
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 51.89,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 55.88
+        },
+        "position_defense": {
+          "normalized_value": 33.47,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 11.76
+        },
+        "traffic_navigation": {
+          "normalized_value": 31.66,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 11.76
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 51.1,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 50.0
+        },
+        "stint_consistency": {
+          "normalized_value": 49.85,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 58.82
+        },
+        "late_pace": {
+          "normalized_value": 45.39,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 50.0
+        }
+      }
+    },
+    "46": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 73.61,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 76.47
+        },
+        "sector_2_speed": {
+          "normalized_value": 93.82,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 97.06
+        },
+        "sector_3_speed": {
+          "normalized_value": 79.48,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 82.35
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 76.69,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 85.29
+        },
+        "sector_variance": {
+          "normalized_value": 67.44,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 76.47
+        },
+        "stint_degradation": {
+          "normalized_value": 52.6,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 52.94
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 66.34,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 82.35
+        },
+        "position_defense": {
+          "normalized_value": 62.1,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 82.35
+        },
+        "traffic_navigation": {
+          "normalized_value": 67.39,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 85.29
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 59.54,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 73.53
+        },
+        "stint_consistency": {
+          "normalized_value": 58.17,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 79.41
+        },
+        "late_pace": {
+          "normalized_value": 38.02,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 35.29
+        }
+      }
+    },
+    "47": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 68.53,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 73.53
+        },
+        "sector_2_speed": {
+          "normalized_value": 60.37,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 67.65
+        },
+        "sector_3_speed": {
+          "normalized_value": 65.78,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 61.76
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 26.75,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 11.76
+        },
+        "sector_variance": {
+          "normalized_value": 36.21,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 20.59
+        },
+        "stint_degradation": {
+          "normalized_value": 54.11,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 61.76
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 35.79,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 17.65
+        },
+        "position_defense": {
+          "normalized_value": 51.34,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 52.94
+        },
+        "traffic_navigation": {
+          "normalized_value": 41.45,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 38.24
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 26.83,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 8.82
+        },
+        "stint_consistency": {
+          "normalized_value": 43.88,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 41.18
+        },
+        "late_pace": {
+          "normalized_value": 45.36,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 47.06
+        }
+      }
+    },
+    "50": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 53.5,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 52.94
+        },
+        "sector_2_speed": {
+          "normalized_value": 58.38,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 64.71
+        },
+        "sector_3_speed": {
+          "normalized_value": 41.46,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 38.24
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 56.49,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 61.76
+        },
+        "sector_variance": {
+          "normalized_value": 76.8,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 97.06
+        },
+        "stint_degradation": {
+          "normalized_value": 65.43,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 85.29
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 78.98,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 97.06
+        },
+        "position_defense": {
+          "normalized_value": 85.14,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 97.06
+        },
+        "traffic_navigation": {
+          "normalized_value": 64.39,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 79.41
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 70.45,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 94.12
+        },
+        "stint_consistency": {
+          "normalized_value": 68.58,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 97.06
+        },
+        "late_pace": {
+          "normalized_value": 79.26,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 97.06
+        }
+      }
+    },
+    "51": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 22.19,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 20.59
+        },
+        "sector_2_speed": {
+          "normalized_value": 46.29,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 41.18
+        },
+        "sector_3_speed": {
+          "normalized_value": 19.74,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 20.59
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 24.7,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 5.88
+        },
+        "sector_variance": {
+          "normalized_value": 36.91,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 26.47
+        },
+        "stint_degradation": {
+          "normalized_value": 39.17,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 23.53
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 38.5,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 26.47
+        },
+        "position_defense": {
+          "normalized_value": 34.82,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 23.53
+        },
+        "traffic_navigation": {
+          "normalized_value": 57.51,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 64.71
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 28.71,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 11.76
+        },
+        "stint_consistency": {
+          "normalized_value": 38.91,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 29.41
+        },
+        "late_pace": {
+          "normalized_value": 39.57,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 41.18
+        }
+      }
+    },
+    "55": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 84.34,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 82.35
+        },
+        "sector_2_speed": {
+          "normalized_value": 89.27,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 91.18
+        },
+        "sector_3_speed": {
+          "normalized_value": 87.45,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 85.29
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 68.79,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 76.47
+        },
+        "sector_variance": {
+          "normalized_value": 47.06,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 44.12
+        },
+        "stint_degradation": {
+          "normalized_value": 62.8,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 76.47
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 46.63,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 44.12
+        },
+        "position_defense": {
+          "normalized_value": 51.19,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 50.0
+        },
+        "traffic_navigation": {
+          "normalized_value": 59.18,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 73.53
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 62.79,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 79.41
+        },
+        "stint_consistency": {
+          "normalized_value": 62.91,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 91.18
+        },
+        "late_pace": {
+          "normalized_value": 75.86,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 94.12
+        }
+      }
+    },
+    "57": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 0,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 0.0
+        },
+        "sector_2_speed": {
+          "normalized_value": 2.26,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 5.88
+        },
+        "sector_3_speed": {
+          "normalized_value": 18.59,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 17.65
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 50.68,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 52.94
+        },
+        "sector_variance": {
+          "normalized_value": 22.97,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 5.88
+        },
+        "stint_degradation": {
+          "normalized_value": 27.09,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 8.82
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 22.04,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 2.94
+        },
+        "position_defense": {
+          "normalized_value": 42.31,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 38.24
+        },
+        "traffic_navigation": {
+          "normalized_value": 41.2,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 32.35
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 37.29,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 23.53
+        },
+        "stint_consistency": {
+          "normalized_value": 22.21,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 8.82
+        },
+        "late_pace": {
+          "normalized_value": 15.91,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 0.0
+        }
+      }
+    },
+    "67": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 14.7,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 11.76
+        },
+        "sector_2_speed": {
+          "normalized_value": 10.8,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 11.76
+        },
+        "sector_3_speed": {
+          "normalized_value": 8.38,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 8.82
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 61.79,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 70.59
+        },
+        "sector_variance": {
+          "normalized_value": 51.98,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 52.94
+        },
+        "stint_degradation": {
+          "normalized_value": 32.97,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 17.65
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 35.97,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 20.59
+        },
+        "position_defense": {
+          "normalized_value": 20.59,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 2.94
+        },
+        "traffic_navigation": {
+          "normalized_value": 31.8,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 14.71
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 63.25,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 82.35
+        },
+        "stint_consistency": {
+          "normalized_value": 39.07,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 32.35
+        },
+        "late_pace": {
+          "normalized_value": 38.49,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 38.24
+        }
+      }
+    },
+    "71": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 62.99,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 64.71
+        },
+        "sector_2_speed": {
+          "normalized_value": 76.38,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 79.41
+        },
+        "sector_3_speed": {
+          "normalized_value": 67.66,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 67.65
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 70.37,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 82.35
+        },
+        "sector_variance": {
+          "normalized_value": 73.83,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 91.18
+        },
+        "stint_degradation": {
+          "normalized_value": 58.54,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 70.59
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 70.2,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 88.24
+        },
+        "position_defense": {
+          "normalized_value": 59.04,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 67.65
+        },
+        "traffic_navigation": {
+          "normalized_value": 65.69,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 82.35
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 57.63,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 64.71
+        },
+        "stint_consistency": {
+          "normalized_value": 56.68,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 70.59
+        },
+        "late_pace": {
+          "normalized_value": 34.35,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 32.35
+        }
+      }
+    },
+    "72": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 89.84,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 88.24
+        },
+        "sector_2_speed": {
+          "normalized_value": 85.43,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 88.24
+        },
+        "sector_3_speed": {
+          "normalized_value": 76.86,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 76.47
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 76.71,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 88.24
+        },
+        "sector_variance": {
+          "normalized_value": 72.83,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 88.24
+        },
+        "stint_degradation": {
+          "normalized_value": 61.87,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 73.53
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 67.92,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 85.29
+        },
+        "position_defense": {
+          "normalized_value": 62.38,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 85.29
+        },
+        "traffic_navigation": {
+          "normalized_value": 58.95,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 70.59
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 45.88,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 35.29
+        },
+        "stint_consistency": {
+          "normalized_value": 46.71,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 47.06
+        },
+        "late_pace": {
+          "normalized_value": 70.56,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 91.18
+        }
+      }
+    },
+    "73": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 32.22,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 29.41
+        },
+        "sector_2_speed": {
+          "normalized_value": 21.47,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 17.65
+        },
+        "sector_3_speed": {
+          "normalized_value": 30.53,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 32.35
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 31.0,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 17.65
+        },
+        "sector_variance": {
+          "normalized_value": 17.68,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 2.94
+        },
+        "stint_degradation": {
+          "normalized_value": 16.51,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 2.94
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 16.29,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 0.0
+        },
+        "position_defense": {
+          "normalized_value": 34.21,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 20.59
+        },
+        "traffic_navigation": {
+          "normalized_value": 31.53,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 8.82
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 48.33,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 44.12
+        },
+        "stint_consistency": {
+          "normalized_value": 50.42,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 61.76
+        },
+        "late_pace": {
+          "normalized_value": 30.07,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 17.65
+        }
+      }
+    },
+    "78": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 74.69,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 79.41
+        },
+        "sector_2_speed": {
+          "normalized_value": 70.28,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 73.53
+        },
+        "sector_3_speed": {
+          "normalized_value": 90.38,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 88.24
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 85.37,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 97.06
+        },
+        "sector_variance": {
+          "normalized_value": 71.26,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 82.35
+        },
+        "stint_degradation": {
+          "normalized_value": 78.15,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 97.06
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 42.35,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 32.35
+        },
+        "position_defense": {
+          "normalized_value": 65.76,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 88.24
+        },
+        "traffic_navigation": {
+          "normalized_value": 64.11,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 76.47
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 43.77,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 32.35
+        },
+        "stint_consistency": {
+          "normalized_value": 40.61,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 38.24
+        },
+        "late_pace": {
+          "normalized_value": 43.34,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 44.12
+        }
+      }
+    },
+    "80": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 1.05,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 2.94
+        },
+        "sector_2_speed": {
+          "normalized_value": 19.55,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 14.71
+        },
+        "sector_3_speed": {
+          "normalized_value": 7.27,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 0.0
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 42.04,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 38.24
+        },
+        "sector_variance": {
+          "normalized_value": 38.74,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 38.24
+        },
+        "stint_degradation": {
+          "normalized_value": 41.7,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 32.35
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 52.69,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 64.71
+        },
+        "position_defense": {
+          "normalized_value": 36.54,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 26.47
+        },
+        "traffic_navigation": {
+          "normalized_value": 52.5,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 52.94
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 8.92,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 0.0
+        },
+        "stint_consistency": {
+          "normalized_value": 31.97,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 17.65
+        },
+        "late_pace": {
+          "normalized_value": 31.59,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 26.47
+        }
+      }
+    },
+    "86": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 6.56,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 8.82
+        },
+        "sector_2_speed": {
+          "normalized_value": 24.39,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 20.59
+        },
+        "sector_3_speed": {
+          "normalized_value": 13.7,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 14.71
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 22.3,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 2.94
+        },
+        "sector_variance": {
+          "normalized_value": 36.94,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 32.35
+        },
+        "stint_degradation": {
+          "normalized_value": 19.78,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 5.88
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 34.54,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 11.76
+        },
+        "position_defense": {
+          "normalized_value": 39.11,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 35.29
+        },
+        "traffic_navigation": {
+          "normalized_value": 42.15,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 41.18
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 36.21,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 20.59
+        },
+        "stint_consistency": {
+          "normalized_value": 40.41,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 35.29
+        },
+        "late_pace": {
+          "normalized_value": 20.14,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 2.94
+        }
+      }
+    },
+    "88": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 63.1,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 67.65
+        },
+        "sector_2_speed": {
+          "normalized_value": 55.85,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 58.82
+        },
+        "sector_3_speed": {
+          "normalized_value": 73.53,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 70.59
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 47.59,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 47.06
+        },
+        "sector_variance": {
+          "normalized_value": 59.79,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 64.71
+        },
+        "stint_degradation": {
+          "normalized_value": 35.29,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 20.59
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 76.94,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 94.12
+        },
+        "position_defense": {
+          "normalized_value": 53.48,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 58.82
+        },
+        "traffic_navigation": {
+          "normalized_value": 77.58,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 94.12
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 19.01,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 2.94
+        },
+        "stint_consistency": {
+          "normalized_value": 13.22,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 0.0
+        },
+        "late_pace": {
+          "normalized_value": 22.66,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 5.88
+        }
+      }
+    },
+    "89": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 59.0,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 58.82
+        },
+        "sector_2_speed": {
+          "normalized_value": 46.55,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 44.12
+        },
+        "sector_3_speed": {
+          "normalized_value": 55.4,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 55.88
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 9.09,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 0.0
+        },
+        "sector_variance": {
+          "normalized_value": 5.28,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 0.0
+        },
+        "stint_degradation": {
+          "normalized_value": 10.97,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 0.0
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 24.7,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 5.88
+        },
+        "position_defense": {
+          "normalized_value": 38.09,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 32.35
+        },
+        "traffic_navigation": {
+          "normalized_value": 16.43,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 0.0
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 55.51,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 61.76
+        },
+        "stint_consistency": {
+          "normalized_value": 45.05,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 44.12
+        },
+        "late_pace": {
+          "normalized_value": 50.87,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 58.82
+        }
+      }
+    },
+    "93": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 44.77,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 35.29
+        },
+        "sector_2_speed": {
+          "normalized_value": 42.63,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 35.29
+        },
+        "sector_3_speed": {
+          "normalized_value": 33.6,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 35.29
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 35.69,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 29.41
+        },
+        "sector_variance": {
+          "normalized_value": 53.29,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 55.88
+        },
+        "stint_degradation": {
+          "normalized_value": 42.8,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 38.24
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 44.51,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 38.24
+        },
+        "position_defense": {
+          "normalized_value": 60.69,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 79.41
+        },
+        "traffic_navigation": {
+          "normalized_value": 57.14,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 61.76
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 57.85,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 67.65
+        },
+        "stint_consistency": {
+          "normalized_value": 57.36,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 76.47
+        },
+        "late_pace": {
+          "normalized_value": 60.07,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 67.65
+        }
+      }
+    },
+    "98": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 50.23,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 50.0
+        },
+        "sector_2_speed": {
+          "normalized_value": 47.03,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 47.06
+        },
+        "sector_3_speed": {
+          "normalized_value": 41.66,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 41.18
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 31.79,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 20.59
+        },
+        "sector_variance": {
+          "normalized_value": 47.64,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 47.06
+        },
+        "stint_degradation": {
+          "normalized_value": 40.25,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 26.47
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 51.05,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 52.94
+        },
+        "position_defense": {
+          "normalized_value": 42.67,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 41.18
+        },
+        "traffic_navigation": {
+          "normalized_value": 33.68,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 20.59
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 68.19,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 91.18
+        },
+        "stint_consistency": {
+          "normalized_value": 50.94,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 64.71
+        },
+        "late_pace": {
+          "normalized_value": 59.27,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 64.71
+        }
+      }
+    },
+    "113": {
+      "speed": {
+        "sector_1_speed": {
+          "normalized_value": 45.63,
+          "weight": 0.35,
+          "display_name": "Sector 1 Speed",
+          "percentile": 41.18
+        },
+        "sector_2_speed": {
+          "normalized_value": 50.13,
+          "weight": 0.35,
+          "display_name": "Sector 2 Speed",
+          "percentile": 52.94
+        },
+        "sector_3_speed": {
+          "normalized_value": 52.44,
+          "weight": 0.3,
+          "display_name": "Sector 3 Speed",
+          "percentile": 52.94
+        }
+      },
+      "consistency": {
+        "lap_time_variance": {
+          "normalized_value": 39.04,
+          "weight": 0.4,
+          "display_name": "Lap Time Stability",
+          "percentile": 32.35
+        },
+        "sector_variance": {
+          "normalized_value": 38.19,
+          "weight": 0.35,
+          "display_name": "Sector Consistency",
+          "percentile": 35.29
+        },
+        "stint_degradation": {
+          "normalized_value": 31.02,
+          "weight": 0.25,
+          "display_name": "Pace Maintenance",
+          "percentile": 11.76
+        }
+      },
+      "racecraft": {
+        "overtakes_completed": {
+          "normalized_value": 44.78,
+          "weight": 0.4,
+          "display_name": "Overtaking Success",
+          "percentile": 41.18
+        },
+        "position_defense": {
+          "normalized_value": 57.93,
+          "weight": 0.35,
+          "display_name": "Defensive Ability",
+          "percentile": 64.71
+        },
+        "traffic_navigation": {
+          "normalized_value": 55.38,
+          "weight": 0.25,
+          "display_name": "Traffic Management",
+          "percentile": 58.82
+        }
+      },
+      "tire_management": {
+        "deg_rate": {
+          "normalized_value": 22.77,
+          "weight": 0.45,
+          "display_name": "Degradation Control",
+          "percentile": 5.88
+        },
+        "stint_consistency": {
+          "normalized_value": 19.0,
+          "weight": 0.3,
+          "display_name": "Stint Stability",
+          "percentile": 5.88
+        },
+        "late_pace": {
+          "normalized_value": 31.52,
+          "weight": 0.25,
+          "display_name": "Late Stint Pace",
+          "percentile": 23.53
+        }
+      }
+    }
+  }
+}
