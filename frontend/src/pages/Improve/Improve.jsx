@@ -36,13 +36,7 @@ export default function Improve() {
 
         // Get telemetry coaching for Barber
         const coachingResponse = await api.get(
-          `/api/drivers/${selectedDriverNumber}/telemetry-coaching`,
-          {
-            params: {
-              track_id: 'barber',
-              race_num: 1
-            }
-          }
+          `/api/drivers/${selectedDriverNumber}/telemetry-coaching?track_id=barber&race_num=1`
         );
         setCoachingData(coachingResponse.data);
 
