@@ -314,25 +314,9 @@
   color: #27ae60;
 }
 
-/* Achievements Section - Spans full width */
-.achievements-section {
-  grid-column: 1 / -1;
-  background: #ffffff;
-  border: 4px solid #e74c3c;
-  border-radius: 16px;
-  padding: 32px;
-}
-
-/* Training Section - Left column */
-.training-section {
-  background: #ffffff;
-  border: 4px solid #27ae60;
-  border-radius: 16px;
-  padding: 32px;
-}
-
-/* Performance Section - Right column */
+/* Performance Section - Spans full width below main grid */
 .performance-section {
+  grid-column: 1 / -1;
   background: #ffffff;
   border: 4px solid #e74c3c;
   border-radius: 16px;
@@ -349,10 +333,6 @@
   border-bottom: 4px solid #e74c3c;
 }
 
-.training-section .section-header {
-  border-bottom-color: #27ae60;
-}
-
 .section-header h2 {
   font-size: 24px;
   font-weight: 900;
@@ -362,186 +342,11 @@
   letter-spacing: 1px;
 }
 
-.training-section .section-header h2 {
-  color: #27ae60;
-}
-
 .section-subtitle {
   font-size: 14px;
   color: #666;
   margin: 8px 0 0 0;
   font-weight: 600;
-}
-
-/* Badge Count */
-.badge-count {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-
-.count-number {
-  font-size: 48px;
-  font-weight: 900;
-  color: #ffc107;
-  line-height: 1;
-}
-
-.count-label {
-  font-size: 12px;
-  font-weight: 700;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-/* ACHIEVEMENTS GRID */
-.achievements-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 16px;
-}
-
-.achievement-card {
-  background: #f8f9fa;
-  border: 3px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-.achievement-card.locked {
-  opacity: 0.5;
-}
-
-.achievement-card.unlocked {
-  background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
-  border-color: #ffc107;
-}
-
-.achievement-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.achievement-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-}
-
-.achievement-name {
-  font-size: 14px;
-  font-weight: 700;
-  color: #000;
-  margin-bottom: 4px;
-}
-
-.achievement-desc {
-  font-size: 11px;
-  color: #666;
-  font-weight: 600;
-}
-
-/* TRAINING PROGRAMS */
-.programs-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.program-card {
-  background: #f8f9fa;
-  border: 3px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 20px;
-  transition: all 0.3s ease;
-}
-
-.program-card:hover {
-  border-color: #27ae60;
-  transform: translateX(4px);
-}
-
-.program-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.program-header h3 {
-  font-size: 18px;
-  font-weight: 900;
-  color: #000;
-  margin: 0;
-}
-
-.recommended-badge {
-  background: #e74c3c;
-  color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.program-details {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 12px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #666;
-}
-
-.program-skills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.skill-tag {
-  background: #e3f2fd;
-  color: #1565c0;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 700;
-  border: 2px solid #64b5f6;
-}
-
-.program-button {
-  width: 100%;
-  padding: 12px;
-  background: #27ae60;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.program-button:hover {
-  background: #229954;
-  transform: translateY(-2px);
-}
-
-.program-card:not(:has(.recommended-badge)) .program-button {
-  background: #f8f9fa;
-  color: #666;
-  border: 2px solid #e0e0e0;
-}
-
-.program-card:not(:has(.recommended-badge)) .program-button:hover {
-  background: #e0e0e0;
-  color: #000;
 }
 
 /* PERFORMANCE ANALYSIS */
@@ -702,10 +507,7 @@
     margin: 0 auto;
   }
 
-  .season-performance-card,
   .similar-drivers-section,
-  .achievements-section,
-  .training-section,
   .performance-section {
     padding: 40px;
   }
@@ -718,16 +520,9 @@
 
   .skill-sliders-section,
   .similar-drivers-section,
-  .similar-drivers-loading {
+  .similar-drivers-loading,
+  .performance-section {
     grid-column: 1;
-  }
-
-  .achievements-section {
-    grid-column: 1;
-  }
-
-  .achievements-grid {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   }
 }
 
@@ -737,17 +532,9 @@
     gap: 16px;
   }
 
-  .achievements-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
   .section-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
-  }
-
-  .badge-count {
-    align-items: flex-start;
   }
 }
