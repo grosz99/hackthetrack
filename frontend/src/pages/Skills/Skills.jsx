@@ -16,7 +16,7 @@ import './Skills.css';
 export default function Skills() {
   const { selectedDriverNumber, drivers } = useDriver();
   const [driverData, setDriverData] = useState(null);
-  const [topDrivers, setTopDrivers] = useState([]);
+  const [factorStats, setFactorStats] = useState({}); // NEW: Store factor stats from efficient endpoint
   const [selectedFactor, setSelectedFactor] = useState(null);
   const [factorBreakdown, setFactorBreakdown] = useState(null);
   const [factorComparison, setFactorComparison] = useState(null);
@@ -35,21 +35,24 @@ export default function Skills() {
         setFactorBreakdown(null);
         setFactorComparison(null);
 
-        // Fetch current driver data and all drivers to find top 3
-        const [driverResponse, allDriversResponse] = await Promise.all([
+        // Fetch current driver data and factor stats (efficient endpoint)
+        const [driverResponse, ...factorResponses] = await Promise.all([
           api.get(`/api/drivers/${selectedDriverNumber}`),
-          api.get('/api/drivers')
+          api.get('/api/factors/speed/stats'),
+          api.get('/api/factors/consistency/stats'),
+          api.get('/api/factors/racecraft/stats'),
+          api.get('/api/factors/tire_management/stats')
         ]);
 
         setDriverData(driverResponse.data);
 
-        // Get top 3 drivers by overall score (excluding current driver)
-        const sortedDrivers = allDriversResponse.data
-          .filter(d => d.driver_number !== selectedDriverNumber)
-          .sort((a, b) => b.overall_score - a.overall_score)
-          .slice(0, 3);
-
-        setTopDrivers(sortedDrivers);
+        // Store factor stats for radar chart
+        setFactorStats({
+          speed: factorResponses[0].data,
+          consistency: factorResponses[1].data,
+          racecraft: factorResponses[2].data,
+          tire_management: factorResponses[3].data
+        });
       } catch (err) {
         console.error('Error fetching driver data:', err);
         setError('Failed to load driver data');
@@ -81,39 +84,30 @@ export default function Skills() {
     );
   }
 
-  // Calculate average of top 3 drivers for each factor
-  const getTopAverage = (factor) => {
-    if (topDrivers.length === 0) return 0;
-    const sum = topDrivers.reduce((acc, driver) => {
-      return acc + (driver[factor]?.percentile || 0);
-    }, 0);
-    return sum / topDrivers.length;
-  };
-
-  // Prepare radar chart data with top 3 average comparison
+  // Prepare radar chart data with top 3 average from efficient endpoint
   const radarData = [
     {
       factor: 'Consistency',
       user: driverData.consistency?.percentile || 0,
-      topAvg: getTopAverage('consistency'),
+      topAvg: factorStats.consistency?.top_3_average || 0,
       fullMark: 100
     },
     {
       factor: 'Racecraft',
       user: driverData.racecraft?.percentile || 0,
-      topAvg: getTopAverage('racecraft'),
+      topAvg: factorStats.racecraft?.top_3_average || 0,
       fullMark: 100
     },
     {
       factor: 'Raw Speed',
       user: driverData.speed?.percentile || 0,
-      topAvg: getTopAverage('speed'),
+      topAvg: factorStats.speed?.top_3_average || 0,
       fullMark: 100
     },
     {
       factor: 'Tire Mgmt',
       user: driverData.tire_management?.percentile || 0,
-      topAvg: getTopAverage('tire_management'),
+      topAvg: factorStats.tire_management?.top_3_average || 0,
       fullMark: 100
     },
   ];
@@ -124,47 +118,19 @@ export default function Skills() {
     setLoadingBreakdown(true);
 
     try {
-      // Map display names to API factor names
-      const factorMap = {
-        'Consistency': 'consistency',
-        'Racecraft': 'racecraft',
-        'Raw Speed': 'speed',
-        'Tire Management': 'tire_management'
-      };
+      // Factor breakdown endpoints have been removed (SQLite dependency eliminated)
+      // This feature is temporarily disabled until we implement a JSON-based solution
+      console.log('[Skills] Factor breakdown feature temporarily unavailable');
 
-      const apiFactorName = factorMap[factorName];
-      const breakdownUrl = `/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}`;
-      const comparisonUrl = `/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}/comparison`;
-
-      console.log('[Skills] Fetching factor data:', {
-        apiFactorName,
-        breakdownUrl,
-        comparisonUrl,
-        driverNumber: selectedDriverNumber
-      });
-
-      // Fetch both breakdown and comparison data
-      const [breakdownResponse, comparisonResponse] = await Promise.all([
-        api.get(breakdownUrl),
-        api.get(comparisonUrl)
-      ]);
-
-      console.log('[Skills] Factor breakdown received:', breakdownResponse.data);
-      console.log('[Skills] Factor comparison received:', comparisonResponse.data);
-
-      setFactorBreakdown(breakdownResponse.data);
-      setFactorComparison(comparisonResponse.data);
-    } catch (err) {
-      console.error('[Skills] Error fetching factor breakdown:', err);
-      console.error('[Skills] Error response:', err.response);
-      console.error('[Skills] Error status:', err.response?.status);
-      console.error('[Skills] Error data:', err.response?.data);
-      console.error('[Skills] Request URL:', err.config?.url);
-
-      // Set error state to show user-friendly message
+      // Show user-friendly message
       setFactorBreakdown(null);
       setFactorComparison(null);
-      setError(`Failed to load ${factorName} breakdown. ${err.response?.status === 404 ? 'Endpoint not found.' : 'Please try again.'}`);
+      setError(`${factorName} breakdown feature is currently being updated. Check back soon!`);
+    } catch (err) {
+      console.error('[Skills] Error:', err);
+      setFactorBreakdown(null);
+      setFactorComparison(null);
+      setError(`Failed to load ${factorName} breakdown. Please try again later.`);
     } finally {
       setLoadingBreakdown(false);
     }
