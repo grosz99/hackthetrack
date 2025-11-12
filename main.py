@@ -39,6 +39,11 @@ if production_url:
 # Also allow any vercel.app subdomain for preview deployments
 allowed_origins.append("https://*.vercel.app")
 
+# TEMPORARY: Allow all origins for development
+# TODO: Restrict this in production
+if os.getenv("CORS_ALLOW_ALL"):
+    allowed_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
