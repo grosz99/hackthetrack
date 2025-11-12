@@ -119,6 +119,7 @@ export default function Skills() {
   ];
 
   const handleFactorClick = async (factorName) => {
+    console.log('Factor clicked:', factorName);
     setSelectedFactor(factorName);
     setLoadingBreakdown(true);
 
@@ -132,6 +133,7 @@ export default function Skills() {
       };
 
       const apiFactorName = factorMap[factorName];
+      console.log('Fetching factor data for:', apiFactorName);
 
       // Fetch both breakdown and comparison data
       const [breakdownResponse, comparisonResponse] = await Promise.all([
@@ -139,10 +141,17 @@ export default function Skills() {
         api.get(`/api/drivers/${selectedDriverNumber}/factors/${apiFactorName}/comparison`)
       ]);
 
+      console.log('Factor breakdown received:', breakdownResponse.data);
+      console.log('Factor comparison received:', comparisonResponse.data);
+
       setFactorBreakdown(breakdownResponse.data);
       setFactorComparison(comparisonResponse.data);
     } catch (err) {
       console.error('Error fetching factor breakdown:', err);
+      console.error('Error details:', err.response?.data || err.message);
+      // Set error state to show user-friendly message
+      setFactorBreakdown(null);
+      setFactorComparison(null);
     } finally {
       setLoadingBreakdown(false);
     }
@@ -416,7 +425,7 @@ export default function Skills() {
             </div>
           ) : (
             <div className="error-breakdown">
-              <p>Failed to load breakdown data</p>
+              <p>Unable to load factor breakdown. Please try again.</p>
             </div>
           )}
         </div>
