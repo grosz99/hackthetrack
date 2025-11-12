@@ -9,6 +9,7 @@ import { useDriver } from '../../context/DriverContext';
 import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import SkillSliders from './components/SkillSliders';
+import PerformanceAnalysis from './components/PerformanceAnalysis';
 import './Improve.css';
 
 export default function Improve() {
@@ -56,37 +57,6 @@ export default function Improve() {
     fetchData();
   }, [selectedDriverNumber]);
 
-  // Calculate top strengths from driver data
-  const getTopStrengths = () => {
-    if (!driverData) return [];
-
-    const factors = [
-      { name: 'Cornering', value: driverData.racecraft?.score || 0 },
-      { name: 'Racecraft', value: driverData.racecraft?.score || 0 },
-      { name: 'Speed', value: driverData.speed?.score || 0 },
-      { name: 'Consistency', value: driverData.consistency?.score || 0 },
-      { name: 'Tire Management', value: driverData.tire_management?.score || 0 }
-    ];
-
-    return factors
-      .filter(f => f.value >= 70)
-      .sort((a, b) => b.value - a.value)
-      .slice(0, 2);
-  };
-
-  // Calculate priority areas from coaching data
-  const getPriorityAreas = () => {
-    if (!coachingData || !coachingData.factor_breakdown) return [];
-
-    return Object.entries(coachingData.factor_breakdown)
-      .map(([factor, count]) => ({
-        name: factor,
-        value: 100 - (count * 10), // Convert to score (more issues = lower score)
-        points: count * 10
-      }))
-      .sort((a, b) => b.points - a.points)
-      .slice(0, 2);
-  };
 
   // Handle target skills change from sliders
   const handleTargetChange = (newTargets) => {
@@ -127,9 +97,6 @@ export default function Improve() {
       </div>
     );
   }
-
-  const topStrengths = getTopStrengths();
-  const priorityAreas = getPriorityAreas();
 
   return (
     <div className="improve-page">
@@ -260,66 +227,10 @@ export default function Improve() {
         )}
 
         {/* PERFORMANCE ANALYSIS SECTION */}
-        <section className="performance-section">
-          <div className="section-header">
-            <h2>PERFORMANCE ANALYSIS</h2>
-            <p className="section-subtitle">Focus areas for maximum improvement</p>
-          </div>
-
-          {error && (
-            <div className="error-message">{error}</div>
-          )}
-
-          {coachingData && (
-            <>
-              {/* Team Principal's Note */}
-              <div className="team-note">
-                <div className="note-content">
-                  <h3>Team Principal's Note</h3>
-                  <p>
-                    {coachingData.summary.primary_weakness ?
-                      `Focus on ${coachingData.summary.primary_weakness} - you're ${coachingData.summary.corners_need_work}/${coachingData.summary.total_corners} corners off pace at Barber` :
-                      "Strong development! You're showing real potential. Continue building your weaker skills."
-                    }
-                  </p>
-                </div>
-              </div>
-
-              {/* Priority Areas */}
-              <div className="priority-areas">
-                <h3>PRIORITY AREAS</h3>
-                {priorityAreas.map(area => (
-                  <div key={area.name} className="priority-item">
-                    <div className="priority-header">
-                      <span className="priority-name">{area.name}</span>
-                      <span className="priority-score">{area.value}</span>
-                    </div>
-                    <div className="priority-bar">
-                      <div
-                        className="priority-fill"
-                        style={{width: `${area.value}%`}}
-                      ></div>
-                    </div>
-                    <div className="priority-text">+{area.points} points to reach competitive level</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Top Strengths */}
-              {topStrengths.length > 0 && (
-                <div className="top-strengths">
-                  <h3>TOP STRENGTHS</h3>
-                  {topStrengths.map(strength => (
-                    <div key={strength.name} className="strength-item">
-                      <span className="strength-name">{strength.name}</span>
-                      <span className="strength-score">{Math.round(strength.value)}</span>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </>
-          )}
-        </section>
+        <PerformanceAnalysis
+          coachingData={coachingData}
+          driverData={driverData}
+        />
 
       </div>
     </div>
