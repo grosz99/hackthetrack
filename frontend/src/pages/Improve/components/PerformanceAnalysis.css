@@ -1,0 +1,372 @@
+/* Performance Analysis Component Styles */
+
+.performance-section {
+  background: linear-gradient(135deg, rgba(42, 0, 0, 0.95) 0%, rgba(20, 0, 0, 0.98) 100%);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 8px 32px rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+.section-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.section-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #ef4444;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.section-subtitle {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 400;
+}
+
+/* Team Principal's Note */
+.team-note {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 4px solid #ef4444;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 32px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.note-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.note-content h3 {
+  font-size: 18px;
+  color: #ef4444;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.note-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 16px;
+}
+
+.pace-summary {
+  display: flex;
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.pace-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.stat-value.good {
+  color: #10b981;
+}
+
+.stat-value.needs-work {
+  color: #f59e0b;
+}
+
+/* Key Insights */
+.key-insights {
+  margin-bottom: 32px;
+}
+
+.key-insights h3 {
+  font-size: 18px;
+  color: #ef4444;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.insight-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 3px solid #ef4444;
+}
+
+.insight-number {
+  background: #ef4444;
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.insight-text {
+  flex: 1;
+  font-size: 15px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Priority Areas */
+.priority-areas {
+  margin-bottom: 32px;
+}
+
+.priority-areas h3 {
+  font-size: 18px;
+  color: #ef4444;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.priority-item {
+  margin-bottom: 24px;
+}
+
+.priority-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.priority-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.priority-count {
+  font-size: 14px;
+  color: #f59e0b;
+  font-weight: 500;
+}
+
+.priority-bar {
+  background: rgba(255, 255, 255, 0.1);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.priority-fill {
+  background: linear-gradient(90deg, #ef4444, #f59e0b);
+  height: 100%;
+  transition: width 0.6s ease;
+}
+
+.priority-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Corner-by-Corner Breakdown */
+.corner-breakdown {
+  margin-bottom: 32px;
+}
+
+.corner-breakdown h3 {
+  font-size: 18px;
+  color: #ef4444;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.breakdown-subtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+}
+
+.corners-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.corner-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 20px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.corner-card.on-pace {
+  border-color: #10b981;
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.corner-card.slower {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.05);
+}
+
+.corner-card.faster {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.corner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.corner-header h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.corner-factor {
+  font-size: 11px;
+  padding: 4px 8px;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.corner-metrics {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.metric {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.metric-value.negative {
+  color: #f59e0b;
+}
+
+.metric-value.positive {
+  color: #3b82f6;
+}
+
+.corner-insight {
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Top Strengths */
+.top-strengths {
+  margin-bottom: 32px;
+}
+
+.top-strengths h3 {
+  font-size: 18px;
+  color: #10b981;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.strengths-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.strength-item {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.strength-name {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.strength-score {
+  font-size: 20px;
+  font-weight: 700;
+  color: #10b981;
+}
+
+/* Future Tracks Notice */
+.future-tracks-notice {
+  text-align: center;
+  padding: 20px;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 8px;
+  border: 1px dashed rgba(59, 130, 246, 0.3);
+}
+
+.future-tracks-notice p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+/* Error State */
+.error-message {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  color: #ef4444;
+  font-size: 15px;
+}
