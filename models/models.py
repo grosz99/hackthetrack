@@ -292,6 +292,13 @@ class PredictionWithUncertainty(BaseModel):
     warning_message: Optional[str] = None
 
 
+class FindSimilarDriverRequest(BaseModel):
+    """Request to find similar driver based on target skills."""
+
+    current_driver_number: int
+    target_skills: Dict[str, float]
+
+
 class SimilarDriverMatch(BaseModel):
     """Similar driver match result."""
 

@@ -25,6 +25,7 @@ from models import (
     FactorComparisonResponse,
     AdjustedSkills,
     PredictionWithUncertainty,
+    FindSimilarDriverRequest,
     SimilarDriverMatch,
     ImprovementRecommendation,
     ImprovePredictionResponse,
@@ -1130,3 +1131,151 @@ async def get_telemetry_coaching(
         "factor_breakdown": insights["factor_breakdown"],
         "detailed_comparisons": insights["detailed_comparisons"]
     }
+
+
+# ============================================================================
+# IMPROVE PAGE - FIND SIMILAR DRIVER
+# ============================================================================
+
+
+@router.post("/drivers/find-similar")
+async def find_similar_driver(request: FindSimilarDriverRequest):
+    """
+    Find top 3 drivers with skill patterns most similar to target skills.
+
+    CRITICAL REQUIREMENT: Only returns drivers with BETTER performance (lower avg_finish).
+    Uses Euclidean distance in 4D skill space (speed, consistency, racecraft, tire_management).
+    Returns up to 3 matching drivers sorted by similarity, all guaranteed to perform better.
+    """
+    try:
+        # Get all drivers with their skills
+        all_drivers = data_loader.get_all_drivers()
+
+        if not all_drivers:
+            raise HTTPException(status_code=500, detail="No driver data available")
+
+        current_driver_num = request.current_driver_number
+        target = request.target_skills
+
+        # Get current driver's performance baseline for comparison
+        current_driver = next((d for d in all_drivers if d.driver_number == current_driver_num), None)
+        if not current_driver:
+            raise HTTPException(status_code=404, detail=f"Current driver {current_driver_num} not found")
+
+        # Get current driver's avg_finish for performance filtering
+        current_season_stats = data_loader.get_season_stats(current_driver_num)
+        current_avg_finish = (
+            current_season_stats.avg_finish
+            if current_season_stats and current_season_stats.avg_finish
+            else current_driver.stats.average_finish
+        )
+
+        if not current_avg_finish or current_avg_finish <= 0:
+            raise HTTPException(
+                status_code=400,
+                detail="Current driver has no valid performance data for comparison"
+            )
+
+        # Extract target skills
+        target_speed = target.get('speed', 0)
+        target_consistency = target.get('consistency', 0)
+        target_racecraft = target.get('racecraft', 0)
+        target_tire = target.get('tire_management', 0)
+
+        # List to store all driver matches with distances
+        matches = []
+
+        # Calculate distance for all drivers
+        for driver in all_drivers:
+            # Skip current driver
+            if driver.driver_number == current_driver_num:
+                continue
+
+            # Get driver skills (access Pydantic model attributes)
+            speed = driver.speed.score
+            consistency = driver.consistency.score
+            racecraft = driver.racecraft.score
+            tire = driver.tire_management.score
+
+            # Get season stats for average finish
+            season_stats = data_loader.get_season_stats(driver.driver_number)
+            avg_finish = season_stats.avg_finish if season_stats and season_stats.avg_finish else driver.stats.average_finish
+
+            # CRITICAL FILTER: Skip drivers without valid avg_finish or who perform worse
+            # In racing, LOWER avg_finish = BETTER performance
+            if not avg_finish or avg_finish <= 0 or avg_finish >= current_avg_finish:
+                continue
+
+            # Calculate Euclidean distance in 4D space
+            distance = (
+                (speed - target_speed) ** 2 +
+                (consistency - target_consistency) ** 2 +
+                (racecraft - target_racecraft) ** 2 +
+                (tire - target_tire) ** 2
+            ) ** 0.5
+
+            matches.append({
+                'driver': driver,
+                'distance': distance,
+                'skills': {
+                    'speed': round(speed, 1),
+                    'consistency': round(consistency, 1),
+                    'racecraft': round(racecraft, 1),
+                    'tire_management': round(tire, 1)
+                },
+                'avg_finish': round(avg_finish, 2),
+                'performance_improvement': round(current_avg_finish - avg_finish, 2)  # How much better
+            })
+
+        # Edge case: No better drivers found
+        if not matches:
+            return {
+                "similar_drivers": [],
+                "message": f"No drivers found with better performance than current avg finish of {round(current_avg_finish, 2)}",
+                "current_avg_finish": round(current_avg_finish, 2)
+            }
+
+        # Sort by distance (closest skill match first) and take top 3
+        matches.sort(key=lambda x: x['distance'])
+        top_matches = matches[:3]  # Take up to 3 (may be fewer if <3 better drivers exist)
+
+        # Calculate dynamic max_distance from actual data for better scoring
+        all_distances = [m['distance'] for m in matches]
+        max_distance = max(all_distances) if all_distances else 200.0
+        min_distance = min(all_distances) if all_distances else 0.0
+
+        similar_drivers = []
+        for match in top_matches:
+            driver = match['driver']
+            distance = match['distance']
+
+            # Improved match score: normalize to 0-100 based on actual distance range
+            # Uses min-max normalization for better interpretability
+            if max_distance > min_distance:
+                normalized_distance = (distance - min_distance) / (max_distance - min_distance)
+                match_score = max(0, 100 * (1 - normalized_distance))
+            else:
+                match_score = 100.0  # Perfect match if all distances are identical
+
+            similar_drivers.append({
+                "driver_number": driver.driver_number,
+                "driver_name": driver.driver_name or f"Driver #{driver.driver_number}",
+                "skills": match['skills'],
+                "match_score": round(match_score, 1),
+                "distance": round(distance, 2),
+                "avg_finish": match['avg_finish'],
+                "performance_improvement": match['performance_improvement'],
+                "current_avg_finish": round(current_avg_finish, 2)
+            })
+
+        return {
+            "similar_drivers": similar_drivers,
+            "current_avg_finish": round(current_avg_finish, 2),
+            "total_better_drivers": len(matches)
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error finding similar drivers: {e}")
+        raise HTTPException(status_code=500, detail=f"Error finding similar drivers: {str(e)}")
