@@ -667,7 +667,7 @@ async def get_factor_breakdown(driver_number: int, factor_name: str):
         )
 
     # Connect to database
-    db_path = Path(__file__).parent.parent.parent.parent / "circuit-fit.db"
+    db_path = Path(__file__).parent.parent.parent / "circuit-fit.db"
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
@@ -750,7 +750,7 @@ async def get_factor_comparison(driver_number: int, factor_name: str):
         )
 
     # Connect to database
-    db_path = Path(__file__).parent.parent.parent.parent / "circuit-fit.db"
+    db_path = Path(__file__).parent.parent.parent / "circuit-fit.db"
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
