@@ -30,6 +30,11 @@ from .models import (
     CornerAnalysis,
     TelemetryCoachingRequest,
     TelemetryCoachingResponse,
+    PracticePlanRequest,
+    PracticePlanResponse,
+    WeeklyMilestone,
+    SkillPriority,
+    FinalPrediction,
 )
 
 __all__ = [
@@ -60,4 +65,9 @@ __all__ = [
     "CornerAnalysis",
     "TelemetryCoachingRequest",
     "TelemetryCoachingResponse",
+    "PracticePlanRequest",
+    "PracticePlanResponse",
+    "WeeklyMilestone",
+    "SkillPriority",
+    "FinalPrediction",
 ]
