@@ -10,6 +10,7 @@ import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import SkillSliders from './components/SkillSliders';
 import PerformanceAnalysis from './components/PerformanceAnalysis';
+import PracticePlanGenerator from './components/PracticePlanGenerator';
 import './Improve.css';
 
 export default function Improve() {
@@ -102,6 +103,11 @@ export default function Improve() {
 
       {/* Main Content Grid */}
       <div className="improve-grid">
+
+        {/* PRACTICE PLAN GENERATOR - THE KILLER FEATURE */}
+        {driverData && (
+          <PracticePlanGenerator driverData={driverData} api={api} />
+        )}
 
         {/* SKILL SLIDERS SECTION */}
         {driverData && (

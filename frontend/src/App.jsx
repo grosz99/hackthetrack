@@ -10,6 +10,9 @@ import Overview from './pages/Overview/Overview'
 import RaceLog from './pages/RaceLog/RaceLog'
 import Skills from './pages/Skills/Skills'
 import Improve from './pages/Improve/Improve'
+import TrackIntelligence from './pages/TrackIntelligence/TrackIntelligence'
+import StrategyChat from './pages/StrategyChat/StrategyChat'
+import TelemetryComparison from './pages/TelemetryComparison/TelemetryComparison'
 
 function App() {
   return (
@@ -28,6 +31,11 @@ function App() {
                 <Route path="/driver/:driverNumber/race-log" element={<RaceLog />} />
                 <Route path="/driver/:driverNumber/skills" element={<Skills />} />
                 <Route path="/driver/:driverNumber/improve" element={<Improve />} />
+                <Route path="/driver/:driverNumber/telemetry-comparison" element={<TelemetryComparison />} />
+                <Route path="/driver/:driverNumber/strategy-chat" element={<StrategyChat />} />
+
+                {/* Track Intelligence - Global feature not driver-specific */}
+                <Route path="/track-intelligence" element={<TrackIntelligence />} />
 
                 {/* Legacy routes - redirect to driver detail */}
                 <Route path="/overview" element={<Navigate to="/driver/7/overview" replace />} />
