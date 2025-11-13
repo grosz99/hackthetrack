@@ -45,6 +45,18 @@ export default function DashboardTabs() {
         >
           Improve
         </NavLink>
+        <NavLink
+          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/telemetry-comparison` : `/driver/${selectedDriverNumber}/telemetry-comparison`}
+          className={({ isActive }) => `dashboard-tab ${isActive ? 'active' : ''}`}
+        >
+          Telemetry
+        </NavLink>
+        <NavLink
+          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/strategy-chat` : `/driver/${selectedDriverNumber}/strategy-chat`}
+          className={({ isActive }) => `dashboard-tab ${isActive ? 'active' : ''}`}
+        >
+          AI Coach
+        </NavLink>
       </div>
     </div>
   );

@@ -1,35 +1,92 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend } from 'recharts';
-import dashboardData from '../data/dashboardData.json';
+import { getTracks, getDrivers } from '../../services/api';
 import './TrackIntelligence.css';
-import './Rankings.css';
+
+// Static metadata about factors (doesn't change)
+const factor_info = {
+  consistency: {
+    description: 'Ability to maintain consistent lap times across a race'
+  },
+  racecraft: {
+    description: 'Skill in wheel-to-wheel racing, overtaking, and defensive driving'
+  },
+  speed: {
+    description: 'Pure one-lap pace and qualifying performance'
+  },
+  tire_management: {
+    description: 'Ability to manage tire degradation over long stints'
+  }
+};
+
+// Static model statistics (from validation)
+const model_stats = {
+  r_squared: 0.895,
+  cross_val_r_squared: 0.877,
+  mae: 1.78,
+  races_analyzed: 291
+};
 
 function TrackIntelligence() {
   const navigate = useNavigate();
-  const { drivers, tracks, factor_info, model_stats } = dashboardData;
 
-  // Pre-select Barber track on initial load
-  const [selectedTrack, setSelectedTrack] = useState(() => {
-    return tracks.find(track => track.id === 'barber') || null;
-  });
+  // State for API data
+  const [drivers, setDrivers] = useState([]);
+  const [tracks, setTracks] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Load data from API on mount
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [tracksData, driversData] = await Promise.all([
+          getTracks(),
+          getDrivers()
+        ]);
+        setTracks(tracksData);
+        setDrivers(driversData);
+      } catch (err) {
+        console.error('Error loading data:', err);
+        setError('Failed to load data');
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadData();
+  }, []);
+
+  const [selectedTrack, setSelectedTrack] = useState(null);
   const [expandedRow, setExpandedRow] = useState(null); // { driverNumber, factorName }
   const [sortConfig, setSortConfig] = useState({ key: 'circuitFitScore', direction: 'desc' }); // Default sort by circuit fit
 
+  // Pre-select Barber track once tracks are loaded
+  useEffect(() => {
+    if (tracks.length > 0 && !selectedTrack) {
+      const barber = tracks.find(track => track.id === 'barber');
+      setSelectedTrack(barber || tracks[0]);
+    }
+  }, [tracks]);
+
   // Calculate average track demands across all tracks
   const avgDemands = useMemo(() => {
+    if (tracks.length === 0) {
+      return { consistency: 0, racecraft: 0, speed: 0, tire_management: 0 };
+    }
+
     const totals = tracks.reduce((acc, track) => ({
-      consistency: acc.consistency + track.demands.consistency,
-      racecraft: acc.racecraft + track.demands.racecraft,
-      raw_speed: acc.raw_speed + track.demands.raw_speed,
-      tire_mgmt: acc.tire_mgmt + track.demands.tire_mgmt
-    }), { consistency: 0, racecraft: 0, raw_speed: 0, tire_mgmt: 0 });
+      consistency: acc.consistency + track.demand_profile.consistency,
+      racecraft: acc.racecraft + track.demand_profile.racecraft,
+      speed: acc.speed + track.demand_profile.speed,
+      tire_management: acc.tire_management + track.demand_profile.tire_management
+    }), { consistency: 0, racecraft: 0, speed: 0, tire_management: 0 });
 
     return {
       consistency: totals.consistency / tracks.length,
       racecraft: totals.racecraft / tracks.length,
-      raw_speed: totals.raw_speed / tracks.length,
-      tire_mgmt: totals.tire_mgmt / tracks.length
+      speed: totals.speed / tracks.length,
+      tire_management: totals.tire_management / tracks.length
     };
   }, [tracks]);
 
@@ -46,26 +103,26 @@ function TrackIntelligence() {
     return [
       {
         skill: 'Consistency',
-        track: normalize(selectedTrack.demands.consistency, avgDemands.consistency),
+        track: normalize(selectedTrack.demand_profile.consistency, avgDemands.consistency),
         average: normalize(avgDemands.consistency, avgDemands.consistency),
         fullMark: 100
       },
       {
         skill: 'Racecraft',
-        track: normalize(selectedTrack.demands.racecraft, avgDemands.racecraft),
+        track: normalize(selectedTrack.demand_profile.racecraft, avgDemands.racecraft),
         average: normalize(avgDemands.racecraft, avgDemands.racecraft),
         fullMark: 100
       },
       {
-        skill: 'Raw Speed',
-        track: normalize(selectedTrack.demands.raw_speed, avgDemands.raw_speed),
-        average: normalize(avgDemands.raw_speed, avgDemands.raw_speed),
+        skill: 'Speed',
+        track: normalize(selectedTrack.demand_profile.speed, avgDemands.speed),
+        average: normalize(avgDemands.speed, avgDemands.speed),
         fullMark: 100
       },
       {
         skill: 'Tire Mgmt',
-        track: normalize(selectedTrack.demands.tire_mgmt, avgDemands.tire_mgmt),
-        average: normalize(avgDemands.tire_mgmt, avgDemands.tire_mgmt),
+        track: normalize(selectedTrack.demand_profile.tire_management, avgDemands.tire_management),
+        average: normalize(avgDemands.tire_management, avgDemands.tire_management),
         fullMark: 100
       }
     ];
@@ -73,25 +130,25 @@ function TrackIntelligence() {
 
   // Calculate circuit fit scores and prepare driver radar data
   const rankedDrivers = useMemo(() => {
-    if (!selectedTrack) return [];
+    if (!selectedTrack || drivers.length === 0) return [];
 
     const driversWithFit = drivers.map(driver => {
       // Calculate circuit fit using dot product (negative is better fit)
       const fit =
-        (driver.factors.raw_speed.z_score * selectedTrack.demands.raw_speed) +
-        (driver.factors.consistency.z_score * selectedTrack.demands.consistency) +
-        (driver.factors.racecraft.z_score * selectedTrack.demands.racecraft) +
-        (driver.factors.tire_mgmt.z_score * selectedTrack.demands.tire_mgmt);
+        (driver.speed.z_score * selectedTrack.demand_profile.speed) +
+        (driver.consistency.z_score * selectedTrack.demand_profile.consistency) +
+        (driver.racecraft.z_score * selectedTrack.demand_profile.racecraft) +
+        (driver.tire_management.z_score * selectedTrack.demand_profile.tire_management);
 
       // Convert to 0-100 scale (negative fit is better, so invert)
       const fitScore = Math.max(0, Math.min(100, Math.round(50 - (fit * 5))));
 
       // Calculate factor rankings (which factor is 1st, 2nd, 3rd, 4th strongest for this driver)
       const factorScores = [
-        { name: 'consistency', score: driver.factors.consistency.score },
-        { name: 'racecraft', score: driver.factors.racecraft.score },
-        { name: 'raw_speed', score: driver.factors.raw_speed.score },
-        { name: 'tire_mgmt', score: driver.factors.tire_mgmt.score }
+        { name: 'consistency', score: driver.consistency.score },
+        { name: 'racecraft', score: driver.racecraft.score },
+        { name: 'speed', score: driver.speed.score },
+        { name: 'tire_management', score: driver.tire_management.score }
       ];
 
       // Sort by score descending to get rankings
@@ -113,23 +170,23 @@ function TrackIntelligence() {
       const driverRadarData = [
         {
           skill: 'Consistency',
-          value: normalize(driver.factors.consistency.z_score),
-          trackDemand: (selectedTrack.demands.consistency / 10) * 100
+          value: normalize(driver.consistency.z_score),
+          trackDemand: (selectedTrack.demand_profile.consistency / 10) * 100
         },
         {
           skill: 'Racecraft',
-          value: normalize(driver.factors.racecraft.z_score),
-          trackDemand: (selectedTrack.demands.racecraft / 10) * 100
+          value: normalize(driver.racecraft.z_score),
+          trackDemand: (selectedTrack.demand_profile.racecraft / 10) * 100
         },
         {
-          skill: 'Raw Speed',
-          value: normalize(driver.factors.raw_speed.z_score),
-          trackDemand: (selectedTrack.demands.raw_speed / 10) * 100
+          skill: 'Speed',
+          value: normalize(driver.speed.z_score),
+          trackDemand: (selectedTrack.demand_profile.speed / 10) * 100
         },
         {
           skill: 'Tire Mgmt',
-          value: normalize(driver.factors.tire_mgmt.z_score),
-          trackDemand: (selectedTrack.demands.tire_mgmt / 10) * 100
+          value: normalize(driver.tire_management.z_score),
+          trackDemand: (selectedTrack.demand_profile.tire_management / 10) * 100
         }
       ];
 
@@ -158,20 +215,20 @@ function TrackIntelligence() {
         // Handle different data structures
         switch (sortConfig.key) {
           case 'consistency':
-            aValue = a.factors.consistency.score;
-            bValue = b.factors.consistency.score;
+            aValue = a.consistency.score;
+            bValue = b.consistency.score;
             break;
           case 'racecraft':
-            aValue = a.factors.racecraft.score;
-            bValue = b.factors.racecraft.score;
+            aValue = a.racecraft.score;
+            bValue = b.racecraft.score;
             break;
-          case 'raw_speed':
-            aValue = a.factors.raw_speed.score;
-            bValue = b.factors.raw_speed.score;
+          case 'speed':
+            aValue = a.speed.score;
+            bValue = b.speed.score;
             break;
-          case 'tire_mgmt':
-            aValue = a.factors.tire_mgmt.score;
-            bValue = b.factors.tire_mgmt.score;
+          case 'tire_management':
+            aValue = a.tire_management.score;
+            bValue = b.tire_management.score;
             break;
           case 'circuitFitScore':
             aValue = a.circuitFitScore;
@@ -207,6 +264,29 @@ function TrackIntelligence() {
     // Don't navigate - stay on this page
     setSelectedDriver(driver);
   };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="home-container">
+        <div style={{ textAlign: 'center', padding: '100px 20px' }}>
+          <h2>Loading...</h2>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="home-container">
+        <div style={{ textAlign: 'center', padding: '100px 20px' }}>
+          <h2>Error Loading Data</h2>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="home-container">
@@ -244,10 +324,9 @@ function TrackIntelligence() {
                   className={`track-pill ${selectedTrack?.id === track.id ? 'active' : ''}`}
                   onClick={() => {
                     setSelectedTrack(track);
-                    setSelectedDriver(null);
                   }}
                 >
-                  <span className="track-pill-name">{track.short_name}</span>
+                  <span className="track-pill-name">{track.name.split(' ')[0]}</span>
                   <span className="track-pill-location">{track.location}</span>
                 </button>
               ))}
@@ -313,13 +392,15 @@ function TrackIntelligence() {
                     <div className="track-meta">
                       <span className="meta-item">{selectedTrack.location}</span>
                       <span className="meta-divider">•</span>
-                      <span className="meta-item">{selectedTrack.length}</span>
+                      <span className="meta-item">{selectedTrack.length_miles} miles</span>
                     </div>
                   </div>
 
-                  <p className="track-insight-text">
-                    {selectedTrack.insight}
-                  </p>
+                  {selectedTrack.description && (
+                    <p className="track-insight-text">
+                      {selectedTrack.description}
+                    </p>
+                  )}
 
                   <div className="legend-explainer">
                     <div className="legend-item">
@@ -372,21 +453,21 @@ function TrackIntelligence() {
                         <span className="sort-indicator">{sortConfig.direction === 'desc' ? '▼' : '▲'}</span>
                       )}
                     </div>
-                    <div className="grid-cell header-cell stat-col sortable-header" onClick={() => handleSort('raw_speed')}>
+                    <div className="grid-cell header-cell stat-col sortable-header" onClick={() => handleSort('speed')}>
                       <span className="header-with-info">
-                        RAW SPEED
-                        <span className="info-icon" data-tooltip={factor_info.raw_speed.description}>ⓘ</span>
+                        SPEED
+                        <span className="info-icon" data-tooltip={factor_info.speed.description}>ⓘ</span>
                       </span>
-                      {sortConfig.key === 'raw_speed' && (
+                      {sortConfig.key === 'speed' && (
                         <span className="sort-indicator">{sortConfig.direction === 'desc' ? '▼' : '▲'}</span>
                       )}
                     </div>
-                    <div className="grid-cell header-cell stat-col sortable-header" onClick={() => handleSort('tire_mgmt')}>
+                    <div className="grid-cell header-cell stat-col sortable-header" onClick={() => handleSort('tire_management')}>
                       <span className="header-with-info">
                         TIRE MGMT
-                        <span className="info-icon" data-tooltip={factor_info.tire_mgmt.description}>ⓘ</span>
+                        <span className="info-icon" data-tooltip={factor_info.tire_management.description}>ⓘ</span>
                       </span>
-                      {sortConfig.key === 'tire_mgmt' && (
+                      {sortConfig.key === 'tire_management' && (
                         <span className="sort-indicator">{sortConfig.direction === 'desc' ? '▼' : '▲'}</span>
                       )}
                     </div>
@@ -418,7 +499,7 @@ function TrackIntelligence() {
                         { label: 'Pass Success Rate', value: 49 },
                         { label: 'Defensive Rating', value: 51 }
                       ]},
-                      raw_speed: { icon: '⚡', title: 'Raw Speed', weight: '50%', variables: [
+                      speed: { icon: '⚡', title: 'Speed', weight: '50%', variables: [
                         { label: 'Qualifying Pace', value: 72 },
                         { label: 'Best Race Lap', value: 68 },
                         { label: 'Avg Top-10 Pace', value: 65 },
@@ -426,7 +507,7 @@ function TrackIntelligence() {
                         { label: 'Sector Best Combo', value: 64 },
                         { label: 'Ultimate Pace', value: 69 }
                       ]},
-                      tire_mgmt: { icon: '🏁', title: 'Tire Management', weight: '10%', variables: [
+                      tire_management: { icon: '🏁', title: 'Tire Management', weight: '10%', variables: [
                         { label: 'Pace Degradation', value: 56 },
                         { label: 'Late Stint Performance', value: 53 },
                         { label: 'Early vs Late Pace', value: 54 },
@@ -435,70 +516,70 @@ function TrackIntelligence() {
                     };
 
                     return (
-                      <React.Fragment key={driver.number}>
+                      <React.Fragment key={driver.driver_number}>
                         {/* Main Data Row */}
                         <div className="grid-row">
                           <div className="grid-cell rank-col">
                             <span className="rank-number">{index + 1}</span>
                           </div>
                           <div className="grid-cell driver-col">
-                            <span className="driver-number">#{driver.number}</span>
+                            <span className="driver-number">#{driver.driver_number}</span>
                           </div>
                           <div
                             className={`grid-cell stat-col clickable-cell ${
-                              expandedRow?.driverNumber === driver.number && expandedRow?.factorName === 'consistency' ? 'active-cell' : ''
+                              expandedRow?.driverNumber === driver.driver_number && expandedRow?.factorName === 'consistency' ? 'active-cell' : ''
                             }`}
                             onClick={() => {
-                              if (expandedRow?.driverNumber === driver.number && expandedRow?.factorName === 'consistency') {
+                              if (expandedRow?.driverNumber === driver.driver_number && expandedRow?.factorName === 'consistency') {
                                 setExpandedRow(null);
                               } else {
-                                setExpandedRow({ driverNumber: driver.number, factorName: 'consistency' });
+                                setExpandedRow({ driverNumber: driver.driver_number, factorName: 'consistency' });
                               }
                             }}
                           >
-                            <span className="stat-value">{driver.factors.consistency.score}</span>
+                            <span className="stat-value">{driver.consistency.score}</span>
                           </div>
                           <div
                             className={`grid-cell stat-col clickable-cell ${
-                              expandedRow?.driverNumber === driver.number && expandedRow?.factorName === 'racecraft' ? 'active-cell' : ''
+                              expandedRow?.driverNumber === driver.driver_number && expandedRow?.factorName === 'racecraft' ? 'active-cell' : ''
                             }`}
                             onClick={() => {
-                              if (expandedRow?.driverNumber === driver.number && expandedRow?.factorName === 'racecraft') {
+                              if (expandedRow?.driverNumber === driver.driver_number && expandedRow?.factorName === 'racecraft') {
                                 setExpandedRow(null);
                               } else {
-                                setExpandedRow({ driverNumber: driver.number, factorName: 'racecraft' });
+                                setExpandedRow({ driverNumber: driver.driver_number, factorName: 'racecraft' });
                               }
                             }}
                           >
-                            <span className="stat-value">{driver.factors.racecraft.score}</span>
+                            <span className="stat-value">{driver.racecraft.score}</span>
                           </div>
                           <div
                             className={`grid-cell stat-col clickable-cell ${
-                              expandedRow?.driverNumber === driver.number && expandedRow?.factorName === 'raw_speed' ? 'active-cell' : ''
+                              expandedRow?.driverNumber === driver.driver_number && expandedRow?.factorName === 'speed' ? 'active-cell' : ''
                             }`}
                             onClick={() => {
-                              if (expandedRow?.driverNumber === driver.number && expandedRow?.factorName === 'raw_speed') {
+                              if (expandedRow?.driverNumber === driver.driver_number && expandedRow?.factorName === 'speed') {
                                 setExpandedRow(null);
                               } else {
-                                setExpandedRow({ driverNumber: driver.number, factorName: 'raw_speed' });
+                                setExpandedRow({ driverNumber: driver.driver_number, factorName: 'speed' });
                               }
                             }}
                           >
-                            <span className="stat-value">{driver.factors.raw_speed.score}</span>
+                            <span className="stat-value">{driver.speed.score}</span>
                           </div>
                           <div
                             className={`grid-cell stat-col clickable-cell ${
-                              expandedRow?.driverNumber === driver.number && expandedRow?.factorName === 'tire_mgmt' ? 'active-cell' : ''
+                              expandedRow?.driverNumber === driver.driver_number && expandedRow?.factorName === 'tire_management' ? 'active-cell' : ''
                             }`}
                             onClick={() => {
-                              if (expandedRow?.driverNumber === driver.number && expandedRow?.factorName === 'tire_mgmt') {
+                              if (expandedRow?.driverNumber === driver.driver_number && expandedRow?.factorName === 'tire_management') {
                                 setExpandedRow(null);
                               } else {
-                                setExpandedRow({ driverNumber: driver.number, factorName: 'tire_mgmt' });
+                                setExpandedRow({ driverNumber: driver.driver_number, factorName: 'tire_management' });
                               }
                             }}
                           >
-                            <span className="stat-value">{driver.factors.tire_mgmt.score}</span>
+                            <span className="stat-value">{driver.tire_management.score}</span>
                           </div>
                           <div className="grid-cell fit-col">
                             <span className="fit-value">{driver.circuitFitScore}</span>
@@ -506,7 +587,7 @@ function TrackIntelligence() {
                         </div>
 
                         {/* Expanded Variables Row */}
-                        {expandedRow?.driverNumber === driver.number && (
+                        {expandedRow?.driverNumber === driver.driver_number && (
                           <div className="expanded-row">
                             <div className="expanded-content">
                               <div className="expanded-header">
@@ -516,14 +597,14 @@ function TrackIntelligence() {
                                     <span className="expanded-weight">({factorMeta[expandedRow.factorName].weight})</span>
                                   </h4>
                                   <p className="expanded-subtitle">
-                                    Underlying variables for Driver #{driver.number}
+                                    Underlying variables for Driver #{driver.driver_number}
                                   </p>
                                 </div>
                                 <button
                                   className="strategize-button-expanded"
                                   onClick={() => navigate('/strategy', {
                                     state: {
-                                      driverNumber: driver.number,
+                                      driverNumber: driver.driver_number,
                                       trackId: selectedTrack.id
                                     }
                                   })}

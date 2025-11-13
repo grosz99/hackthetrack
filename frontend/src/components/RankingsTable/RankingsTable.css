@@ -52,6 +52,24 @@
 .rankings-table {
   width: 100%;
   border-collapse: collapse;
+  display: table !important;
+}
+
+.rankings-table thead {
+  display: table-header-group !important;
+}
+
+.rankings-table tbody {
+  display: table-row-group !important;
+}
+
+.rankings-table tr {
+  display: table-row !important;
+}
+
+.rankings-table th,
+.rankings-table td {
+  display: table-cell !important;
 }
 
 .rankings-table thead {
@@ -110,30 +128,9 @@
   border-radius: 50%;
   font-weight: 900;
   font-size: 20px;
-  background: #f8f9fa;
-  border: 3px solid #e0e0e0;
-  color: #000;
-}
-
-.rank-badge.rank-1 {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-  border-color: #FFA500;
-  color: #1a1a1a;
-  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.4);
-}
-
-.rank-badge.rank-2 {
-  background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
-  border-color: #A8A8A8;
-  color: #1a1a1a;
-  box-shadow: 0 4px 12px rgba(192, 192, 192, 0.4);
-}
-
-.rank-badge.rank-3 {
-  background: linear-gradient(135deg, #CD7F32 0%, #B8860B 100%);
-  border-color: #B8860B;
-  color: #1a1a1a;
-  box-shadow: 0 4px 12px rgba(205, 127, 50, 0.4);
+  background: #e74c3c;
+  border: 3px solid #c0392b;
+  color: #ffffff;
 }
 
 /* Driver Info */

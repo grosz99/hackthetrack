@@ -33,6 +33,11 @@ from models import (
     TelemetryCoachingRequest,
     TelemetryCoachingResponse,
     CornerAnalysis,
+    PracticePlanRequest,
+    PracticePlanResponse,
+    WeeklyMilestone,
+    SkillPriority,
+    FinalPrediction,
 )
 from ..services.data_loader import data_loader
 from ..services.ai_strategy import ai_service
@@ -1313,3 +1318,275 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
     except Exception as e:
         logger.error(f"Error finding similar drivers: {e}")
         raise HTTPException(status_code=500, detail=f"Error finding similar drivers: {str(e)}")
+
+
+# ============================================================================
+# PRACTICE PLAN ENDPOINT - THE KILLER FEATURE
+# ============================================================================
+
+
+@router.post(
+    "/practice/generate-plan",
+    response_model=PracticePlanResponse,
+    summary="Generate personalized practice plan",
+    description="Create a week-by-week practice plan to reach target position"
+)
+async def generate_practice_plan(request: PracticePlanRequest):
+    """
+    Generate a personalized practice plan showing exactly what to improve and by how much.
+
+    This is the killer feature that predicts position improvement based on skill gains.
+    """
+    # Model coefficients from validated 4-factor model
+    MODEL_COEFFICIENTS = {
+        'speed': 6.079,
+        'consistency': 3.792,
+        'racecraft': 1.943,
+        'tire_management': 1.237,
+        'intercept': 13.01
+    }
+
+    FACTOR_WEIGHTS = {
+        'speed': 0.466,
+        'consistency': 0.291,
+        'racecraft': 0.149,
+        'tire_management': 0.095
+    }
+
+    try:
+        # Get driver data
+        driver = data_loader.get_driver(request.driver_number)
+        if not driver:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Driver {request.driver_number} not found"
+            )
+
+        # Get track data
+        track = data_loader.get_track(request.current_track)
+        if not track:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Track {request.current_track} not found"
+            )
+
+        # Calculate current predicted position
+        from app.utils.numpy_stats import percentile_to_z
+
+        current_z_scores = {
+            'speed': percentile_to_z(driver.speed.percentile),
+            'consistency': percentile_to_z(driver.consistency.percentile),
+            'racecraft': percentile_to_z(driver.racecraft.percentile),
+            'tire_management': percentile_to_z(driver.tire_management.percentile)
+        }
+
+        current_position = (
+            MODEL_COEFFICIENTS['intercept'] +
+            MODEL_COEFFICIENTS['speed'] * current_z_scores['speed'] +
+            MODEL_COEFFICIENTS['consistency'] * current_z_scores['consistency'] +
+            MODEL_COEFFICIENTS['racecraft'] * current_z_scores['racecraft'] +
+            MODEL_COEFFICIENTS['tire_management'] * current_z_scores['tire_management']
+        )
+
+        # Calculate gap to target
+        positions_to_gain = current_position - request.target_position
+
+        if positions_to_gain <= 0:
+            # Already at or better than target
+            return PracticePlanResponse(
+                current_position=round(current_position, 2),
+                target_position=request.target_position,
+                positions_to_gain=0,
+                success_probability=1.0,
+                weekly_plan=[],
+                skill_priorities={},
+                final_prediction=FinalPrediction(
+                    predicted_position=round(current_position, 2),
+                    confidence_interval=[round(current_position - 0.5, 2), round(current_position + 0.5, 2)],
+                    success_probability=1.0
+                ),
+                track_name=track.name,
+                ai_coaching_summary="You're already at or above your target position! Focus on maintaining your current performance."
+            )
+
+        # Determine which skills to prioritize based on:
+        # 1. Model coefficient (impact on position)
+        # 2. Current score (room for improvement)
+        # 3. Track demand profile
+
+        skill_gaps = {}
+        for skill in ['speed', 'consistency', 'racecraft', 'tire_management']:
+            current_percentile = getattr(driver, skill).percentile
+            track_demand = getattr(track.demand_profile, skill)
+
+            # Calculate skill priority score
+            model_weight = MODEL_COEFFICIENTS[skill]
+            room_for_improvement = 100 - current_percentile
+            track_importance = track_demand / 100
+
+            priority_score = model_weight * room_for_improvement * track_importance
+
+            skill_gaps[skill] = {
+                'current': current_percentile,
+                'weight': model_weight,
+                'room': room_for_improvement,
+                'track_fit': track_importance,
+                'priority': priority_score
+            }
+
+        # Sort skills by priority
+        sorted_skills = sorted(skill_gaps.items(), key=lambda x: x[1]['priority'], reverse=True)
+
+        # Calculate how much to improve each skill per week
+        total_weeks = request.weeks_available
+        weekly_plan = []
+
+        # Distribute improvement across top 2-3 skills
+        primary_skills = sorted_skills[:2]  # Focus on top 2 skills
+
+        # Calculate points needed to reach target
+        # Each percentile point improvement translates to position change via coefficient
+        points_per_position = 1.5  # Rough estimate: need ~1.5 percentile points per position
+        total_points_needed = positions_to_gain * points_per_position
+
+        # Distribute improvement across primary skills weighted by their coefficients
+        total_coefficient = sum(skill_gaps[skill]['weight'] for skill, _ in primary_skills)
+
+        skill_targets = {}
+        for skill, data in primary_skills:
+            proportion = skill_gaps[skill]['weight'] / total_coefficient
+            points_to_add = total_points_needed * proportion
+            target_score = min(95, data['current'] + points_to_add)  # Cap at 95th percentile
+            skill_targets[skill] = target_score
+
+        # Generate weekly milestones
+        cumulative_improvement = {skill: 0 for skill, _ in primary_skills}
+
+        for week in range(1, total_weeks + 1):
+            # Distribute improvement linearly across weeks
+            week_fraction = week / total_weeks
+
+            # Pick primary skill for this week (alternate between top skills)
+            focus_skill_name = primary_skills[week % len(primary_skills)][0]
+            focus_skill_data = skill_gaps[focus_skill_name]
+
+            # Calculate targets for this week
+            week_target = focus_skill_data['current'] + (skill_targets[focus_skill_name] - focus_skill_data['current']) * week_fraction
+            improvement_this_week = week_target - (focus_skill_data['current'] + cumulative_improvement[focus_skill_name])
+            cumulative_improvement[focus_skill_name] += improvement_this_week
+
+            # Calculate predicted position after this week
+            projected_skills = {
+                skill: focus_skill_data['current'] + cumulative_improvement.get(skill, 0)
+                for skill, focus_skill_data in skill_gaps.items()
+            }
+
+            # Convert to z-scores and predict
+            projected_z = {
+                skill: percentile_to_z(min(99, max(1, projected_skills[skill])))
+                for skill in projected_skills
+            }
+
+            week_predicted_position = (
+                MODEL_COEFFICIENTS['intercept'] +
+                MODEL_COEFFICIENTS['speed'] * projected_z['speed'] +
+                MODEL_COEFFICIENTS['consistency'] * projected_z['consistency'] +
+                MODEL_COEFFICIENTS['racecraft'] * projected_z['racecraft'] +
+                MODEL_COEFFICIENTS['tire_management'] * projected_z['tire_management']
+            )
+
+            # Generate practice drills for focused skill
+            drill_map = {
+                'speed': [
+                    "Qualifying simulation laps (5-10 lap sessions)",
+                    "Sector time optimization exercises",
+                    "Low-fuel sprint race practice"
+                ],
+                'consistency': [
+                    "20-lap consistency runs (track lap time variation)",
+                    "Race simulation with tire management",
+                    "Steady-state pace practice"
+                ],
+                'racecraft': [
+                    "Overtaking scenario practice",
+                    "Defensive driving exercises",
+                    "Race start simulations"
+                ],
+                'tire_management': [
+                    "Long-run tire degradation practice",
+                    "Smooth driving input exercises",
+                    "Fuel-and-tire saving techniques"
+                ]
+            }
+
+            milestone = WeeklyMilestone(
+                week=week,
+                focus_skill=focus_skill_name.replace('_', ' ').title(),
+                current_score=round(focus_skill_data['current'] + cumulative_improvement[focus_skill_name] - improvement_this_week, 1),
+                target_score=round(week_target, 1),
+                improvement_needed=f"+{round(improvement_this_week, 1)} pts",
+                practice_hours=3 if week_fraction < 0.5 else 4,  # More hours in later weeks
+                drills=drill_map.get(focus_skill_name, ["General practice"]),
+                expected_position_after_week=round(week_predicted_position, 2),
+                milestone=f"Week {week}: Improve {focus_skill_name.replace('_', ' ').title()} to {round(week_target, 1)}th percentile"
+            )
+
+            weekly_plan.append(milestone)
+
+        # Build skill priorities summary
+        skill_priorities = {}
+        for skill, data in sorted_skills[:3]:  # Top 3 skills
+            target = skill_targets.get(skill, data['current'])
+            improvement = target - data['current']
+
+            # Estimate position impact
+            z_current = percentile_to_z(data['current'])
+            z_target = percentile_to_z(target)
+            position_impact = (z_target - z_current) * MODEL_COEFFICIENTS[skill]
+
+            skill_priorities[skill] = SkillPriority(
+                skill_name=skill.replace('_', ' ').title(),
+                current=round(data['current'], 1),
+                target=round(target, 1),
+                position_impact=f"+{abs(round(position_impact, 1))} positions" if position_impact < 0 else f"{round(position_impact, 1)} positions",
+                effort_score="High (4 hrs/week)" if improvement > 10 else "Medium (3 hrs/week)"
+            )
+
+        # Final prediction
+        final_predicted_position = weekly_plan[-1].expected_position_after_week if weekly_plan else current_position
+        success_probability = min(0.95, max(0.5, 1 - (abs(final_predicted_position - request.target_position) / positions_to_gain)))
+
+        final_prediction = FinalPrediction(
+            predicted_position=round(final_predicted_position, 2),
+            confidence_interval=[
+                round(max(1, final_predicted_position - 1.0), 2),
+                round(final_predicted_position + 1.0, 2)
+            ],
+            success_probability=round(success_probability, 2)
+        )
+
+        # AI coaching summary (optional - can use Claude API here if needed)
+        ai_coaching_summary = (
+            f"Based on your current performance at {track.name}, focus on improving "
+            f"{' and '.join([skill.replace('_', ' ').title() for skill, _ in primary_skills])}. "
+            f"With {total_weeks} weeks of dedicated practice, you have a "
+            f"{round(success_probability * 100)}% probability of reaching P{request.target_position}."
+        )
+
+        return PracticePlanResponse(
+            current_position=round(current_position, 2),
+            target_position=request.target_position,
+            positions_to_gain=round(positions_to_gain, 2),
+            success_probability=round(success_probability, 2),
+            weekly_plan=weekly_plan,
+            skill_priorities=skill_priorities,
+            final_prediction=final_prediction,
+            track_name=track.name,
+            ai_coaching_summary=ai_coaching_summary
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating practice plan: {e}")
+        raise HTTPException(status_code=500, detail=f"Error generating practice plan: {str(e)}")

@@ -335,3 +335,60 @@ class ImprovePredictionResponse(BaseModel):
     prediction: PredictionWithUncertainty
     similar_drivers: List[SimilarDriverMatch]
     recommendations: List[ImprovementRecommendation]
+
+
+# Practice Plan Models
+
+class PracticePlanRequest(BaseModel):
+    """Request to generate a personalized practice plan."""
+
+    driver_number: int
+    target_position: int = Field(..., ge=1, le=30, description="Target finishing position")
+    current_track: str = Field(..., description="Track ID for circuit-specific planning")
+    weeks_available: int = Field(..., ge=1, le=12, description="Number of weeks available to practice")
+
+
+class WeeklyMilestone(BaseModel):
+    """Weekly practice milestone with targets and predictions."""
+
+    week: int
+    focus_skill: str
+    current_score: float
+    target_score: float
+    improvement_needed: str
+    practice_hours: int
+    drills: List[str]
+    expected_position_after_week: float
+    milestone: str
+
+
+class SkillPriority(BaseModel):
+    """Priority skill for improvement with impact analysis."""
+
+    skill_name: str
+    current: float
+    target: float
+    position_impact: str
+    effort_score: str
+
+
+class FinalPrediction(BaseModel):
+    """Final prediction after completing practice plan."""
+
+    predicted_position: float
+    confidence_interval: List[float]
+    success_probability: float
+
+
+class PracticePlanResponse(BaseModel):
+    """Complete practice plan response with weekly breakdown."""
+
+    current_position: float
+    target_position: int
+    positions_to_gain: float
+    success_probability: float
+    weekly_plan: List[WeeklyMilestone]
+    skill_priorities: Dict[str, SkillPriority]
+    final_prediction: FinalPrediction
+    track_name: str
+    ai_coaching_summary: Optional[str] = None

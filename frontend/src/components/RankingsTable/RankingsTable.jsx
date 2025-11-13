@@ -93,9 +93,6 @@ export default function RankingsTable({ drivers = [] }) {
         <table className="rankings-table">
           <thead>
             <tr>
-              <th onClick={() => handleSort('rank')} className="sortable">
-                RANK {sortKey === 'rank' && (sortDirection === 'asc' ? '↑' : '↓')}
-              </th>
               <th>DRIVER</th>
               <th onClick={() => handleSort('overall_score')} className="sortable">
                 OVERALL {sortKey === 'overall_score' && (sortDirection === 'asc' ? '↑' : '↓')}
@@ -132,15 +129,7 @@ export default function RankingsTable({ drivers = [] }) {
                 transition={{ delay: index * 0.03, duration: 0.3 }}
                 onClick={() => handleDriverClick(driver.number)}
                 className="driver-row"
-                whileHover={{ scale: 1.01, backgroundColor: 'rgba(255, 255, 255, 0.05)' }}
               >
-                {/* Rank */}
-                <td>
-                  <div className={`rank-badge rank-${driver.rank <= 3 ? driver.rank : 'default'}`}>
-                    {driver.rank}
-                  </div>
-                </td>
-
                 {/* Driver Info */}
                 <td className="driver-info">
                   <div className="driver-number-badge">{driver.number}</div>

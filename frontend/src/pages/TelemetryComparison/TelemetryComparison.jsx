@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { compareTelemetry, getDrivers } from '../../services/api';
-import dashboardData from '../data/dashboardData.json';
+import { compareTelemetry, getDrivers, getTracks } from '../../services/api';
 import './TelemetryComparison.css';
 
 function TelemetryComparison() {
@@ -17,8 +16,32 @@ function TelemetryComparison() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { tracks } = dashboardData;
-  const availableDrivers = dashboardData.drivers.map(d => d.number).sort((a, b) => a - b);
+  // Fetch tracks and drivers from API
+  const [tracks, setTracks] = useState([]);
+  const [drivers, setDrivers] = useState([]);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  // Load tracks and drivers on mount
+  useEffect(() => {
+    const loadInitialData = async () => {
+      try {
+        const [tracksData, driversData] = await Promise.all([
+          getTracks(),
+          getDrivers()
+        ]);
+        setTracks(tracksData);
+        setDrivers(driversData);
+      } catch (err) {
+        console.error('Error loading initial data:', err);
+        setError('Failed to load tracks and drivers');
+      } finally {
+        setInitialLoading(false);
+      }
+    };
+    loadInitialData();
+  }, []);
+
+  const availableDrivers = drivers.map(d => d.driver_number).sort((a, b) => a - b);
 
   useEffect(() => {
     if (driver1 && driver2 && trackId) {
@@ -67,7 +90,19 @@ function TelemetryComparison() {
     },
   ] : [];
 
-  const selectedTrack = tracks.find(t => t.id === trackId);
+  const selectedTrack = tracks.find(t => t.track_id === trackId);
+
+  // Show loading state while fetching initial data
+  if (initialLoading) {
+    return (
+      <div className="telemetry-container">
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="telemetry-container">
@@ -86,7 +121,7 @@ function TelemetryComparison() {
             className="select-input"
           >
             {tracks.map((track) => (
-              <option key={track.id} value={track.id}>
+              <option key={track.track_id} value={track.track_id}>
                 {track.name}
               </option>
             ))}
