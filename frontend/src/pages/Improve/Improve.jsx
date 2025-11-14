@@ -20,9 +20,19 @@ export default function Improve() {
   const [coachingData, setCoachingData] = useState(null);
   const [targetSkills, setTargetSkills] = useState(null);
   const [similarDrivers, setSimilarDrivers] = useState(null);
+  const [selectedTrack, setSelectedTrack] = useState('barber');
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
+
+  const tracks = [
+    { id: 'barber', name: 'Barber Motorsports Park' },
+    { id: 'cota', name: 'Circuit of the Americas' },
+    { id: 'roadamerica', name: 'Road America' },
+    { id: 'sebring', name: 'Sebring International' },
+    { id: 'sonoma', name: 'Sonoma Raceway' },
+    { id: 'vir', name: 'Virginia International Raceway' }
+  ];
 
   // Load driver data and coaching
   useEffect(() => {
@@ -101,136 +111,137 @@ export default function Improve() {
       {/* Unified Navigation Tabs */}
       <DashboardTabs />
 
-      {/* Main Content Grid */}
-      <div className="improve-grid">
+      {/* Main Content */}
+      <div className="improve-content">
 
-        {/* PRACTICE PLAN GENERATOR - THE KILLER FEATURE */}
-        {driverData && (
-          <PracticePlanGenerator driverData={driverData} api={api} />
-        )}
+        {/* TWO COLUMN LAYOUT - Skills & Comparables */}
+        <div className="improve-grid">
+          {/* LEFT COLUMN - SKILL SLIDERS */}
+          {driverData && (
+            <section className="skill-sliders-section">
+              <SkillSliders
+                currentSkills={{
+                  speed: driverData.speed?.score || 0,
+                  consistency: driverData.consistency?.score || 0,
+                  racecraft: driverData.racecraft?.score || 0,
+                  tire_management: driverData.tire_management?.score || 0
+                }}
+                onTargetChange={handleTargetChange}
+                onFindSimilar={handleFindSimilar}
+                tracks={tracks}
+                selectedTrack={selectedTrack}
+                onTrackChange={setSelectedTrack}
+              />
+            </section>
+          )}
 
-        {/* SKILL SLIDERS SECTION */}
-        {driverData && (
-          <section className="skill-sliders-section">
-            <SkillSliders
-              currentSkills={{
-                speed: driverData.speed?.score || 0,
-                consistency: driverData.consistency?.score || 0,
-                racecraft: driverData.racecraft?.score || 0,
-                tire_management: driverData.tire_management?.score || 0
-              }}
-              onTargetChange={handleTargetChange}
-              onFindSimilar={handleFindSimilar}
-            />
-          </section>
-        )}
+          {/* RIGHT COLUMN - COMPARABLES */}
+          <section className="comparables-section">
+            {!searching && !similarDrivers && (
+              <div className="comparables-empty">
+                <div className="empty-icon">👥</div>
+                <h3>Find Similar Drivers</h3>
+                <p>Adjust your target skills and select a track, then click "Find Comparables" to see drivers with similar skill profiles.</p>
+              </div>
+            )}
 
-        {/* SIMILAR DRIVERS LOADING */}
-        {searching && (
-          <section className="similar-drivers-loading">
-            <div className="loading-text">Finding similar drivers...</div>
-          </section>
-        )}
+            {searching && (
+              <div className="comparables-loading">
+                <div className="loading-spinner"></div>
+                <p>Finding similar drivers...</p>
+              </div>
+            )}
 
-        {/* SIMILAR DRIVERS RESULTS */}
-        {similarDrivers && similarDrivers.length > 0 && driverData && (
-          <section className="similar-drivers-section">
-            {/* Improvement Prediction */}
-            <div className="improvement-prediction">
-              <h4>YOUR PREDICTED IMPROVEMENT</h4>
-              <div className="improvement-stats">
-                <div className="stat-box">
-                  <div className="stat-label">Current Avg</div>
-                  <div className="stat-value current">
-                    {driverData.stats?.average_finish?.toFixed(2) || 'N/A'}
+            {similarDrivers && similarDrivers.length > 0 && driverData && (
+              <div className="comparables-results">
+                <div className="comparables-header">
+                  <h3>Similar Drivers at {tracks.find(t => t.id === selectedTrack)?.name}</h3>
+                  <p>Drivers with skill patterns most similar to your target</p>
+                </div>
+
+                {/* Improvement Prediction */}
+                <div className="improvement-prediction">
+                  <h4>Predicted Improvement</h4>
+                  <div className="improvement-stats">
+                    <div className="stat-box">
+                      <div className="stat-label">Current Avg</div>
+                      <div className="stat-value current">
+                        {driverData.stats?.average_finish?.toFixed(1) || 'N/A'}
+                      </div>
+                    </div>
+                    <div className="stat-arrow">→</div>
+                    <div className="stat-box">
+                      <div className="stat-label">Predicted Avg</div>
+                      <div className="stat-value predicted">
+                        {(() => {
+                          const avgOfSimilar = similarDrivers
+                            .filter(d => d.avg_finish)
+                            .reduce((sum, d) => sum + d.avg_finish, 0) /
+                            similarDrivers.filter(d => d.avg_finish).length;
+                          return avgOfSimilar ? avgOfSimilar.toFixed(1) : 'N/A';
+                        })()}
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="stat-arrow">→</div>
-                <div className="stat-box">
-                  <div className="stat-label">Predicted Avg</div>
-                  <div className="stat-value predicted">
-                    {(() => {
-                      const avgOfSimilar = similarDrivers
-                        .filter(d => d.avg_finish)
-                        .reduce((sum, d) => sum + d.avg_finish, 0) /
-                        similarDrivers.filter(d => d.avg_finish).length;
-                      return avgOfSimilar ? avgOfSimilar.toFixed(2) : 'N/A';
-                    })()}
-                  </div>
-                  {(() => {
-                    const current = driverData.stats?.average_finish;
-                    const avgOfSimilar = similarDrivers
-                      .filter(d => d.avg_finish)
-                      .reduce((sum, d) => sum + d.avg_finish, 0) /
-                      similarDrivers.filter(d => d.avg_finish).length;
-                    if (current && avgOfSimilar) {
-                      const improvement = current - avgOfSimilar;
-                      return (
-                        <div className="improvement-delta">
-                          {improvement > 0 ? `↑ ${improvement.toFixed(2)} positions better` : 'No change'}
+
+                {/* Similar Drivers List */}
+                <div className="similar-drivers-list">
+                  {similarDrivers.map((driver, index) => (
+                    <div key={driver.driver_number} className="similar-driver-card">
+                      <div className="rank-badge">#{index + 1}</div>
+                      <div className="driver-info">
+                        <h4>Driver #{driver.driver_number}</h4>
+                        <p>{driver.driver_name}</p>
+                        <div className="match-score">{driver.match_score}% Match</div>
+                      </div>
+                      {driver.avg_finish && (
+                        <div className="avg-finish">
+                          <span className="label">Avg Finish</span>
+                          <span className="value">P{driver.avg_finish.toFixed(1)}</span>
                         </div>
-                      );
-                    }
-                    return null;
-                  })()}
+                      )}
+                      <div className="skills-grid">
+                        <div className="skill-item">
+                          <span className="skill-label">Speed</span>
+                          <span className="skill-value">{driver.skills.speed}</span>
+                        </div>
+                        <div className="skill-item">
+                          <span className="skill-label">Consistency</span>
+                          <span className="skill-value">{driver.skills.consistency}</span>
+                        </div>
+                        <div className="skill-item">
+                          <span className="skill-label">Racecraft</span>
+                          <span className="skill-value">{driver.skills.racecraft}</span>
+                        </div>
+                        <div className="skill-item">
+                          <span className="skill-label">Tire Mgmt</span>
+                          <span className="skill-value">{driver.skills.tire_management}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </div>
+            )}
+          </section>
+        </div>
 
-            <div className="similar-drivers-header">
-              <h3>Top 3 Similar Drivers</h3>
-              <p className="similar-drivers-subtitle">
-                Drivers with skill patterns most similar to your target
-              </p>
-            </div>
-
-            <div className="similar-drivers-grid">
-              {similarDrivers.map((driver, index) => (
-                <div key={driver.driver_number} className="similar-driver-card">
-                  <div className="rank-badge">#{index + 1}</div>
-                  <div className="match-score">{driver.match_score}% Match</div>
-
-                  <div className="driver-info">
-                    <h4>Driver #{driver.driver_number}</h4>
-                    <p>{driver.driver_name}</p>
-                  </div>
-
-                  {driver.avg_finish && (
-                    <div className="avg-finish">
-                      <span className="label">Avg Finish:</span>
-                      <span className="value">{driver.avg_finish}</span>
-                    </div>
-                  )}
-
-                  <div className="skills-grid">
-                    <div className="skill-item">
-                      <span className="skill-label">Speed</span>
-                      <span className="skill-value">{driver.skills.speed}</span>
-                    </div>
-                    <div className="skill-item">
-                      <span className="skill-label">Consistency</span>
-                      <span className="skill-value">{driver.skills.consistency}</span>
-                    </div>
-                    <div className="skill-item">
-                      <span className="skill-label">Racecraft</span>
-                      <span className="skill-value">{driver.skills.racecraft}</span>
-                    </div>
-                    <div className="skill-item">
-                      <span className="skill-label">Tire Mgmt</span>
-                      <span className="skill-value">{driver.skills.tire_management}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+        {/* FULL WIDTH SECTIONS BELOW */}
+        {/* PRACTICE PLAN GENERATOR */}
+        {driverData && (
+          <section className="practice-plan-section">
+            <PracticePlanGenerator driverData={driverData} api={api} />
           </section>
         )}
 
         {/* PERFORMANCE ANALYSIS SECTION */}
-        <PerformanceAnalysis
-          coachingData={coachingData}
-          driverData={driverData}
-        />
+        <section className="performance-analysis-section">
+          <PerformanceAnalysis
+            coachingData={coachingData}
+            driverData={driverData}
+          />
+        </section>
 
       </div>
     </div>

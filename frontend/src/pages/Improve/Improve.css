@@ -1,8 +1,8 @@
 /* Improve Page - Design System Match */
 
 .improve-page {
-  padding: 24px 32px;
-  background: #0a0a0a;
+  padding: var(--spacing-8) var(--spacing-10);
+  background: var(--color-dark-1);
   min-height: 100vh;
   width: 100%;
   max-width: 100%;
@@ -10,90 +10,155 @@
   box-sizing: border-box;
 }
 
-/* Container constraint for content */
+/* Container constraint for content - matches Overview page */
 .improve-page > * {
-  max-width: 1400px;
+  max-width: 1500px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Main Grid Layout - 2 columns */
+/* Main Content */
+.improve-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Two Column Grid - Skills & Comparables */
 .improve-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  padding: 0;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 48px;
   align-items: stretch;
 }
 
-/* Make sections same height */
-.improve-grid > section {
-  min-height: 800px;
-  display: flex;
-  flex-direction: column;
+.skill-sliders-section,
+.comparables-section {
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
-/* Skill Sliders Section - Left column */
-.skill-sliders-section {
-  grid-column: 1;
-}
-
-/* Similar Drivers Loading - Right column */
-.similar-drivers-loading {
-  grid-column: 2;
+/* Comparables Section - RIGHT COLUMN */
+.comparables-section {
   background: #ffffff;
-  border: 4px solid #3498db;
+  border: 4px solid #e74c3c;
   border-radius: 16px;
   padding: 32px;
-  text-align: center;
+  min-height: 600px;
   display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Empty State */
+.comparables-empty {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  text-align: center;
+  flex: 1;
+  padding: 48px 24px;
 }
 
-.similar-drivers-loading .loading-text {
+.comparables-empty .empty-icon {
+  font-size: 64px;
+  margin-bottom: 24px;
+  opacity: 0.5;
+}
+
+.comparables-empty h3 {
   font-size: 24px;
   font-weight: 900;
-  color: #3498db;
-  animation: pulse 1.5s ease-in-out infinite;
+  color: #e74c3c;
+  margin: 0 0 12px 0;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+.comparables-empty p {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+  max-width: 400px;
+  line-height: 1.6;
 }
 
-/* Similar Drivers Section - Right column */
-.similar-drivers-section {
-  grid-column: 2;
-  background: #ffffff;
-  border: 4px solid #27ae60;
-  border-radius: 16px;
-  padding: 32px;
+/* Loading State */
+.comparables-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  flex: 1;
+  padding: 48px 24px;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #e0e0e0;
+  border-top-color: #e74c3c;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 24px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.comparables-loading p {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e74c3c;
+  margin: 0;
+}
+
+/* Comparables Results */
+.comparables-results {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-/* Improvement Prediction Banner */
+.comparables-header {
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 3px solid #e74c3c;
+}
+
+.comparables-header h3 {
+  font-size: 20px;
+  font-weight: 900;
+  color: #e74c3c;
+  margin: 0 0 8px 0;
+  text-transform: uppercase;
+}
+
+.comparables-header p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+  font-weight: 600;
+}
+
+/* Improvement Prediction */
 .improvement-prediction {
-  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-  border: 4px solid #27ae60;
+  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+  border: 3px solid #e74c3c;
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
   margin-bottom: 20px;
   text-align: center;
 }
 
 .improvement-prediction h4 {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
-  color: #1b5e20;
+  color: #c62828;
   margin: 0 0 12px 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -103,7 +168,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .stat-box {
@@ -112,7 +177,7 @@
 }
 
 .stat-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: #666;
   text-transform: uppercase;
@@ -121,7 +186,7 @@
 }
 
 .stat-value {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 900;
   font-family: var(--font-mono);
 }
@@ -135,142 +200,103 @@
 }
 
 .stat-arrow {
-  font-size: 24px;
-  color: #27ae60;
+  font-size: 20px;
+  color: #e74c3c;
 }
 
-.improvement-delta {
-  display: inline-block;
-  margin-top: 8px;
-  padding: 4px 12px;
-  background: #27ae60;
-  color: white;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.similar-drivers-header {
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 4px solid #27ae60;
-}
-
-.similar-drivers-header h3 {
-  font-size: 24px;
-  font-weight: 900;
-  color: #27ae60;
-  margin: 0 0 8px 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.similar-drivers-subtitle {
-  font-size: 14px;
-  color: #666;
-  margin: 0;
-  font-weight: 600;
-}
-
-/* Similar Drivers Grid - 3 cards stacked vertically */
-.similar-drivers-grid {
+/* Similar Drivers List */
+.similar-drivers-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   overflow-y: auto;
   flex: 1;
-  max-height: calc(100% - 300px);
 }
 
-.similar-drivers-grid::-webkit-scrollbar {
-  width: 8px;
+.similar-drivers-list::-webkit-scrollbar {
+  width: 6px;
 }
 
-.similar-drivers-grid::-webkit-scrollbar-track {
+.similar-drivers-list::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 4px;
 }
 
-.similar-drivers-grid::-webkit-scrollbar-thumb {
-  background: #27ae60;
+.similar-drivers-list::-webkit-scrollbar-thumb {
+  background: #e74c3c;
   border-radius: 4px;
-}
-
-.similar-drivers-grid::-webkit-scrollbar-thumb:hover {
-  background: #229954;
 }
 
 .similar-driver-card {
   background: #f8f9fa;
-  border: 3px solid #e0e0e0;
+  border: 2px solid #e0e0e0;
   border-radius: 12px;
-  padding: 20px;
+  padding: 16px;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 }
 
 .similar-driver-card:hover {
-  border-color: #27ae60;
-  transform: translateX(4px);
-  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+  border-color: #e74c3c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
 }
 
 .rank-badge {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: #27ae60;
+  top: 12px;
+  right: 12px;
+  background: #e74c3c;
   color: white;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 900;
 }
 
-.similar-driver-card .match-score {
-  font-size: 28px;
-  font-weight: 900;
-  color: #27ae60;
-  font-family: var(--font-mono);
-  margin-bottom: 16px;
+.driver-info {
+  margin-bottom: 12px;
 }
 
-.similar-driver-card .driver-info {
-  margin-bottom: 16px;
-  text-align: left;
-}
-
-.similar-driver-card .driver-info h4 {
-  font-size: 20px;
+.driver-info h4 {
+  font-size: 18px;
   font-weight: 900;
   color: #000;
   margin: 0 0 4px 0;
 }
 
-.similar-driver-card .driver-info p {
-  font-size: 14px;
-  font-weight: 700;
+.driver-info p {
+  font-size: 13px;
+  font-weight: 600;
   color: #666;
-  margin: 0;
+  margin: 0 0 8px 0;
+}
+
+.match-score {
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 900;
+  color: #e74c3c;
+  font-family: var(--font-mono);
 }
 
 .avg-finish {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 16px;
+  padding: 10px 14px;
   background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
-  border: 3px solid #ffc107;
+  border: 2px solid #ffc107;
   border-radius: 8px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .avg-finish .label {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   color: #f57f17;
   text-transform: uppercase;
@@ -278,7 +304,7 @@
 }
 
 .avg-finish .value {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 900;
   color: #f57f17;
   font-family: var(--font-mono);
@@ -294,14 +320,14 @@
   background: #ffffff;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  padding: 12px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .skill-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   color: #666;
   text-transform: uppercase;
@@ -309,19 +335,20 @@
 }
 
 .skill-value {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 900;
-  color: #27ae60;
+  color: #e74c3c;
 }
 
-/* Performance Section - Spans full width below main grid */
-.performance-section {
-  grid-column: 1 / -1;
-  background: #ffffff;
-  border: 4px solid #e74c3c;
-  border-radius: 16px;
-  padding: 32px;
+/* Full Width Sections Below */
+.practice-plan-section {
+  width: 100%;
 }
+
+.performance-analysis-section {
+  width: 100%;
+}
+
 
 /* Section Headers */
 .section-header {
@@ -501,15 +528,13 @@
     padding: 32px 48px;
   }
 
-  .improve-grid {
-    gap: 32px;
+  .improve-content {
     max-width: 1600px;
-    margin: 0 auto;
+    gap: 32px;
   }
 
-  .similar-drivers-section,
-  .performance-section {
-    padding: 40px;
+  .improve-grid {
+    gap: 32px;
   }
 }
 
@@ -517,24 +542,42 @@
   .improve-grid {
     grid-template-columns: 1fr;
   }
-
-  .skill-sliders-section,
-  .similar-drivers-section,
-  .similar-drivers-loading,
-  .performance-section {
-    grid-column: 1;
-  }
 }
 
 @media (max-width: 768px) {
-  .improve-grid {
+  .improve-page {
     padding: 16px;
+  }
+
+  .improve-content {
     gap: 16px;
+  }
+
+  .improve-grid {
+    gap: 16px;
+  }
+
+  .comparables-section {
+    padding: 24px;
+    min-height: 400px;
   }
 
   .section-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+
+  .improvement-stats {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .stat-arrow {
+    transform: rotate(90deg);
+  }
+
+  .skills-grid {
+    grid-template-columns: 1fr;
   }
 }

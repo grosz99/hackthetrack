@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import GRCupLogo from '../GRCupLogo/GRCupLogo';
 import './RankingsTable.css';
 
 export default function RankingsTable({ drivers = [] }) {
@@ -85,8 +86,29 @@ export default function RankingsTable({ drivers = [] }) {
   return (
     <div className="rankings-table-container">
       <div className="rankings-header">
-        <h1 className="rankings-title">DRIVER RANKINGS</h1>
-        <p className="rankings-subtitle">Development Pool - 4 Factor Performance Model</p>
+        <div className="rankings-header-content">
+          <div className="rankings-center-section">
+            <div className="rankings-icon">
+              <span className="icon-trophy">🏆</span>
+            </div>
+            <h1 className="rankings-title">DRIVER RANKINGS</h1>
+          </div>
+          <div className="rankings-logo-container">
+            <GRCupLogo size="small" />
+          </div>
+        </div>
+        <div className="rankings-description">
+          <p className="description-text">
+            Development Pool - Comprehensive 4-Factor Performance Model analyzing Speed, Consistency, Racecraft, and Tire Management across all race sessions
+          </p>
+        </div>
+      </div>
+
+      <div className="cta-container">
+        <div className="cta-text">
+          <strong>Click on any driver</strong> to view their complete performance dashboard with detailed analytics, race logs, skills breakdown, and personalized improvement recommendations
+        </div>
+        <div className="cta-arrow">→</div>
       </div>
 
       <div className="table-wrapper">
@@ -114,9 +136,6 @@ export default function RankingsTable({ drivers = [] }) {
               </th>
               <th onClick={() => handleSort('top10')} className="sortable">
                 TOP 10 {sortKey === 'top10' && (sortDirection === 'asc' ? '↑' : '↓')}
-              </th>
-              <th onClick={() => handleSort('dnfs')} className="sortable">
-                DNF {sortKey === 'dnfs' && (sortDirection === 'asc' ? '↑' : '↓')}
               </th>
             </tr>
           </thead>
@@ -215,11 +234,6 @@ export default function RankingsTable({ drivers = [] }) {
                 {/* Top 10 */}
                 <td>
                   <span className="stat-value">{driver.top10}</span>
-                </td>
-
-                {/* DNF */}
-                <td>
-                  <span className="stat-value">{driver.dnfs}</span>
                 </td>
               </motion.tr>
             ))}

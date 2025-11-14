@@ -4,6 +4,7 @@ import { useDriver } from '../../context/DriverContext';
 import { useScout } from '../../context/ScoutContext';
 import { classifyDriver } from '../../utils/classification';
 import ClassificationBadge from '../ClassificationBadge/ClassificationBadge';
+import GRCupLogo from '../GRCupLogo/GRCupLogo';
 import './DashboardHeader.css';
 
 /**
@@ -103,7 +104,7 @@ export default function DashboardHeader({ driverData, pageName }) {
                 <ClassificationBadge classification={classification} size="large" />
               )}
             </div>
-            <div className="season-subtitle">Toyota Gazoo Series</div>
+            <GRCupLogo size="small" />
           </div>
 
           {/* Driver Selector */}

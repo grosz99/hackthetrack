@@ -14,7 +14,7 @@ const SKILLS = [
   { key: 'tire_management', label: 'TIRE MGMT', icon: '' }
 ];
 
-export default function SkillSliders({ currentSkills, onTargetChange, onFindSimilar }) {
+export default function SkillSliders({ currentSkills, onTargetChange, onFindSimilar, tracks, selectedTrack, onTrackChange }) {
   // Initialize target skills to current skills (clamped to valid range)
   const getInitialTargets = () => ({
     speed: Math.min(100, Math.max(0, Math.round(currentSkills.speed || 0))),
@@ -190,17 +190,35 @@ export default function SkillSliders({ currentSkills, onTargetChange, onFindSimi
       </div>
 
       <div className="sliders-footer">
+        {/* Track Selector */}
+        <div className="track-selector-container">
+          <label htmlFor="track-select">Select Track</label>
+          <select
+            id="track-select"
+            value={selectedTrack}
+            onChange={(e) => onTrackChange(e.target.value)}
+            className="track-selector"
+          >
+            {tracks.map(track => (
+              <option key={track.id} value={track.id}>
+                {track.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Find Comparables Button */}
         <button
           onClick={onFindSimilar}
           disabled={!hasChanges()}
-          className="find-similar-btn"
+          className="find-comparables-btn"
         >
-          <span>Find Similar Driver</span>
+          <span className="btn-icon">👥</span>
+          <span>Find Comparables</span>
         </button>
-        {!hasChanges() ? (
+
+        {!hasChanges() && (
           <p className="helper-text">Use your {MAX_TOTAL_INCREASE}% budget to set target skills</p>
-        ) : (
-          <p className="helper-text">Using {getTotalIncrease()}% of your {MAX_TOTAL_INCREASE}% budget</p>
         )}
       </div>
     </div>
@@ -215,5 +233,11 @@ SkillSliders.propTypes = {
     tire_management: PropTypes.number
   }).isRequired,
   onTargetChange: PropTypes.func.isRequired,
-  onFindSimilar: PropTypes.func.isRequired
+  onFindSimilar: PropTypes.func.isRequired,
+  tracks: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string
+  })).isRequired,
+  selectedTrack: PropTypes.string.isRequired,
+  onTrackChange: PropTypes.func.isRequired
 };
