@@ -6,31 +6,130 @@
   padding: 0;
 }
 
-/* Header Section */
+/* Header Section - Match Driver Dashboard Style */
 .rankings-header {
-  background: #ffffff;
+  background: var(--color-dark-2);
   border: 4px solid #e74c3c;
   border-radius: 16px;
-  padding: 40px;
+  padding: 0;
   margin: 0 0 32px 0;
+  overflow: hidden;
+}
+
+.rankings-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32px 40px;
+}
+
+.rankings-center-section {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex: 1;
+}
+
+.rankings-icon {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 6px solid #fff;
+  box-shadow: 0 8px 32px rgba(231, 76, 60, 0.4);
+  flex-shrink: 0;
+}
+
+.icon-trophy {
+  font-size: 60px;
+  line-height: 1;
+  filter: grayscale(100%) brightness(200%);
 }
 
 .rankings-title {
-  font-size: 28px;
-  font-weight: 900;
-  color: #000;
-  margin: 0 0 8px 0;
-  text-transform: uppercase;
-  letter-spacing: -0.5px;
+  font-size: 48px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+  letter-spacing: -2px;
+  line-height: 1;
   font-family: 'Inter', sans-serif;
 }
 
-.rankings-subtitle {
-  font-size: 14px;
-  color: #666;
+.rankings-logo-container {
+  flex-shrink: 0;
+}
+
+.rankings-description {
+  background: transparent;
+  padding: 24px 40px;
+  border-top: 2px solid rgba(231, 76, 60, 0.3);
+}
+
+.description-text {
+  font-size: 16px;
+  color: #ccc;
   margin: 0;
   font-weight: 600;
+  line-height: 1.6;
   letter-spacing: -0.2px;
+}
+
+.cta-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: transparent;
+  border: 2px solid rgba(231, 76, 60, 0.4);
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin: 24px 0;
+  animation: pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: rgba(231, 76, 60, 0.4);
+    box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.3);
+  }
+  50% {
+    border-color: rgba(231, 76, 60, 0.8);
+    box-shadow: 0 0 0 4px rgba(231, 76, 60, 0.1);
+  }
+}
+
+.cta-text {
+  flex: 1;
+  font-size: 15px;
+  color: #fff;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.cta-text strong {
+  color: #e74c3c;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cta-arrow {
+  font-size: 32px;
+  color: #e74c3c;
+  font-weight: 900;
+  animation: bounce-right 1.5s ease-in-out infinite;
+}
+
+@keyframes bounce-right {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(8px);
+  }
 }
 
 /* Table Wrapper */
@@ -106,10 +205,39 @@
 
 .driver-row {
   cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.driver-row::after {
+  content: 'View Dashboard →';
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e74c3c;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+  z-index: 10;
 }
 
 .driver-row:hover {
-  background-color: #fff9f0 !important;
+  background-color: rgba(231, 76, 60, 0.05) !important;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+}
+
+.driver-row:hover::after {
+  opacity: 1;
 }
 
 .rankings-table td {

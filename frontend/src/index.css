@@ -24,7 +24,8 @@
   }
 
   body {
-    @apply bg-bg-primary text-text-primary font-sans overflow-x-hidden;
+    background: #0a0a0a;
+    @apply text-text-primary font-sans overflow-x-hidden antialiased;
     line-height: 1.6;
   }
 

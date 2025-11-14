@@ -29,6 +29,7 @@ export default function Overview() {
   const [topDrivers, setTopDrivers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showFactorInfo, setShowFactorInfo] = useState(false);
 
   // Classification for driver
   const classification = driverData ? classifyDriver(driverData) : null;
@@ -158,7 +159,7 @@ export default function Overview() {
       <DashboardTabs />
 
       {/* Top Section - Compact Tiles + Race Chart */}
-      <div style={{ display: 'flex', gap: '24px', marginBottom: '48px' }}>
+      <div className="top-section">
         {/* Compact Performance Tiles - 2x3 Grid */}
         <div className="season-performance-tiles">
           <div className="performance-tile">
@@ -194,8 +195,8 @@ export default function Overview() {
 
         {/* Race by Race Performance Chart with Expand Button */}
         {racePerformanceData.length > 0 && (
-          <div style={{ display: 'flex', gap: '20px', alignItems: 'stretch', flex: 1 }}>
-            <div className="race-performance" style={{ flex: 1, marginTop: 0 }}>
+          <div className="race-chart-wrapper">
+            <div className="race-performance" style={{ flex: 1 }}>
               <h2>Race by Race Performance</h2>
               <ResponsiveContainer width="100%" height={350}>
                 <ComposedChart
@@ -247,48 +248,14 @@ export default function Overview() {
             </div>
 
             {/* Expand to Race Logs Button */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+            <div className="expand-button-container">
               <NavLink
                 to={`/driver/${selectedDriverNumber}/race-log`}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  background: '#e74c3c',
-                  color: '#fff',
-                  fontSize: '36px',
-                  fontWeight: 900,
-                  textDecoration: 'none',
-                  borderRadius: '50%',
-                  border: '4px solid #fff',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 16px rgba(231, 76, 60, 0.4)',
-                  width: '80px',
-                  height: '80px',
-                  flexShrink: 0
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.background = '#c0392b';
-                  e.currentTarget.style.transform = 'scale(1.1)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(231, 76, 60, 0.6)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.background = '#e74c3c';
-                  e.currentTarget.style.transform = 'scale(1)';
-                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.4)';
-                }}
+                className="expand-button"
               >
                 →
               </NavLink>
-              <span style={{
-                fontSize: '12px',
-                fontWeight: 700,
-                color: '#fff',
-                textTransform: 'uppercase',
-                letterSpacing: '1px',
-                textAlign: 'center'
-              }}>
+              <span className="expand-button-label">
                 See Race<br/>Logs
               </span>
             </div>
@@ -297,11 +264,22 @@ export default function Overview() {
       </div>
 
       {/* Bottom Section - 4-Factor Performance Analysis */}
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'stretch' }}>
-        {/* 4-Factor Spider Chart */}
-        <div className="spider-chart-container" style={{ flex: 1 }}>
-          <h3>Performance Radar - 4 Key Factors</h3>
-          <ResponsiveContainer width="100%" height={350}>
+      <div className="bottom-section">
+        {/* Left side: Spider Chart and Factor Tiles */}
+        <div className="race-chart-wrapper">
+          {/* 4-Factor Spider Chart */}
+          <div className="spider-chart-container">
+            <div className="spider-chart-header">
+              <h3>Performance Radar - 4 Key Factors</h3>
+            </div>
+            <button
+              className="info-button"
+              onClick={() => setShowFactorInfo(true)}
+              aria-label="Learn about the 4-factor model"
+            >
+              ?
+            </button>
+            <ResponsiveContainer width="100%" height={350}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="#ddd" strokeWidth={1} />
               <PolarAngleAxis
@@ -364,176 +342,164 @@ export default function Overview() {
           </div>
         </div>
 
+        {/* See Skills Button */}
+        <div className="expand-button-container">
+          <NavLink
+            to={`/driver/${selectedDriverNumber}/skills`}
+            className="expand-button"
+          >
+            →
+          </NavLink>
+          <span className="expand-button-label">
+            See<br/>Skills
+          </span>
+        </div>
+
         {/* 4 Factor Breakdown Tiles */}
-        <div style={{ flex: 1, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', alignContent: 'stretch' }}>
+        <div className="factor-tiles-grid">
           {/* Consistency Card */}
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '28px 24px',
-            border: '4px solid #e74c3c',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <h4 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#000' }}>Consistency</h4>
-              <div style={{ fontSize: '36px', fontWeight: 900, color: '#e74c3c', lineHeight: 1 }}>
+          <div className="factor-card">
+            <div className="factor-card-header">
+              <h4 className="factor-card-title">Consistency</h4>
+              <div className="factor-card-score">
                 {Math.round(driverData?.consistency?.score || 0)}
               </div>
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: '#666', marginBottom: '16px' }}>
+            <div className="factor-card-percentile">
               {(driverData?.consistency?.percentile || 0).toFixed(1)}th Percentile
             </div>
-            <div style={{ height: '12px', background: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
-              <div style={{
-                height: '100%',
-                background: '#e74c3c',
-                width: `${driverData?.consistency?.percentile || 0}%`,
-                transition: 'width 0.3s ease'
+            <div className="factor-card-bar-container">
+              <div className="factor-card-bar" style={{
+                width: `${driverData?.consistency?.percentile || 0}%`
               }}></div>
             </div>
           </div>
 
           {/* Racecraft Card */}
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '28px 24px',
-            border: '4px solid #e74c3c',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <h4 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#000' }}>Racecraft</h4>
-              <div style={{ fontSize: '36px', fontWeight: 900, color: '#e74c3c', lineHeight: 1 }}>
+          <div className="factor-card">
+            <div className="factor-card-header">
+              <h4 className="factor-card-title">Racecraft</h4>
+              <div className="factor-card-score">
                 {Math.round(driverData?.racecraft?.score || 0)}
               </div>
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: '#666', marginBottom: '16px' }}>
+            <div className="factor-card-percentile">
               {(driverData?.racecraft?.percentile || 0).toFixed(1)}th Percentile
             </div>
-            <div style={{ height: '12px', background: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
-              <div style={{
-                height: '100%',
-                background: '#e74c3c',
-                width: `${driverData?.racecraft?.percentile || 0}%`,
-                transition: 'width 0.3s ease'
+            <div className="factor-card-bar-container">
+              <div className="factor-card-bar" style={{
+                width: `${driverData?.racecraft?.percentile || 0}%`
               }}></div>
             </div>
           </div>
 
           {/* Speed Card */}
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '28px 24px',
-            border: '4px solid #e74c3c',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <h4 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#000' }}>Raw Speed</h4>
-              <div style={{ fontSize: '36px', fontWeight: 900, color: '#e74c3c', lineHeight: 1 }}>
+          <div className="factor-card">
+            <div className="factor-card-header">
+              <h4 className="factor-card-title">Raw Speed</h4>
+              <div className="factor-card-score">
                 {Math.round(driverData?.speed?.score || 0)}
               </div>
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: '#666', marginBottom: '16px' }}>
+            <div className="factor-card-percentile">
               {(driverData?.speed?.percentile || 0).toFixed(1)}th Percentile
             </div>
-            <div style={{ height: '12px', background: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
-              <div style={{
-                height: '100%',
-                background: '#e74c3c',
-                width: `${driverData?.speed?.percentile || 0}%`,
-                transition: 'width 0.3s ease'
+            <div className="factor-card-bar-container">
+              <div className="factor-card-bar" style={{
+                width: `${driverData?.speed?.percentile || 0}%`
               }}></div>
             </div>
           </div>
 
           {/* Tire Management Card */}
-          <div style={{
-            background: 'white',
-            borderRadius: '16px',
-            padding: '28px 24px',
-            border: '4px solid #e74c3c',
-            boxShadow: '0 6px 20px rgba(0,0,0,0.12)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-              <h4 style={{ margin: 0, fontSize: '22px', fontWeight: 700, color: '#000' }}>Tire Mgmt</h4>
-              <div style={{ fontSize: '36px', fontWeight: 900, color: '#e74c3c', lineHeight: 1 }}>
+          <div className="factor-card">
+            <div className="factor-card-header">
+              <h4 className="factor-card-title">Tire Mgmt</h4>
+              <div className="factor-card-score">
                 {Math.round(driverData?.tire_management?.score || 0)}
               </div>
             </div>
-            <div style={{ fontSize: '16px', fontWeight: 600, color: '#666', marginBottom: '16px' }}>
+            <div className="factor-card-percentile">
               {(driverData?.tire_management?.percentile || 0).toFixed(1)}th Percentile
             </div>
-            <div style={{ height: '12px', background: '#eee', borderRadius: '6px', overflow: 'hidden' }}>
-              <div style={{
-                height: '100%',
-                background: '#e74c3c',
-                width: `${driverData?.tire_management?.percentile || 0}%`,
-                transition: 'width 0.3s ease'
+            <div className="factor-card-bar-container">
+              <div className="factor-card-bar" style={{
+                width: `${driverData?.tire_management?.percentile || 0}%`
               }}></div>
             </div>
           </div>
         </div>
-
-        {/* Expand to Skills Button */}
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
-          <NavLink
-            to={`/driver/${selectedDriverNumber}/skills`}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              background: '#e74c3c',
-              color: '#fff',
-              fontSize: '36px',
-              fontWeight: 900,
-              textDecoration: 'none',
-              borderRadius: '50%',
-              border: '4px solid #fff',
-              cursor: 'pointer',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 16px rgba(231, 76, 60, 0.4)',
-              width: '80px',
-              height: '80px',
-              flexShrink: 0
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.background = '#c0392b';
-              e.currentTarget.style.transform = 'scale(1.1)';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(231, 76, 60, 0.6)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.background = '#e74c3c';
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 4px 16px rgba(231, 76, 60, 0.4)';
-            }}
-          >
-            →
-          </NavLink>
-          <span style={{
-            fontSize: '12px',
-            fontWeight: 700,
-            color: '#fff',
-            textTransform: 'uppercase',
-            letterSpacing: '1px',
-            textAlign: 'center'
-          }}>
-            See<br/>Skills
-          </span>
-        </div>
       </div>
+
+      {/* Right side: Improve Skills Button */}
+      <div className="expand-button-container">
+        <NavLink
+          to={`/driver/${selectedDriverNumber}/improve`}
+          className="expand-button"
+        >
+          →
+        </NavLink>
+        <span className="expand-button-label">
+          Improve<br/>Skills
+        </span>
+      </div>
+    </div>
+
+      {/* 4-Factor Model Info Modal */}
+      {showFactorInfo && (
+        <div className="modal-overlay" onClick={() => setShowFactorInfo(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Understanding the 4-Factor Performance Model</h2>
+              <button
+                className="modal-close"
+                onClick={() => setShowFactorInfo(false)}
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="factor-info-section">
+                <h3>Overview</h3>
+                <p>
+                  The 4-Factor Performance Model breaks down driver performance into four essential dimensions that together reveal your complete racing profile. While raw speed shows how fast you can go, the other three factors—consistency, racecraft, and tire management—determine whether you can sustain that pace under race conditions and execute when it matters. Analyzing all four factors together identifies your strengths and weaknesses, helping you understand not just how fast you are, but how effective you are at converting that speed into race results.
+                </p>
+              </div>
+
+              <div className="factor-info-section">
+                <h3>The 4 Key Factors</h3>
+                <div className="factor-definitions">
+                  <div className="factor-definition">
+                    <strong className="factor-name">Speed:</strong>
+                    <span className="factor-description">
+                      Measures your raw pace through lap times and sector performance, showing your pure driving ability when pushing to the limit.
+                    </span>
+                  </div>
+                  <div className="factor-definition">
+                    <strong className="factor-name">Consistency:</strong>
+                    <span className="factor-description">
+                      Quantifies how reliably you can reproduce your best performance lap after lap, with lower variation indicating better control and repeatability.
+                    </span>
+                  </div>
+                  <div className="factor-definition">
+                    <strong className="factor-name">Racecraft:</strong>
+                    <span className="factor-description">
+                      Evaluates your wheel-to-wheel racing skills including overtaking efficiency, defensive positioning, and ability to execute race strategy under pressure.
+                    </span>
+                  </div>
+                  <div className="factor-definition">
+                    <strong className="factor-name">Tire Management:</strong>
+                    <span className="factor-description">
+                      Assesses how effectively you preserve tire performance throughout a stint, balancing pace degradation against competitors to maintain speed over longer runs.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

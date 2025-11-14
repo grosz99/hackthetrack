@@ -1,0 +1,154 @@
+/* GR Cup North America Logo - Official Branding */
+
+.gr-cup-logo {
+  display: inline-block;
+}
+
+.gr-cup-container {
+  background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+  border: 3px solid #e74c3c;
+  border-radius: 8px;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
+}
+
+/* Top Line - TOYOTA GAZOO Racing */
+.gr-cup-top {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.toyota-text {
+  color: #ffffff;
+  font-style: italic;
+}
+
+.racing-text {
+  color: #e74c3c;
+  font-style: italic;
+}
+
+/* Main Line - GR CUP */
+.gr-cup-main {
+  font-family: 'Inter', sans-serif;
+  font-size: 42px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.gr-text {
+  color: #ffffff;
+}
+
+.r-text {
+  color: #e74c3c;
+}
+
+.cup-text {
+  color: #ffffff;
+}
+
+/* Bottom Line - NORTH AMERICA */
+.gr-cup-bottom {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  line-height: 1;
+  color: #ffffff;
+  background: #e74c3c;
+  padding: 4px 12px;
+  border-radius: 2px;
+}
+
+.region-text {
+  color: #ffffff;
+}
+
+/* Size Variants */
+.gr-cup-logo-small .gr-cup-container {
+  padding: 12px 18px;
+  gap: 2px;
+}
+
+.gr-cup-logo-small .gr-cup-top {
+  font-size: 9px;
+}
+
+.gr-cup-logo-small .gr-cup-main {
+  font-size: 28px;
+}
+
+.gr-cup-logo-small .gr-cup-bottom {
+  font-size: 8px;
+  padding: 3px 8px;
+}
+
+.gr-cup-logo-medium .gr-cup-container {
+  padding: 16px 24px;
+  gap: 4px;
+}
+
+.gr-cup-logo-medium .gr-cup-top {
+  font-size: 12px;
+}
+
+.gr-cup-logo-medium .gr-cup-main {
+  font-size: 42px;
+}
+
+.gr-cup-logo-medium .gr-cup-bottom {
+  font-size: 11px;
+  padding: 4px 12px;
+}
+
+.gr-cup-logo-large .gr-cup-container {
+  padding: 24px 36px;
+  gap: 6px;
+}
+
+.gr-cup-logo-large .gr-cup-top {
+  font-size: 16px;
+}
+
+.gr-cup-logo-large .gr-cup-main {
+  font-size: 56px;
+}
+
+.gr-cup-logo-large .gr-cup-bottom {
+  font-size: 14px;
+  padding: 6px 16px;
+  letter-spacing: 3px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .gr-cup-logo-large .gr-cup-container {
+    padding: 16px 24px;
+  }
+
+  .gr-cup-logo-large .gr-cup-top {
+    font-size: 12px;
+  }
+
+  .gr-cup-logo-large .gr-cup-main {
+    font-size: 36px;
+  }
+
+  .gr-cup-logo-large .gr-cup-bottom {
+    font-size: 10px;
+    padding: 4px 10px;
+  }
+}

@@ -4,7 +4,7 @@
    ============================================================================ */
 
 .driver-overview {
-  padding: var(--spacing-6) var(--spacing-8);
+  padding: var(--spacing-8) var(--spacing-10);
   background: var(--color-dark-1);
   min-height: 100vh;
   width: 100%;
@@ -13,9 +13,9 @@
   box-sizing: border-box;
 }
 
-/* Container constraint for content */
-.driver-overview > * {
-  max-width: 1400px;
+/* Container constraint for content - exclude header and tabs */
+.driver-overview > *:not(.dashboard-header):not(.scout-breadcrumb):not(.dashboard-nav-tabs-container) {
+  max-width: 1500px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -81,6 +81,143 @@
 /* Tab styles are now in DashboardTabs.css */
 
 /* ============================================================================
+   Main Content Sections
+   ============================================================================ */
+
+.top-section {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 48px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.bottom-section {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.race-chart-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+  flex: 1;
+}
+
+.factor-tiles-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-content: stretch;
+}
+
+.factor-card {
+  background: white;
+  border-radius: 16px;
+  padding: var(--spacing-10);
+  border: 4px solid #e74c3c;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.factor-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.factor-card-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: #000;
+}
+
+.factor-card-score {
+  font-size: 36px;
+  font-weight: 900;
+  color: #e74c3c;
+  line-height: 1;
+}
+
+.factor-card-percentile {
+  font-size: 16px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 16px;
+}
+
+.factor-card-bar-container {
+  height: 12px;
+  background: #eee;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.factor-card-bar {
+  height: 100%;
+  background: #e74c3c;
+  transition: width 0.3s ease;
+}
+
+.action-buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  flex-shrink: 0;
+}
+
+.expand-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.expand-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e74c3c;
+  color: #fff;
+  font-size: 36px;
+  font-weight: 900;
+  text-decoration: none;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.4);
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.expand-button:hover {
+  background: #c0392b;
+  transform: scale(1.1);
+  box-shadow: 0 8px 24px rgba(231, 76, 60, 0.6);
+}
+
+.expand-button-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+}
+
+/* ============================================================================
    Season Performance Section - Compact Tiles
    ============================================================================ */
 
@@ -89,8 +226,8 @@
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(3, 1fr);
   gap: 16px;
-  width: 100%;
-  max-width: 300px;
+  width: 300px;
+  flex-shrink: 0;
 }
 
 .performance-tile {
@@ -233,7 +370,7 @@
 .season-stats {
   background: linear-gradient(135deg, #1a1a1a, #0f0f0f);
   border-radius: 16px;
-  padding: 28px;
+  padding: var(--spacing-10);
   border: 1px solid #333;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
@@ -299,12 +436,13 @@
 .spider-chart-container {
   background: var(--color-white);
   border-radius: var(--radius-xl);
-  padding: var(--spacing-7);
+  padding: var(--spacing-10);
   border: 4px solid var(--color-primary);
   box-shadow: var(--shadow-primary);
   display: flex;
   flex-direction: column;
   transition: all var(--transition-base);
+  position: relative;
 }
 
 .spider-chart-container:hover {
@@ -312,13 +450,47 @@
   box-shadow: var(--shadow-primary-hover);
 }
 
+.spider-chart-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: var(--spacing-6);
+}
+
 .spider-chart-container h3 {
   font-size: var(--text-2xl);
   font-weight: var(--font-bold);
-  margin: 0 0 var(--spacing-6) 0;
+  margin: 0;
   color: var(--color-black);
   text-align: center;
   letter-spacing: -0.5px;
+}
+
+.info-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--color-primary);
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 900;
+  color: #ffffff;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(231, 76, 60, 0.3);
+  z-index: 10;
+}
+
+.info-button:hover {
+  background: var(--color-primary-dark);
+  transform: scale(1.15);
+  box-shadow: 0 3px 10px rgba(231, 76, 60, 0.4);
 }
 
 /* ============================================================================
@@ -328,7 +500,7 @@
 .race-performance {
   background: #fff;
   border-radius: 16px;
-  padding: 28px;
+  padding: 40px;
   border: 4px solid #e74c3c;
   box-shadow: 0 4px 16px rgba(231, 76, 60, 0.2);
   margin-top: 24px;
@@ -421,6 +593,27 @@
   .season-performance-card .stats-grid {
     grid-template-columns: repeat(3, 1fr);
   }
+
+  .top-section {
+    flex-direction: column;
+  }
+
+  .bottom-section {
+    flex-direction: column;
+  }
+
+  .race-chart-wrapper {
+    flex-direction: column;
+  }
+
+  .season-performance-tiles {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .factor-tiles-grid {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 @media (max-width: 768px) {
@@ -469,6 +662,17 @@
   .race-performance,
   .season-performance-card {
     padding: 24px;
+  }
+
+  .factor-tiles-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .expand-button-container {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 20px;
   }
 }
 
@@ -521,5 +725,199 @@
 
   .stat-value {
     font-size: 28px;
+  }
+
+  .factor-tiles-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .factor-card-title {
+    font-size: 18px;
+  }
+
+  .factor-card-score {
+    font-size: 28px;
+  }
+
+  .factor-card-percentile {
+    font-size: 14px;
+  }
+}
+
+/* ============================================================================
+   4-Factor Info Modal
+   ============================================================================ */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 4px solid var(--color-primary);
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 12px 48px rgba(231, 76, 60, 0.4);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32px 40px 24px 40px;
+  border-bottom: 3px solid var(--color-primary);
+}
+
+.modal-header h2 {
+  font-size: 28px;
+  font-weight: 900;
+  color: #000;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.modal-close {
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.modal-close:hover {
+  background: var(--color-primary);
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.modal-body {
+  padding: 32px 40px;
+}
+
+.factor-info-section {
+  margin-bottom: 32px;
+}
+
+.factor-info-section:last-child {
+  margin-bottom: 0;
+}
+
+.factor-info-section h3 {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--color-primary);
+  margin: 0 0 16px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.factor-info-section p {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #333;
+  margin: 0;
+  font-weight: 500;
+}
+
+.factor-definitions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.factor-definition {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffebee 100%);
+  border-radius: 12px;
+  border: 2px solid rgba(231, 76, 60, 0.2);
+  transition: all 0.2s ease;
+}
+
+.factor-definition:hover {
+  border-color: var(--color-primary);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.15);
+}
+
+.factor-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--color-primary);
+  letter-spacing: -0.3px;
+}
+
+.factor-description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Responsive Modal */
+@media (max-width: 768px) {
+  .modal-header {
+    padding: 24px 24px 16px 24px;
+  }
+
+  .modal-header h2 {
+    font-size: 22px;
+  }
+
+  .modal-body {
+    padding: 24px;
+  }
+
+  .factor-info-section h3 {
+    font-size: 18px;
+  }
+
+  .factor-info-section p {
+    font-size: 15px;
+  }
+
+  .factor-name {
+    font-size: 16px;
+  }
+
+  .factor-description {
+    font-size: 14px;
   }
 }
