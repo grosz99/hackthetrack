@@ -5,7 +5,7 @@ import GRCupLogo from '../GRCupLogo/GRCupLogo';
 import { TrophyIcon } from '../icons';
 import './RankingsTable.css';
 
-export default function RankingsTable({ drivers = [] }) {
+export default function RankingsTable({ drivers = [], onShowInfo }) {
   const navigate = useNavigate();
   const [sortKey, setSortKey] = useState('overall_score');
   const [sortDirection, setSortDirection] = useState('desc');
@@ -104,7 +104,14 @@ export default function RankingsTable({ drivers = [] }) {
             <div className="rankings-icon">
               <TrophyIcon size="lg" />
             </div>
-            <h1 className="rankings-title">DRIVER RANKINGS</h1>
+            <div className="rankings-title-section">
+              <h1 className="rankings-title">DRIVER RANKINGS</h1>
+              {onShowInfo && (
+                <button className="info-modal-button" onClick={onShowInfo} aria-label="Learn about the platform">
+                  Platform Overview
+                </button>
+              )}
+            </div>
           </div>
           <div className="rankings-logo-container">
             <GRCupLogo size="small" />

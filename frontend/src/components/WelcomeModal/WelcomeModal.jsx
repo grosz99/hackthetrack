@@ -71,6 +71,38 @@ export default function WelcomeModal({ onClose }) {
       )
     },
     {
+      id: 'four-factors',
+      title: 'Understanding the 4-Factor Performance Model',
+      content: (
+        <div className="four-factors-section">
+          <div className="factor-overview">
+            <p>
+              The 4-Factor Performance Model breaks down driver performance into four essential dimensions that together reveal your complete racing profile. While raw speed shows how fast you can go, the other three factors—consistency, racecraft, and tire management—determine whether you can sustain that pace under race conditions and execute when it matters.
+            </p>
+          </div>
+
+          <div className="factor-definitions-grid">
+            <div className="factor-card">
+              <h4>Speed</h4>
+              <p>Measures your raw pace through lap times and sector performance, showing your pure driving ability when pushing to the limit.</p>
+            </div>
+            <div className="factor-card">
+              <h4>Consistency</h4>
+              <p>Quantifies how reliably you can reproduce your best performance lap after lap, with lower variation indicating better control and repeatability.</p>
+            </div>
+            <div className="factor-card">
+              <h4>Racecraft</h4>
+              <p>Evaluates your wheel-to-wheel racing skills including overtaking efficiency, defensive positioning, and ability to execute race strategy under pressure.</p>
+            </div>
+            <div className="factor-card">
+              <h4>Tire Management</h4>
+              <p>Assesses how effectively you preserve tire performance throughout a stint, balancing pace degradation against competitors to maintain speed over longer runs.</p>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
       id: 'honesty',
       title: 'What We Are (And Aren\'t)',
       content: (
