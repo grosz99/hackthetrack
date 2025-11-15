@@ -102,13 +102,13 @@ export function getDriverTags(driver) {
 
   // Performance tags
   if (speed >= 70) {
-    tags.push({ type: 'SPEED', label: 'Speed Specialist', icon: '⚡' });
+    tags.push({ type: 'SPEED', label: 'Speed Specialist', icon: null });
   }
   if (consistency >= 60) {
-    tags.push({ type: 'CONSISTENT', label: 'Consistency Driver', icon: '🎯' });
+    tags.push({ type: 'CONSISTENT', label: 'Consistency Driver', icon: null });
   }
   if (racecraft >= 60) {
-    tags.push({ type: 'WHEEL_TO_WHEEL', label: 'Wheel-to-Wheel', icon: '⚔️' });
+    tags.push({ type: 'WHEEL_TO_WHEEL', label: 'Wheel-to-Wheel', icon: null });
   }
 
   // Experience tags
@@ -122,7 +122,7 @@ export function getDriverTags(driver) {
 
   // Potential tags
   if (speed > overall + 10) {
-    tags.push({ type: 'HIGH_UPSIDE', label: 'High Upside', icon: '↗️' });
+    tags.push({ type: 'HIGH_UPSIDE', label: 'High Upside', icon: null });
   }
 
   return tags;

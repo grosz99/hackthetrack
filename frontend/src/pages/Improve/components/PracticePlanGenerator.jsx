@@ -5,6 +5,7 @@
 
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
+import { TargetIcon, RocketIcon, WarningIcon, ChartIcon, FlagIcon } from '../../../components/icons';
 import './PracticePlanGenerator.css';
 
 export default function PracticePlanGenerator({ driverData, api }) {
@@ -65,12 +66,13 @@ export default function PracticePlanGenerator({ driverData, api }) {
     <section className="practice-plan-generator">
       <div className="practice-plan-header">
         <div className="header-content">
-          <h2>🎯 Create Your Practice Plan</h2>
+          <h2><TargetIcon size="sm" className="inline-icon" /> Create Your Practice Plan</h2>
           <p>Get a personalized week-by-week plan to reach your target position</p>
         </div>
         <button
           className={`expand-btn ${expanded ? 'expanded' : ''}`}
           onClick={() => setExpanded(!expanded)}
+          aria-label={expanded ? 'Collapse practice plan' : 'Expand practice plan'}
         >
           {expanded ? '▼ Collapse' : '▶ Expand'}
         </button>
@@ -153,12 +155,12 @@ export default function PracticePlanGenerator({ driverData, api }) {
               disabled={loading || currentPosition <= targetPosition}
               className="generate-btn"
             >
-              {loading ? 'Generating Plan...' : '🚀 Generate My Practice Plan'}
+              {loading ? 'Generating Plan...' : <><RocketIcon size="sm" className="btn-icon" /> Generate My Practice Plan</>}
             </button>
 
             {error && (
               <div className="error-message">
-                ⚠️ {error}
+                <WarningIcon size="sm" className="inline-icon" /> {error}
               </div>
             )}
           </div>
@@ -169,7 +171,7 @@ export default function PracticePlanGenerator({ driverData, api }) {
               {/* Success Probability */}
               <div className="success-banner">
                 <div className="success-icon">
-                  {practicePlan.success_probability > 0.75 ? '🎯' : practicePlan.success_probability > 0.5 ? '📈' : '🎲'}
+                  {practicePlan.success_probability > 0.75 ? <TargetIcon size="sm" /> : practicePlan.success_probability > 0.5 ? <ChartIcon size="sm" /> : <WarningIcon size="sm" />}
                 </div>
                 <div className="success-content">
                   <h3>
@@ -181,7 +183,7 @@ export default function PracticePlanGenerator({ driverData, api }) {
 
               {/* Timeline Chart */}
               <div className="timeline-chart-section">
-                <h3>📊 Your Position Progression</h3>
+                <h3><ChartIcon size="sm" className="inline-icon" /> Your Position Progression</h3>
                 <ResponsiveContainer width="100%" height={300}>
                   <AreaChart data={chartData}>
                     <defs>
@@ -238,7 +240,7 @@ export default function PracticePlanGenerator({ driverData, api }) {
 
               {/* Skill Priorities */}
               <div className="skill-priorities-section">
-                <h3>🎯 Focus Areas (Prioritized by Impact)</h3>
+                <h3><TargetIcon size="sm" className="inline-icon" /> Focus Areas (Prioritized by Impact)</h3>
                 <div className="skill-priorities-grid">
                   {Object.entries(practicePlan.skill_priorities).map(([skillKey, skill]) => (
                     <div key={skillKey} className="skill-priority-card">
@@ -304,7 +306,7 @@ export default function PracticePlanGenerator({ driverData, api }) {
 
               {/* Final Prediction */}
               <div className="final-prediction-section">
-                <h3>🏁 Final Prediction</h3>
+                <h3><FlagIcon size="sm" className="inline-icon" /> Final Prediction</h3>
                 <div className="prediction-stats">
                   <div className="prediction-stat">
                     <div className="stat-label">Predicted Final Position</div>

@@ -3,9 +3,7 @@ import { DriverProvider } from './context/DriverContext'
 import { ScoutProvider } from './context/ScoutContext'
 
 // Import pages
-import ScoutLanding from './pages/ScoutLanding/ScoutLanding'
 import Rankings from './pages/Rankings/Rankings'
-import TestRankings from './pages/TestRankings'
 import Overview from './pages/Overview/Overview'
 import RaceLog from './pages/RaceLog/RaceLog'
 import Skills from './pages/Skills/Skills'
@@ -46,7 +44,6 @@ function App() {
                 {/* Old scout routes - redirect to rankings */}
                 <Route path="/scout" element={<Navigate to="/rankings" replace />} />
                 <Route path="/scout/driver/:driverNumber/overview" element={<Navigate to="/driver/:driverNumber/overview" replace />} />
-                <Route path="/test" element={<TestRankings />} />
               </Routes>
             </main>
           </div>

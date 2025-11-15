@@ -2,12 +2,25 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import GRCupLogo from '../GRCupLogo/GRCupLogo';
+import { TrophyIcon } from '../icons';
 import './RankingsTable.css';
 
 export default function RankingsTable({ drivers = [] }) {
   const navigate = useNavigate();
   const [sortKey, setSortKey] = useState('overall_score');
   const [sortDirection, setSortDirection] = useState('desc');
+  const [activeTooltip, setActiveTooltip] = useState(null);
+
+  // Metric explanations (2 sentences max)
+  const metricInfo = {
+    overall_score: "Weighted composite of all four performance factors. Speed 46.6%, Consistency 29.1%, Racecraft 14.9%, Tire Management 9.5%.",
+    cornering: "Measures consistency through lap time standard deviation and position variability. Lower variation indicates more reliable, predictable performance.",
+    tire_mgmt: "Evaluates pace maintenance across race distance by comparing early vs late lap times. Positive values show drivers who get faster as tires wear.",
+    racecraft: "Assesses overtaking ability and defensive skills through position changes and battles won. Captures wheel-to-wheel racing prowess.",
+    raw_speed: "Pure pace measured by fastest lap times and qualifying positions. The foundation of competitive performance.",
+    wins: "Total race victories. The ultimate measure of on-track success.",
+    top10: "Number of top-10 finishes. Indicates consistency in points-scoring positions."
+  };
 
   // Calculate overall score from 4 factors using validated coefficients
   // Coefficients from statistical validation (see backend routes.py lines 740-746)
@@ -89,7 +102,7 @@ export default function RankingsTable({ drivers = [] }) {
         <div className="rankings-header-content">
           <div className="rankings-center-section">
             <div className="rankings-icon">
-              <span className="icon-trophy">🏆</span>
+              <TrophyIcon size="lg" />
             </div>
             <h1 className="rankings-title">DRIVER RANKINGS</h1>
           </div>
@@ -99,16 +112,9 @@ export default function RankingsTable({ drivers = [] }) {
         </div>
         <div className="rankings-description">
           <p className="description-text">
-            Development Pool - Comprehensive 4-Factor Performance Model analyzing Speed, Consistency, Racecraft, and Tire Management across all race sessions
+            <strong>Click on any driver</strong> to view their complete performance dashboard with detailed analytics, race logs, skills breakdown, and personalized improvement recommendations
           </p>
         </div>
-      </div>
-
-      <div className="cta-container">
-        <div className="cta-text">
-          <strong>Click on any driver</strong> to view their complete performance dashboard with detailed analytics, race logs, skills breakdown, and personalized improvement recommendations
-        </div>
-        <div className="cta-arrow">→</div>
       </div>
 
       <div className="table-wrapper">
@@ -116,26 +122,96 @@ export default function RankingsTable({ drivers = [] }) {
           <thead>
             <tr>
               <th>DRIVER</th>
-              <th onClick={() => handleSort('overall_score')} className="sortable">
-                OVERALL {sortKey === 'overall_score' && (sortDirection === 'asc' ? '↑' : '↓')}
+              <th
+                className="sortable-with-info"
+                onMouseEnter={() => setActiveTooltip('overall_score')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                onClick={() => handleSort('overall_score')}
+              >
+                <div className="header-content">
+                  OVERALL {sortKey === 'overall_score' && (sortDirection === 'asc' ? '↑' : '↓')}
+                  {activeTooltip === 'overall_score' && (
+                    <div className="tooltip">{metricInfo.overall_score}</div>
+                  )}
+                </div>
               </th>
-              <th onClick={() => handleSort('cornering')} className="sortable">
-                CORNERING {sortKey === 'cornering' && (sortDirection === 'asc' ? '↑' : '↓')}
+              <th
+                className="sortable-with-info"
+                onMouseEnter={() => setActiveTooltip('cornering')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                onClick={() => handleSort('cornering')}
+              >
+                <div className="header-content">
+                  CORNERING {sortKey === 'cornering' && (sortDirection === 'asc' ? '↑' : '↓')}
+                  {activeTooltip === 'cornering' && (
+                    <div className="tooltip">{metricInfo.cornering}</div>
+                  )}
+                </div>
               </th>
-              <th onClick={() => handleSort('tire_mgmt')} className="sortable">
-                TIRE MGMT {sortKey === 'tire_mgmt' && (sortDirection === 'asc' ? '↑' : '↓')}
+              <th
+                className="sortable-with-info"
+                onMouseEnter={() => setActiveTooltip('tire_mgmt')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                onClick={() => handleSort('tire_mgmt')}
+              >
+                <div className="header-content">
+                  TIRE MGMT {sortKey === 'tire_mgmt' && (sortDirection === 'asc' ? '↑' : '↓')}
+                  {activeTooltip === 'tire_mgmt' && (
+                    <div className="tooltip">{metricInfo.tire_mgmt}</div>
+                  )}
+                </div>
               </th>
-              <th onClick={() => handleSort('racecraft')} className="sortable">
-                RACECRAFT {sortKey === 'racecraft' && (sortDirection === 'asc' ? '↑' : '↓')}
+              <th
+                className="sortable-with-info"
+                onMouseEnter={() => setActiveTooltip('racecraft')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                onClick={() => handleSort('racecraft')}
+              >
+                <div className="header-content">
+                  RACECRAFT {sortKey === 'racecraft' && (sortDirection === 'asc' ? '↑' : '↓')}
+                  {activeTooltip === 'racecraft' && (
+                    <div className="tooltip">{metricInfo.racecraft}</div>
+                  )}
+                </div>
               </th>
-              <th onClick={() => handleSort('raw_speed')} className="sortable">
-                RAW SPEED {sortKey === 'raw_speed' && (sortDirection === 'asc' ? '↑' : '↓')}
+              <th
+                className="sortable-with-info"
+                onMouseEnter={() => setActiveTooltip('raw_speed')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                onClick={() => handleSort('raw_speed')}
+              >
+                <div className="header-content">
+                  RAW SPEED {sortKey === 'raw_speed' && (sortDirection === 'asc' ? '↑' : '↓')}
+                  {activeTooltip === 'raw_speed' && (
+                    <div className="tooltip">{metricInfo.raw_speed}</div>
+                  )}
+                </div>
               </th>
-              <th onClick={() => handleSort('wins')} className="sortable">
-                WINS {sortKey === 'wins' && (sortDirection === 'asc' ? '↑' : '↓')}
+              <th
+                className="sortable-with-info"
+                onMouseEnter={() => setActiveTooltip('wins')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                onClick={() => handleSort('wins')}
+              >
+                <div className="header-content">
+                  WINS {sortKey === 'wins' && (sortDirection === 'asc' ? '↑' : '↓')}
+                  {activeTooltip === 'wins' && (
+                    <div className="tooltip">{metricInfo.wins}</div>
+                  )}
+                </div>
               </th>
-              <th onClick={() => handleSort('top10')} className="sortable">
-                TOP 10 {sortKey === 'top10' && (sortDirection === 'asc' ? '↑' : '↓')}
+              <th
+                className="sortable-with-info"
+                onMouseEnter={() => setActiveTooltip('top10')}
+                onMouseLeave={() => setActiveTooltip(null)}
+                onClick={() => handleSort('top10')}
+              >
+                <div className="header-content">
+                  TOP 10 {sortKey === 'top10' && (sortDirection === 'asc' ? '↑' : '↓')}
+                  {activeTooltip === 'top10' && (
+                    <div className="tooltip">{metricInfo.top10}</div>
+                  )}
+                </div>
               </th>
             </tr>
           </thead>

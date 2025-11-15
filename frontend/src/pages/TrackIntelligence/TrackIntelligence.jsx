@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar, ResponsiveContainer, Legend } from 'recharts';
+import { BullseyeIcon, SwordIcon, LightningIcon, TireIcon } from '../../components/icons';
 import { getTracks, getDrivers } from '../../services/api';
 import './TrackIntelligence.css';
 
@@ -485,7 +486,7 @@ function TrackIntelligence() {
                   {/* Data Rows with Expandable Variables */}
                   {sortedDrivers.map((driver, index) => {
                     const factorMeta = {
-                      consistency: { icon: '🎯', title: 'Consistency', weight: '31%', variables: [
+                      consistency: { icon: <BullseyeIcon size="md" />, title: 'Consistency', weight: '31%', variables: [
                         { label: 'Stint Consistency', value: 71 },
                         { label: 'Sector Consistency', value: 68 },
                         { label: 'Braking Consistency', value: 66 },
@@ -493,13 +494,13 @@ function TrackIntelligence() {
                         { label: 'Corner Repeatability', value: 64 },
                         { label: 'Pressure Consistency', value: 61 }
                       ]},
-                      racecraft: { icon: '⚔️', title: 'Racecraft', weight: '16%', variables: [
+                      racecraft: { icon: <SwordIcon size="md" />, title: 'Racecraft', weight: '16%', variables: [
                         { label: 'Positions Gained', value: 58 },
                         { label: 'Position Changes', value: 52 },
                         { label: 'Pass Success Rate', value: 49 },
                         { label: 'Defensive Rating', value: 51 }
                       ]},
-                      speed: { icon: '⚡', title: 'Speed', weight: '50%', variables: [
+                      speed: { icon: <LightningIcon size="md" />, title: 'Speed', weight: '50%', variables: [
                         { label: 'Qualifying Pace', value: 72 },
                         { label: 'Best Race Lap', value: 68 },
                         { label: 'Avg Top-10 Pace', value: 65 },
@@ -507,7 +508,7 @@ function TrackIntelligence() {
                         { label: 'Sector Best Combo', value: 64 },
                         { label: 'Ultimate Pace', value: 69 }
                       ]},
-                      tire_management: { icon: '🏁', title: 'Tire Management', weight: '10%', variables: [
+                      tire_management: { icon: <TireIcon size="md" />, title: 'Tire Management', weight: '10%', variables: [
                         { label: 'Pace Degradation', value: 56 },
                         { label: 'Late Stint Performance', value: 53 },
                         { label: 'Early vs Late Pace', value: 54 },

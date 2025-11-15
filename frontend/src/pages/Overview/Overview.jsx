@@ -7,7 +7,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
-         ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
+         ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
          Legend, ResponsiveContainer } from 'recharts';
 import api from '../../services/api';
 import { useDriver } from '../../context/DriverContext';
@@ -252,6 +252,7 @@ export default function Overview() {
               <NavLink
                 to={`/driver/${selectedDriverNumber}/race-log`}
                 className="expand-button"
+                aria-label="View detailed race logs"
               >
                 →
               </NavLink>
@@ -347,6 +348,7 @@ export default function Overview() {
           <NavLink
             to={`/driver/${selectedDriverNumber}/skills`}
             className="expand-button"
+            aria-label="View skills breakdown"
           >
             →
           </NavLink>
@@ -436,6 +438,7 @@ export default function Overview() {
         <NavLink
           to={`/driver/${selectedDriverNumber}/improve`}
           className="expand-button"
+          aria-label="Improve skills"
         >
           →
         </NavLink>

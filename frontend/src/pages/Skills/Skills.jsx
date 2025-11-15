@@ -113,7 +113,6 @@ export default function Skills() {
   ];
 
   const handleFactorClick = async (factorName) => {
-    console.log('[Skills] Factor clicked:', factorName);
     setSelectedFactor(factorName);
     setLoadingBreakdown(true);
     setError(null);
@@ -129,16 +128,11 @@ export default function Skills() {
 
       const apiFactorName = factorNameMap[factorName] || factorName.toLowerCase().replace(' ', '_');
 
-      console.log('[Skills] Fetching breakdown for factor:', apiFactorName);
-
       // Fetch breakdown and comparison data in parallel
       const [breakdownResponse, comparisonResponse] = await Promise.all([
         api.get(`/api/factors/${apiFactorName}/breakdown/${selectedDriverNumber}`),
         api.get(`/api/factors/${apiFactorName}/comparison/${selectedDriverNumber}`)
       ]);
-
-      console.log('[Skills] Breakdown data:', breakdownResponse.data);
-      console.log('[Skills] Comparison data:', comparisonResponse.data);
 
       setFactorBreakdown(breakdownResponse.data);
       setFactorComparison(comparisonResponse.data);
@@ -319,7 +313,7 @@ export default function Skills() {
         <div className="variable-detail-section">
           <div className="variable-detail-header">
             <h2>{selectedFactor} Breakdown</h2>
-            <button className="close-button" onClick={() => setSelectedFactor(null)}>✕</button>
+            <button className="close-button" onClick={() => setSelectedFactor(null)} aria-label="Close factor breakdown">✕</button>
           </div>
 
           {loadingBreakdown ? (

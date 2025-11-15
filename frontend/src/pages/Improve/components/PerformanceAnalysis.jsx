@@ -4,6 +4,7 @@
  * Scalable for all tracks (currently showing Barber R1)
  */
 
+import { MessageIcon, TargetIcon, StarIcon, FlagIcon } from '../../../components/icons';
 import './PerformanceAnalysis.css';
 
 export default function PerformanceAnalysis({ coachingData, driverData }) {
@@ -58,7 +59,7 @@ export default function PerformanceAnalysis({ coachingData, driverData }) {
 
       {/* Team Principal's Note */}
       <div className="team-note">
-        <div className="note-icon">💬</div>
+        <div className="note-icon"><MessageIcon size="md" /></div>
         <div className="note-content">
           <h3>Team Principal's Assessment</h3>
           <p>
@@ -83,7 +84,7 @@ export default function PerformanceAnalysis({ coachingData, driverData }) {
       {/* Key Insights */}
       {key_insights && key_insights.length > 0 && (
         <div className="key-insights">
-          <h3>🎯 KEY FOCUS AREAS</h3>
+          <h3><TargetIcon size="sm" className="inline-icon" /> KEY FOCUS AREAS</h3>
           <div className="insights-list">
             {key_insights.map((insight, index) => (
               <div key={index} className="insight-item">
@@ -166,7 +167,7 @@ export default function PerformanceAnalysis({ coachingData, driverData }) {
       {/* Top Strengths */}
       {topStrengths.length > 0 && (
         <div className="top-strengths">
-          <h3>✨ YOUR STRENGTHS</h3>
+          <h3><StarIcon size="sm" className="inline-icon" /> YOUR STRENGTHS</h3>
           <div className="strengths-grid">
             {topStrengths.map(strength => (
               <div key={strength.name} className="strength-item">
@@ -180,7 +181,7 @@ export default function PerformanceAnalysis({ coachingData, driverData }) {
 
       {/* Future Tracks Notice */}
       <div className="future-tracks-notice">
-        <p>🏁 More tracks coming soon: Sebring, COTA, Sonoma, Road America, VIR</p>
+        <p><FlagIcon size="sm" className="inline-icon" /> More tracks coming soon: Sebring, COTA, Sonoma, Road America, VIR</p>
       </div>
     </section>
   );

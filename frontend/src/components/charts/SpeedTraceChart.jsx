@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
   ReferenceArea
 } from 'recharts';
+import { StarIcon, ChartIcon } from '../icons';
 import './SpeedTraceChart.css';
 
 /**
@@ -205,17 +206,17 @@ const SpeedTraceChart = ({ telemetryData, comparisonDrivers, highlightedCorners 
       <div className="speed-trace-insights">
         <h4>Key Insights</h4>
         <ul>
-          <li>🔴 <strong>Red line (You):</strong> Your current speed profile</li>
+          <li><span className="legend-dot red"></span> <strong>Red line (You):</strong> Your current speed profile</li>
           {traces.next_tier && (
-            <li>🟠 <strong>Orange line (Next Tier):</strong> Achievable target - driver just ahead of you</li>
+            <li><span className="legend-dot orange"></span> <strong>Orange line (Next Tier):</strong> Achievable target - driver just ahead of you</li>
           )}
           {traces.leader && traces.leader.driver_number !== traces.user?.driver_number && (
-            <li>🟢 <strong>Green line (Leader):</strong> Ultimate goal - race winner's pace</li>
+            <li><span className="legend-dot green"></span> <strong>Green line (Leader):</strong> Ultimate goal - race winner's pace</li>
           )}
           {highlightedCorners.length > 0 && (
-            <li>⭐ <strong>Highlighted zones (Gold):</strong> {highlightedCorners.map(c => `Turn ${c}`).join(', ')} - Focus areas mentioned by your coach</li>
+            <li><StarIcon size="sm" className="legend-icon gold" /> <strong>Highlighted zones (Gold):</strong> {highlightedCorners.map(c => `Turn ${c}`).join(', ')} - Focus areas mentioned by your coach</li>
           )}
-          <li>📊 <strong>Look for gaps:</strong> Where lines diverge shows opportunities for improvement</li>
+          <li><ChartIcon size="sm" className="legend-icon" /> <strong>Look for gaps:</strong> Where lines diverge shows opportunities for improvement</li>
         </ul>
       </div>
     </div>
