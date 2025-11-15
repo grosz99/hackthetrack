@@ -7,10 +7,10 @@ export default function PerformanceRadar({ driver }) {
 
   // Extract 4 factors
   const factors = [
-    { name: 'Cornering', value: driver.racecraft || 0 },
-    { name: 'Racecraft', value: driver.racecraft || 0 },
-    { name: 'Tire Mgmt', value: driver.tire_management || 0 },
-    { name: 'Raw Speed', value: driver.speed || 0 },
+    { name: 'Consistency', value: driver.consistency?.percentile || 0 },
+    { name: 'Racecraft', value: driver.racecraft?.percentile || 0 },
+    { name: 'Tire Mgmt', value: driver.tire_management?.percentile || 0 },
+    { name: 'Raw Speed', value: driver.speed?.percentile || 0 },
   ];
 
   // Calculate top 3 average (mock for now - would come from API)

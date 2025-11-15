@@ -1,0 +1,12 @@
+export { default as TrophyIcon } from './TrophyIcon';
+export { default as TargetIcon } from './TargetIcon';
+export { default as ChartIcon } from './ChartIcon';
+export { default as WarningIcon } from './WarningIcon';
+export { default as FlagIcon } from './FlagIcon';
+export { default as MessageIcon } from './MessageIcon';
+export { default as RocketIcon } from './RocketIcon';
+export { default as StarIcon } from './StarIcon';
+export { default as LightningIcon } from './LightningIcon';
+export { default as SwordIcon } from './SwordIcon';
+export { default as TireIcon } from './TireIcon';
+export { default as BullseyeIcon } from './BullseyeIcon';

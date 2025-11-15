@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { ChartIcon } from '../../components/icons';
 import { sendChatMessage, getDriver, getTrack, getDetailedTelemetry } from '../../services/api';
 import SpeedTraceChart from '../../components/charts/SpeedTraceChart';
 import './StrategyChat.css';
@@ -302,7 +303,8 @@ function StrategyChat() {
               onClick={loadTelemetryData}
               disabled={telemetryLoading}
             >
-              {telemetryLoading ? 'Loading...' : showTelemetry ? 'Refresh Speed Trace' : '📊 View Speed Trace Comparison'}
+              <ChartIcon size="sm" className="btn-icon" />
+              {telemetryLoading ? 'Loading...' : showTelemetry ? 'Refresh Speed Trace' : 'View Speed Trace Comparison'}
             </button>
           </div>
         )}

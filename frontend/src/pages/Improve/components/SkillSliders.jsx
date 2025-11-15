@@ -171,6 +171,7 @@ export default function SkillSliders({ currentSkills, onTargetChange, onFindSimi
                     disabled={target <= current}
                     className="increment-btn decrement"
                     title="Decrease by 1%"
+                    aria-label={`Decrease ${label} target by 1%`}
                   >
                     -1%
                   </button>
@@ -179,6 +180,7 @@ export default function SkillSliders({ currentSkills, onTargetChange, onFindSimi
                     disabled={target >= 100 || getRemainingBudget() === 0}
                     className="increment-btn increment"
                     title={getRemainingBudget() === 0 ? "Budget depleted" : "Increase by 1%"}
+                    aria-label={`Increase ${label} target by 1%`}
                   >
                     +1%
                   </button>

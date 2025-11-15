@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { ChartIcon } from '../../components/icons';
 import { compareTelemetry, getDrivers, getTracks } from '../../services/api';
 import './TelemetryComparison.css';
 
@@ -328,9 +329,9 @@ function TelemetryComparison() {
       {/* Empty State */}
       {!comparisonData && !loading && !error && (
         <div className="empty-state">
-          <div className="empty-icon">📊</div>
-          <h3>Select Two Drivers to Compare</h3>
-          <p>Choose drivers and click "Compare" to see detailed telemetry analysis</p>
+          <div className="empty-icon"><ChartIcon size="xl" /></div>
+          <h3>Compare Driver Telemetry</h3>
+          <p>Select two drivers to view detailed performance analysis powered by our validated statistical framework</p>
         </div>
       )}
     </div>
