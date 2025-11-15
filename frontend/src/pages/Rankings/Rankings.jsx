@@ -33,10 +33,14 @@ export default function Rankings() {
     );
   }
 
+  const handleReopenWelcome = () => {
+    setShowWelcome(true);
+  };
+
   return (
     <div className="rankings-page">
       {showWelcome && <WelcomeModal onClose={handleCloseWelcome} />}
-      <RankingsTable drivers={drivers} />
+      <RankingsTable drivers={drivers} onShowInfo={handleReopenWelcome} />
     </div>
   );
 }

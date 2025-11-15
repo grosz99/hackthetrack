@@ -47,6 +47,12 @@
   filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
+.rankings-title-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 .rankings-title {
   font-size: 60px;
   font-weight: 900;
@@ -55,6 +61,27 @@
   letter-spacing: -2.5px;
   line-height: 1;
   font-family: 'Inter', sans-serif;
+}
+
+.info-modal-button {
+  background: transparent;
+  border: 2px solid #e74c3c;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  align-self: flex-start;
+}
+
+.info-modal-button:hover {
+  background: #e74c3c;
+  border-color: #e74c3c;
+  color: white;
 }
 
 .rankings-logo-container {
@@ -209,7 +236,7 @@
 }
 
 .driver-row::after {
-  content: 'View Dashboard →';
+  content: 'Review Analytics →';
   position: absolute;
   right: 16px;
   top: 50%;
