@@ -11,6 +11,8 @@ import api from '../../services/api';
 import { useDriver } from '../../context/DriverContext';
 import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
+import SkillGapPrioritizer from '../../components/SkillGapPrioritizer/SkillGapPrioritizer';
+import CoachRecommendations from '../../components/CoachRecommendations/CoachRecommendations';
 import './Skills.css';
 
 export default function Skills() {
@@ -419,6 +421,27 @@ export default function Skills() {
           )}
         </div>
       )}
+
+      {/* Coach View Section - Diagnostic Analysis */}
+      <div className="coach-view-section">
+        <div className="coach-view-header">
+          <h2>Driver's Coach View</h2>
+          <p>Prioritized weaknesses with telemetry-backed evidence and actionable recommendations</p>
+        </div>
+
+        <div className="coach-view-grid">
+          {/* Skill Gap Prioritizer */}
+          <SkillGapPrioritizer
+            driverNumber={selectedDriverNumber}
+            onGapSelected={(gap) => {
+              console.log('Gap selected:', gap);
+            }}
+          />
+
+          {/* Coach Recommendations */}
+          <CoachRecommendations driverNumber={selectedDriverNumber} />
+        </div>
+      </div>
     </div>
   );
 }

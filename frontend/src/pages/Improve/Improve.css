@@ -376,6 +376,63 @@
   font-weight: 600;
 }
 
+/* SKILLS CONNECTION BANNER */
+.skills-connection-banner {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border: 2px solid #ff9800;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.banner-icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.banner-text {
+  color: #e65100;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.banner-text strong {
+  color: #bf360c;
+}
+
+/* PROJECTED RANKINGS SECTION - THE KILLER FEATURE */
+.projected-rankings-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 3px solid #27ae60;
+  margin-bottom: 32px;
+}
+
+.projected-rankings-section .section-header {
+  border-bottom-color: #27ae60;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.projected-rankings-section .section-header h2 {
+  color: #27ae60;
+}
+
+.projected-rankings-section .section-header p {
+  margin: 0;
+  color: #555;
+  font-size: 14px;
+}
+
 /* PERFORMANCE ANALYSIS */
 .error-message {
   background: #ffebee;

@@ -1,0 +1,327 @@
+/**
+ * ProjectedRankingsTable Styles
+ * NASCAR aesthetic with highlighted projection rows
+ */
+
+.projected-rankings-table {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e0e0e0;
+}
+
+.projected-rankings-table.loading,
+.projected-rankings-table.error,
+.projected-rankings-table.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: #666;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #27ae60;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.projection-header {
+  margin-bottom: 20px;
+  border-bottom: 3px solid #27ae60;
+  padding-bottom: 16px;
+}
+
+.projection-header h3 {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.projection-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.summary-item .label {
+  font-size: 11px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.summary-item .value {
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.summary-item .value.current {
+  color: #666;
+}
+
+.summary-item .value.projected {
+  color: #27ae60;
+}
+
+.summary-arrow {
+  font-size: 28px;
+  color: #27ae60;
+  font-weight: 700;
+}
+
+.positions-gained {
+  margin-left: auto;
+}
+
+.positions-gained .gain {
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.positions-gained .gain.positive {
+  background: #d4edda;
+  color: #155724;
+}
+
+.positions-gained .gain.negative {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.positions-gained .gain.neutral {
+  background: #e2e3e5;
+  color: #383d41;
+}
+
+.confidence-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.confidence-badge[data-level="high"] {
+  background: #d4edda;
+  color: #155724;
+}
+
+.confidence-badge[data-level="medium"] {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.confidence-badge[data-level="low"] {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.avg-finish-comparison {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.finish-item {
+  text-align: center;
+}
+
+.finish-label {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.finish-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1a1a1a;
+}
+
+.finish-value.projected {
+  color: #27ae60;
+}
+
+.finish-arrow {
+  font-size: 24px;
+  color: #27ae60;
+  font-weight: 700;
+}
+
+.rankings-table-container {
+  overflow-x: auto;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.rankings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.rankings-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.rankings-table th {
+  background: #1a1a1a;
+  color: #fff;
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.rankings-table th:first-child {
+  border-top-left-radius: 6px;
+}
+
+.rankings-table th:last-child {
+  border-top-right-radius: 6px;
+}
+
+.rankings-table td {
+  padding: 12px 8px;
+  text-align: center;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.rankings-table tbody tr:hover {
+  background: #f5f5f5;
+}
+
+.rankings-table .user-row {
+  background: #fff3e0;
+}
+
+.rankings-table .user-row:hover {
+  background: #ffe0b2;
+}
+
+.rankings-table .projected-row {
+  background: #e8f5e9;
+  border: 2px solid #27ae60;
+  font-weight: 600;
+}
+
+.rankings-table .projected-row:hover {
+  background: #c8e6c9;
+}
+
+.rank-cell {
+  font-weight: 900;
+}
+
+.rank-number {
+  display: inline-block;
+  background: #f0f0f0;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.projected-row .rank-number {
+  background: #27ae60;
+  color: #fff;
+}
+
+.driver-cell {
+  text-align: left;
+  font-weight: 600;
+}
+
+.driver-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.projected-badge {
+  background: #27ae60;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.skill-cell {
+  color: #333;
+}
+
+.finish-cell {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.projected-row .finish-cell {
+  color: #27ae60;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .projection-summary {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .positions-gained {
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+    margin-top: 8px;
+  }
+
+  .avg-finish-comparison {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .rankings-table {
+    font-size: 12px;
+  }
+
+  .rankings-table th,
+  .rankings-table td {
+    padding: 8px 4px;
+  }
+}

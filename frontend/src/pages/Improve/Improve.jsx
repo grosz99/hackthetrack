@@ -1,6 +1,7 @@
 /**
- * Improve Page - Skill Development and Performance Analysis
- * Match skills with similar drivers and track performance improvement areas
+ * Development Page - Projection and Planning View
+ * Interactive skill projections showing where driver would rank with improvements
+ * Includes practice plan generation and similar driver matching
  */
 
 import { useState, useEffect } from 'react';
@@ -11,6 +12,7 @@ import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import SkillSliders from './components/SkillSliders';
 import PerformanceAnalysis from './components/PerformanceAnalysis';
 import PracticePlanGenerator from './components/PracticePlanGenerator';
+import ProjectedRankingsTable from '../../components/ProjectedRankingsTable/ProjectedRankingsTable';
 import './Improve.css';
 
 export default function Improve() {
@@ -94,7 +96,7 @@ export default function Improve() {
   if (loading) {
     return (
       <div className="improve-page">
-        <DashboardHeader driverData={driverData} pageName="Improve" />
+        <DashboardHeader driverData={driverData} pageName="Development" />
         <DashboardTabs />
         <div className="loading-container">
           <div className="loading-text">Loading...</div>
@@ -106,13 +108,51 @@ export default function Improve() {
   return (
     <div className="improve-page">
       {/* Unified Header */}
-      <DashboardHeader driverData={driverData} pageName="Improve" />
+      <DashboardHeader driverData={driverData} pageName="Development" />
 
       {/* Unified Navigation Tabs */}
       <DashboardTabs />
 
       {/* Main Content */}
       <div className="improve-content">
+
+        {/* Connection to Skills Page */}
+        <div className="skills-connection-banner">
+          <div className="banner-content">
+            <span className="banner-icon" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e65100" strokeWidth="2">
+                <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/>
+                <line x1="9" y1="21" x2="15" y2="21"/>
+              </svg>
+            </span>
+            <span className="banner-text">
+              <strong>Tip:</strong> Visit the <strong>Skills</strong> page first to see your prioritized weakness analysis
+              and coach recommendations. Then come here to project where you could rank with those improvements!
+            </span>
+          </div>
+        </div>
+
+        {/* PROJECTED RANKINGS - THE KILLER FEATURE */}
+        {driverData && targetSkills && (
+          <section className="projected-rankings-section">
+            <div className="section-header">
+              <h2>Projected Rankings</h2>
+              <p>See where you would rank with your adjusted skills</p>
+            </div>
+            <ProjectedRankingsTable
+              driverNumber={selectedDriverNumber}
+              adjustedSkills={{
+                speed: targetSkills.speed,
+                consistency: targetSkills.consistency,
+                racecraft: targetSkills.racecraft,
+                tire_management: targetSkills.tire_management,
+              }}
+              onProjectionUpdate={(projection) => {
+                console.log('Projection updated:', projection);
+              }}
+            />
+          </section>
+        )}
 
         {/* TWO COLUMN LAYOUT - Skills & Comparables */}
         <div className="improve-grid">
@@ -121,10 +161,10 @@ export default function Improve() {
             <section className="skill-sliders-section">
               <SkillSliders
                 currentSkills={{
-                  speed: driverData.speed?.score || 0,
-                  consistency: driverData.consistency?.score || 0,
-                  racecraft: driverData.racecraft?.score || 0,
-                  tire_management: driverData.tire_management?.score || 0
+                  speed: driverData.speed?.percentile || 0,
+                  consistency: driverData.consistency?.percentile || 0,
+                  racecraft: driverData.racecraft?.percentile || 0,
+                  tire_management: driverData.tire_management?.percentile || 0
                 }}
                 onTargetChange={handleTargetChange}
                 onFindSimilar={handleFindSimilar}
@@ -139,7 +179,14 @@ export default function Improve() {
           <section className="comparables-section">
             {!searching && !similarDrivers && (
               <div className="comparables-empty">
-                <div className="empty-icon">👥</div>
+                <div className="empty-icon" aria-hidden="true">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                    <circle cx="9" cy="7" r="4"/>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                  </svg>
+                </div>
                 <h3>Find Similar Drivers</h3>
                 <p>Adjust your target skills and select a track, then click "Find Comparables" to see drivers with similar skill profiles.</p>
               </div>
