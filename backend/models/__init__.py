@@ -35,6 +35,16 @@ from .models import (
     WeeklyMilestone,
     SkillPriority,
     FinalPrediction,
+    # Skills Page - Coach View Models
+    SkillGapItem,
+    SkillGapAnalysisResponse,
+    CoachRecommendation,
+    CoachRecommendationsResponse,
+    # Development Page - Projection Models
+    ProjectedDriverRanking,
+    ProjectedRankingsResponse,
+    TrackImprovementFocus,
+    TrackImprovementPlanResponse,
 )
 
 __all__ = [
@@ -70,4 +80,14 @@ __all__ = [
     "WeeklyMilestone",
     "SkillPriority",
     "FinalPrediction",
+    # Skills Page - Coach View Models
+    "SkillGapItem",
+    "SkillGapAnalysisResponse",
+    "CoachRecommendation",
+    "CoachRecommendationsResponse",
+    # Development Page - Projection Models
+    "ProjectedDriverRanking",
+    "ProjectedRankingsResponse",
+    "TrackImprovementFocus",
+    "TrackImprovementPlanResponse",
 ]
