@@ -38,6 +38,14 @@ from models import (
     WeeklyMilestone,
     SkillPriority,
     FinalPrediction,
+    SkillGapItem,
+    SkillGapAnalysisResponse,
+    CoachRecommendation,
+    CoachRecommendationsResponse,
+    ProjectedDriverRanking,
+    ProjectedRankingsResponse,
+    TrackImprovementFocus,
+    TrackImprovementPlanResponse,
 )
 from ..services.data_loader import data_loader
 from ..services.ai_strategy import ai_service
@@ -1590,3 +1598,472 @@ async def generate_practice_plan(request: PracticePlanRequest):
     except Exception as e:
         logger.error(f"Error generating practice plan: {e}")
         raise HTTPException(status_code=500, detail=f"Error generating practice plan: {str(e)}")
+
+
+# ============================================================================
+# SKILLS PAGE - DIAGNOSTIC ENDPOINTS (Coach View)
+# ============================================================================
+
+
+@router.get(
+    "/drivers/{driver_number}/skill-gaps",
+    response_model=SkillGapAnalysisResponse,
+    summary="Analyze skill gaps with position impact",
+    description="Calculate prioritized skill gaps showing how much each gap costs in positions"
+)
+async def get_skill_gap_analysis(driver_number: int):
+    """
+    Analyze driver's skill gaps vs top 3 drivers with position impact.
+
+    Returns prioritized list of skill gaps showing:
+    - Gap in percentile points vs top 3 average
+    - Estimated positions gained if gap is closed (using 4-factor model coefficients)
+    - Telemetry evidence from Barber (where available)
+    - Priority ranking based on impact
+
+    This is the core of the Coach View - showing WHERE to focus improvement efforts.
+    """
+    import json
+    from pathlib import Path
+    from app.utils.numpy_stats import percentile_to_z
+
+    # Model coefficients from validated 4-factor model
+    MODEL_COEFFICIENTS = {
+        "speed": 6.079,
+        "consistency": 3.792,
+        "racecraft": 1.943,
+        "tire_management": 1.237,
+        "intercept": 13.01,
+    }
+
+    # Get driver
+    driver = data_loader.get_driver(driver_number)
+    if not driver:
+        raise HTTPException(
+            status_code=404, detail=f"Driver {driver_number} not found"
+        )
+
+    # Get all drivers to calculate rankings and top 3
+    all_drivers = data_loader.get_all_drivers()
+    if not all_drivers:
+        raise HTTPException(status_code=500, detail="No driver data available")
+
+    # Sort drivers by overall score to get ranking
+    drivers_ranked = sorted(all_drivers, key=lambda d: d.overall_score, reverse=True)
+    current_rank = next(
+        (i + 1 for i, d in enumerate(drivers_ranked) if d.driver_number == driver_number),
+        len(drivers_ranked),
+    )
+
+    # Calculate top 3 average for each factor
+    top3_averages = {
+        "speed": sum(d.speed.percentile for d in drivers_ranked[:3]) / 3,
+        "consistency": sum(d.consistency.percentile for d in drivers_ranked[:3]) / 3,
+        "racecraft": sum(d.racecraft.percentile for d in drivers_ranked[:3]) / 3,
+        "tire_management": sum(d.tire_management.percentile for d in drivers_ranked[:3]) / 3,
+    }
+
+    # Load telemetry insights for evidence (Barber only for now)
+    telemetry_evidence = {}
+    try:
+        insights_file = Path(__file__).parent.parent.parent / "data" / "telemetry_coaching_insights.json"
+        if insights_file.exists():
+            with open(insights_file, "r") as f:
+                all_insights = json.load(f)
+            # Check for Barber R1 data for this driver
+            if "barber_r1" in all_insights and str(driver_number) in all_insights["barber_r1"]:
+                barber_data = all_insights["barber_r1"][str(driver_number)]
+                # Map factor breakdown to evidence
+                for factor, count in barber_data.get("factor_breakdown", {}).items():
+                    if count > 0:
+                        factor_key = factor.lower().replace(" ", "_")
+                        if factor_key == "speed":
+                            telemetry_evidence["speed"] = [
+                                insight for insight in barber_data.get("key_insights", [])
+                                if "mph SLOWER" in insight or "speed" in insight.lower()
+                            ]
+                        elif factor_key == "consistency":
+                            telemetry_evidence["consistency"] = [
+                                insight for insight in barber_data.get("key_insights", [])
+                                if "EARLIER" in insight or "LATER" in insight
+                            ]
+                        elif factor_key == "racecraft":
+                            telemetry_evidence["racecraft"] = [
+                                insight for insight in barber_data.get("key_insights", [])
+                                if "braking" in insight.lower() or "exit" in insight.lower()
+                            ]
+    except Exception as e:
+        logger.warning(f"Could not load telemetry evidence: {e}")
+
+    # Calculate skill gaps with position impact
+    skill_gaps = []
+    total_potential_positions = 0
+
+    factors = [
+        ("speed", "Speed", driver.speed.percentile),
+        ("consistency", "Consistency", driver.consistency.percentile),
+        ("racecraft", "Racecraft", driver.racecraft.percentile),
+        ("tire_management", "Tire Management", driver.tire_management.percentile),
+    ]
+
+    for factor_key, display_name, current_pct in factors:
+        top3_avg = top3_averages[factor_key]
+        gap = top3_avg - current_pct
+
+        # Only include if there's a gap (top 3 is better)
+        if gap > 0:
+            # Calculate position impact using model coefficient
+            # z-score change from closing the gap
+            current_z = percentile_to_z(current_pct)
+            target_z = percentile_to_z(top3_avg)
+            z_improvement = target_z - current_z
+
+            # Position impact = coefficient * z-score change
+            # Negative because lower position number is better
+            position_impact = abs(MODEL_COEFFICIENTS[factor_key] * z_improvement)
+
+            total_potential_positions += position_impact
+
+            skill_gaps.append(
+                SkillGapItem(
+                    factor_name=factor_key,
+                    display_name=display_name,
+                    current_percentile=round(current_pct, 1),
+                    top3_average=round(top3_avg, 1),
+                    gap_percentile=round(gap, 1),
+                    position_impact=round(position_impact, 2),
+                    priority_rank=0,  # Will be set after sorting
+                    telemetry_evidence=telemetry_evidence.get(factor_key, [])[:3],  # Top 3 evidence items
+                )
+            )
+
+    # Sort by position impact (highest first) and assign priority ranks
+    skill_gaps.sort(key=lambda x: x.position_impact, reverse=True)
+    for i, gap in enumerate(skill_gaps):
+        gap.priority_rank = i + 1
+
+    # Determine primary weakness
+    primary_weakness = skill_gaps[0].display_name if skill_gaps else "None identified"
+
+    # Estimate potential rank if all gaps closed
+    estimated_potential_rank = max(1, int(current_rank - total_potential_positions))
+
+    # Generate coach summary
+    if skill_gaps:
+        top_gap = skill_gaps[0]
+        coach_summary = (
+            f"Focus on {top_gap.display_name} - closing the {top_gap.gap_percentile:.1f} percentile gap "
+            f"to top 3 average could gain you {top_gap.position_impact:.1f} positions. "
+            f"Total potential improvement: {total_potential_positions:.1f} positions "
+            f"(from P{current_rank} to ~P{estimated_potential_rank})."
+        )
+    else:
+        coach_summary = "Excellent! You're performing at or above top 3 level in all skill areas."
+
+    return SkillGapAnalysisResponse(
+        driver_number=driver_number,
+        driver_name=driver.driver_name or f"Driver #{driver_number}",
+        current_overall_rank=current_rank,
+        total_drivers=len(all_drivers),
+        skill_gaps=skill_gaps,
+        primary_weakness=primary_weakness,
+        estimated_potential_rank=estimated_potential_rank,
+        coach_summary=coach_summary,
+    )
+
+
+@router.get(
+    "/drivers/{driver_number}/coach-recommendations",
+    response_model=CoachRecommendationsResponse,
+    summary="Get telemetry-backed coaching recommendations",
+    description="Generate prioritized coaching recommendations based on telemetry evidence"
+)
+async def get_coach_recommendations(driver_number: int):
+    """
+    Generate actionable coaching recommendations based on skill gaps and telemetry evidence.
+
+    Uses:
+    - Skill gap analysis to prioritize areas
+    - Barber telemetry data for specific corner evidence
+    - Model coefficients for impact estimation
+
+    Returns prioritized list of recommendations with specific evidence.
+    """
+    import json
+    from pathlib import Path
+
+    # Get skill gaps first
+    skill_gaps_response = await get_skill_gap_analysis(driver_number)
+
+    # Load telemetry insights
+    track_insights = {}
+    try:
+        insights_file = Path(__file__).parent.parent.parent / "data" / "telemetry_coaching_insights.json"
+        if insights_file.exists():
+            with open(insights_file, "r") as f:
+                all_insights = json.load(f)
+
+            # Get Barber insights if available
+            if "barber_r1" in all_insights and str(driver_number) in all_insights["barber_r1"]:
+                barber_data = all_insights["barber_r1"][str(driver_number)]
+                track_insights["barber"] = barber_data.get("key_insights", [])
+    except Exception as e:
+        logger.warning(f"Could not load telemetry insights: {e}")
+
+    # Generate recommendations based on skill gaps
+    recommendations = []
+
+    for i, gap in enumerate(skill_gaps_response.skill_gaps[:3]):  # Top 3 priorities
+        evidence = gap.telemetry_evidence if gap.telemetry_evidence else []
+
+        # Generate specific recommendation based on factor
+        if gap.factor_name == "speed":
+            recommendation_text = (
+                f"Increase corner entry and apex speeds. You're {gap.gap_percentile:.1f} percentile points "
+                f"behind top 3 average in raw speed."
+            )
+            expected = f"+{gap.position_impact:.1f} positions"
+        elif gap.factor_name == "consistency":
+            recommendation_text = (
+                f"Improve lap-to-lap consistency. Focus on consistent braking points and "
+                f"throttle application. Gap: {gap.gap_percentile:.1f} percentile points."
+            )
+            expected = f"+{gap.position_impact:.1f} positions"
+        elif gap.factor_name == "racecraft":
+            recommendation_text = (
+                f"Develop better race craft through overtaking and defensive skills. "
+                f"Gap: {gap.gap_percentile:.1f} percentile points to top 3."
+            )
+            expected = f"+{gap.position_impact:.1f} positions"
+        else:  # tire_management
+            recommendation_text = (
+                f"Improve tire management through smoother inputs and strategic pace management. "
+                f"Gap: {gap.gap_percentile:.1f} percentile points."
+            )
+            expected = f"+{gap.position_impact:.1f} positions"
+
+        recommendations.append(
+            CoachRecommendation(
+                priority=i + 1,
+                skill_area=gap.display_name,
+                recommendation=recommendation_text,
+                evidence=evidence,
+                expected_improvement=expected,
+            )
+        )
+
+    # Summary
+    if recommendations:
+        summary = (
+            f"Focus on {recommendations[0].skill_area} as your primary improvement area. "
+            f"Combined improvements could gain you ~{sum(g.position_impact for g in skill_gaps_response.skill_gaps):.1f} positions."
+        )
+    else:
+        summary = "You're performing at top 3 level. Focus on maintaining consistency."
+
+    return CoachRecommendationsResponse(
+        driver_number=driver_number,
+        recommendations=recommendations,
+        track_specific_insights=track_insights,
+        summary=summary,
+    )
+
+
+# ============================================================================
+# DEVELOPMENT PAGE - PROJECTION ENDPOINTS
+# ============================================================================
+
+
+@router.get(
+    "/rankings/projected",
+    response_model=ProjectedRankingsResponse,
+    summary="Get projected rankings with adjusted skills",
+    description="Calculate where driver would rank with hypothetical skill improvements"
+)
+async def get_projected_rankings(
+    driver_number: int = Query(..., description="Driver number to project"),
+    speed: float = Query(..., ge=0, le=100, description="Projected speed percentile"),
+    consistency: float = Query(..., ge=0, le=100, description="Projected consistency percentile"),
+    racecraft: float = Query(..., ge=0, le=100, description="Projected racecraft percentile"),
+    tire_management: float = Query(..., ge=0, le=100, description="Projected tire management percentile"),
+):
+    """
+    Project where driver would rank with adjusted skill levels.
+
+    Returns:
+    - Complete rankings table with all drivers
+    - User's current rank and projected rank
+    - Projected average finish position
+    - Visual indicator of user's projected position among real drivers
+
+    This is THE KILLER FEATURE for the Development page.
+    """
+    from app.utils.numpy_stats import percentile_to_z
+
+    # Model coefficients
+    MODEL_COEFFICIENTS = {
+        "speed": 6.079,
+        "consistency": 3.792,
+        "racecraft": 1.943,
+        "tire_management": 1.237,
+        "intercept": 13.01,
+    }
+
+    # Get user driver
+    user_driver = data_loader.get_driver(driver_number)
+    if not user_driver:
+        raise HTTPException(
+            status_code=404, detail=f"Driver {driver_number} not found"
+        )
+
+    # Get all drivers
+    all_drivers = data_loader.get_all_drivers()
+    if not all_drivers:
+        raise HTTPException(status_code=500, detail="No driver data available")
+
+    # Calculate projected average finish for user
+    projected_z_scores = {
+        "speed": percentile_to_z(speed),
+        "consistency": percentile_to_z(consistency),
+        "racecraft": percentile_to_z(racecraft),
+        "tire_management": percentile_to_z(tire_management),
+    }
+
+    projected_avg_finish = (
+        MODEL_COEFFICIENTS["intercept"]
+        + MODEL_COEFFICIENTS["speed"] * projected_z_scores["speed"]
+        + MODEL_COEFFICIENTS["consistency"] * projected_z_scores["consistency"]
+        + MODEL_COEFFICIENTS["racecraft"] * projected_z_scores["racecraft"]
+        + MODEL_COEFFICIENTS["tire_management"] * projected_z_scores["tire_management"]
+    )
+
+    # Calculate current average finish
+    current_z_scores = {
+        "speed": percentile_to_z(user_driver.speed.percentile),
+        "consistency": percentile_to_z(user_driver.consistency.percentile),
+        "racecraft": percentile_to_z(user_driver.racecraft.percentile),
+        "tire_management": percentile_to_z(user_driver.tire_management.percentile),
+    }
+
+    current_avg_finish = (
+        MODEL_COEFFICIENTS["intercept"]
+        + MODEL_COEFFICIENTS["speed"] * current_z_scores["speed"]
+        + MODEL_COEFFICIENTS["consistency"] * current_z_scores["consistency"]
+        + MODEL_COEFFICIENTS["racecraft"] * current_z_scores["racecraft"]
+        + MODEL_COEFFICIENTS["tire_management"] * current_z_scores["tire_management"]
+    )
+
+    # Build rankings table with all drivers
+    rankings_data = []
+
+    for driver in all_drivers:
+        # Calculate avg finish using the same model
+        driver_z = {
+            "speed": percentile_to_z(driver.speed.percentile),
+            "consistency": percentile_to_z(driver.consistency.percentile),
+            "racecraft": percentile_to_z(driver.racecraft.percentile),
+            "tire_management": percentile_to_z(driver.tire_management.percentile),
+        }
+
+        driver_avg_finish = (
+            MODEL_COEFFICIENTS["intercept"]
+            + MODEL_COEFFICIENTS["speed"] * driver_z["speed"]
+            + MODEL_COEFFICIENTS["consistency"] * driver_z["consistency"]
+            + MODEL_COEFFICIENTS["racecraft"] * driver_z["racecraft"]
+            + MODEL_COEFFICIENTS["tire_management"] * driver_z["tire_management"]
+        )
+
+        rankings_data.append(
+            {
+                "driver_number": driver.driver_number,
+                "driver_name": driver.driver_name or f"Driver #{driver.driver_number}",
+                "speed": driver.speed.percentile,
+                "consistency": driver.consistency.percentile,
+                "racecraft": driver.racecraft.percentile,
+                "tire_management": driver.tire_management.percentile,
+                "overall_score": driver.overall_score,
+                "avg_finish": driver_avg_finish,
+                "is_user": driver.driver_number == driver_number,
+                "is_projected": False,
+            }
+        )
+
+    # Add projected user as separate entry
+    projected_overall = (
+        speed * 0.466
+        + consistency * 0.291
+        + racecraft * 0.149
+        + tire_management * 0.095
+    )
+
+    rankings_data.append(
+        {
+            "driver_number": driver_number,
+            "driver_name": f"{user_driver.driver_name or f'Driver #{driver_number}'} (PROJECTED)",
+            "speed": speed,
+            "consistency": consistency,
+            "racecraft": racecraft,
+            "tire_management": tire_management,
+            "overall_score": projected_overall,
+            "avg_finish": projected_avg_finish,
+            "is_user": True,
+            "is_projected": True,
+        }
+    )
+
+    # Sort by avg_finish (lower is better) to determine rankings
+    rankings_data.sort(key=lambda x: x["avg_finish"])
+
+    # Assign ranks and build response
+    rankings_table = []
+    current_rank = 0
+    projected_rank = 0
+
+    for i, data in enumerate(rankings_data):
+        rank = i + 1
+
+        # Track user's current and projected ranks
+        if data["driver_number"] == driver_number:
+            if data["is_projected"]:
+                projected_rank = rank
+            else:
+                current_rank = rank
+
+        rankings_table.append(
+            ProjectedDriverRanking(
+                rank=rank,
+                driver_number=data["driver_number"],
+                driver_name=data["driver_name"],
+                speed=round(data["speed"], 1),
+                consistency=round(data["consistency"], 1),
+                racecraft=round(data["racecraft"], 1),
+                tire_management=round(data["tire_management"], 1),
+                overall_score=round(data["overall_score"], 1),
+                avg_finish=round(data["avg_finish"], 2),
+                is_user=data["is_user"],
+                is_projected=data["is_projected"],
+            )
+        )
+
+    # Determine confidence level based on skill changes
+    skill_changes = abs(speed - user_driver.speed.percentile) + abs(consistency - user_driver.consistency.percentile) + abs(racecraft - user_driver.racecraft.percentile) + abs(tire_management - user_driver.tire_management.percentile)
+
+    if skill_changes < 10:
+        confidence_level = "high"
+    elif skill_changes < 25:
+        confidence_level = "medium"
+    else:
+        confidence_level = "low"
+
+    positions_gained = current_rank - projected_rank
+
+    return ProjectedRankingsResponse(
+        user_driver_number=driver_number,
+        current_rank=current_rank,
+        projected_rank=projected_rank,
+        positions_gained=positions_gained,
+        projected_avg_finish=round(projected_avg_finish, 2),
+        current_avg_finish=round(current_avg_finish, 2),
+        rankings_table=rankings_table,
+        confidence_level=confidence_level,
+    )

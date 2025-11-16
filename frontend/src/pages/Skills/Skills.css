@@ -768,3 +768,45 @@
   color: #e74c3c;
   font-size: 12px;
 }
+
+/* ============================================
+   Coach View Section - Diagnostic Analysis
+   ============================================ */
+
+.coach-view-section {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 3px solid #e74c3c;
+}
+
+.coach-view-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.coach-view-header h2 {
+  margin: 0 0 8px 0;
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.coach-view-header p {
+  margin: 0;
+  color: #aaa;
+  font-size: 16px;
+}
+
+.coach-view-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 1200px) {
+  .coach-view-grid {
+    grid-template-columns: 1fr;
+  }
+}

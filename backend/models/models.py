@@ -392,3 +392,101 @@ class PracticePlanResponse(BaseModel):
     final_prediction: FinalPrediction
     track_name: str
     ai_coaching_summary: Optional[str] = None
+
+
+# Skills Page - Diagnostic Models (Coach View)
+
+class SkillGapItem(BaseModel):
+    """Individual skill gap with position impact analysis."""
+
+    factor_name: str
+    display_name: str
+    current_percentile: float
+    top3_average: float
+    gap_percentile: float
+    position_impact: float  # Estimated positions gained if gap closed
+    priority_rank: int
+    telemetry_evidence: List[str] = []  # Corner-specific evidence from Barber
+
+
+class SkillGapAnalysisResponse(BaseModel):
+    """Complete skill gap analysis for driver's coach view."""
+
+    driver_number: int
+    driver_name: str
+    current_overall_rank: int
+    total_drivers: int
+    skill_gaps: List[SkillGapItem]
+    primary_weakness: str
+    estimated_potential_rank: int
+    coach_summary: str
+
+
+class CoachRecommendation(BaseModel):
+    """Actionable coaching recommendation based on telemetry evidence."""
+
+    priority: int
+    skill_area: str
+    recommendation: str
+    evidence: List[str]
+    expected_improvement: str
+
+
+class CoachRecommendationsResponse(BaseModel):
+    """Complete coaching recommendations with telemetry-backed evidence."""
+
+    driver_number: int
+    recommendations: List[CoachRecommendation]
+    track_specific_insights: Dict[str, List[str]]
+    summary: str
+
+
+# Development Page - Projection Models
+
+class ProjectedDriverRanking(BaseModel):
+    """Individual driver ranking for projection table."""
+
+    rank: int
+    driver_number: int
+    driver_name: str
+    speed: float
+    consistency: float
+    racecraft: float
+    tire_management: float
+    overall_score: float
+    avg_finish: float
+    is_user: bool = False
+    is_projected: bool = False
+
+
+class ProjectedRankingsResponse(BaseModel):
+    """Projected rankings table showing where driver would rank with adjusted skills."""
+
+    user_driver_number: int
+    current_rank: int
+    projected_rank: int
+    positions_gained: int
+    projected_avg_finish: float
+    current_avg_finish: float
+    rankings_table: List[ProjectedDriverRanking]
+    confidence_level: str
+
+
+class TrackImprovementFocus(BaseModel):
+    """Track-specific skill focus recommendation."""
+
+    track_id: str
+    track_name: str
+    primary_skill_focus: str
+    secondary_skill_focus: str
+    specific_corners: List[str]
+    rationale: str
+
+
+class TrackImprovementPlanResponse(BaseModel):
+    """Track-by-track improvement plan for driver development."""
+
+    driver_number: int
+    skill_gaps: Dict[str, float]
+    track_recommendations: List[TrackImprovementFocus]
+    overall_strategy: str
