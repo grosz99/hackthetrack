@@ -452,7 +452,7 @@ export default function Skills() {
                     </div>
                     <div className="variable-stats">
                       <span className="variable-score">{variable.normalized_value.toFixed(1)}/100</span>
-                      <span className="variable-weight">Weight: {(variable.weight * 100).toFixed(0)}%</span>
+                      <span className="variable-weight">Impact: {Math.abs(variable.loading * 100).toFixed(0)}%</span>
                     </div>
                   </div>
                 ))}
