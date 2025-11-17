@@ -13,7 +13,7 @@
   align-items: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #e74c3c;
+  background: #EB0A1E;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -27,7 +27,7 @@
 }
 
 .back-to-scout-btn:hover {
-  background: #c0392b;
+  background: #B80818;
   transform: translateX(-4px);
 }
 
@@ -45,7 +45,7 @@
 }
 
 .trail-scout {
-  color: #e74c3c;
+  color: #EB0A1E;
 }
 
 .trail-driver,
@@ -72,7 +72,7 @@
   width: 180px;
   height: 180px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background: linear-gradient(135deg, #EB0A1E, #B80818);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -139,7 +139,7 @@
   font-weight: 700;
   background: #fff;
   color: #000;
-  border: 4px solid #e74c3c;
+  border: 4px solid #EB0A1E;
   border-radius: 12px;
   cursor: pointer;
   outline: none;

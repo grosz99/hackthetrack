@@ -94,7 +94,7 @@
 }
 
 .recommendation-card.priority-1 {
-  border-left: 6px solid #e74c3c;
+  border-left: 6px solid #EB0A1E;
 }
 
 .recommendation-card.priority-2 {
@@ -125,7 +125,7 @@
 }
 
 .priority-1 .priority-circle {
-  background: #e74c3c;
+  background: #EB0A1E;
 }
 
 .priority-2 .priority-circle {

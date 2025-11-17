@@ -19,16 +19,16 @@ export default function BullseyeIcon({ size = 'md', className = '' }) {
       aria-label="Bullseye target icon"
     >
       {/* Outer ring */}
-      <circle cx="32" cy="32" r="28" fill="white" stroke="#e74c3c" strokeWidth="2" />
+      <circle cx="32" cy="32" r="28" fill="white" stroke="#EB0A1E" strokeWidth="2" />
 
       {/* Middle ring */}
-      <circle cx="32" cy="32" r="20" fill="#e74c3c" />
+      <circle cx="32" cy="32" r="20" fill="#EB0A1E" />
 
       {/* Inner ring */}
       <circle cx="32" cy="32" r="12" fill="white" />
 
       {/* Center */}
-      <circle cx="32" cy="32" r="6" fill="#e74c3c" />
+      <circle cx="32" cy="32" r="6" fill="#EB0A1E" />
 
       {/* Center dot */}
       <circle cx="32" cy="32" r="2" fill="white" />

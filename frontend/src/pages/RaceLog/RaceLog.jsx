@@ -157,7 +157,7 @@ export default function RaceLog() {
           </div>
           <div className="average-stat">
             <div className="average-value" style={{
-              color: averages.avgGain > 0 ? '#2ecc71' : averages.avgGain < 0 ? '#e74c3c' : '#888'
+              color: averages.avgGain > 0 ? '#2ecc71' : averages.avgGain < 0 ? '#EB0A1E' : '#888'
             }}>
               {averages.avgGain > 0 ? '+' : ''}{averages.avgGain}
             </div>
@@ -244,7 +244,7 @@ export default function RaceLog() {
                           <div className="detail-section">
                             <div className="detail-label">Gap to Fastest Lap</div>
                             <div className="detail-value" style={{
-                              color: result.gap_to_fastest_lap === '0.000' ? '#2ecc71' : '#e74c3c'
+                              color: result.gap_to_fastest_lap === '0.000' ? '#2ecc71' : '#EB0A1E'
                             }}>
                               {result.gap_to_fastest_lap || '—'}
                             </div>
@@ -256,7 +256,7 @@ export default function RaceLog() {
                           <div className="detail-section">
                             <div className="detail-label">Gap to S1 Best</div>
                             <div className="detail-value" style={{
-                              color: result.gap_to_s1_best === '0.000' ? '#2ecc71' : '#e74c3c'
+                              color: result.gap_to_s1_best === '0.000' ? '#2ecc71' : '#EB0A1E'
                             }}>
                               {result.gap_to_s1_best || '—'}
                             </div>
@@ -268,7 +268,7 @@ export default function RaceLog() {
                           <div className="detail-section">
                             <div className="detail-label">Gap to S2 Best</div>
                             <div className="detail-value" style={{
-                              color: result.gap_to_s2_best === '0.000' ? '#2ecc71' : '#e74c3c'
+                              color: result.gap_to_s2_best === '0.000' ? '#2ecc71' : '#EB0A1E'
                             }}>
                               {result.gap_to_s2_best || '—'}
                             </div>
@@ -280,7 +280,7 @@ export default function RaceLog() {
                           <div className="detail-section">
                             <div className="detail-label">Gap to S3 Best</div>
                             <div className="detail-value" style={{
-                              color: result.gap_to_s3_best === '0.000' ? '#2ecc71' : '#e74c3c'
+                              color: result.gap_to_s3_best === '0.000' ? '#2ecc71' : '#EB0A1E'
                             }}>
                               {result.gap_to_s3_best || '—'}
                             </div>

@@ -218,7 +218,7 @@ export default function Overview() {
                     tick={{ fill: '#000', fontWeight: 600 }}
                   />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#fff', border: '2px solid #e74c3c', borderRadius: '8px' }}
+                    contentStyle={{ backgroundColor: '#fff', border: '2px solid #EB0A1E', borderRadius: '8px' }}
                     labelStyle={{ color: '#000', fontWeight: 600 }}
                   />
                   <Legend
@@ -231,7 +231,7 @@ export default function Overview() {
                     stroke="#888"
                     strokeWidth={4}
                     name="Starting Position"
-                    dot={{ r: 6, fill: '#888', strokeWidth: 3, stroke: '#e74c3c' }}
+                    dot={{ r: 6, fill: '#888', strokeWidth: 3, stroke: '#EB0A1E' }}
                     style={{ filter: 'drop-shadow(0px 0px 2px rgba(231, 76, 60, 0.8))' }}
                   />
                   <Line
@@ -240,7 +240,7 @@ export default function Overview() {
                     stroke="#000"
                     strokeWidth={4}
                     name="Finishing Position"
-                    dot={{ r: 6, fill: '#000', strokeWidth: 3, stroke: '#e74c3c' }}
+                    dot={{ r: 6, fill: '#000', strokeWidth: 3, stroke: '#EB0A1E' }}
                     style={{ filter: 'drop-shadow(0px 0px 2px rgba(231, 76, 60, 0.8))' }}
                   />
                 </ComposedChart>
@@ -305,8 +305,8 @@ export default function Overview() {
               <Radar
                 name={`You (#${selectedDriverNumber})`}
                 dataKey="user"
-                stroke="#e74c3c"
-                fill="#e74c3c"
+                stroke="#EB0A1E"
+                fill="#EB0A1E"
                 fillOpacity={0.3}
                 strokeWidth={3}
               />
@@ -326,7 +326,7 @@ export default function Overview() {
               <div style={{
                 width: '24px',
                 height: '3px',
-                background: '#e74c3c',
+                background: '#EB0A1E',
                 borderRadius: '2px'
               }}></div>
               <span>You (#{selectedDriverNumber})</span>

@@ -41,7 +41,7 @@ export default function WelcomeModal({ onClose }) {
           <div className="pillar">
             <div className="pillar-icon-wrapper">
               <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                <path d="M32 8L40 24L56 26L44 38L47 54L32 46L17 54L20 38L8 26L24 24L32 8Z" fill="#e74c3c" stroke="#c0392b" strokeWidth="2"/>
+                <path d="M32 8L40 24L56 26L44 38L47 54L32 46L17 54L20 38L8 26L24 24L32 8Z" fill="#EB0A1E" stroke="#B80818" strokeWidth="2"/>
               </svg>
             </div>
             <h3>Claude AI Coaching</h3>

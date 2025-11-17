@@ -35,7 +35,7 @@
   width: 180px;
   height: 180px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background: linear-gradient(135deg, #EB0A1E, #B80818);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -90,7 +90,7 @@
 
 .tab {
   background: transparent;
-  border: 2px solid #e74c3c;
+  border: 2px solid #EB0A1E;
   color: #fff;
   padding: 20px 40px;
   font-size: 24px;
@@ -107,13 +107,13 @@
 }
 
 .tab:hover {
-  background: #e74c3c;
+  background: #EB0A1E;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
 }
 
 .tab.active {
-  background: #e74c3c;
+  background: #EB0A1E;
   color: #fff;
   box-shadow: 0 4px 12px rgba(231, 76, 60, 0.6);
 }
@@ -171,7 +171,7 @@
 
 .factor-card-large {
   background: #fff;
-  border: 5px solid #e74c3c;
+  border: 5px solid #EB0A1E;
   border-radius: 16px;
   padding: 32px;
   box-shadow: 0 6px 24px rgba(231, 76, 60, 0.25);
@@ -184,12 +184,12 @@
 .factor-card-large:hover {
   transform: translateY(-4px);
   box-shadow: 0 12px 36px rgba(231, 76, 60, 0.35);
-  border-color: #c0392b;
+  border-color: #B80818;
 }
 
 .factor-card-large.selected {
   border-width: 6px;
-  border-color: #c0392b;
+  border-color: #B80818;
   box-shadow: 0 12px 48px rgba(231, 76, 60, 0.5);
   transform: translateY(-2px);
 }
@@ -213,7 +213,7 @@
 .factor-score {
   font-size: 48px;
   font-weight: 900;
-  color: #e74c3c;
+  color: #EB0A1E;
   line-height: 1;
   text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.05);
 }
@@ -239,7 +239,7 @@
 
 .percentile-fill {
   height: 100%;
-  background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+  background: linear-gradient(90deg, #EB0A1E 0%, #B80818 100%);
   transition: width 0.5s ease;
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
@@ -254,7 +254,7 @@
 /* Radar Chart Container - New larger version on left */
 .radar-chart-container-new {
   background: #fff;
-  border: 5px solid #e74c3c;
+  border: 5px solid #EB0A1E;
   border-radius: 16px;
   padding: 32px;
   box-shadow: 0 6px 24px rgba(231, 76, 60, 0.25);
@@ -311,7 +311,7 @@
 .variable-detail-section {
   margin-top: 48px;
   background: #fff;
-  border: 5px solid #e74c3c;
+  border: 5px solid #EB0A1E;
   border-radius: 16px;
   padding: 32px;
   box-shadow: 0 6px 24px rgba(231, 76, 60, 0.25);
@@ -335,7 +335,7 @@
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 3px solid #e74c3c;
+  border-bottom: 3px solid #EB0A1E;
 }
 
 .variable-detail-header h2 {
@@ -348,7 +348,7 @@
 }
 
 .close-button {
-  background: #e74c3c;
+  background: #EB0A1E;
   color: #fff;
   border: none;
   width: 40px;
@@ -364,7 +364,7 @@
 }
 
 .close-button:hover {
-  background: #c0392b;
+  background: #B80818;
   transform: scale(1.1);
 }
 
@@ -408,7 +408,7 @@
 }
 
 .error-text {
-  color: #e74c3c;
+  color: #EB0A1E;
 }
 
 /* Responsive Design */
@@ -518,7 +518,7 @@
 /* Explanation Box */
 .explanation-box {
   background: rgba(231, 76, 60, 0.05);
-  border: 3px solid #e74c3c;
+  border: 3px solid #EB0A1E;
   border-radius: 12px;
   padding: 24px;
 }
@@ -549,7 +549,7 @@
 
 .variable-card {
   background: #fff;
-  border: 3px solid #e74c3c;
+  border: 3px solid #EB0A1E;
   border-radius: 12px;
   padding: 20px;
   transition: all 0.2s ease;
@@ -577,7 +577,7 @@
 .variable-percentile {
   font-size: 14px;
   font-weight: 700;
-  color: #e74c3c;
+  color: #EB0A1E;
   background: rgba(231, 76, 60, 0.1);
   padding: 4px 12px;
   border-radius: 12px;
@@ -593,7 +593,7 @@
 
 .variable-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, #e74c3c, #c0392b);
+  background: linear-gradient(90deg, #EB0A1E, #B80818);
   border-radius: 6px;
   transition: width 0.3s ease;
 }
@@ -649,7 +649,7 @@
 }
 
 .driver-comparison-card.user-card {
-  border-color: #e74c3c;
+  border-color: #EB0A1E;
   background: rgba(231, 76, 60, 0.03);
 }
 
@@ -659,11 +659,11 @@
   align-items: center;
   margin-bottom: 12px;
   padding-bottom: 12px;
-  border-bottom: 2px solid #e74c3c;
+  border-bottom: 2px solid #EB0A1E;
 }
 
 .user-card .card-header {
-  border-bottom-color: #e74c3c;
+  border-bottom-color: #EB0A1E;
 }
 
 .driver-label {
@@ -683,7 +683,7 @@
 .driver-score {
   font-size: 28px;
   font-weight: 900;
-  color: #e74c3c;
+  color: #EB0A1E;
   text-align: center;
   margin-bottom: 16px;
 }
@@ -723,13 +723,13 @@
 }
 
 .mini-bar-fill.user-fill {
-  background: linear-gradient(90deg, #e74c3c, #c0392b);
+  background: linear-gradient(90deg, #EB0A1E, #B80818);
 }
 
 /* Insights Box */
 .insights-box {
   background: rgba(231, 76, 60, 0.05);
-  border: 3px solid #e74c3c;
+  border: 3px solid #EB0A1E;
   border-radius: 12px;
   padding: 24px;
 }
@@ -765,7 +765,7 @@
   content: '▶';
   position: absolute;
   left: 0;
-  color: #e74c3c;
+  color: #EB0A1E;
   font-size: 12px;
 }
 
@@ -776,7 +776,7 @@
 .coach-view-section {
   margin-top: 48px;
   padding-top: 32px;
-  border-top: 3px solid #e74c3c;
+  border-top: 3px solid #EB0A1E;
 }
 
 .coach-view-header {

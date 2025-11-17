@@ -17,7 +17,7 @@
 
 .dashboard-tab {
   background: transparent;
-  border: 2px solid #e74c3c;
+  border: 2px solid #EB0A1E;
   color: #fff;
   padding: 14px 28px;
   font-size: 16px;
@@ -38,7 +38,7 @@
 .dashboard-tab:hover {
   color: #fff;
   background: rgba(231, 76, 60, 0.1);
-  border-color: #e74c3c;
+  border-color: #EB0A1E;
 }
 
 .dashboard-tab.active {

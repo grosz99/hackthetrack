@@ -188,8 +188,8 @@ export default function PracticePlanGenerator({ driverData, api }) {
                   <AreaChart data={chartData}>
                     <defs>
                       <linearGradient id="positionGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#e74c3c" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#e74c3c" stopOpacity={0.1}/>
+                        <stop offset="5%" stopColor="#EB0A1E" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#EB0A1E" stopOpacity={0.1}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="#333" />
@@ -208,7 +208,7 @@ export default function PracticePlanGenerator({ driverData, api }) {
                     <Tooltip
                       contentStyle={{
                         background: '#1a1a1a',
-                        border: '2px solid #e74c3c',
+                        border: '2px solid #EB0A1E',
                         borderRadius: '8px'
                       }}
                       labelStyle={{ color: '#fff' }}
@@ -216,7 +216,7 @@ export default function PracticePlanGenerator({ driverData, api }) {
                     <Area
                       type="monotone"
                       dataKey="position"
-                      stroke="#e74c3c"
+                      stroke="#EB0A1E"
                       strokeWidth={3}
                       fill="url(#positionGradient)"
                     />

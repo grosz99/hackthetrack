@@ -21,8 +21,8 @@ export default function RocketIcon({ size = 'md', className = '' }) {
       {/* Rocket body */}
       <path
         d="M32 4C32 4 24 12 24 28V44L28 52L32 56L36 52L40 44V28C40 12 32 4 32 4Z"
-        fill="#e74c3c"
-        stroke="#c0392b"
+        fill="#EB0A1E"
+        stroke="#B80818"
         strokeWidth="2"
       />
 
@@ -32,7 +32,7 @@ export default function RocketIcon({ size = 'md', className = '' }) {
       {/* Left fin */}
       <path
         d="M24 40L16 48L20 52L24 44Z"
-        fill="#c0392b"
+        fill="#B80818"
         stroke="#a93226"
         strokeWidth="2"
       />
@@ -40,7 +40,7 @@ export default function RocketIcon({ size = 'md', className = '' }) {
       {/* Right fin */}
       <path
         d="M40 40L48 48L44 52L40 44Z"
-        fill="#c0392b"
+        fill="#B80818"
         stroke="#a93226"
         strokeWidth="2"
       />

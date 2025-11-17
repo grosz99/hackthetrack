@@ -118,7 +118,7 @@
   background: white;
   border-radius: 16px;
   padding: var(--spacing-10);
-  border: 4px solid #e74c3c;
+  border: 4px solid #EB0A1E;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
@@ -142,7 +142,7 @@
 .factor-card-score {
   font-size: 36px;
   font-weight: 900;
-  color: #e74c3c;
+  color: #EB0A1E;
   line-height: 1;
 }
 
@@ -162,7 +162,7 @@
 
 .factor-card-bar {
   height: 100%;
-  background: #e74c3c;
+  background: #EB0A1E;
   transition: width 0.3s ease;
 }
 
@@ -187,7 +187,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #e74c3c;
+  background: #EB0A1E;
   color: #fff;
   font-size: 36px;
   font-weight: 900;
@@ -203,7 +203,7 @@
 }
 
 .expand-button:hover {
-  background: #c0392b;
+  background: #B80818;
   transform: scale(1.1);
   box-shadow: 0 8px 24px rgba(231, 76, 60, 0.6);
 }
@@ -309,7 +309,7 @@
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: #e74c3c;
+  background: #EB0A1E;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -320,7 +320,7 @@
 }
 
 .season-performance-arrow:hover {
-  background: #c0392b;
+  background: #B80818;
   transform: scale(1.1);
 }
 
@@ -341,7 +341,7 @@
 
 .season-performance-card .stat-item:hover {
   background: rgba(0, 0, 0, 0.04);
-  border-color: #e74c3c;
+  border-color: #EB0A1E;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(231, 76, 60, 0.15);
 }
@@ -349,7 +349,7 @@
 .season-performance-card .stat-value {
   font-size: 36px;
   font-weight: 900;
-  color: #e74c3c;
+  color: #EB0A1E;
   margin-bottom: 6px;
   font-family: 'Inter', sans-serif;
   line-height: 1;
@@ -501,7 +501,7 @@
   background: #fff;
   border-radius: 16px;
   padding: 40px;
-  border: 4px solid #e74c3c;
+  border: 4px solid #EB0A1E;
   box-shadow: 0 4px 16px rgba(231, 76, 60, 0.2);
   margin-top: 24px;
   transition: all 0.3s ease;
