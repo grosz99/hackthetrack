@@ -490,3 +490,15 @@ class TrackImprovementPlanResponse(BaseModel):
     skill_gaps: Dict[str, float]
     track_recommendations: List[TrackImprovementFocus]
     overall_strategy: str
+
+
+class FactorCoachingResponse(BaseModel):
+    """AI-generated coaching recommendations for a specific skill factor."""
+
+    driver_number: int
+    factor_name: str
+    factor_percentile: float
+    factor_rank: int
+    total_drivers: int
+    coaching_analysis: str
+    generated_at: str

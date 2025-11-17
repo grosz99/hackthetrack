@@ -123,6 +123,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 }
 
 .factor-card-header {
@@ -198,6 +199,42 @@
   height: 100%;
   background: linear-gradient(90deg, #EB0A1E 0%, #B80818 100%);
   transition: width 0.3s ease;
+}
+
+.card-expand-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #EB0A1E;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.card-expand-btn:hover {
+  background: #B80818;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(235, 10, 30, 0.4);
+}
+
+.card-expand-btn svg {
+  pointer-events: none;
+}
+
+.factor-card-description {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  line-height: 1.5;
+  margin-top: 16px;
 }
 
 .action-buttons-container {
