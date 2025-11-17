@@ -27,6 +27,7 @@ export default function Overview() {
   const [raceResults, setRaceResults] = useState([]);
   const [driverData, setDriverData] = useState(null);
   const [topDrivers, setTopDrivers] = useState([]);
+  const [factorStats, setFactorStats] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showFactorInfo, setShowFactorInfo] = useState(false);
@@ -50,17 +51,29 @@ export default function Overview() {
         setLoading(true);
         setError(null);
 
-        // Fetch season stats, race results, driver factors, and all drivers in parallel
-        const [statsResponse, resultsResponse, driverResponse, allDriversResponse] = await Promise.all([
+        // Fetch season stats, race results, driver factors, all drivers, and factor stats in parallel
+        const [statsResponse, resultsResponse, driverResponse, allDriversResponse, ...factorResponses] = await Promise.all([
           api.get(`/api/drivers/${selectedDriverNumber}/stats`),
           api.get(`/api/drivers/${selectedDriverNumber}/results`),
           api.get(`/api/drivers/${selectedDriverNumber}`),
-          api.get('/api/drivers')
+          api.get('/api/drivers'),
+          api.get('/api/factors/speed/stats'),
+          api.get('/api/factors/consistency/stats'),
+          api.get('/api/factors/racecraft/stats'),
+          api.get('/api/factors/tire_management/stats')
         ]);
 
         setSeasonStats(statsResponse.data);
         setRaceResults(resultsResponse.data);
         setDriverData(driverResponse.data);
+
+        // Store factor stats for max reference
+        setFactorStats({
+          speed: factorResponses[0].data,
+          consistency: factorResponses[1].data,
+          racecraft: factorResponses[2].data,
+          tire_management: factorResponses[3].data
+        });
 
         // Get top 3 drivers by overall score (excluding current driver)
         const sortedDrivers = allDriversResponse.data
@@ -361,73 +374,77 @@ export default function Overview() {
         <div className="factor-tiles-grid">
           {/* Consistency Card */}
           <div className="factor-card">
-            <div className="factor-card-header">
-              <h4 className="factor-card-title">Consistency</h4>
-              <div className="factor-card-score">
+            <div className="factor-card-header-stacked">
+              <h4 className="factor-card-title-large">Consistency</h4>
+              <div className="factor-card-score-large">
                 {Math.round(driverData?.consistency?.score || 0)}
               </div>
             </div>
-            <div className="factor-card-percentile">
-              {(driverData?.consistency?.percentile || 0).toFixed(1)}th Percentile
-            </div>
             <div className="factor-card-bar-container">
               <div className="factor-card-bar" style={{
-                width: `${driverData?.consistency?.percentile || 0}%`
+                width: `${((driverData?.consistency?.score || 0) / (factorStats.consistency?.max || 100)) * 100}%`
               }}></div>
+            </div>
+            <div className="factor-card-bar-labels">
+              <span>0</span>
+              <span>{factorStats.consistency?.max?.toFixed(0) || 100}</span>
             </div>
           </div>
 
           {/* Racecraft Card */}
           <div className="factor-card">
-            <div className="factor-card-header">
-              <h4 className="factor-card-title">Racecraft</h4>
-              <div className="factor-card-score">
+            <div className="factor-card-header-stacked">
+              <h4 className="factor-card-title-large">Racecraft</h4>
+              <div className="factor-card-score-large">
                 {Math.round(driverData?.racecraft?.score || 0)}
               </div>
             </div>
-            <div className="factor-card-percentile">
-              {(driverData?.racecraft?.percentile || 0).toFixed(1)}th Percentile
-            </div>
             <div className="factor-card-bar-container">
               <div className="factor-card-bar" style={{
-                width: `${driverData?.racecraft?.percentile || 0}%`
+                width: `${((driverData?.racecraft?.score || 0) / (factorStats.racecraft?.max || 100)) * 100}%`
               }}></div>
+            </div>
+            <div className="factor-card-bar-labels">
+              <span>0</span>
+              <span>{factorStats.racecraft?.max?.toFixed(0) || 100}</span>
             </div>
           </div>
 
           {/* Speed Card */}
           <div className="factor-card">
-            <div className="factor-card-header">
-              <h4 className="factor-card-title">Raw Speed</h4>
-              <div className="factor-card-score">
+            <div className="factor-card-header-stacked">
+              <h4 className="factor-card-title-large">Raw Speed</h4>
+              <div className="factor-card-score-large">
                 {Math.round(driverData?.speed?.score || 0)}
               </div>
             </div>
-            <div className="factor-card-percentile">
-              {(driverData?.speed?.percentile || 0).toFixed(1)}th Percentile
-            </div>
             <div className="factor-card-bar-container">
               <div className="factor-card-bar" style={{
-                width: `${driverData?.speed?.percentile || 0}%`
+                width: `${((driverData?.speed?.score || 0) / (factorStats.speed?.max || 100)) * 100}%`
               }}></div>
+            </div>
+            <div className="factor-card-bar-labels">
+              <span>0</span>
+              <span>{factorStats.speed?.max?.toFixed(0) || 100}</span>
             </div>
           </div>
 
           {/* Tire Management Card */}
           <div className="factor-card">
-            <div className="factor-card-header">
-              <h4 className="factor-card-title">Tire Mgmt</h4>
-              <div className="factor-card-score">
+            <div className="factor-card-header-stacked">
+              <h4 className="factor-card-title-large">Tire Mgmt</h4>
+              <div className="factor-card-score-large">
                 {Math.round(driverData?.tire_management?.score || 0)}
               </div>
             </div>
-            <div className="factor-card-percentile">
-              {(driverData?.tire_management?.percentile || 0).toFixed(1)}th Percentile
-            </div>
             <div className="factor-card-bar-container">
               <div className="factor-card-bar" style={{
-                width: `${driverData?.tire_management?.percentile || 0}%`
+                width: `${((driverData?.tire_management?.score || 0) / (factorStats.tire_management?.max || 100)) * 100}%`
               }}></div>
+            </div>
+            <div className="factor-card-bar-labels">
+              <span>0</span>
+              <span>{factorStats.tire_management?.max?.toFixed(0) || 100}</span>
             </div>
           </div>
         </div>
