@@ -1,4 +1,4 @@
-/* Improve Page - Design System Match */
+/* Improve Page - Simplified Driver Development Flow */
 
 .improve-page {
   padding: var(--spacing-8) var(--spacing-10);
@@ -26,10 +26,115 @@
   box-sizing: border-box;
 }
 
-/* Two Column Grid - Skills & Comparables */
+/* =================================================================
+   AI RECOMMENDATION BANNER
+   ================================================================= */
+.ai-recommendation-banner {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 4px solid #EB0A1E;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.recommendation-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.recommendation-icon {
+  background: #EB0A1E;
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.recommendation-header h3 {
+  font-size: 28px;
+  font-weight: 900;
+  color: #000;
+  margin: 0;
+}
+
+.recommendation-reasoning {
+  font-size: 16px;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  max-width: 800px;
+}
+
+.recommendation-values {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.recommendation-values span {
+  background: #f0f0f0;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  font-family: var(--font-mono);
+}
+
+.recommendation-actions {
+  display: flex;
+  gap: 16px;
+}
+
+.apply-btn {
+  background: #EB0A1E;
+  color: #fff;
+  border: none;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.apply-btn:hover {
+  background: #B80818;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(235, 10, 30, 0.3);
+}
+
+.skip-btn {
+  background: transparent;
+  color: #EB0A1E;
+  border: 2px solid #EB0A1E;
+  padding: 16px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.skip-btn:hover {
+  background: rgba(235, 10, 30, 0.1);
+}
+
+/* =================================================================
+   TWO COLUMN GRID - Skills & Best Match
+   ================================================================= */
 .improve-grid {
   display: flex;
-  gap: 12px;
+  gap: 24px;
   margin-bottom: 48px;
   align-items: stretch;
 }
@@ -41,7 +146,9 @@
   box-sizing: border-box;
 }
 
-/* Comparables Section - RIGHT COLUMN */
+/* =================================================================
+   COMPARABLES SECTION - RIGHT COLUMN
+   ================================================================= */
 .comparables-section {
   background: #ffffff;
   border: 4px solid #EB0A1E;
@@ -117,217 +224,128 @@
   margin: 0;
 }
 
-/* Comparables Results */
-.comparables-results {
+/* =================================================================
+   BEST MATCH RESULTS
+   ================================================================= */
+.best-match-results {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.comparables-header {
+.best-match-header {
   margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 3px solid #EB0A1E;
 }
 
-.comparables-header h3 {
+.best-match-header h3 {
   font-size: 20px;
   font-weight: 900;
   color: #EB0A1E;
-  margin: 0 0 8px 0;
-  text-transform: uppercase;
-}
-
-.comparables-header p {
-  font-size: 14px;
-  color: #666;
   margin: 0;
-  font-weight: 600;
+  text-transform: uppercase;
 }
 
-/* Improvement Prediction */
-.improvement-prediction {
-  background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+/* Best Match Card */
+.best-match-card {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border: 3px solid #EB0A1E;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.improvement-prediction h4 {
-  font-size: 12px;
-  font-weight: 700;
-  color: #c62828;
-  margin: 0 0 12px 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.improvement-stats {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  gap: 12px;
-}
-
-.stat-box {
-  flex: 1;
-  text-align: center;
-}
-
-.stat-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: #666;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-
-.stat-value {
-  font-size: 24px;
-  font-weight: 900;
-  font-family: var(--font-mono);
-}
-
-.stat-value.current {
-  color: #EB0A1E;
-}
-
-.stat-value.predicted {
-  color: #27ae60;
-}
-
-.stat-arrow {
-  font-size: 20px;
-  color: #EB0A1E;
-}
-
-/* Similar Drivers List */
-.similar-drivers-list {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.similar-drivers-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.similar-drivers-list::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 4px;
-}
-
-.similar-drivers-list::-webkit-scrollbar-thumb {
-  background: #EB0A1E;
-  border-radius: 4px;
-}
-
-.similar-driver-card {
-  background: #f8f9fa;
-  border: 2px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 16px;
+  border-radius: 16px;
+  padding: 24px;
   position: relative;
-  transition: all 0.2s ease;
+  margin-bottom: 24px;
 }
 
-.similar-driver-card:hover {
-  border-color: #EB0A1E;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
-}
-
-.rank-badge {
+.match-badge {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 16px;
+  right: 16px;
   background: #EB0A1E;
   color: white;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 20px;
   font-size: 14px;
   font-weight: 900;
 }
 
 .driver-info {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .driver-info h4 {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 900;
   color: #000;
   margin: 0 0 4px 0;
 }
 
 .driver-info p {
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 600;
   color: #666;
-  margin: 0 0 8px 0;
+  margin: 0;
 }
 
-.match-score {
-  display: inline-block;
-  font-size: 20px;
-  font-weight: 900;
-  color: #EB0A1E;
-  font-family: var(--font-mono);
-}
-
-.avg-finish {
+/* Finish Comparison */
+.finish-comparison {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 10px 14px;
+  justify-content: center;
+  gap: 24px;
   background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
   border: 2px solid #ffc107;
-  border-radius: 8px;
-  margin-bottom: 12px;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
 }
 
-.avg-finish .label {
+.your-finish,
+.their-finish {
+  text-align: center;
+}
+
+.finish-comparison .label {
   font-size: 12px;
   font-weight: 700;
   color: #f57f17;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 4px;
 }
 
-.avg-finish .value {
-  font-size: 20px;
+.finish-comparison .value {
+  font-size: 32px;
   font-weight: 900;
   color: #f57f17;
   font-family: var(--font-mono);
 }
 
+.finish-comparison .arrow {
+  font-size: 24px;
+  color: #f57f17;
+  font-weight: 900;
+}
+
 .skills-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 12px;
 }
 
 .skill-item {
   background: #ffffff;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  padding: 10px;
+  padding: 12px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .skill-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   color: #666;
   text-transform: uppercase;
@@ -335,235 +353,60 @@
 }
 
 .skill-value {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 900;
   color: #EB0A1E;
 }
 
-/* Full Width Sections Below */
-.practice-plan-section {
-  width: 100%;
-}
-
-.performance-analysis-section {
-  width: 100%;
-}
-
-
-/* Section Headers */
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 4px solid #EB0A1E;
-}
-
-.section-header h2 {
-  font-size: 24px;
-  font-weight: 900;
-  color: #EB0A1E;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.section-subtitle {
-  font-size: 14px;
-  color: #666;
-  margin: 8px 0 0 0;
-  font-weight: 600;
-}
-
-/* SKILLS CONNECTION BANNER */
-.skills-connection-banner {
-  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-  border: 2px solid #ff9800;
-  border-radius: 8px;
-  padding: 16px 20px;
-  margin-bottom: 24px;
-}
-
-.banner-content {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.banner-icon {
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
-.banner-text {
-  color: #e65100;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.banner-text strong {
-  color: #bf360c;
-}
-
-/* PROJECTED RANKINGS SECTION - THE KILLER FEATURE */
-.projected-rankings-section {
-  background: #fff;
+/* =================================================================
+   TRACK-SPECIFIC IMPROVEMENT SECTION
+   ================================================================= */
+.track-improvement-section {
+  background: #f8f9fa;
+  border: 2px solid #e0e0e0;
   border-radius: 12px;
-  padding: 32px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  border: 3px solid #27ae60;
-  margin-bottom: 32px;
+  padding: 24px;
+  flex: 1;
 }
 
-.projected-rankings-section .section-header {
-  border-bottom-color: #27ae60;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.projected-rankings-section .section-header h2 {
-  color: #27ae60;
-}
-
-.projected-rankings-section .section-header p {
-  margin: 0;
-  color: #555;
-  font-size: 14px;
-}
-
-/* PERFORMANCE ANALYSIS */
-.error-message {
-  background: #ffebee;
-  color: #c62828;
-  padding: 16px;
-  border-radius: 8px;
-  border-left: 4px solid #c62828;
-  margin-bottom: 16px;
-  font-weight: 600;
-}
-
-/* Team Note */
-.team-note {
-  background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
-  border: 3px solid #ffc107;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
-}
-
-.note-content h3 {
-  font-size: 16px;
+.track-improvement-section h4 {
+  font-size: 18px;
   font-weight: 900;
-  color: #f57f17;
-  margin: 0 0 8px 0;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.note-content p {
-  font-size: 14px;
-  font-weight: 600;
   color: #000;
-  margin: 0;
+  margin: 0 0 16px 0;
+}
+
+.improvement-insights {
+  color: #333;
   line-height: 1.6;
 }
 
-/* Priority Areas */
-.priority-areas {
-  margin-bottom: 24px;
+.insight-intro {
+  font-size: 14px;
+  margin-bottom: 16px;
 }
 
-.priority-areas h3 {
-  font-size: 16px;
-  font-weight: 900;
-  color: #EB0A1E;
-  margin: 0 0 16px 0;
-  text-transform: uppercase;
+.insight-placeholder {
+  background: #fff;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
 }
 
-.priority-item {
-  background: #ffebee;
-  border: 3px solid #EB0A1E;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 12px;
-}
-
-.priority-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.priority-name {
-  font-size: 16px;
-  font-weight: 900;
-  color: #000;
-}
-
-.priority-score {
-  font-size: 24px;
-  font-weight: 900;
-  color: #EB0A1E;
-}
-
-.priority-bar {
-  width: 100%;
-  height: 12px;
-  background: #ffcdd2;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.priority-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #ff5252 0%, #EB0A1E 100%);
-  transition: width 0.5s ease;
-}
-
-.priority-text {
-  font-size: 12px;
-  font-weight: 600;
+.insight-placeholder p {
+  margin: 0 0 8px 0;
+  font-size: 14px;
   color: #666;
 }
 
-/* Top Strengths */
-.top-strengths h3 {
-  font-size: 16px;
-  font-weight: 900;
-  color: #27ae60;
-  margin: 0 0 16px 0;
-  text-transform: uppercase;
+.insight-placeholder p:last-child {
+  margin-bottom: 0;
 }
 
-.strength-item {
-  background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-  border: 3px solid #27ae60;
-  border-radius: 12px;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.strength-name {
-  font-size: 16px;
-  font-weight: 900;
-  color: #1b5e20;
-}
-
-.strength-score {
-  font-size: 24px;
-  font-weight: 900;
-  color: #2e7d32;
-}
-
-/* Loading State */
+/* =================================================================
+   LOADING STATE
+   ================================================================= */
 .loading-container {
   display: flex;
   align-items: center;
@@ -577,9 +420,22 @@
   font-weight: 700;
 }
 
-/* Responsive Design */
+/* =================================================================
+   ERROR MESSAGE
+   ================================================================= */
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 16px;
+  border-radius: 8px;
+  border-left: 4px solid #c62828;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
 
-/* Desktop optimization for larger screens */
+/* =================================================================
+   RESPONSIVE DESIGN
+   ================================================================= */
 @media (min-width: 1400px) {
   .improve-page {
     padding: 32px 48px;
@@ -597,7 +453,11 @@
 
 @media (max-width: 1200px) {
   .improve-grid {
-    grid-template-columns: 1fr;
+    flex-direction: column;
+  }
+
+  .comparables-section {
+    min-height: 400px;
   }
 }
 
@@ -614,23 +474,40 @@
     gap: 16px;
   }
 
+  .ai-recommendation-banner {
+    padding: 24px;
+  }
+
+  .recommendation-header h3 {
+    font-size: 22px;
+  }
+
+  .recommendation-values {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .recommendation-actions {
+    flex-direction: column;
+  }
+
+  .apply-btn,
+  .skip-btn {
+    width: 100%;
+    text-align: center;
+  }
+
   .comparables-section {
     padding: 24px;
     min-height: 400px;
   }
 
-  .section-header {
+  .finish-comparison {
     flex-direction: column;
-    align-items: flex-start;
     gap: 12px;
   }
 
-  .improvement-stats {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .stat-arrow {
+  .finish-comparison .arrow {
     transform: rotate(90deg);
   }
 

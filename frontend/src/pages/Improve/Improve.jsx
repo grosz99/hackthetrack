@@ -1,7 +1,6 @@
 /**
- * Development Page - Projection and Planning View
- * Interactive skill projections showing where driver would rank with improvements
- * Includes practice plan generation and similar driver matching
+ * Driver Development Page - AI-Guided Skill Improvement
+ * Streamlined flow: AI Recommendation → Skill Sliders → Best Match → Track-Specific Actions
  */
 
 import { useState, useEffect } from 'react';
@@ -10,18 +9,16 @@ import { useDriver } from '../../context/DriverContext';
 import DashboardHeader from '../../components/DashboardHeader/DashboardHeader';
 import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import SkillSliders from './components/SkillSliders';
-import PerformanceAnalysis from './components/PerformanceAnalysis';
-import PracticePlanGenerator from './components/PracticePlanGenerator';
-import ProjectedRankingsTable from '../../components/ProjectedRankingsTable/ProjectedRankingsTable';
 import './Improve.css';
 
 export default function Improve() {
-  const { selectedDriverNumber, drivers } = useDriver();
+  const { selectedDriverNumber } = useDriver();
 
   const [driverData, setDriverData] = useState(null);
-  const [coachingData, setCoachingData] = useState(null);
+  const [coachingRecommendations, setCoachingRecommendations] = useState(null);
+  const [recommendedAllocation, setRecommendedAllocation] = useState(null);
   const [targetSkills, setTargetSkills] = useState(null);
-  const [similarDrivers, setSimilarDrivers] = useState(null);
+  const [bestMatch, setBestMatch] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState('barber');
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
@@ -36,22 +33,84 @@ export default function Improve() {
     { id: 'vir', name: 'Virginia International Raceway' }
   ];
 
-  // Load driver data and coaching
+  // Generate AI-recommended budget allocation based on weaknesses
+  const generateRecommendedAllocation = (driverFactors, coaching) => {
+    const factors = ['speed', 'consistency', 'racecraft', 'tire_management'];
+    const MAX_BUDGET = 5;
+
+    // Get percentiles for each factor
+    const weaknesses = factors.map(factor => ({
+      factor,
+      percentile: driverFactors[factor]?.percentile || 50,
+      coaching: coaching?.[factor]?.coaching_analysis || ''
+    })).sort((a, b) => a.percentile - b.percentile);
+
+    // Allocate budget - weakest gets most
+    const allocation = { speed: 0, consistency: 0, racecraft: 0, tire_management: 0 };
+    let remaining = MAX_BUDGET;
+
+    // Weakest area gets 3% if really weak, else 2%
+    if (weaknesses[0].percentile < 40) {
+      allocation[weaknesses[0].factor] = 3;
+      remaining -= 3;
+    } else {
+      allocation[weaknesses[0].factor] = 2;
+      remaining -= 2;
+    }
+
+    // Second weakest gets 1-2%
+    allocation[weaknesses[1].factor] = Math.min(2, remaining);
+    remaining -= allocation[weaknesses[1].factor];
+
+    // Remaining to third if any
+    if (remaining > 0) {
+      allocation[weaknesses[2].factor] = remaining;
+    }
+
+    const factorDisplayNames = {
+      speed: 'Speed',
+      consistency: 'Consistency',
+      racecraft: 'Racecraft',
+      tire_management: 'Tire Management'
+    };
+
+    return {
+      allocation,
+      weakestFactor: factorDisplayNames[weaknesses[0].factor],
+      weakestPercentile: weaknesses[0].percentile.toFixed(0),
+      reasoning: `Your weakest area is ${factorDisplayNames[weaknesses[0].factor]} (${weaknesses[0].percentile.toFixed(0)}th percentile). Focus your budget here for maximum improvement impact.`
+    };
+  };
+
+  // Load driver data and AI coaching recommendations
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
+        setBestMatch(null);
 
         // Get driver data
         const driverResponse = await api.get(`/api/drivers/${selectedDriverNumber}`);
         setDriverData(driverResponse.data);
 
-        // Get telemetry coaching for Barber
-        const coachingResponse = await api.get(
-          `/api/drivers/${selectedDriverNumber}/telemetry-coaching?track_id=barber&race_num=1`
+        // Get AI coaching recommendations for all factors
+        const coachingPromises = ['speed', 'consistency', 'racecraft', 'tire_management'].map(
+          factor => api.get(`/api/factors/${factor}/coaching/${selectedDriverNumber}`)
         );
-        setCoachingData(coachingResponse.data);
+        const coachingResults = await Promise.all(coachingPromises);
+
+        const coachingData = {
+          speed: coachingResults[0].data,
+          consistency: coachingResults[1].data,
+          racecraft: coachingResults[2].data,
+          tire_management: coachingResults[3].data
+        };
+        setCoachingRecommendations(coachingData);
+
+        // Generate AI-recommended allocation
+        const recommendation = generateRecommendedAllocation(driverResponse.data, coachingData);
+        setRecommendedAllocation(recommendation);
 
       } catch (err) {
         console.error('Error loading data:', err);
@@ -64,51 +123,97 @@ export default function Improve() {
     fetchData();
   }, [selectedDriverNumber]);
 
+  // Handle applying AI recommendation
+  const handleApplyRecommendation = () => {
+    if (!recommendedAllocation || !driverData) return;
+
+    const newTargets = {
+      speed: (driverData.speed?.percentile || 0) + recommendedAllocation.allocation.speed,
+      consistency: (driverData.consistency?.percentile || 0) + recommendedAllocation.allocation.consistency,
+      racecraft: (driverData.racecraft?.percentile || 0) + recommendedAllocation.allocation.racecraft,
+      tire_management: (driverData.tire_management?.percentile || 0) + recommendedAllocation.allocation.tire_management
+    };
+
+    setTargetSkills(newTargets);
+  };
 
   // Handle target skills change from sliders
   const handleTargetChange = (newTargets) => {
     setTargetSkills(newTargets);
   };
 
-  // Find similar drivers based on target skills
-  const handleFindSimilar = async () => {
+  // Find best matching driver based on target skills
+  const handleFindBestMatch = async () => {
     if (!targetSkills) return;
 
     try {
       setSearching(true);
-      setSimilarDrivers(null);
+      setBestMatch(null);
 
-      // Call backend API to find top 3 similar drivers
+      // Call backend API to find similar drivers (returns top 1)
       const response = await api.post('/api/drivers/find-similar', {
         current_driver_number: selectedDriverNumber,
         target_skills: targetSkills
       });
 
-      setSimilarDrivers(response.data.similar_drivers);
+      // Take only the best match
+      if (response.data.similar_drivers && response.data.similar_drivers.length > 0) {
+        setBestMatch(response.data.similar_drivers[0]);
+      }
     } catch (err) {
-      console.error('Error finding similar drivers:', err);
-      setError('Failed to find similar drivers. Please try again.');
+      console.error('Error finding best match:', err);
+      setError('Failed to find comparable driver. Please try again.');
     } finally {
       setSearching(false);
     }
   };
 
+  // Calculate which skill improved most
+  const getPrimaryImprovement = () => {
+    if (!targetSkills || !driverData) return null;
+
+    const deltas = {
+      speed: targetSkills.speed - (driverData.speed?.percentile || 0),
+      consistency: targetSkills.consistency - (driverData.consistency?.percentile || 0),
+      racecraft: targetSkills.racecraft - (driverData.racecraft?.percentile || 0),
+      tire_management: targetSkills.tire_management - (driverData.tire_management?.percentile || 0)
+    };
+
+    const maxDelta = Math.max(...Object.values(deltas));
+    const primaryFactor = Object.keys(deltas).find(key => deltas[key] === maxDelta);
+
+    const displayNames = {
+      speed: 'Speed',
+      consistency: 'Consistency',
+      racecraft: 'Racecraft',
+      tire_management: 'Tire Management'
+    };
+
+    return {
+      factor: primaryFactor,
+      displayName: displayNames[primaryFactor],
+      delta: maxDelta
+    };
+  };
+
   if (loading) {
     return (
       <div className="improve-page">
-        <DashboardHeader driverData={driverData} pageName="Development" />
+        <DashboardHeader driverData={driverData} pageName="Driver Development" />
         <DashboardTabs />
         <div className="loading-container">
-          <div className="loading-text">Loading...</div>
+          <div className="loading-text">Loading development data...</div>
         </div>
       </div>
     );
   }
 
+  const primaryImprovement = getPrimaryImprovement();
+
   return (
     <div className="improve-page">
       {/* Unified Header */}
-      <DashboardHeader driverData={driverData} pageName="Development" />
+      <DashboardHeader driverData={driverData} pageName="Driver Development" />
 
       {/* Unified Navigation Tabs */}
       <DashboardTabs />
@@ -116,48 +221,40 @@ export default function Improve() {
       {/* Main Content */}
       <div className="improve-content">
 
-        {/* Connection to Skills Page */}
-        <div className="skills-connection-banner">
-          <div className="banner-content">
-            <span className="banner-icon" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#e65100" strokeWidth="2">
-                <path d="M12 2a7 7 0 0 0-7 7c0 2.38 1.19 4.47 3 5.74V17a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2.26c1.81-1.27 3-3.36 3-5.74a7 7 0 0 0-7-7z"/>
-                <line x1="9" y1="21" x2="15" y2="21"/>
-              </svg>
-            </span>
-            <span className="banner-text">
-              <strong>Tip:</strong> Visit the <strong>Skills</strong> page first to see your prioritized weakness analysis
-              and coach recommendations. Then come here to project where you could rank with those improvements!
-            </span>
-          </div>
-        </div>
-
-        {/* PROJECTED RANKINGS - THE KILLER FEATURE */}
-        {driverData && targetSkills && (
-          <section className="projected-rankings-section">
-            <div className="section-header">
-              <h2>Projected Rankings</h2>
-              <p>See where you would rank with your adjusted skills</p>
+        {/* AI RECOMMENDED ALLOCATION */}
+        {recommendedAllocation && !targetSkills && (
+          <div className="ai-recommendation-banner">
+            <div className="recommendation-header">
+              <span className="recommendation-icon">AI</span>
+              <h3>Recommended Budget Allocation</h3>
             </div>
-            <ProjectedRankingsTable
-              driverNumber={selectedDriverNumber}
-              adjustedSkills={{
-                speed: targetSkills.speed,
-                consistency: targetSkills.consistency,
-                racecraft: targetSkills.racecraft,
-                tire_management: targetSkills.tire_management,
-              }}
-              onProjectionUpdate={(projection) => {
-                console.log('Projection updated:', projection);
-              }}
-            />
-          </section>
+            <p className="recommendation-reasoning">{recommendedAllocation.reasoning}</p>
+            <div className="recommendation-values">
+              <span>Speed +{recommendedAllocation.allocation.speed}%</span>
+              <span>Consistency +{recommendedAllocation.allocation.consistency}%</span>
+              <span>Racecraft +{recommendedAllocation.allocation.racecraft}%</span>
+              <span>Tire Mgmt +{recommendedAllocation.allocation.tire_management}%</span>
+            </div>
+            <div className="recommendation-actions">
+              <button className="apply-btn" onClick={handleApplyRecommendation}>
+                Apply Recommendation
+              </button>
+              <button className="skip-btn" onClick={() => setTargetSkills({
+                speed: driverData.speed?.percentile || 0,
+                consistency: driverData.consistency?.percentile || 0,
+                racecraft: driverData.racecraft?.percentile || 0,
+                tire_management: driverData.tire_management?.percentile || 0
+              })}>
+                Allocate Manually
+              </button>
+            </div>
+          </div>
         )}
 
-        {/* TWO COLUMN LAYOUT - Skills & Comparables */}
+        {/* TWO COLUMN LAYOUT - Skills & Best Match */}
         <div className="improve-grid">
           {/* LEFT COLUMN - SKILL SLIDERS */}
-          {driverData && (
+          {driverData && targetSkills && (
             <section className="skill-sliders-section">
               <SkillSliders
                 currentSkills={{
@@ -166,8 +263,9 @@ export default function Improve() {
                   racecraft: driverData.racecraft?.percentile || 0,
                   tire_management: driverData.tire_management?.percentile || 0
                 }}
+                initialTargets={targetSkills}
                 onTargetChange={handleTargetChange}
-                onFindSimilar={handleFindSimilar}
+                onFindSimilar={handleFindBestMatch}
                 tracks={tracks}
                 selectedTrack={selectedTrack}
                 onTrackChange={setSelectedTrack}
@@ -175,9 +273,9 @@ export default function Improve() {
             </section>
           )}
 
-          {/* RIGHT COLUMN - COMPARABLES */}
+          {/* RIGHT COLUMN - BEST MATCH RESULTS */}
           <section className="comparables-section">
-            {!searching && !similarDrivers && (
+            {!searching && !bestMatch && targetSkills && (
               <div className="comparables-empty">
                 <div className="empty-icon" aria-hidden="true">
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5">
@@ -187,108 +285,84 @@ export default function Improve() {
                     <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                   </svg>
                 </div>
-                <h3>Find Similar Drivers</h3>
-                <p>Adjust your target skills and select a track, then click "Find Comparables" to see drivers with similar skill profiles.</p>
+                <h3>Find Your Best Match</h3>
+                <p>Adjust your skill targets and select a track, then click "Find Best Match" to see a comparable driver and track-specific improvement actions.</p>
               </div>
             )}
 
             {searching && (
               <div className="comparables-loading">
                 <div className="loading-spinner"></div>
-                <p>Finding similar drivers...</p>
+                <p>Finding best match...</p>
               </div>
             )}
 
-            {similarDrivers && similarDrivers.length > 0 && driverData && (
-              <div className="comparables-results">
-                <div className="comparables-header">
-                  <h3>Similar Drivers at {tracks.find(t => t.id === selectedTrack)?.name}</h3>
-                  <p>Drivers with skill patterns most similar to your target</p>
+            {bestMatch && driverData && (
+              <div className="best-match-results">
+                <div className="best-match-header">
+                  <h3>Best Match at {tracks.find(t => t.id === selectedTrack)?.name}</h3>
                 </div>
 
-                {/* Improvement Prediction */}
-                <div className="improvement-prediction">
-                  <h4>Predicted Improvement</h4>
-                  <div className="improvement-stats">
-                    <div className="stat-box">
-                      <div className="stat-label">Current Avg</div>
-                      <div className="stat-value current">
-                        {driverData.stats?.average_finish?.toFixed(1) || 'N/A'}
+                {/* Best Match Card */}
+                <div className="best-match-card">
+                  <div className="match-badge">{bestMatch.match_score}% Match</div>
+                  <div className="driver-info">
+                    <h4>Driver #{bestMatch.driver_number}</h4>
+                    <p>{bestMatch.driver_name}</p>
+                  </div>
+                  {bestMatch.avg_finish && (
+                    <div className="finish-comparison">
+                      <div className="your-finish">
+                        <span className="label">Your Avg</span>
+                        <span className="value">P{driverData.stats?.average_finish?.toFixed(1) || 'N/A'}</span>
+                      </div>
+                      <div className="arrow">→</div>
+                      <div className="their-finish">
+                        <span className="label">Their Avg</span>
+                        <span className="value">P{bestMatch.avg_finish.toFixed(1)}</span>
                       </div>
                     </div>
-                    <div className="stat-arrow">→</div>
-                    <div className="stat-box">
-                      <div className="stat-label">Predicted Avg</div>
-                      <div className="stat-value predicted">
-                        {(() => {
-                          const avgOfSimilar = similarDrivers
-                            .filter(d => d.avg_finish)
-                            .reduce((sum, d) => sum + d.avg_finish, 0) /
-                            similarDrivers.filter(d => d.avg_finish).length;
-                          return avgOfSimilar ? avgOfSimilar.toFixed(1) : 'N/A';
-                        })()}
-                      </div>
+                  )}
+                  <div className="skills-grid">
+                    <div className="skill-item">
+                      <span className="skill-label">Speed</span>
+                      <span className="skill-value">{bestMatch.skills.speed}</span>
+                    </div>
+                    <div className="skill-item">
+                      <span className="skill-label">Consistency</span>
+                      <span className="skill-value">{bestMatch.skills.consistency}</span>
+                    </div>
+                    <div className="skill-item">
+                      <span className="skill-label">Racecraft</span>
+                      <span className="skill-value">{bestMatch.skills.racecraft}</span>
+                    </div>
+                    <div className="skill-item">
+                      <span className="skill-label">Tire Mgmt</span>
+                      <span className="skill-value">{bestMatch.skills.tire_management}</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Similar Drivers List */}
-                <div className="similar-drivers-list">
-                  {similarDrivers.map((driver, index) => (
-                    <div key={driver.driver_number} className="similar-driver-card">
-                      <div className="rank-badge">#{index + 1}</div>
-                      <div className="driver-info">
-                        <h4>Driver #{driver.driver_number}</h4>
-                        <p>{driver.driver_name}</p>
-                        <div className="match-score">{driver.match_score}% Match</div>
-                      </div>
-                      {driver.avg_finish && (
-                        <div className="avg-finish">
-                          <span className="label">Avg Finish</span>
-                          <span className="value">P{driver.avg_finish.toFixed(1)}</span>
-                        </div>
-                      )}
-                      <div className="skills-grid">
-                        <div className="skill-item">
-                          <span className="skill-label">Speed</span>
-                          <span className="skill-value">{driver.skills.speed}</span>
-                        </div>
-                        <div className="skill-item">
-                          <span className="skill-label">Consistency</span>
-                          <span className="skill-value">{driver.skills.consistency}</span>
-                        </div>
-                        <div className="skill-item">
-                          <span className="skill-label">Racecraft</span>
-                          <span className="skill-value">{driver.skills.racecraft}</span>
-                        </div>
-                        <div className="skill-item">
-                          <span className="skill-label">Tire Mgmt</span>
-                          <span className="skill-value">{driver.skills.tire_management}</span>
-                        </div>
+                {/* Track-Specific Improvement Actions */}
+                {primaryImprovement && primaryImprovement.delta > 0 && (
+                  <div className="track-improvement-section">
+                    <h4>How to Achieve Your +{primaryImprovement.delta}% {primaryImprovement.displayName}</h4>
+                    <div className="improvement-insights">
+                      <p className="insight-intro">
+                        Based on Driver #{bestMatch.driver_number}'s performance at {tracks.find(t => t.id === selectedTrack)?.name},
+                        here's what they do differently:
+                      </p>
+                      <div className="insight-placeholder">
+                        <p><strong>Track-specific insights coming soon...</strong></p>
+                        <p>This section will show corner-by-corner analysis of how the comparable driver achieves their {primaryImprovement.displayName.toLowerCase()} performance at this track.</p>
                       </div>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                )}
               </div>
             )}
           </section>
         </div>
-
-        {/* FULL WIDTH SECTIONS BELOW */}
-        {/* PRACTICE PLAN GENERATOR */}
-        {driverData && (
-          <section className="practice-plan-section">
-            <PracticePlanGenerator driverData={driverData} api={api} />
-          </section>
-        )}
-
-        {/* PERFORMANCE ANALYSIS SECTION */}
-        <section className="performance-analysis-section">
-          <PerformanceAnalysis
-            coachingData={coachingData}
-            driverData={driverData}
-          />
-        </section>
 
       </div>
     </div>
