@@ -14,21 +14,34 @@ const SKILLS = [
   { key: 'tire_management', label: 'TIRE MGMT', icon: '' }
 ];
 
-export default function SkillSliders({ currentSkills, onTargetChange, onFindSimilar, tracks, selectedTrack, onTrackChange }) {
-  // Initialize target skills to current skills (clamped to valid range)
-  const getInitialTargets = () => ({
-    speed: Math.min(100, Math.max(0, Math.round(currentSkills.speed || 0))),
-    consistency: Math.min(100, Math.max(0, Math.round(currentSkills.consistency || 0))),
-    racecraft: Math.min(100, Math.max(0, Math.round(currentSkills.racecraft || 0))),
-    tire_management: Math.min(100, Math.max(0, Math.round(currentSkills.tire_management || 0)))
-  });
+export default function SkillSliders({ currentSkills, initialTargets, onTargetChange, onFindSimilar, tracks, selectedTrack, onTrackChange }) {
+  // Initialize target skills to initial targets if provided, otherwise use current skills (clamped to valid range)
+  const getInitialTargets = () => {
+    if (initialTargets) {
+      return {
+        speed: Math.min(100, Math.max(0, Math.round(initialTargets.speed || 0))),
+        consistency: Math.min(100, Math.max(0, Math.round(initialTargets.consistency || 0))),
+        racecraft: Math.min(100, Math.max(0, Math.round(initialTargets.racecraft || 0))),
+        tire_management: Math.min(100, Math.max(0, Math.round(initialTargets.tire_management || 0)))
+      };
+    }
+    return {
+      speed: Math.min(100, Math.max(0, Math.round(currentSkills.speed || 0))),
+      consistency: Math.min(100, Math.max(0, Math.round(currentSkills.consistency || 0))),
+      racecraft: Math.min(100, Math.max(0, Math.round(currentSkills.racecraft || 0))),
+      tire_management: Math.min(100, Math.max(0, Math.round(currentSkills.tire_management || 0)))
+    };
+  };
 
   const [targetSkills, setTargetSkills] = useState(getInitialTargets());
 
-  // Reset target skills when current skills change (e.g., driver changes)
+  // Reset target skills when initial targets or current skills change
   useEffect(() => {
     setTargetSkills(getInitialTargets());
-  }, [currentSkills.speed, currentSkills.consistency, currentSkills.racecraft, currentSkills.tire_management]);
+  }, [
+    initialTargets?.speed, initialTargets?.consistency, initialTargets?.racecraft, initialTargets?.tire_management,
+    currentSkills.speed, currentSkills.consistency, currentSkills.racecraft, currentSkills.tire_management
+  ]);
 
   // Calculate total increase across all skills
   const getTotalIncrease = (skills = targetSkills) => {
@@ -209,14 +222,14 @@ export default function SkillSliders({ currentSkills, onTargetChange, onFindSimi
           </select>
         </div>
 
-        {/* Find Comparables Button */}
+        {/* Find Best Match Button */}
         <button
           onClick={onFindSimilar}
           disabled={!hasChanges()}
           className="find-comparables-btn"
         >
-          <span className="btn-icon">👥</span>
-          <span>Find Comparables</span>
+          <span className="btn-icon">TARGET</span>
+          <span>Find Best Match</span>
         </button>
 
         {!hasChanges() && (
@@ -234,6 +247,12 @@ SkillSliders.propTypes = {
     racecraft: PropTypes.number,
     tire_management: PropTypes.number
   }).isRequired,
+  initialTargets: PropTypes.shape({
+    speed: PropTypes.number,
+    consistency: PropTypes.number,
+    racecraft: PropTypes.number,
+    tire_management: PropTypes.number
+  }),
   onTargetChange: PropTypes.func.isRequired,
   onFindSimilar: PropTypes.func.isRequired,
   tracks: PropTypes.arrayOf(PropTypes.shape({
