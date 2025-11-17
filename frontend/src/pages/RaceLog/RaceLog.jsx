@@ -166,19 +166,10 @@ export default function RaceLog() {
         </div>
       </div>
 
-      {/* Quick link to Skills */}
-      <div className="quick-link-container">
-        <button
-          className="quick-link-btn"
-          onClick={() => navigate(`/driver/${selectedDriverNumber}/skills`)}
-        >
-          <span>View Skill Breakdown</span>
-          <span className="arrow">→</span>
-        </button>
-      </div>
-
-      {/* Race Results Table */}
-      <div className="race-table-container">
+      {/* Race Results with Action Button */}
+      <div className="race-section-layout">
+        {/* Race Results Table */}
+        <div className="race-table-container">
         <div className="table-header">
           <h2 className="table-title">2025 Season Results</h2>
           <div className="table-subtitle">Click rows for race lap time analysis</div>
@@ -237,52 +228,72 @@ export default function RaceLog() {
                     <tr key={`${index}-expanded`} className="expanded-row">
                       <td colSpan="8">
                         <div className="expanded-details">
-                          <div className="detail-section">
-                            <div className="detail-label">Driver Fastest Lap</div>
-                            <div className="detail-value">{result.driver_fastest_lap || '—'}</div>
-                          </div>
-                          <div className="detail-section">
-                            <div className="detail-label">Gap to Fastest Lap</div>
-                            <div className="detail-value" style={{
-                              color: result.gap_to_fastest_lap === '0.000' ? '#2ecc71' : '#EB0A1E'
-                            }}>
-                              {result.gap_to_fastest_lap || '—'}
+                          <div className="detail-group">
+                            <div className="group-header">Fastest Lap</div>
+                            <div className="group-tiles">
+                              <div className="detail-section">
+                                <div className="detail-label">Driver Time</div>
+                                <div className="detail-value">{result.driver_fastest_lap || '—'}</div>
+                              </div>
+                              <div className="detail-section gap-section">
+                                <div className="detail-label">Gap to Best</div>
+                                <div className="detail-value" style={{
+                                  color: result.gap_to_fastest_lap === '0.000' ? '#2ecc71' : '#EB0A1E'
+                                }}>
+                                  +{result.gap_to_fastest_lap || '—'}
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div className="detail-section">
-                            <div className="detail-label">Driver S1 Best</div>
-                            <div className="detail-value">{result.driver_s1_best || '—'}</div>
-                          </div>
-                          <div className="detail-section">
-                            <div className="detail-label">Gap to S1 Best</div>
-                            <div className="detail-value" style={{
-                              color: result.gap_to_s1_best === '0.000' ? '#2ecc71' : '#EB0A1E'
-                            }}>
-                              {result.gap_to_s1_best || '—'}
+                          <div className="detail-group">
+                            <div className="group-header">Sector 1</div>
+                            <div className="group-tiles">
+                              <div className="detail-section">
+                                <div className="detail-label">Driver Time</div>
+                                <div className="detail-value">{result.driver_s1_best || '—'}</div>
+                              </div>
+                              <div className="detail-section gap-section">
+                                <div className="detail-label">Gap to Best</div>
+                                <div className="detail-value" style={{
+                                  color: result.gap_to_s1_best === '0.000' ? '#2ecc71' : '#EB0A1E'
+                                }}>
+                                  +{result.gap_to_s1_best || '—'}
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div className="detail-section">
-                            <div className="detail-label">Driver S2 Best</div>
-                            <div className="detail-value">{result.driver_s2_best || '—'}</div>
-                          </div>
-                          <div className="detail-section">
-                            <div className="detail-label">Gap to S2 Best</div>
-                            <div className="detail-value" style={{
-                              color: result.gap_to_s2_best === '0.000' ? '#2ecc71' : '#EB0A1E'
-                            }}>
-                              {result.gap_to_s2_best || '—'}
+                          <div className="detail-group">
+                            <div className="group-header">Sector 2</div>
+                            <div className="group-tiles">
+                              <div className="detail-section">
+                                <div className="detail-label">Driver Time</div>
+                                <div className="detail-value">{result.driver_s2_best || '—'}</div>
+                              </div>
+                              <div className="detail-section gap-section">
+                                <div className="detail-label">Gap to Best</div>
+                                <div className="detail-value" style={{
+                                  color: result.gap_to_s2_best === '0.000' ? '#2ecc71' : '#EB0A1E'
+                                }}>
+                                  +{result.gap_to_s2_best || '—'}
+                                </div>
+                              </div>
                             </div>
                           </div>
-                          <div className="detail-section">
-                            <div className="detail-label">Driver S3 Best</div>
-                            <div className="detail-value">{result.driver_s3_best || '—'}</div>
-                          </div>
-                          <div className="detail-section">
-                            <div className="detail-label">Gap to S3 Best</div>
-                            <div className="detail-value" style={{
-                              color: result.gap_to_s3_best === '0.000' ? '#2ecc71' : '#EB0A1E'
-                            }}>
-                              {result.gap_to_s3_best || '—'}
+                          <div className="detail-group">
+                            <div className="group-header">Sector 3</div>
+                            <div className="group-tiles">
+                              <div className="detail-section">
+                                <div className="detail-label">Driver Time</div>
+                                <div className="detail-value">{result.driver_s3_best || '—'}</div>
+                              </div>
+                              <div className="detail-section gap-section">
+                                <div className="detail-label">Gap to Best</div>
+                                <div className="detail-value" style={{
+                                  color: result.gap_to_s3_best === '0.000' ? '#2ecc71' : '#EB0A1E'
+                                }}>
+                                  +{result.gap_to_s3_best || '—'}
+                                </div>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -294,6 +305,21 @@ export default function RaceLog() {
             })}
           </tbody>
         </table>
+        </div>
+
+        {/* Action Button - View Skill Breakdown */}
+        <div className="action-button-container">
+          <button
+            className="circular-action-btn"
+            onClick={() => navigate(`/driver/${selectedDriverNumber}/skills`)}
+            aria-label="View skill breakdown"
+          >
+            →
+          </button>
+          <span className="action-button-label">
+            View Skill<br/>Breakdown
+          </span>
+        </div>
       </div>
     </div>
   );

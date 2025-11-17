@@ -498,17 +498,17 @@ export default function Overview() {
         </div>
       </div>
 
-      {/* Right side: Improve Skills Button */}
+      {/* Right side: Driver Development Button */}
       <div className="expand-button-container">
         <NavLink
-          to={`/driver/${selectedDriverNumber}/improve`}
+          to={`/driver/${selectedDriverNumber}/skills`}
           className="expand-button"
-          aria-label="Improve skills"
+          aria-label="Driver development"
         >
           →
         </NavLink>
         <span className="expand-button-label">
-          Improve<br/>Skills
+          Driver<br/>Development
         </span>
       </div>
     </div>
