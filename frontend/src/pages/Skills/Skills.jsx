@@ -184,16 +184,18 @@ export default function Skills() {
       {/* Unified Navigation Tabs */}
       <DashboardTabs />
 
-      {/* AI-Generated Driver Overview - Simple Text on Black */}
+      {/* AI-Generated Driver Overview - NBA Scouting Report Style */}
       {driverData && (
-        <div className="driver-scouting-text">
-          <p className="scouting-headline-simple">
+        <div className="scouting-report-section">
+          <h2 className="scouting-report-title">SCOUTING REPORT</h2>
+
+          <p className="scouting-headline-big">
             {(() => {
               const factors = [
-                { name: 'Speed', adjective: 'fast', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
-                { name: 'Consistency', adjective: 'consistent', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
-                { name: 'Racecraft', adjective: 'tactical', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
-                { name: 'Tire Management', adjective: 'tire-savvy', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
+                { name: 'speed', adjective: 'fast', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
+                { name: 'consistency', adjective: 'consistent', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
+                { name: 'racecraft', adjective: 'tactical', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
+                { name: 'tire management', adjective: 'tire-savvy', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
               ];
               const sorted = [...factors].sort((a, b) => (b.score / b.max) - (a.score / a.max));
               const top = sorted[0];
@@ -202,11 +204,26 @@ export default function Skills() {
 
               return (
                 <>
-                  <span className="headline-red">{top.adjective.charAt(0).toUpperCase() + top.adjective.slice(1)}, {second.adjective}</span> driver with strong {top.name.toLowerCase()} fundamentals. Top skills: <span className="headline-red">{allVariables[0]?.name || 'N/A'}</span> ({Math.round(allVariables[0]?.percentile || 0)}th), <span className="headline-red">{allVariables[1]?.name || 'N/A'}</span> ({Math.round(allVariables[1]?.percentile || 0)}th), <span className="headline-red">{allVariables[2]?.name || 'N/A'}</span> ({Math.round(allVariables[2]?.percentile || 0)}th). Focus area: <span className="headline-red">{weakest.name.toLowerCase()}</span>.
+                  <span className="headline-bold">A {top.adjective}, {second.adjective} driver</span>
+                  <span className="headline-light"> with strong {top.name} fundamentals and room to grow in {weakest.name}.</span>
                 </>
               );
             })()}
           </p>
+
+          <div className="scouting-badges">
+            {allVariables.slice(0, 4).map((variable) => (
+              <div key={variable.name} className="scouting-badge">
+                <div className="scouting-badge-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                </div>
+                <span className="scouting-badge-label">{variable.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
