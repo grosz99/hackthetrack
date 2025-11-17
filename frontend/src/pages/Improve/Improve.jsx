@@ -19,6 +19,7 @@ export default function Improve() {
   const [recommendedAllocation, setRecommendedAllocation] = useState(null);
   const [targetSkills, setTargetSkills] = useState(null);
   const [bestMatch, setBestMatch] = useState(null);
+  const [matchCoachingData, setMatchCoachingData] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState('barber');
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
@@ -94,9 +95,10 @@ export default function Improve() {
         const driverResponse = await api.get(`/api/drivers/${selectedDriverNumber}`);
         setDriverData(driverResponse.data);
 
-        // Get AI coaching recommendations for all factors
+        // Get AI coaching recommendations for all factors (handle missing data gracefully)
         const coachingPromises = ['speed', 'consistency', 'racecraft', 'tire_management'].map(
           factor => api.get(`/api/factors/${factor}/coaching/${selectedDriverNumber}`)
+            .catch(() => ({ data: null })) // Handle 404s gracefully
         );
         const coachingResults = await Promise.all(coachingPromises);
 
@@ -108,9 +110,18 @@ export default function Improve() {
         };
         setCoachingRecommendations(coachingData);
 
-        // Generate AI-recommended allocation
+        // Generate AI-recommended allocation and auto-apply it
         const recommendation = generateRecommendedAllocation(driverResponse.data, coachingData);
         setRecommendedAllocation(recommendation);
+
+        // Auto-apply the recommendation to pre-fill sliders
+        const autoTargets = {
+          speed: (driverResponse.data.speed?.percentile || 0) + recommendation.allocation.speed,
+          consistency: (driverResponse.data.consistency?.percentile || 0) + recommendation.allocation.consistency,
+          racecraft: (driverResponse.data.racecraft?.percentile || 0) + recommendation.allocation.racecraft,
+          tire_management: (driverResponse.data.tire_management?.percentile || 0) + recommendation.allocation.tire_management
+        };
+        setTargetSkills(autoTargets);
 
       } catch (err) {
         console.error('Error loading data:', err);
@@ -149,6 +160,7 @@ export default function Improve() {
     try {
       setSearching(true);
       setBestMatch(null);
+      setMatchCoachingData(null);
 
       // Call backend API to find similar drivers (returns top 1)
       const response = await api.post('/api/drivers/find-similar', {
@@ -158,7 +170,20 @@ export default function Improve() {
 
       // Take only the best match
       if (response.data.similar_drivers && response.data.similar_drivers.length > 0) {
-        setBestMatch(response.data.similar_drivers[0]);
+        const match = response.data.similar_drivers[0];
+        setBestMatch(match);
+
+        // Fetch coaching data for the matched driver (for track-specific insights)
+        const primaryFactor = getPrimaryImprovementFactor();
+        if (primaryFactor) {
+          try {
+            const coachingResponse = await api.get(`/api/factors/${primaryFactor}/coaching/${match.driver_number}`);
+            setMatchCoachingData(coachingResponse.data);
+          } catch {
+            // Coaching data may not exist for this driver
+            setMatchCoachingData(null);
+          }
+        }
       }
     } catch (err) {
       console.error('Error finding best match:', err);
@@ -166,6 +191,21 @@ export default function Improve() {
     } finally {
       setSearching(false);
     }
+  };
+
+  // Get the primary improvement factor key (for fetching coaching data)
+  const getPrimaryImprovementFactor = () => {
+    if (!targetSkills || !driverData) return null;
+
+    const deltas = {
+      speed: targetSkills.speed - (driverData.speed?.percentile || 0),
+      consistency: targetSkills.consistency - (driverData.consistency?.percentile || 0),
+      racecraft: targetSkills.racecraft - (driverData.racecraft?.percentile || 0),
+      tire_management: targetSkills.tire_management - (driverData.tire_management?.percentile || 0)
+    };
+
+    const maxDelta = Math.max(...Object.values(deltas));
+    return Object.keys(deltas).find(key => deltas[key] === maxDelta);
   };
 
   // Calculate which skill improved most
@@ -269,6 +309,7 @@ export default function Improve() {
                 tracks={tracks}
                 selectedTrack={selectedTrack}
                 onTrackChange={setSelectedTrack}
+                aiRecommendation={recommendedAllocation}
               />
             </section>
           )}
@@ -349,13 +390,22 @@ export default function Improve() {
                     <h4>How to Achieve Your +{primaryImprovement.delta}% {primaryImprovement.displayName}</h4>
                     <div className="improvement-insights">
                       <p className="insight-intro">
-                        Based on Driver #{bestMatch.driver_number}'s performance at {tracks.find(t => t.id === selectedTrack)?.name},
-                        here's what they do differently:
+                        Based on Driver #{bestMatch.driver_number}'s {primaryImprovement.displayName.toLowerCase()} performance analysis:
                       </p>
-                      <div className="insight-placeholder">
-                        <p><strong>Track-specific insights coming soon...</strong></p>
-                        <p>This section will show corner-by-corner analysis of how the comparable driver achieves their {primaryImprovement.displayName.toLowerCase()} performance at this track.</p>
-                      </div>
+                      {matchCoachingData && matchCoachingData.coaching_analysis ? (
+                        <div className="coaching-analysis-box">
+                          <p className="coaching-text">{matchCoachingData.coaching_analysis}</p>
+                          <div className="coaching-stats">
+                            <span className="stat-badge">Rank: #{matchCoachingData.factor_rank} of {matchCoachingData.total_drivers}</span>
+                            <span className="stat-badge">Percentile: {matchCoachingData.factor_percentile?.toFixed(1)}%</span>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="insight-placeholder">
+                          <p><strong>AI coaching analysis not available for this driver</strong></p>
+                          <p>The comparable driver's detailed performance insights have not yet been generated.</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
