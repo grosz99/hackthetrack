@@ -46,10 +46,12 @@ from models import (
     ProjectedRankingsResponse,
     TrackImprovementFocus,
     TrackImprovementPlanResponse,
+    FactorCoachingResponse,
 )
 from ..services.data_loader import data_loader
 from ..services.ai_strategy import ai_service
 from ..services.ai_telemetry_coach import ai_telemetry_coach
+from ..services.ai_skill_coach import ai_skill_coach
 
 # No prefix here - it's added by main.py when including the router
 router = APIRouter(tags=["racing"])
@@ -895,6 +897,74 @@ async def get_factor_comparison(factor_name: str, driver_number: int):
         "top_drivers": top_comparisons,
         "insights": insights
     }
+
+
+@router.get(
+    "/factors/{factor_name}/coaching/{driver_number}",
+    response_model=FactorCoachingResponse,
+    summary="Get AI-powered coaching for a specific factor",
+    description="Get pre-calculated personalized coaching recommendations"
+)
+async def get_factor_coaching(factor_name: str, driver_number: int):
+    """
+    Get AI-powered coaching recommendations for a driver's specific skill factor.
+
+    Returns pre-calculated coaching analysis that includes:
+    - Assessment of current performance
+    - Priority focus areas based on weakest variables
+    - Specific drills and exercises
+    - Expected progress timeline
+
+    Args:
+        factor_name: One of speed, consistency, racecraft, tire_management
+        driver_number: Driver number
+
+    Returns:
+        AI-generated coaching analysis with actionable recommendations
+    """
+    import json
+    from pathlib import Path
+
+    valid_factors = ["speed", "consistency", "racecraft", "tire_management"]
+    if factor_name not in valid_factors:
+        raise ValidationError(
+            f"Invalid factor. Must be one of: {', '.join(valid_factors)}"
+        )
+
+    coaching_path = Path(__file__).parent.parent.parent / "data" / "coaching_recommendations.json"
+
+    if not coaching_path.exists():
+        raise HTTPException(
+            status_code=503,
+            detail="Coaching recommendations not available. Run generate_coaching_recommendations.py first."
+        )
+
+    with open(coaching_path, 'r') as f:
+        coaching_data = json.load(f)
+
+    driver_recs = coaching_data.get("recommendations", {}).get(str(driver_number))
+    if not driver_recs:
+        raise NotFoundError(f"No coaching recommendations for driver {driver_number}")
+
+    factor_rec = driver_recs.get(factor_name)
+    if not factor_rec:
+        raise NotFoundError(f"No {factor_name} coaching for driver {driver_number}")
+
+    if factor_rec.get("coaching_analysis") is None:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Coaching generation failed for driver {driver_number} {factor_name}"
+        )
+
+    return FactorCoachingResponse(
+        driver_number=driver_number,
+        factor_name=factor_name,
+        factor_percentile=factor_rec["factor_percentile"],
+        factor_rank=factor_rec["factor_rank"],
+        total_drivers=factor_rec["total_drivers"],
+        coaching_analysis=factor_rec["coaching_analysis"],
+        generated_at=factor_rec["generated_at"]
+    )
 
 
 # ============================================================================

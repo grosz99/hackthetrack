@@ -1,0 +1,42 @@
+{
+  "generated_at": "2025-11-17T02:53:39.683127+00:00",
+  "total_drivers": 1,
+  "factors": [
+    "speed",
+    "consistency",
+    "racecraft",
+    "tire_management"
+  ],
+  "recommendations": {
+    "14": {
+      "speed": {
+        "factor_percentile": 37.72,
+        "factor_rank": 21,
+        "total_drivers": 34,
+        "coaching_analysis": "Driver #14 sits in the bottom third of the field for raw speed, ranking 21st overall at the 37.7th percentile, with a concerning weakness in qualifying pace that places them near the bottom at just the 21.1th percentile. Their race pace shows moderate improvement, with best race lap and top 10 lap average both reaching the 44.7th percentile, suggesting they find more comfort once races develop. At Circuit of the Americas, consistently slow qualifying efforts from P19-P20 left them over 1.7 seconds off the fastest lap in both races, while Sonoma Raceway showed similar qualifying struggles from P20 and P25 that forced them to drive through the field. The dramatic 15-position gain to P10 in Sonoma Race 2 demonstrates their ability to maximize race pace when track position allows, though their gap of +1.259 to the fastest lap still indicated a significant speed deficit. The primary development opportunity is to unlock single-lap pace in qualifying, as consistent starting positions outside the top 20 severely limit their ability to showcase their relatively stronger race management skills.",
+        "generated_at": "2025-11-17T02:53:48.165006+00:00"
+      },
+      "consistency": {
+        "factor_percentile": 42.76,
+        "factor_rank": 21,
+        "total_drivers": 34,
+        "coaching_analysis": "Driver #14 ranks 21st of 34 drivers in overall consistency (42.8th percentile), revealing a frustrating pattern of erratic performance management that undermines their otherwise decent mechanical execution. While sector consistency (52.6th percentile) and braking consistency (52.6th percentile) hover near league average, their stint consistency collapse to the 18.4th percentile exposes an inability to maintain pace across extended runs. This volatility manifests clearly at Circuit of the Americas, where they delivered a solid P14 finish gaining six positions in one race, then immediately cratered to P26 with a seven-position loss in the next outing despite nearly identical pace gaps. The Sonoma results tell the same story\u2014a disastrous P22 finish preceded a spectacular 15-position recovery drive to P10, suggesting their underlying speed exists but their ability to deliver it reliably remains severely compromised. The primary development focus must be on building mental and physical stamina protocols to eliminate the dramatic lap-time degradation within stints that currently prevents them from competing consistently at their demonstrated ceiling.",
+        "generated_at": "2025-11-17T02:53:56.476859+00:00"
+      },
+      "racecraft": {
+        "factor_percentile": 47.37,
+        "factor_rank": 17,
+        "total_drivers": 34,
+        "coaching_analysis": "Driver #14 presents a paradoxical racecraft profile, ranking 17th overall but showing strong position-gaining ability at the 71st percentile while demonstrating inconsistent race-to-race execution with position changes at only the 47th percentile. The driver's season reveals extreme volatility, evidenced most clearly at Sonoma Raceway where they suffered a 2-position loss in race one before storming through the field to gain 15 positions in race two, their standout performance of the season. Similarly at Circuit of the Americas, they showed flashes of competence with a 6-position gain from P20 to P14, only to surrender 7 positions in the following race despite starting from a similar grid position. This inconsistency suggests a driver with genuine overtaking capability who struggles with race management, situational awareness, or perhaps setup optimization across varying conditions. The primary development opportunity lies in establishing consistency through improved race preparation and mental approach, as their 71st percentile positions-gained metric proves they possess the raw racecraft skills when everything aligns properly.",
+        "generated_at": "2025-11-17T02:54:04.852286+00:00"
+      },
+      "tire_management": {
+        "factor_percentile": 34.21,
+        "factor_rank": 27,
+        "total_drivers": 34,
+        "coaching_analysis": "Driver #14 ranks in the bottom third of the field for tire management at 27th overall (34.2nd percentile), with a particularly concerning weakness in maintaining pace as stints progress. The driver's early versus late pace differential sits at an alarming 2.6th percentile, indicating a significant dropoff in performance as tire wear accumulates, though their absolute late stint performance reaches a slightly better 23.7th percentile. This pattern manifested clearly at Sonoma Raceway where both races showed struggles with ultimate pace (gaps of +1.900 and +1.259 to fastest lap), though the driver managed an impressive 15-position gain in Race 2 by capitalizing on others' mistakes rather than raw pace. At Circuit of the Americas, the inconsistency continued with a strong 6-position gain in Race 1 followed by a 7-position loss in Race 2, suggesting the driver either lacks proper tire preservation technique or struggles to adapt setup for longer runs. The primary development opportunity lies in working with engineers on tire temperature management and learning to build a more conservative early-stint approach that preserves grip for later in the run, as the current aggressive style appears to sacrifice late-race competitiveness.",
+        "generated_at": "2025-11-17T02:54:14.354540+00:00"
+      }
+    }
+  }
+}

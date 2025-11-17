@@ -294,16 +294,16 @@ export default function Overview() {
               ?
             </button>
             <ResponsiveContainer width="100%" height={350}>
-            <RadarChart data={radarData}>
+            <RadarChart data={radarData} outerRadius="70%">
               <PolarGrid stroke="#ddd" strokeWidth={1} />
               <PolarAngleAxis
                 dataKey="factor"
-                tick={{ fill: '#000', fontSize: 16, fontWeight: 700 }}
+                tick={{ fill: '#000', fontSize: 14, fontWeight: 700 }}
               />
               <PolarRadiusAxis
                 angle={90}
                 domain={[0, 100]}
-                tick={{ fill: '#666', fontSize: 12, fontWeight: 600 }}
+                tick={{ fill: '#666', fontSize: 11, fontWeight: 600 }}
               />
               {/* Top 3 Average in gray */}
               <Radar
@@ -374,6 +374,17 @@ export default function Overview() {
         <div className="factor-tiles-grid">
           {/* Consistency Card */}
           <div className="factor-card">
+            <NavLink
+              to={`/driver/${selectedDriverNumber}/skills`}
+              className="card-expand-btn"
+              title="Click to learn more about this factor"
+              aria-label="Expand Consistency details"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </NavLink>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Consistency</h4>
               <div className="factor-card-score-large">
@@ -389,10 +400,22 @@ export default function Overview() {
               <span>0</span>
               <span>{factorStats.consistency?.max?.toFixed(0) || 100}</span>
             </div>
+            <p className="factor-card-description">Measures ability to maintain steady lap times and avoid performance variability throughout a race stint.</p>
           </div>
 
           {/* Racecraft Card */}
           <div className="factor-card">
+            <NavLink
+              to={`/driver/${selectedDriverNumber}/skills`}
+              className="card-expand-btn"
+              title="Click to learn more about this factor"
+              aria-label="Expand Racecraft details"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </NavLink>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Racecraft</h4>
               <div className="factor-card-score-large">
@@ -408,10 +431,22 @@ export default function Overview() {
               <span>0</span>
               <span>{factorStats.racecraft?.max?.toFixed(0) || 100}</span>
             </div>
+            <p className="factor-card-description">Evaluates wheel-to-wheel racing skills including overtaking ability, defensive driving, and position management.</p>
           </div>
 
           {/* Speed Card */}
           <div className="factor-card">
+            <NavLink
+              to={`/driver/${selectedDriverNumber}/skills`}
+              className="card-expand-btn"
+              title="Click to learn more about this factor"
+              aria-label="Expand Raw Speed details"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </NavLink>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Raw Speed</h4>
               <div className="factor-card-score-large">
@@ -427,12 +462,24 @@ export default function Overview() {
               <span>0</span>
               <span>{factorStats.speed?.max?.toFixed(0) || 100}</span>
             </div>
+            <p className="factor-card-description">Measures pure pace including qualifying performance, fastest race laps, and overall lap time potential.</p>
           </div>
 
           {/* Tire Management Card */}
           <div className="factor-card">
+            <NavLink
+              to={`/driver/${selectedDriverNumber}/skills`}
+              className="card-expand-btn"
+              title="Click to learn more about this factor"
+              aria-label="Expand Tire Management details"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </NavLink>
             <div className="factor-card-header-stacked">
-              <h4 className="factor-card-title-large">Tire Mgmt</h4>
+              <h4 className="factor-card-title-large">Tire Management</h4>
               <div className="factor-card-score-large">
                 {Math.round(driverData?.tire_management?.score || 0)}
               </div>
@@ -446,6 +493,7 @@ export default function Overview() {
               <span>0</span>
               <span>{factorStats.tire_management?.max?.toFixed(0) || 100}</span>
             </div>
+            <p className="factor-card-description">Assesses ability to preserve tire performance over long stints and minimize degradation through smooth inputs.</p>
           </div>
         </div>
       </div>

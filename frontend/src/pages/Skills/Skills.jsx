@@ -20,6 +20,8 @@ export default function Skills() {
   const [selectedFactor, setSelectedFactor] = useState(null);
   const [factorBreakdown, setFactorBreakdown] = useState(null);
   const [factorComparison, setFactorComparison] = useState(null);
+  const [coachingAnalysis, setCoachingAnalysis] = useState(null);
+  const [loadingCoaching, setLoadingCoaching] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingBreakdown, setLoadingBreakdown] = useState(false);
   const [error, setError] = useState(null);
@@ -34,6 +36,7 @@ export default function Skills() {
         setSelectedFactor(null);
         setFactorBreakdown(null);
         setFactorComparison(null);
+        setCoachingAnalysis(null);
 
         // Fetch current driver data, factor stats, and all breakdowns
         const [driverResponse, ...factorResponses] = await Promise.all([
@@ -142,6 +145,8 @@ export default function Skills() {
   const handleFactorClick = async (factorName) => {
     setSelectedFactor(factorName);
     setLoadingBreakdown(true);
+    setCoachingAnalysis(null);
+    setLoadingCoaching(false);
     setError(null);
 
     try {
@@ -163,6 +168,18 @@ export default function Skills() {
 
       setFactorBreakdown(breakdownResponse.data);
       setFactorComparison(comparisonResponse.data);
+
+      // Fetch AI coaching analysis asynchronously (don't block the UI)
+      setLoadingCoaching(true);
+      api.get(`/api/factors/${apiFactorName}/coaching/${selectedDriverNumber}`)
+        .then(coachingResponse => {
+          setCoachingAnalysis(coachingResponse.data);
+          setLoadingCoaching(false);
+        })
+        .catch(coachingErr => {
+          console.error('[Skills] Error loading AI coaching:', coachingErr);
+          setLoadingCoaching(false);
+        });
     } catch (err) {
       console.error('[Skills] Error loading factor breakdown:', err);
       setFactorBreakdown(null);
@@ -459,66 +476,43 @@ export default function Skills() {
                 })}
               </div>
 
-              {/* Comparison Section */}
-              <div className="comparison-section">
-                <h3>How You Stack Up</h3>
-                <div className="comparison-grid">
-                  {/* User Driver */}
-                  <div className="driver-comparison-card user-card">
-                    <div className="card-header">
-                      <span className="driver-label">You</span>
-                      <span className="driver-number">#{factorComparison.user_driver.driver_number}</span>
-                    </div>
-                    <div className="driver-score">{factorComparison.user_driver.percentile.toFixed(1)}th percentile</div>
-                    <div className="mini-bars">
-                      {factorBreakdown.variables.map((variable, idx) => (
-                        <div key={idx} className="mini-bar-row">
-                          <span className="mini-label">{variable.display_name}</span>
-                          <div className="mini-bar">
-                            <div
-                              className="mini-bar-fill user-fill"
-                              style={{ width: `${factorComparison.user_driver.variables[variable.name]}%` }}
-                            ></div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+              {/* Scout's Assessment Section */}
+              <div className="scouts-assessment">
+                <div className="scouts-assessment-header">
+                  <h3 className="scouts-assessment-title">Scout's Assessment</h3>
+                </div>
+                {loadingCoaching ? (
+                  <div className="assessment-loading">
+                    <div className="assessment-spinner"></div>
+                    <span className="assessment-loading-text">Generating scouting report...</span>
                   </div>
-
-                  {/* Top 3 Drivers */}
-                  {factorComparison.top_drivers.map((driver, idx) => (
-                    <div key={idx} className="driver-comparison-card">
-                      <div className="card-header">
-                        <span className="driver-label">#{idx + 1} Best</span>
-                        <span className="driver-number">#{driver.driver_number}</span>
+                ) : coachingAnalysis ? (
+                  <>
+                    <div className="assessment-stats">
+                      <div className="stat-pill">
+                        <span className="stat-pill-value">#{coachingAnalysis.factor_rank}</span>
+                        <span className="stat-pill-label">Overall Rank</span>
                       </div>
-                      <div className="driver-score">{driver.percentile.toFixed(1)}th percentile</div>
-                      <div className="mini-bars">
-                        {factorBreakdown.variables.map((variable, vidx) => (
-                          <div key={vidx} className="mini-bar-row">
-                            <span className="mini-label">{variable.display_name}</span>
-                            <div className="mini-bar">
-                              <div
-                                className="mini-bar-fill"
-                                style={{ width: `${driver.variables[variable.name]}%` }}
-                              ></div>
-                            </div>
-                          </div>
-                        ))}
+                      <div className="stat-pill">
+                        <span className="stat-pill-value">{coachingAnalysis.factor_percentile.toFixed(0)}th</span>
+                        <span className="stat-pill-label">Percentile</span>
+                      </div>
+                      <div className="stat-pill">
+                        <span className="stat-pill-value">{coachingAnalysis.total_drivers}</span>
+                        <span className="stat-pill-label">Drivers</span>
                       </div>
                     </div>
-                  ))}
-                </div>
-
-                {/* Insights */}
-                <div className="insights-box">
-                  <h4>Key Insights</h4>
-                  <ul className="insights-list">
-                    {factorComparison.insights.map((insight, idx) => (
-                      <li key={idx}>{insight}</li>
-                    ))}
-                  </ul>
-                </div>
+                    <div className="assessment-body">
+                      <p className="assessment-text">{coachingAnalysis.coaching_analysis}</p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="assessment-body">
+                    <p className="assessment-text" style={{ color: '#666', textAlign: 'center' }}>
+                      Scouting assessment unavailable. View the metrics breakdown above for detailed performance data.
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           ) : (
