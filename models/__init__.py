@@ -45,6 +45,8 @@ from .models import (
     ProjectedRankingsResponse,
     TrackImprovementFocus,
     TrackImprovementPlanResponse,
+    # AI Coaching Models
+    FactorCoachingResponse,
 )
 
 __all__ = [
@@ -90,4 +92,6 @@ __all__ = [
     "ProjectedRankingsResponse",
     "TrackImprovementFocus",
     "TrackImprovementPlanResponse",
+    # AI Coaching Models
+    "FactorCoachingResponse",
 ]
