@@ -438,24 +438,25 @@ export default function Skills() {
 
               {/* Variables Grid */}
               <div className="variables-grid">
-                {factorBreakdown.variables.map((variable, index) => (
-                  <div key={index} className="variable-card">
-                    <div className="variable-header">
-                      <h4>{variable.display_name}</h4>
-                      <span className="variable-percentile">{variable.percentile.toFixed(1)}th</span>
+                {factorBreakdown.variables.map((variable, index) => {
+                  // Calculate ranking from percentile (assuming ~34 drivers)
+                  const totalDrivers = 34;
+                  const rank = Math.round(totalDrivers * (1 - variable.percentile / 100)) + 1;
+                  const clampedRank = Math.min(Math.max(rank, 1), totalDrivers);
+
+                  return (
+                    <div key={index} className="variable-card">
+                      <div className="variable-header">
+                        <h4>{variable.display_name}</h4>
+                        <span className="variable-rank">{clampedRank}{clampedRank === 1 ? 'st' : clampedRank === 2 ? 'nd' : clampedRank === 3 ? 'rd' : 'th'} of {totalDrivers}</span>
+                      </div>
+                      <p className="variable-description">{variable.description}</p>
+                      <div className="variable-percentile-badge">
+                        {variable.percentile.toFixed(0)}th percentile
+                      </div>
                     </div>
-                    <div className="variable-bar">
-                      <div
-                        className="variable-bar-fill"
-                        style={{ width: `${variable.normalized_value}%` }}
-                      ></div>
-                    </div>
-                    <div className="variable-stats">
-                      <span className="variable-score">{variable.normalized_value.toFixed(1)}/100</span>
-                      <span className="variable-weight">Impact: {Math.abs(variable.loading * 100).toFixed(0)}%</span>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Comparison Section */}

@@ -745,7 +745,7 @@
 }
 
 .variable-header h4 {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
   color: #000;
   margin: 0;
@@ -753,47 +753,29 @@
   letter-spacing: 0.5px;
 }
 
-.variable-percentile {
-  font-size: 14px;
-  font-weight: 700;
+.variable-rank {
+  font-size: 18px;
+  font-weight: 900;
   color: #EB0A1E;
-  background: rgba(231, 76, 60, 0.1);
-  padding: 4px 12px;
-  border-radius: 12px;
   flex-shrink: 0;
 }
 
-.variable-bar {
-  height: 12px;
-  background: #e0e0e0;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 12px;
-  width: 100%;
-  box-sizing: border-box;
+.variable-description {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+  line-height: 1.5;
+  margin: 12px 0 16px 0;
 }
 
-.variable-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #EB0A1E, #B80818);
-  border-radius: 6px;
-  transition: width 0.3s ease;
-  max-width: 100%;
-}
-
-.variable-stats {
-  display: flex;
-  justify-content: space-between;
+.variable-percentile-badge {
+  display: inline-block;
   font-size: 13px;
-  font-weight: 600;
-}
-
-.variable-score {
-  color: #000;
-}
-
-.variable-weight {
-  color: #666;
+  font-weight: 700;
+  color: #EB0A1E;
+  background: rgba(231, 76, 60, 0.1);
+  padding: 6px 12px;
+  border-radius: 16px;
 }
 
 /* Comparison Section */
