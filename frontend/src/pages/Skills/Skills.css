@@ -482,9 +482,11 @@
   box-shadow: 0 6px 24px rgba(231, 76, 60, 0.25);
   animation: slideDown 0.3s ease;
   box-sizing: border-box;
+  width: 100%;
   max-width: 1500px;
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden;
 }
 
 @keyframes slideDown {
@@ -814,6 +816,9 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 16px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .driver-comparison-card {
