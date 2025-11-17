@@ -208,18 +208,22 @@ export default function Skills() {
 
         {/* Factor Cards Grid - 2x2 on right side */}
         <div className="factor-cards-container">
-          <div className="factor-cards-instructions">
-            <h3 className="instructions-title">Skill Factor Breakdown</h3>
-            <p className="instructions-text">
-              Click any skill tile below to see detailed breakdowns and comparisons with top drivers
-            </p>
-          </div>
           <div className="factor-cards-grid-new">
           {/* Consistency Card */}
           <div
             className={`factor-card-large ${selectedFactor === 'Consistency' ? 'selected' : ''}`}
             onClick={() => handleFactorClick('Consistency')}
           >
+            <button
+              className="card-expand-btn"
+              title="Click to see detailed breakdown and comparison"
+              aria-label="Expand Consistency details"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
             <div className="factor-header-stacked">
               <h3 className="factor-name-large">Consistency</h3>
               <div className="factor-score-large">{Math.round(driverData.consistency?.score || 0)}</div>
@@ -230,19 +234,11 @@ export default function Skills() {
                   className="score-bar-fill"
                   style={{ width: `${((driverData.consistency?.score || 0) / (factorStats.consistency?.max || 100)) * 100}%` }}
                 ></div>
-                <div
-                  className="score-bar-max"
-                  style={{ left: '100%' }}
-                  title={`Max: ${factorStats.consistency?.max?.toFixed(0) || 100}`}
-                ></div>
               </div>
               <div className="bar-labels">
                 <span>0</span>
                 <span>{factorStats.consistency?.max?.toFixed(0) || 100}</span>
               </div>
-            </div>
-            <div className="factor-description">
-              Measures lap-to-lap consistency and predictability of performance
             </div>
           </div>
 
@@ -251,6 +247,16 @@ export default function Skills() {
             className={`factor-card-large ${selectedFactor === 'Racecraft' ? 'selected' : ''}`}
             onClick={() => handleFactorClick('Racecraft')}
           >
+            <button
+              className="card-expand-btn"
+              title="Click to see detailed breakdown and comparison"
+              aria-label="Expand Racecraft details"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
             <div className="factor-header-stacked">
               <h3 className="factor-name-large">Racecraft</h3>
               <div className="factor-score-large">{Math.round(driverData.racecraft?.score || 0)}</div>
@@ -261,19 +267,11 @@ export default function Skills() {
                   className="score-bar-fill"
                   style={{ width: `${((driverData.racecraft?.score || 0) / (factorStats.racecraft?.max || 100)) * 100}%` }}
                 ></div>
-                <div
-                  className="score-bar-max"
-                  style={{ left: '100%' }}
-                  title={`Max: ${factorStats.racecraft?.max?.toFixed(0) || 100}`}
-                ></div>
               </div>
               <div className="bar-labels">
                 <span>0</span>
                 <span>{factorStats.racecraft?.max?.toFixed(0) || 100}</span>
               </div>
-            </div>
-            <div className="factor-description">
-              Ability to overtake, defend position, and navigate traffic effectively
             </div>
           </div>
 
@@ -282,6 +280,16 @@ export default function Skills() {
             className={`factor-card-large ${selectedFactor === 'Raw Speed' ? 'selected' : ''}`}
             onClick={() => handleFactorClick('Raw Speed')}
           >
+            <button
+              className="card-expand-btn"
+              title="Click to see detailed breakdown and comparison"
+              aria-label="Expand Raw Speed details"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
             <div className="factor-header-stacked">
               <h3 className="factor-name-large">Raw Speed</h3>
               <div className="factor-score-large">{Math.round(driverData.speed?.score || 0)}</div>
@@ -292,19 +300,11 @@ export default function Skills() {
                   className="score-bar-fill"
                   style={{ width: `${((driverData.speed?.score || 0) / (factorStats.speed?.max || 100)) * 100}%` }}
                 ></div>
-                <div
-                  className="score-bar-max"
-                  style={{ left: '100%' }}
-                  title={`Max: ${factorStats.speed?.max?.toFixed(0) || 100}`}
-                ></div>
               </div>
               <div className="bar-labels">
                 <span>0</span>
                 <span>{factorStats.speed?.max?.toFixed(0) || 100}</span>
               </div>
-            </div>
-            <div className="factor-description">
-              Pure pace and ability to extract maximum performance from the car
             </div>
           </div>
 
@@ -313,6 +313,16 @@ export default function Skills() {
             className={`factor-card-large ${selectedFactor === 'Tire Management' ? 'selected' : ''}`}
             onClick={() => handleFactorClick('Tire Management')}
           >
+            <button
+              className="card-expand-btn"
+              title="Click to see detailed breakdown and comparison"
+              aria-label="Expand Tire Management details"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+            </button>
             <div className="factor-header-stacked">
               <h3 className="factor-name-large">Tire Management</h3>
               <div className="factor-score-large">{Math.round(driverData.tire_management?.score || 0)}</div>
@@ -323,24 +333,99 @@ export default function Skills() {
                   className="score-bar-fill"
                   style={{ width: `${((driverData.tire_management?.score || 0) / (factorStats.tire_management?.max || 100)) * 100}%` }}
                 ></div>
-                <div
-                  className="score-bar-max"
-                  style={{ left: '100%' }}
-                  title={`Max: ${factorStats.tire_management?.max?.toFixed(0) || 100}`}
-                ></div>
               </div>
               <div className="bar-labels">
                 <span>0</span>
                 <span>{factorStats.tire_management?.max?.toFixed(0) || 100}</span>
               </div>
             </div>
-            <div className="factor-description">
-              Ability to preserve tires and maintain pace over long stints
-            </div>
           </div>
           </div>
         </div>
       </div>
+
+      {/* AI-Generated Driver Overview */}
+      {driverData && (
+        <div className="driver-ai-overview">
+          <h2 className="ai-overview-title">Driver Analysis</h2>
+          <div className="ai-overview-content">
+            {/* Season Highlight */}
+            <div className="ai-insight-card highlight-card">
+              <div className="insight-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </div>
+              <h3>Season Highlight</h3>
+              <p className="insight-text">
+                {driverData.stats?.best_finish ? (
+                  <>Best finish of <strong>P{driverData.stats.best_finish}</strong> this season with an average finish of <strong>P{driverData.stats.average_finish?.toFixed(1)}</strong> across {driverData.stats.races_completed || 'multiple'} races.</>
+                ) : (
+                  <>Season performance shows consistent effort with overall ranking of <strong>#{driverData.overall_rank || 'N/A'}</strong> in the field.</>
+                )}
+              </p>
+            </div>
+
+            {/* Key Strengths */}
+            <div className="ai-insight-card strength-card">
+              <div className="insight-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#27ae60" strokeWidth="2">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+              </div>
+              <h3>Key Strengths</h3>
+              <p className="insight-text">
+                {(() => {
+                  const factors = [
+                    { name: 'Raw Speed', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
+                    { name: 'Consistency', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
+                    { name: 'Racecraft', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
+                    { name: 'Tire Management', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
+                  ];
+                  const sorted = [...factors].sort((a, b) => (b.score / b.max) - (a.score / a.max));
+                  const top = sorted[0];
+                  const second = sorted[1];
+                  return (
+                    <>
+                      Strongest in <strong>{top.name}</strong> ({Math.round(top.score)}/{Math.round(top.max)}) and <strong>{second.name}</strong> ({Math.round(second.score)}/{Math.round(second.max)}). These are the foundation for competitive performance.
+                    </>
+                  );
+                })()}
+              </p>
+            </div>
+
+            {/* Biggest Area to Improve */}
+            <div className="ai-insight-card improve-card">
+              <div className="insight-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f57f17" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="12"></line>
+                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                </svg>
+              </div>
+              <h3>Priority Improvement Area</h3>
+              <p className="insight-text">
+                {(() => {
+                  const factors = [
+                    { name: 'Raw Speed', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
+                    { name: 'Consistency', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
+                    { name: 'Racecraft', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
+                    { name: 'Tire Management', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
+                  ];
+                  const sorted = [...factors].sort((a, b) => (a.score / a.max) - (b.score / b.max));
+                  const weakest = sorted[0];
+                  const gap = weakest.max - weakest.score;
+                  return (
+                    <>
+                      <strong>{weakest.name}</strong> shows the largest gap to top performers. Currently at {Math.round(weakest.score)} vs field leader at {Math.round(weakest.max)} (<strong>{Math.round(gap)} point gap</strong>). Focused improvement here will yield significant results.
+                    </>
+                  );
+                })()}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Variable Detail View - shown when factor is clicked */}
       {selectedFactor && (
