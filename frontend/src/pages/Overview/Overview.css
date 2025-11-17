@@ -153,16 +153,50 @@
   margin-bottom: 16px;
 }
 
+/* NEW: Stacked header layout for factor cards */
+.factor-card-header-stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.factor-card-title-large {
+  margin: 0 0 8px 0;
+  font-size: 24px;
+  font-weight: 900;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.factor-card-score-large {
+  font-size: 56px;
+  font-weight: 900;
+  color: #EB0A1E;
+  line-height: 1;
+}
+
+.factor-card-bar-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #666;
+}
+
 .factor-card-bar-container {
-  height: 12px;
-  background: #eee;
-  border-radius: 6px;
+  height: 14px;
+  background: #e0e0e0;
+  border-radius: 7px;
   overflow: hidden;
+  border: 2px solid #ccc;
 }
 
 .factor-card-bar {
   height: 100%;
-  background: #EB0A1E;
+  background: linear-gradient(90deg, #EB0A1E 0%, #B80818 100%);
   transition: width 0.3s ease;
 }
 
