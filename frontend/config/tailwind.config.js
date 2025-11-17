@@ -9,8 +9,8 @@ export default {
       colors: {
         primary: {
           DEFAULT: '#EB0A1E',
-          dark: '#c20818',
-          light: '#ff1a2e',
+          dark: '#B80818',
+          light: '#FF2D3D',
         },
         bg: {
           primary: '#ffffff',
@@ -42,6 +42,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+        heading: ['Oswald', 'Bebas Neue', 'sans-serif'],
         mono: ['Roboto Mono', 'monospace'],
       },
       fontSize: {

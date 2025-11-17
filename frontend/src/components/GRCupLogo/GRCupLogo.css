@@ -6,7 +6,7 @@
 
 .gr-cup-container {
   background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-  border: 3px solid #e74c3c;
+  border: 3px solid #EB0A1E;
   border-radius: 8px;
   padding: 16px 24px;
   display: flex;
@@ -34,7 +34,7 @@
 }
 
 .racing-text {
-  color: #e74c3c;
+  color: #EB0A1E;
   font-style: italic;
 }
 
@@ -53,7 +53,7 @@
 }
 
 .r-text {
-  color: #e74c3c;
+  color: #EB0A1E;
 }
 
 .cup-text {
@@ -68,7 +68,7 @@
   letter-spacing: 2px;
   line-height: 1;
   color: #ffffff;
-  background: #e74c3c;
+  background: #EB0A1E;
   padding: 4px 12px;
   border-radius: 2px;
 }

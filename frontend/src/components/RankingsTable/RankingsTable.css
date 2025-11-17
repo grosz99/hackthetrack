@@ -9,7 +9,7 @@
 /* Header Section - Match Driver Dashboard Style */
 .rankings-header {
   background: var(--color-dark-2);
-  border: 4px solid #e74c3c;
+  border: 4px solid #EB0A1E;
   border-radius: 16px;
   padding: 0;
   margin: 0 0 32px 0;
@@ -34,7 +34,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  background: linear-gradient(135deg, #EB0A1E, #B80818);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,7 +65,7 @@
 
 .info-modal-button {
   background: transparent;
-  border: 2px solid #e74c3c;
+  border: 2px solid #EB0A1E;
   color: white;
   padding: 8px 16px;
   border-radius: 6px;
@@ -79,8 +79,8 @@
 }
 
 .info-modal-button:hover {
-  background: #e74c3c;
-  border-color: #e74c3c;
+  background: #EB0A1E;
+  border-color: #EB0A1E;
   color: white;
 }
 
@@ -136,7 +136,7 @@
 }
 
 .cta-text strong {
-  color: #e74c3c;
+  color: #EB0A1E;
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -144,7 +144,7 @@
 
 .cta-arrow {
   font-size: 32px;
-  color: #e74c3c;
+  color: #EB0A1E;
   font-weight: 900;
   animation: bounce-right 1.5s ease-in-out infinite;
 }
@@ -161,7 +161,7 @@
 /* Table Wrapper */
 .table-wrapper {
   background: #ffffff;
-  border: 4px solid #e74c3c;
+  border: 4px solid #EB0A1E;
   border-radius: 16px;
   margin: 0;
   overflow: hidden;
@@ -199,7 +199,7 @@
 
 .rankings-table thead {
   background: #f8f9fa;
-  border-bottom: 4px solid #e74c3c;
+  border-bottom: 4px solid #EB0A1E;
 }
 
 .rankings-table th {
@@ -208,7 +208,7 @@
   font-weight: 900;
   font-size: 12px;
   letter-spacing: 1px;
-  color: #e74c3c;
+  color: #EB0A1E;
   text-transform: uppercase;
   white-space: nowrap;
 }
@@ -241,7 +241,7 @@
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  background: #e74c3c;
+  background: #EB0A1E;
   color: white;
   padding: 8px 16px;
   border-radius: 8px;
@@ -282,8 +282,8 @@
   border-radius: 50%;
   font-weight: 900;
   font-size: 20px;
-  background: #e74c3c;
-  border: 3px solid #c0392b;
+  background: #EB0A1E;
+  border: 3px solid #B80818;
   color: #ffffff;
 }
 
@@ -301,12 +301,12 @@
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: #e74c3c;
+  background: #EB0A1E;
   color: white;
   font-weight: 900;
   font-size: 18px;
   flex-shrink: 0;
-  border: 3px solid #c0392b;
+  border: 3px solid #B80818;
 }
 
 .rankings-table .driver-name {
@@ -327,12 +327,12 @@
   justify-content: center;
   min-width: 60px;
   padding: 8px 12px;
-  background: #e74c3c;
+  background: #EB0A1E;
   color: white;
   font-weight: 900;
   font-size: 20px;
   border-radius: 8px;
-  border: 3px solid #c0392b;
+  border: 3px solid #B80818;
 }
 
 /* Factor Cell with Progress Bar */
@@ -500,7 +500,7 @@
   font-weight: 900;
   font-size: 12px;
   letter-spacing: 1px;
-  color: #e74c3c;
+  color: #EB0A1E;
   text-transform: uppercase;
   white-space: nowrap;
   cursor: pointer;
@@ -508,7 +508,7 @@
 }
 
 .sortable-with-info:hover {
-  color: #c0392b;
+  color: #B80818;
   background: rgba(231, 76, 60, 0.05);
 }
 

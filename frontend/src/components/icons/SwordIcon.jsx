@@ -31,7 +31,7 @@ export default function SwordIcon({ size = 'md', className = '' }) {
       </g>
 
       {/* Center circle */}
-      <circle cx="32" cy="32" r="6" fill="#e74c3c" stroke="#c0392b" strokeWidth="2" />
+      <circle cx="32" cy="32" r="6" fill="#EB0A1E" stroke="#B80818" strokeWidth="2" />
     </svg>
   );
 }

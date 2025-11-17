@@ -187,8 +187,8 @@ export default function Skills() {
               <Radar
                 name={`You (#${selectedDriverNumber})`}
                 dataKey="user"
-                stroke="#e74c3c"
-                fill="#e74c3c"
+                stroke="#EB0A1E"
+                fill="#EB0A1E"
                 fillOpacity={0.4}
                 strokeWidth={4}
               />
@@ -196,7 +196,7 @@ export default function Skills() {
           </ResponsiveContainer>
           <div className="radar-legend">
             <div className="legend-item">
-              <div className="legend-color" style={{ background: '#e74c3c' }}></div>
+              <div className="legend-color" style={{ background: '#EB0A1E' }}></div>
               <span>You (#{selectedDriverNumber})</span>
             </div>
             <div className="legend-item">
