@@ -287,7 +287,7 @@ export default function Skills() {
           >
             <button
               className="card-expand-btn"
-              title="Click to see detailed breakdown and comparison"
+              title="Click to learn more about this factor"
               aria-label="Expand Consistency details"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -311,6 +311,7 @@ export default function Skills() {
                 <span>{factorStats.consistency?.max?.toFixed(0) || 100}</span>
               </div>
             </div>
+            <p className="factor-description">Measures ability to maintain steady lap times and avoid performance variability throughout a race stint.</p>
           </div>
 
           {/* Racecraft Card */}
@@ -320,7 +321,7 @@ export default function Skills() {
           >
             <button
               className="card-expand-btn"
-              title="Click to see detailed breakdown and comparison"
+              title="Click to learn more about this factor"
               aria-label="Expand Racecraft details"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -344,6 +345,7 @@ export default function Skills() {
                 <span>{factorStats.racecraft?.max?.toFixed(0) || 100}</span>
               </div>
             </div>
+            <p className="factor-description">Evaluates wheel-to-wheel racing skills including overtaking ability, defensive driving, and position management.</p>
           </div>
 
           {/* Raw Speed Card */}
@@ -353,7 +355,7 @@ export default function Skills() {
           >
             <button
               className="card-expand-btn"
-              title="Click to see detailed breakdown and comparison"
+              title="Click to learn more about this factor"
               aria-label="Expand Raw Speed details"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -377,6 +379,7 @@ export default function Skills() {
                 <span>{factorStats.speed?.max?.toFixed(0) || 100}</span>
               </div>
             </div>
+            <p className="factor-description">Measures pure pace including qualifying performance, fastest race laps, and overall lap time potential.</p>
           </div>
 
           {/* Tire Management Card */}
@@ -386,7 +389,7 @@ export default function Skills() {
           >
             <button
               className="card-expand-btn"
-              title="Click to see detailed breakdown and comparison"
+              title="Click to learn more about this factor"
               aria-label="Expand Tire Management details"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -410,6 +413,7 @@ export default function Skills() {
                 <span>{factorStats.tire_management?.max?.toFixed(0) || 100}</span>
               </div>
             </div>
+            <p className="factor-description">Assesses ability to preserve tire performance over long stints and minimize degradation through smooth inputs.</p>
           </div>
           </div>
         </div>
