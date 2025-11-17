@@ -156,6 +156,106 @@ export default function Skills() {
       {/* Unified Navigation Tabs */}
       <DashboardTabs />
 
+      {/* AI-Generated Driver Overview - Scouting Report Style */}
+      {driverData && (
+        <div className="driver-scouting-report">
+          <div className="scouting-headline">
+            {(() => {
+              const factors = [
+                { name: 'Speed', adjective: 'fast', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
+                { name: 'Consistency', adjective: 'consistent', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
+                { name: 'Racecraft', adjective: 'tactical', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
+                { name: 'Tire Management', adjective: 'tire-savvy', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
+              ];
+              const sorted = [...factors].sort((a, b) => (b.score / b.max) - (a.score / a.max));
+              const top = sorted[0];
+              const second = sorted[1];
+              const weakest = sorted[3];
+
+              return (
+                <>
+                  <span className="headline-emphasis">{top.adjective.charAt(0).toUpperCase() + top.adjective.slice(1)}, {second.adjective} driver</span>
+                  <span className="headline-detail"> with strong {top.name.toLowerCase()} fundamentals and room to grow in {weakest.name.toLowerCase()}.</span>
+                </>
+              );
+            })()}
+          </div>
+
+          <div className="skill-badges-row">
+            {(() => {
+              const factors = [
+                { name: 'Raw Speed', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
+                { name: 'Consistency', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
+                { name: 'Racecraft', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
+                { name: 'Tire Management', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
+              ];
+              const sorted = [...factors].sort((a, b) => (b.score / b.max) - (a.score / a.max));
+              return sorted.slice(0, 3).map((factor, idx) => (
+                <div key={factor.name} className="skill-badge">
+                  <div className="badge-icon">
+                    {factor.name === 'Raw Speed' && (
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
+                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                      </svg>
+                    )}
+                    {factor.name === 'Consistency' && (
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                      </svg>
+                    )}
+                    {factor.name === 'Racecraft' && (
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="6"/>
+                        <circle cx="12" cy="12" r="2"/>
+                      </svg>
+                    )}
+                    {factor.name === 'Tire Management' && (
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                      </svg>
+                    )}
+                  </div>
+                  <span className="badge-label">{factor.name}</span>
+                </div>
+              ));
+            })()}
+          </div>
+
+          <div className="scouting-summary">
+            <h3>Performance Summary</h3>
+            <p>
+              {driverData.stats?.best_finish ? (
+                <>
+                  Season best of <strong>P{driverData.stats.best_finish}</strong> with <strong>P{driverData.stats.average_finish?.toFixed(1)}</strong> average finish.
+                </>
+              ) : (
+                <>Overall field ranking: <strong>#{driverData.overall_rank || 'N/A'}</strong>.</>
+              )}
+              {' '}
+              {(() => {
+                const factors = [
+                  { name: 'Tire Management', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 },
+                  { name: 'Consistency', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
+                  { name: 'Racecraft', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
+                  { name: 'Raw Speed', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 }
+                ];
+                const sorted = [...factors].sort((a, b) => (a.score / a.max) - (b.score / b.max));
+                const weakest = sorted[0];
+                const gap = Math.round(weakest.max - weakest.score);
+                return (
+                  <>
+                    Primary development focus: <strong>{weakest.name}</strong> ({gap} point gap to leader).
+                    Targeted improvement here will unlock significant performance gains.
+                  </>
+                );
+              })()}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Main Content Grid - Radar Left, Factor Cards Right */}
       <div className="skills-content-new">
         {/* Radar Chart on left side */}
@@ -343,89 +443,6 @@ export default function Skills() {
           </div>
         </div>
       </div>
-
-      {/* AI-Generated Driver Overview */}
-      {driverData && (
-        <div className="driver-ai-overview">
-          <h2 className="ai-overview-title">Driver Analysis</h2>
-          <div className="ai-overview-content">
-            {/* Season Highlight */}
-            <div className="ai-insight-card highlight-card">
-              <div className="insight-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
-                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                </svg>
-              </div>
-              <h3>Season Highlight</h3>
-              <p className="insight-text">
-                {driverData.stats?.best_finish ? (
-                  <>Best finish of <strong>P{driverData.stats.best_finish}</strong> this season with an average finish of <strong>P{driverData.stats.average_finish?.toFixed(1)}</strong> across {driverData.stats.races_completed || 'multiple'} races.</>
-                ) : (
-                  <>Season performance shows consistent effort with overall ranking of <strong>#{driverData.overall_rank || 'N/A'}</strong> in the field.</>
-                )}
-              </p>
-            </div>
-
-            {/* Key Strengths */}
-            <div className="ai-insight-card strength-card">
-              <div className="insight-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#27ae60" strokeWidth="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-              </div>
-              <h3>Key Strengths</h3>
-              <p className="insight-text">
-                {(() => {
-                  const factors = [
-                    { name: 'Raw Speed', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
-                    { name: 'Consistency', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
-                    { name: 'Racecraft', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
-                    { name: 'Tire Management', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
-                  ];
-                  const sorted = [...factors].sort((a, b) => (b.score / b.max) - (a.score / a.max));
-                  const top = sorted[0];
-                  const second = sorted[1];
-                  return (
-                    <>
-                      Strongest in <strong>{top.name}</strong> ({Math.round(top.score)}/{Math.round(top.max)}) and <strong>{second.name}</strong> ({Math.round(second.score)}/{Math.round(second.max)}). These are the foundation for competitive performance.
-                    </>
-                  );
-                })()}
-              </p>
-            </div>
-
-            {/* Biggest Area to Improve */}
-            <div className="ai-insight-card improve-card">
-              <div className="insight-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#f57f17" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="8" x2="12" y2="12"></line>
-                  <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-              </div>
-              <h3>Priority Improvement Area</h3>
-              <p className="insight-text">
-                {(() => {
-                  const factors = [
-                    { name: 'Raw Speed', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
-                    { name: 'Consistency', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
-                    { name: 'Racecraft', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
-                    { name: 'Tire Management', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
-                  ];
-                  const sorted = [...factors].sort((a, b) => (a.score / a.max) - (b.score / b.max));
-                  const weakest = sorted[0];
-                  const gap = weakest.max - weakest.score;
-                  return (
-                    <>
-                      <strong>{weakest.name}</strong> shows the largest gap to top performers. Currently at {Math.round(weakest.score)} vs field leader at {Math.round(weakest.max)} (<strong>{Math.round(gap)} point gap</strong>). Focused improvement here will yield significant results.
-                    </>
-                  );
-                })()}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Variable Detail View - shown when factor is clicked */}
       {selectedFactor && (
