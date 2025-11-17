@@ -404,6 +404,38 @@
   margin-bottom: 0;
 }
 
+/* Coaching Analysis Box */
+.coaching-analysis-box {
+  background: #fff;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.coaching-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.7;
+  margin: 0 0 16px 0;
+  text-align: justify;
+}
+
+.coaching-stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-badge {
+  background: #EB0A1E;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
 /* =================================================================
    LOADING STATE
    ================================================================= */

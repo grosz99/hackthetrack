@@ -14,7 +14,7 @@ const SKILLS = [
   { key: 'tire_management', label: 'TIRE MGMT', icon: '' }
 ];
 
-export default function SkillSliders({ currentSkills, initialTargets, onTargetChange, onFindSimilar, tracks, selectedTrack, onTrackChange }) {
+export default function SkillSliders({ currentSkills, initialTargets, onTargetChange, onFindSimilar, tracks, selectedTrack, onTrackChange, aiRecommendation }) {
   // Initialize target skills to initial targets if provided, otherwise use current skills (clamped to valid range)
   const getInitialTargets = () => {
     if (initialTargets) {
@@ -123,6 +123,19 @@ export default function SkillSliders({ currentSkills, initialTargets, onTargetCh
       <div className="sliders-header">
         <h3>Set Your Target Skills</h3>
         <p className="sliders-subtitle">You have a total budget of 5% to distribute across all skills</p>
+
+        {/* AI Recommendation Insight */}
+        {aiRecommendation && (
+          <div className="ai-insight-box">
+            <div className="ai-insight-header">
+              <span className="ai-badge">AI</span>
+              <span>Recommended Allocation</span>
+            </div>
+            <p className="ai-insight-text">{aiRecommendation.reasoning}</p>
+            <p className="ai-insight-adjust">Feel free to adjust sliders to match your priorities</p>
+          </div>
+        )}
+
         <div className="budget-indicator">
           <span className="budget-label">Remaining Budget:</span>
           <span className={`budget-value ${getRemainingBudget() === 0 ? 'budget-depleted' : ''}`}>
@@ -260,5 +273,11 @@ SkillSliders.propTypes = {
     name: PropTypes.string
   })).isRequired,
   selectedTrack: PropTypes.string.isRequired,
-  onTrackChange: PropTypes.func.isRequired
+  onTrackChange: PropTypes.func.isRequired,
+  aiRecommendation: PropTypes.shape({
+    reasoning: PropTypes.string,
+    weakestFactor: PropTypes.string,
+    weakestPercentile: PropTypes.string,
+    allocation: PropTypes.object
+  })
 };
