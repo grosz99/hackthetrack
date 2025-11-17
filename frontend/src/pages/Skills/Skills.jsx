@@ -220,18 +220,26 @@ export default function Skills() {
             className={`factor-card-large ${selectedFactor === 'Consistency' ? 'selected' : ''}`}
             onClick={() => handleFactorClick('Consistency')}
           >
-            <div className="factor-header">
-              <h3 className="factor-name">Consistency</h3>
-              <div className="factor-score">{Math.round(driverData.consistency?.score || 0)}</div>
+            <div className="factor-header-stacked">
+              <h3 className="factor-name-large">Consistency</h3>
+              <div className="factor-score-large">{Math.round(driverData.consistency?.score || 0)}</div>
             </div>
-            <div className="factor-percentile">
-              {(driverData.consistency?.percentile || 0).toFixed(1)}th Percentile
-            </div>
-            <div className="percentile-bar">
-              <div
-                className="percentile-fill"
-                style={{ width: `${driverData.consistency?.percentile || 0}%` }}
-              ></div>
+            <div className="score-bar-container">
+              <div className="score-bar">
+                <div
+                  className="score-bar-fill"
+                  style={{ width: `${((driverData.consistency?.score || 0) / (factorStats.consistency?.max || 100)) * 100}%` }}
+                ></div>
+                <div
+                  className="score-bar-max"
+                  style={{ left: '100%' }}
+                  title={`Max: ${factorStats.consistency?.max?.toFixed(0) || 100}`}
+                ></div>
+              </div>
+              <div className="bar-labels">
+                <span>0</span>
+                <span>{factorStats.consistency?.max?.toFixed(0) || 100}</span>
+              </div>
             </div>
             <div className="factor-description">
               Measures lap-to-lap consistency and predictability of performance
@@ -243,18 +251,26 @@ export default function Skills() {
             className={`factor-card-large ${selectedFactor === 'Racecraft' ? 'selected' : ''}`}
             onClick={() => handleFactorClick('Racecraft')}
           >
-            <div className="factor-header">
-              <h3 className="factor-name">Racecraft</h3>
-              <div className="factor-score">{Math.round(driverData.racecraft?.score || 0)}</div>
+            <div className="factor-header-stacked">
+              <h3 className="factor-name-large">Racecraft</h3>
+              <div className="factor-score-large">{Math.round(driverData.racecraft?.score || 0)}</div>
             </div>
-            <div className="factor-percentile">
-              {(driverData.racecraft?.percentile || 0).toFixed(1)}th Percentile
-            </div>
-            <div className="percentile-bar">
-              <div
-                className="percentile-fill"
-                style={{ width: `${driverData.racecraft?.percentile || 0}%` }}
-              ></div>
+            <div className="score-bar-container">
+              <div className="score-bar">
+                <div
+                  className="score-bar-fill"
+                  style={{ width: `${((driverData.racecraft?.score || 0) / (factorStats.racecraft?.max || 100)) * 100}%` }}
+                ></div>
+                <div
+                  className="score-bar-max"
+                  style={{ left: '100%' }}
+                  title={`Max: ${factorStats.racecraft?.max?.toFixed(0) || 100}`}
+                ></div>
+              </div>
+              <div className="bar-labels">
+                <span>0</span>
+                <span>{factorStats.racecraft?.max?.toFixed(0) || 100}</span>
+              </div>
             </div>
             <div className="factor-description">
               Ability to overtake, defend position, and navigate traffic effectively
@@ -266,18 +282,26 @@ export default function Skills() {
             className={`factor-card-large ${selectedFactor === 'Raw Speed' ? 'selected' : ''}`}
             onClick={() => handleFactorClick('Raw Speed')}
           >
-            <div className="factor-header">
-              <h3 className="factor-name">Raw Speed</h3>
-              <div className="factor-score">{Math.round(driverData.speed?.score || 0)}</div>
+            <div className="factor-header-stacked">
+              <h3 className="factor-name-large">Raw Speed</h3>
+              <div className="factor-score-large">{Math.round(driverData.speed?.score || 0)}</div>
             </div>
-            <div className="factor-percentile">
-              {(driverData.speed?.percentile || 0).toFixed(1)}th Percentile
-            </div>
-            <div className="percentile-bar">
-              <div
-                className="percentile-fill"
-                style={{ width: `${driverData.speed?.percentile || 0}%` }}
-              ></div>
+            <div className="score-bar-container">
+              <div className="score-bar">
+                <div
+                  className="score-bar-fill"
+                  style={{ width: `${((driverData.speed?.score || 0) / (factorStats.speed?.max || 100)) * 100}%` }}
+                ></div>
+                <div
+                  className="score-bar-max"
+                  style={{ left: '100%' }}
+                  title={`Max: ${factorStats.speed?.max?.toFixed(0) || 100}`}
+                ></div>
+              </div>
+              <div className="bar-labels">
+                <span>0</span>
+                <span>{factorStats.speed?.max?.toFixed(0) || 100}</span>
+              </div>
             </div>
             <div className="factor-description">
               Pure pace and ability to extract maximum performance from the car
@@ -289,18 +313,26 @@ export default function Skills() {
             className={`factor-card-large ${selectedFactor === 'Tire Management' ? 'selected' : ''}`}
             onClick={() => handleFactorClick('Tire Management')}
           >
-            <div className="factor-header">
-              <h3 className="factor-name">Tire Management</h3>
-              <div className="factor-score">{Math.round(driverData.tire_management?.score || 0)}</div>
+            <div className="factor-header-stacked">
+              <h3 className="factor-name-large">Tire Management</h3>
+              <div className="factor-score-large">{Math.round(driverData.tire_management?.score || 0)}</div>
             </div>
-            <div className="factor-percentile">
-              {(driverData.tire_management?.percentile || 0).toFixed(1)}th Percentile
-            </div>
-            <div className="percentile-bar">
-              <div
-                className="percentile-fill"
-                style={{ width: `${driverData.tire_management?.percentile || 0}%` }}
-              ></div>
+            <div className="score-bar-container">
+              <div className="score-bar">
+                <div
+                  className="score-bar-fill"
+                  style={{ width: `${((driverData.tire_management?.score || 0) / (factorStats.tire_management?.max || 100)) * 100}%` }}
+                ></div>
+                <div
+                  className="score-bar-max"
+                  style={{ left: '100%' }}
+                  title={`Max: ${factorStats.tire_management?.max?.toFixed(0) || 100}`}
+                ></div>
+              </div>
+              <div className="bar-labels">
+                <span>0</span>
+                <span>{factorStats.tire_management?.max?.toFixed(0) || 100}</span>
+              </div>
             </div>
             <div className="factor-description">
               Ability to preserve tires and maintain pace over long stints

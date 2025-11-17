@@ -138,8 +138,8 @@
 
 /* Instructions for clicking tiles */
 .factor-cards-instructions {
-  background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
-  border: 3px solid #ffc107;
+  background: #ffffff;
+  border: 3px solid #EB0A1E;
   border-radius: 12px;
   padding: 20px 24px;
   text-align: center;
@@ -148,7 +148,7 @@
 .instructions-title {
   font-size: 20px;
   font-weight: 900;
-  color: #f57f17;
+  color: #EB0A1E;
   margin: 0 0 8px 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -157,7 +157,7 @@
 .instructions-text {
   font-size: 14px;
   font-weight: 600;
-  color: #2d5016;
+  color: #333333;
   margin: 0;
 }
 
@@ -245,10 +245,77 @@
 }
 
 .factor-description {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
-  color: #888;
+  color: #666;
   line-height: 1.5;
+  margin-top: auto;
+}
+
+/* NEW: Stacked Header Layout - Name on top, Score below */
+.factor-header-stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.factor-name-large {
+  font-size: 28px;
+  font-weight: 900;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0 0 8px 0;
+}
+
+.factor-score-large {
+  font-size: 72px;
+  font-weight: 900;
+  color: #EB0A1E;
+  line-height: 1;
+  text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.05);
+}
+
+/* NEW: Score Bar with Max Reference */
+.score-bar-container {
+  margin-bottom: 20px;
+}
+
+.score-bar {
+  height: 16px;
+  background: #e0e0e0;
+  border-radius: 8px;
+  overflow: visible;
+  position: relative;
+  border: 2px solid #ccc;
+}
+
+.score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #EB0A1E 0%, #B80818 100%);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.score-bar-max {
+  position: absolute;
+  top: -4px;
+  width: 4px;
+  height: 24px;
+  background: #333;
+  border-radius: 2px;
+  transform: translateX(-50%);
+}
+
+.bar-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
 }
 
 /* Radar Chart Container - New larger version on left */
