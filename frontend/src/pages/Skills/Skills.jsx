@@ -184,10 +184,10 @@ export default function Skills() {
       {/* Unified Navigation Tabs */}
       <DashboardTabs />
 
-      {/* AI-Generated Driver Overview - Scouting Report Style */}
+      {/* AI-Generated Driver Overview - Simple Text on Black */}
       {driverData && (
-        <div className="driver-scouting-report">
-          <div className="scouting-headline">
+        <div className="driver-scouting-text">
+          <p className="scouting-headline-simple">
             {(() => {
               const factors = [
                 { name: 'Speed', adjective: 'fast', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
@@ -202,58 +202,11 @@ export default function Skills() {
 
               return (
                 <>
-                  <span className="headline-emphasis">{top.adjective.charAt(0).toUpperCase() + top.adjective.slice(1)}, {second.adjective} driver</span>
-                  <span className="headline-detail"> with strong {top.name.toLowerCase()} fundamentals and room to grow in {weakest.name.toLowerCase()}.</span>
+                  <span className="headline-red">{top.adjective.charAt(0).toUpperCase() + top.adjective.slice(1)}, {second.adjective}</span> driver with strong {top.name.toLowerCase()} fundamentals. Top skills: <span className="headline-red">{allVariables[0]?.name || 'N/A'}</span> ({Math.round(allVariables[0]?.percentile || 0)}th), <span className="headline-red">{allVariables[1]?.name || 'N/A'}</span> ({Math.round(allVariables[1]?.percentile || 0)}th), <span className="headline-red">{allVariables[2]?.name || 'N/A'}</span> ({Math.round(allVariables[2]?.percentile || 0)}th). Focus area: <span className="headline-red">{weakest.name.toLowerCase()}</span>.
                 </>
               );
             })()}
-          </div>
-
-          <div className="skill-badges-row">
-            {allVariables.slice(0, 3).map((variable, idx) => (
-              <div key={variable.name} className="skill-badge">
-                <div className="badge-icon">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
-                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-                    <polyline points="22 4 12 14.01 9 11.01"/>
-                  </svg>
-                </div>
-                <span className="badge-label">{variable.name}</span>
-                <span className="badge-percentile">{Math.round(variable.percentile)}th</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="scouting-summary">
-            <h3>Performance Summary</h3>
-            <p>
-              {driverData.stats?.best_finish ? (
-                <>
-                  Season best of <strong>P{driverData.stats.best_finish}</strong> with <strong>P{driverData.stats.average_finish?.toFixed(1)}</strong> average finish.
-                </>
-              ) : (
-                <>Overall field ranking: <strong>#{driverData.overall_rank || 'N/A'}</strong>.</>
-              )}
-              {' '}
-              {(() => {
-                const factors = [
-                  { name: 'Tire Management', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 },
-                  { name: 'Consistency', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
-                  { name: 'Racecraft', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
-                  { name: 'Raw Speed', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 }
-                ];
-                const sorted = [...factors].sort((a, b) => (a.score / a.max) - (b.score / b.max));
-                const weakest = sorted[0];
-                const gap = Math.round(weakest.max - weakest.score);
-                return (
-                  <>
-                    Primary development focus: <strong>{weakest.name}</strong> ({gap} point gap to leader).
-                    Targeted improvement here will unlock significant performance gains.
-                  </>
-                );
-              })()}
-            </p>
-          </div>
+          </p>
         </div>
       )}
 
