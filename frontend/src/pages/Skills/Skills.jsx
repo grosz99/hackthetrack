@@ -435,6 +435,7 @@ export default function Skills() {
 
       {/* Variable Detail View - shown when factor is clicked */}
       {selectedFactor && (
+        <div className="breakdown-layout">
         <div className="variable-detail-section">
           <div className="variable-detail-header">
             <h2>{selectedFactor} Breakdown</h2>
@@ -520,6 +521,21 @@ export default function Skills() {
               <p>Unable to load factor breakdown. Please try again.</p>
             </div>
           )}
+        </div>
+
+        {/* Sticky Action Button - Driver Development */}
+        <div className="skills-action-button-container">
+          <button
+            className="skills-circular-action-btn"
+            onClick={() => window.open('https://www.toyota.com/racing', '_blank')}
+            aria-label="View driver development resources"
+          >
+            →
+          </button>
+          <span className="skills-action-button-label">
+            Driver<br/>Development
+          </span>
+        </div>
         </div>
       )}
     </div>
