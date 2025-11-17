@@ -418,6 +418,16 @@
   text-align: center;
 }
 
+.badge-percentile {
+  font-size: 12px;
+  font-weight: 700;
+  color: #EB0A1E;
+  background: rgba(235, 10, 30, 0.1);
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-top: 4px;
+}
+
 .scouting-summary {
   background: #f8f9fa;
   border-radius: 12px;

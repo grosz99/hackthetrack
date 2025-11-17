@@ -19,6 +19,7 @@ export default function Skills() {
   const { selectedDriverNumber, drivers } = useDriver();
   const [driverData, setDriverData] = useState(null);
   const [factorStats, setFactorStats] = useState({}); // NEW: Store factor stats from efficient endpoint
+  const [allVariables, setAllVariables] = useState([]); // Store all variables from all factors
   const [selectedFactor, setSelectedFactor] = useState(null);
   const [factorBreakdown, setFactorBreakdown] = useState(null);
   const [factorComparison, setFactorComparison] = useState(null);
@@ -37,13 +38,17 @@ export default function Skills() {
         setFactorBreakdown(null);
         setFactorComparison(null);
 
-        // Fetch current driver data and factor stats (efficient endpoint)
+        // Fetch current driver data, factor stats, and all breakdowns
         const [driverResponse, ...factorResponses] = await Promise.all([
           api.get(`/api/drivers/${selectedDriverNumber}`),
           api.get('/api/factors/speed/stats'),
           api.get('/api/factors/consistency/stats'),
           api.get('/api/factors/racecraft/stats'),
-          api.get('/api/factors/tire_management/stats')
+          api.get('/api/factors/tire_management/stats'),
+          api.get(`/api/factors/speed/breakdown/${selectedDriverNumber}`),
+          api.get(`/api/factors/consistency/breakdown/${selectedDriverNumber}`),
+          api.get(`/api/factors/racecraft/breakdown/${selectedDriverNumber}`),
+          api.get(`/api/factors/tire_management/breakdown/${selectedDriverNumber}`)
         ]);
 
         setDriverData(driverResponse.data);
@@ -55,6 +60,29 @@ export default function Skills() {
           racecraft: factorResponses[2].data,
           tire_management: factorResponses[3].data
         });
+
+        // Collect all variables from all factor breakdowns
+        const variables = [];
+        const breakdowns = [
+          factorResponses[4].data,
+          factorResponses[5].data,
+          factorResponses[6].data,
+          factorResponses[7].data
+        ];
+        breakdowns.forEach(breakdown => {
+          if (breakdown.variables) {
+            breakdown.variables.forEach(v => {
+              variables.push({
+                name: v.display_name,
+                percentile: v.percentile,
+                factor: breakdown.factor_name
+              });
+            });
+          }
+        });
+        // Sort by percentile descending to get top variables
+        variables.sort((a, b) => b.percentile - a.percentile);
+        setAllVariables(variables);
       } catch (err) {
         console.error('Error fetching driver data:', err);
         setError('Failed to load driver data');
@@ -182,45 +210,18 @@ export default function Skills() {
           </div>
 
           <div className="skill-badges-row">
-            {(() => {
-              const factors = [
-                { name: 'Raw Speed', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
-                { name: 'Consistency', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
-                { name: 'Racecraft', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
-                { name: 'Tire Management', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
-              ];
-              const sorted = [...factors].sort((a, b) => (b.score / b.max) - (a.score / a.max));
-              return sorted.slice(0, 3).map((factor, idx) => (
-                <div key={factor.name} className="skill-badge">
-                  <div className="badge-icon">
-                    {factor.name === 'Raw Speed' && (
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
-                        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
-                      </svg>
-                    )}
-                    {factor.name === 'Consistency' && (
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
-                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                      </svg>
-                    )}
-                    {factor.name === 'Racecraft' && (
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <circle cx="12" cy="12" r="6"/>
-                        <circle cx="12" cy="12" r="2"/>
-                      </svg>
-                    )}
-                    {factor.name === 'Tire Management' && (
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
-                        <circle cx="12" cy="12" r="10"/>
-                        <path d="M12 6v6l4 2"/>
-                      </svg>
-                    )}
-                  </div>
-                  <span className="badge-label">{factor.name}</span>
+            {allVariables.slice(0, 3).map((variable, idx) => (
+              <div key={variable.name} className="skill-badge">
+                <div className="badge-icon">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
                 </div>
-              ));
-            })()}
+                <span className="badge-label">{variable.name}</span>
+                <span className="badge-percentile">{Math.round(variable.percentile)}th</span>
+              </div>
+            ))}
           </div>
 
           <div className="scouting-summary">
