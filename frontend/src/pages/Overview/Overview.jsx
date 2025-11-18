@@ -379,17 +379,20 @@ export default function Overview() {
         <div className="factor-tiles-grid">
           {/* Consistency Card */}
           <div className="factor-card">
-            <button
-              onClick={() => toggleCard('consistency')}
-              className="card-expand-btn"
-              title="Click to see description"
-              aria-label="Toggle Consistency description"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
+            <div className="card-expand-container">
+              <button
+                onClick={() => toggleCard('consistency')}
+                className="card-expand-btn"
+                title="Click to see what makes up this metric"
+                aria-label="Toggle Consistency description"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <span className="expand-hint">Click for details</span>
+            </div>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Consistency</h4>
               <div className="factor-card-score-large">
@@ -412,17 +415,20 @@ export default function Overview() {
 
           {/* Racecraft Card */}
           <div className="factor-card">
-            <button
-              onClick={() => toggleCard('racecraft')}
-              className="card-expand-btn"
-              title="Click to see description"
-              aria-label="Toggle Racecraft description"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
+            <div className="card-expand-container">
+              <button
+                onClick={() => toggleCard('racecraft')}
+                className="card-expand-btn"
+                title="Click to see what makes up this metric"
+                aria-label="Toggle Racecraft description"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <span className="expand-hint">Click for details</span>
+            </div>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Racecraft</h4>
               <div className="factor-card-score-large">
@@ -445,17 +451,20 @@ export default function Overview() {
 
           {/* Speed Card */}
           <div className="factor-card">
-            <button
-              onClick={() => toggleCard('speed')}
-              className="card-expand-btn"
-              title="Click to see description"
-              aria-label="Toggle Raw Speed description"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
+            <div className="card-expand-container">
+              <button
+                onClick={() => toggleCard('speed')}
+                className="card-expand-btn"
+                title="Click to see what makes up this metric"
+                aria-label="Toggle Raw Speed description"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <span className="expand-hint">Click for details</span>
+            </div>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Raw Speed</h4>
               <div className="factor-card-score-large">
@@ -478,17 +487,20 @@ export default function Overview() {
 
           {/* Tire Management Card */}
           <div className="factor-card">
-            <button
-              onClick={() => toggleCard('tire_management')}
-              className="card-expand-btn"
-              title="Click to see description"
-              aria-label="Toggle Tire Management description"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-              </svg>
-            </button>
+            <div className="card-expand-container">
+              <button
+                onClick={() => toggleCard('tire_management')}
+                className="card-expand-btn"
+                title="Click to see what makes up this metric"
+                aria-label="Toggle Tire Management description"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+              </button>
+              <span className="expand-hint">Click for details</span>
+            </div>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Tire Management</h4>
               <div className="factor-card-score-large">
