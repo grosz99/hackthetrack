@@ -208,13 +208,17 @@
 
 .rankings-table th {
   padding: 20px 16px;
-  text-align: left;
+  text-align: center;
   font-weight: 900;
   font-size: 12px;
   letter-spacing: 1px;
   color: #EB0A1E;
   text-transform: uppercase;
   white-space: nowrap;
+}
+
+.rankings-table th:first-child {
+  text-align: center;
 }
 
 .rankings-table th.sortable {
@@ -296,8 +300,8 @@
 .driver-info {
   display: flex;
   align-items: center;
-  gap: 12px;
-  text-align: left;
+  gap: 24px;
+  text-align: center;
 }
 
 .driver-number-badge {
@@ -313,6 +317,7 @@
   font-size: 18px;
   flex-shrink: 0;
   border: 3px solid #B80818;
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #EB0A1E;
 }
 
 .driver-name-container {
