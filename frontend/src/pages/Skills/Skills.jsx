@@ -5,6 +5,7 @@
  */
 
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer } from 'recharts';
 import api from '../../services/api';
 import { useDriver } from '../../context/DriverContext';
@@ -13,6 +14,7 @@ import DashboardTabs from '../../components/DashboardTabs/DashboardTabs';
 import './Skills.css';
 
 export default function Skills() {
+  const navigate = useNavigate();
   const { selectedDriverNumber, drivers } = useDriver();
   const [driverData, setDriverData] = useState(null);
   const [factorStats, setFactorStats] = useState({}); // NEW: Store factor stats from efficient endpoint
@@ -527,7 +529,7 @@ export default function Skills() {
         <div className="skills-action-button-container">
           <button
             className="skills-circular-action-btn"
-            onClick={() => window.open('https://www.toyota.com/racing', '_blank')}
+            onClick={() => navigate(`/driver/${selectedDriverNumber}/improve`)}
             aria-label="View driver development resources"
           >
             →
