@@ -133,7 +133,8 @@
    TWO COLUMN GRID - Skills & Best Match
    ================================================================= */
 .improve-grid {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
   margin-bottom: 48px;
   align-items: stretch;
@@ -141,9 +142,10 @@
 
 .skill-sliders-section,
 .comparables-section {
-  flex: 1;
   min-width: 0;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 /* =================================================================
@@ -404,7 +406,7 @@
   margin-bottom: 0;
 }
 
-/* Coaching Analysis Box */
+/* Coaching Analysis Box - Match Scouting Report Style */
 .coaching-analysis-box {
   background: #fff;
   border: 2px solid #e0e0e0;
@@ -416,7 +418,7 @@
   font-size: 14px;
   color: #333;
   line-height: 1.7;
-  margin: 0 0 16px 0;
+  margin: 0;
   text-align: justify;
 }
 
@@ -434,6 +436,67 @@
   font-size: 12px;
   font-weight: 700;
   font-family: var(--font-mono);
+}
+
+/* Live Insights Loading */
+.insights-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 2px solid #e0e0e0;
+}
+
+.insights-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e0e0e0;
+  border-top-color: #EB0A1E;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 12px;
+}
+
+.insights-loading p {
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  margin: 0;
+}
+
+/* Live Insights Formatting - Structured Sections */
+.live-insights {
+  font-size: 14px;
+  line-height: 1.7;
+  color: #333;
+  margin: 0;
+}
+
+.live-insights strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 900;
+  color: #EB0A1E;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 16px;
+  margin-bottom: 8px;
+}
+
+.live-insights strong:first-child {
+  margin-top: 0;
+}
+
+.live-insights p {
+  margin: 0 0 12px 0;
+  text-align: justify;
+}
+
+.live-insights p:last-child {
+  margin-bottom: 0;
 }
 
 /* =================================================================
