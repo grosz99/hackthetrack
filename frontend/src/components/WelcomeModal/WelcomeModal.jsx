@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { TrophyIcon, TargetIcon, ChartIcon } from '../icons';
+import { TargetIcon, ChartIcon } from '../icons';
+import GibbsAIBranding from '../GibbsAIBranding/GibbsAIBranding';
 import './WelcomeModal.css';
 
 export default function WelcomeModal({ onClose }) {
@@ -13,10 +14,59 @@ export default function WelcomeModal({ onClose }) {
       subtitle: 'Making the Predictable Unpredictable',
       content: (
         <div className="welcome-intro">
-          <TrophyIcon size="xxl" />
+          <div className="welcome-logo">
+            <GibbsAIBranding size="large" />
+          </div>
           <p className="intro-text">
-            Welcome to HackTheTrack — where validated statistics meet AI-powered coaching to transform your racing performance.
+            Welcome to Gibbs AI. The perfect blend of AI and Scouting to help find the drivers of the future.
           </p>
+        </div>
+      )
+    },
+    {
+      id: 'why-gibbs',
+      title: 'Why Gibbs AI?',
+      content: (
+        <div className="gibbs-story-section">
+          <div className="our-mission">
+            <h4>Our Mission</h4>
+            <p>
+              <strong>Gibbs AI</strong> aims to replicate Joe Gibbs' legendary eye for talent and development philosophy. Using validated statistics and AI-powered analysis, we help identify and develop the drivers of the future—just as Joe Gibbs has done for decades in NASCAR and the NFL.
+            </p>
+          </div>
+
+          <div className="gibbs-hero">
+            <div className="gibbs-icon">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="38" fill="#EB0A1E" stroke="#B80818" strokeWidth="4"/>
+                <path d="M40 20L48 36L64 38L52 50L55 66L40 58L25 66L28 50L16 38L32 36L40 20Z" fill="#FFD700" stroke="#B8860B" strokeWidth="2"/>
+              </svg>
+            </div>
+            <h3>An Eye for Talent</h3>
+          </div>
+
+          <div className="gibbs-story">
+            <p className="story-intro">
+              <strong>Joe Gibbs</strong> is a legendary figure in American motorsports and football—a Hall of Fame NFL coach who won three Super Bowls with the Washington Redskins and a Toyota partner who built one of NASCAR's most successful racing organizations.
+            </p>
+
+            <div className="accomplishments-grid">
+              <div className="accomplishment">
+                <h4>NASCAR Excellence</h4>
+                <p>Joe Gibbs Racing has developed and championed some of the winningest drivers of the 21st century, including <strong>Tony Stewart</strong>, <strong>Joey Logano</strong>, and <strong>Denny Hamlin</strong>.</p>
+              </div>
+
+              <div className="accomplishment">
+                <h4>Talent Development</h4>
+                <p>His ability to identify raw talent, provide world-class development programs, and create championship-winning teams is unmatched across both motorsports and professional football.</p>
+              </div>
+
+              <div className="accomplishment">
+                <h4>Toyota Partnership</h4>
+                <p>As a long-time Toyota partner in NASCAR, Joe Gibbs Racing has been instrumental in Toyota's success in American racing, combining technical excellence with driver development.</p>
+              </div>
+            </div>
+          </div>
         </div>
       )
     },
@@ -103,28 +153,48 @@ export default function WelcomeModal({ onClose }) {
       )
     },
     {
-      id: 'honesty',
-      title: 'What We Are (And Aren\'t)',
+      id: 'why-gibbs',
+      title: 'Why Gibbs AI?',
       content: (
-        <div className="honesty-section">
-          <div className="honesty-column yes">
-            <h3>What We Offer</h3>
-            <ul>
-              <li><strong>Validated statistical framework</strong> — 89.5% accuracy in explaining finish positions from historical data</li>
-              <li><strong>Real Claude AI coaching</strong> — Anthropic's LLM analyzing your telemetry with race engineering expertise</li>
-              <li><strong>Evidence-based scoring</strong> — Every metric backed by regression analysis on 291 driver-races</li>
-              <li><strong>Honest uncertainty</strong> — We show you the data, not guarantees</li>
-            </ul>
+        <div className="gibbs-story-section">
+          <div className="gibbs-hero">
+            <div className="gibbs-icon">
+              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                <circle cx="40" cy="40" r="38" fill="#EB0A1E" stroke="#B80818" strokeWidth="4"/>
+                <path d="M40 20L48 36L64 38L52 50L55 66L40 58L25 66L28 50L16 38L32 36L40 20Z" fill="#FFD700" stroke="#B8860B" strokeWidth="2"/>
+              </svg>
+            </div>
+            <h3>An Eye for Talent</h3>
           </div>
 
-          <div className="honesty-column no">
-            <h3>What We Don't Claim</h3>
-            <ul>
-              <li><strong>Not a crystal ball</strong> — We score current performance, we don't predict future race outcomes</li>
-              <li><strong>Not "AI predictions"</strong> — Our model uses statistical regression coefficients, not neural networks</li>
-              <li><strong>Not magic</strong> — Improvement requires practice and seat time, not just data</li>
-              <li><strong>Not comprehensive</strong> — Currently focused on GR Cup data (more series coming)</li>
-            </ul>
+          <div className="gibbs-story">
+            <p className="story-intro">
+              <strong>Joe Gibbs</strong> is a legendary figure in American motorsports and football—a Hall of Fame NFL coach who won three Super Bowls with the Washington Redskins and a Toyota partner who built one of NASCAR's most successful racing organizations.
+            </p>
+
+            <div className="accomplishments-grid">
+              <div className="accomplishment">
+                <h4>NASCAR Excellence</h4>
+                <p>Joe Gibbs Racing has developed and championed some of the winningest drivers of the 21st century, including <strong>Tony Stewart</strong>, <strong>Joey Logano</strong>, and <strong>Denny Hamlin</strong>.</p>
+              </div>
+
+              <div className="accomplishment">
+                <h4>Talent Development</h4>
+                <p>His ability to identify raw talent, provide world-class development programs, and create championship-winning teams is unmatched across both motorsports and professional football.</p>
+              </div>
+
+              <div className="accomplishment">
+                <h4>Toyota Partnership</h4>
+                <p>As a long-time Toyota partner in NASCAR, Joe Gibbs Racing has been instrumental in Toyota's success in American racing, combining technical excellence with driver development.</p>
+              </div>
+            </div>
+
+            <div className="our-mission">
+              <h4>Our Mission</h4>
+              <p>
+                <strong>Gibbs AI</strong> aims to replicate Joe Gibbs' legendary eye for talent and development philosophy. Using validated statistics and AI-powered analysis, we help identify and develop the drivers of the future—just as Joe Gibbs has done for decades in NASCAR and the NFL.
+              </p>
+            </div>
           </div>
         </div>
       )
