@@ -1,0 +1,62 @@
+/* Toyota Gibbs Logo Component - For Page Headers */
+
+.toyota-gibbs-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Large size - Default header */
+.toyota-gibbs-logo-large .logo-image {
+  height: 140px;
+  width: auto;
+  max-height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(235, 10, 30, 0.3));
+  transition: all var(--transition-base);
+}
+
+.toyota-gibbs-logo-large .logo-image:hover {
+  filter: drop-shadow(0 6px 20px rgba(235, 10, 30, 0.5));
+  transform: translateY(-2px);
+}
+
+/* Small size - Sticky/condensed header */
+.toyota-gibbs-logo-small .logo-image {
+  height: 50px;
+  width: auto;
+  filter: drop-shadow(0 2px 8px rgba(235, 10, 30, 0.25));
+}
+
+/* Responsive Design */
+@media (max-width: 1199px) {
+  .toyota-gibbs-logo-large .logo-image {
+    height: 160px;
+  }
+}
+
+@media (max-width: 767px) {
+  .toyota-gibbs-logo-large .logo-image {
+    height: 130px;
+  }
+
+  .toyota-gibbs-logo-small .logo-image {
+    height: 80px;
+  }
+}
+
+/* Animation for page load */
+@keyframes logoEntrance {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toyota-gibbs-logo {
+  animation: logoEntrance 600ms cubic-bezier(0.4, 0, 0.2, 1);
+}
