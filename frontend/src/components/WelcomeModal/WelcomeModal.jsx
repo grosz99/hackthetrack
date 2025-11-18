@@ -1,6 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import { TargetIcon, ChartIcon } from '../icons';
 import GibbsAIBranding from '../GibbsAIBranding/GibbsAIBranding';
 import './WelcomeModal.css';
 
@@ -66,7 +65,6 @@ export default function WelcomeModal({ onClose }) {
       content: (
         <div className="pillars-grid">
           <div className="pillar">
-            <TargetIcon size="lg" />
             <h3>Performance Intelligence</h3>
             <p className="pillar-subtitle">4-Factor Statistical Model (R²=0.895)</p>
             <ul className="feature-list">
@@ -79,11 +77,6 @@ export default function WelcomeModal({ onClose }) {
           </div>
 
           <div className="pillar">
-            <div className="pillar-icon-wrapper">
-              <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                <path d="M32 8L40 24L56 26L44 38L47 54L32 46L17 54L20 38L8 26L24 24L32 8Z" fill="#EB0A1E" stroke="#B80818" strokeWidth="2"/>
-              </svg>
-            </div>
             <h3>Claude AI Coaching</h3>
             <p className="pillar-subtitle">Real AI-Powered Insights</p>
             <ul className="feature-list">
@@ -96,7 +89,6 @@ export default function WelcomeModal({ onClose }) {
           </div>
 
           <div className="pillar">
-            <ChartIcon size="lg" />
             <h3>Making the Predictable Unpredictable</h3>
             <p className="pillar-subtitle">Change Your Outcome</p>
             <ul className="feature-list">
