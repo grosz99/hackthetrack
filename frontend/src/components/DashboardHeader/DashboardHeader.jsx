@@ -4,18 +4,35 @@ import { useDriver } from '../../context/DriverContext';
 import { useScout } from '../../context/ScoutContext';
 import { classifyDriver } from '../../utils/classification';
 import ClassificationBadge from '../ClassificationBadge/ClassificationBadge';
-import GRCupLogo from '../GRCupLogo/GRCupLogo';
+import GibbsAIBranding from '../GibbsAIBranding/GibbsAIBranding';
 import './DashboardHeader.css';
 
 /**
- * DashboardHeader - Unified header component for all dashboard pages
+ * Get page-specific description text
+ */
+const getPageDescription = (pageName) => {
+  const descriptions = {
+    'Overview': 'View comprehensive performance metrics, 4-factor analysis breakdown, and AI-powered insights into driver strengths and development areas',
+    'Race Log': 'Explore complete race history with detailed lap-by-lap analysis, position changes, and performance trends across all championship rounds',
+    'Skills': 'Dive deep into the 4-factor performance model analyzing speed, consistency, racecraft, and tire management with statistical breakdowns',
+    'Improve': 'Access personalized AI coaching recommendations, practice plans, and data-driven improvement strategies tailored to driver performance gaps'
+  };
+
+  return descriptions[pageName] || 'Explore detailed driver performance analytics and AI-powered insights';
+};
+
+/**
+ * DashboardHeader - Unified header component with Gibbs AI branding
  *
  * Features:
- * - Circular driver number badge
+ * - Prominent Gibbs AI for Toyota Gazoo Racing branding
+ * - Sticky header that stays visible on scroll
+ * - Circular driver number badge (reduced size)
  * - Driver selector with all 34 drivers from DriverContext
- * - Scout breadcrumb when navigated from scout portal
+ * - Scout/Rankings breadcrumb navigation
  * - Classification badge display when from scout
- * - Consistent Toyota racing theme
+ * - Consistent TGR theme
+ * - Contextual page descriptions
  */
 export default function DashboardHeader({ driverData, pageName }) {
   const { selectedDriverNumber, setSelectedDriverNumber, drivers } = useDriver();
@@ -91,37 +108,47 @@ export default function DashboardHeader({ driverData, pageName }) {
         </div>
       )}
 
-      {/* Header Section */}
+      {/* Header Section - Sticky with consistent Rankings flow */}
       <div className="dashboard-header">
         <div className="header-content">
-          <div className="driver-number-display">
-            <span className="number-large">{selectedDriverNumber}</span>
-          </div>
-          <div className="driver-name-section">
-            <div className="driver-name-row">
-              <h1 className="driver-name">Driver #{selectedDriverNumber}</h1>
-              {isFromScout && classification && (
-                <ClassificationBadge classification={classification} size="large" />
-              )}
+          {/* LEFT: Driver Section (40%) - Matches Rankings icon+title layout */}
+          <div className="driver-section">
+            <div className="driver-badge-large">
+              <span className="badge-number">{selectedDriverNumber}</span>
             </div>
-            <GRCupLogo size="small" />
+            <div className="driver-info-stack">
+              <h1 className="driver-name-large">Driver #{selectedDriverNumber}</h1>
+              {isFromScout && classification && (
+                <ClassificationBadge classification={classification} size="medium" />
+              )}
+              <select
+                value={selectedDriverNumber}
+                onChange={(e) => handleDriverChange(Number(e.target.value))}
+                className="driver-selector"
+              >
+                {drivers.map((driver) => (
+                  <option key={driver.number} value={driver.number}>
+                    {driver.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Driver Selector */}
-          <div className="driver-selector-container">
-            <span className="selector-label">Select Driver</span>
-            <select
-              value={selectedDriverNumber}
-              onChange={(e) => handleDriverChange(Number(e.target.value))}
-              className="driver-selector"
-            >
-              {drivers.map((driver) => (
-                <option key={driver.number} value={driver.number}>
-                  {driver.name}
-                </option>
-              ))}
-            </select>
+          {/* CENTER: Spacer (20%) */}
+          <div className="header-spacer"></div>
+
+          {/* RIGHT: Gibbs AI Branding (40%) - Matches Rankings logo position */}
+          <div className="brand-section-right">
+            <GibbsAIBranding size="large" />
           </div>
+        </div>
+
+        {/* Description Section - Contextual page information */}
+        <div className="header-description">
+          <p className="description-text">
+            {getPageDescription(pageName)}
+          </p>
         </div>
       </div>
     </>

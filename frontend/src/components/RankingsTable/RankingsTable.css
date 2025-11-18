@@ -20,7 +20,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 32px 40px;
+  padding: 24px 40px;
 }
 
 .rankings-center-section {
@@ -31,15 +31,15 @@
 }
 
 .rankings-icon {
-  width: 120px;
-  height: 120px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   background: linear-gradient(135deg, #EB0A1E, #B80818);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 6px solid #fff;
-  box-shadow: 0 8px 32px rgba(231, 76, 60, 0.4);
+  border: 4px solid #fff;
+  box-shadow: 0 4px 16px rgba(231, 76, 60, 0.4);
   flex-shrink: 0;
 }
 
@@ -54,11 +54,11 @@
 }
 
 .rankings-title {
-  font-size: 60px;
+  font-size: 42px;
   font-weight: 900;
   color: #fff;
   margin: 0;
-  letter-spacing: -2.5px;
+  letter-spacing: -1.5px;
   line-height: 1;
   font-family: 'Inter', sans-serif;
 }
@@ -86,11 +86,15 @@
 
 .rankings-logo-container {
   flex-shrink: 0;
+  max-height: 80px; /* Constrain height to prevent stretching */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .rankings-description {
   background: transparent;
-  padding: 24px 40px;
+  padding: 20px 40px;
   border-top: 2px solid rgba(231, 76, 60, 0.3);
 }
 
