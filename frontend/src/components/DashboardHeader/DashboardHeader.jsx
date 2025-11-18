@@ -4,7 +4,7 @@ import { useDriver } from '../../context/DriverContext';
 import { useScout } from '../../context/ScoutContext';
 import { classifyDriver } from '../../utils/classification';
 import ClassificationBadge from '../ClassificationBadge/ClassificationBadge';
-import GibbsAIBranding from '../GibbsAIBranding/GibbsAIBranding';
+import ToyotaGibbsLogo from '../ToyotaGibbsLogo/ToyotaGibbsLogo';
 import './DashboardHeader.css';
 
 /**
@@ -138,9 +138,9 @@ export default function DashboardHeader({ driverData, pageName }) {
           {/* CENTER: Spacer (20%) */}
           <div className="header-spacer"></div>
 
-          {/* RIGHT: Gibbs AI Branding (40%) - Matches Rankings logo position */}
+          {/* RIGHT: Toyota Gibbs Logo (40%) - Matches Rankings logo position */}
           <div className="brand-section-right">
-            <GibbsAIBranding size="large" />
+            <ToyotaGibbsLogo size="large" />
           </div>
         </div>
 

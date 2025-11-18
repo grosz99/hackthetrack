@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import GibbsAIBranding from '../GibbsAIBranding/GibbsAIBranding';
+import ToyotaGibbsLogo from '../ToyotaGibbsLogo/ToyotaGibbsLogo';
 import { TrophyIcon } from '../icons';
 import './RankingsTable.css';
 
@@ -114,7 +114,7 @@ export default function RankingsTable({ drivers = [], onShowInfo }) {
             </div>
           </div>
           <div className="rankings-logo-container">
-            <GibbsAIBranding size="large" />
+            <ToyotaGibbsLogo size="large" />
           </div>
         </div>
         <div className="rankings-description">
