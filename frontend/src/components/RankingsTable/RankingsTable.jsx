@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ToyotaGibbsLogo from '../ToyotaGibbsLogo/ToyotaGibbsLogo';
-import { TrophyIcon } from '../icons';
 import './RankingsTable.css';
 
 export default function RankingsTable({ drivers = [], onShowInfo }) {
@@ -101,9 +100,6 @@ export default function RankingsTable({ drivers = [], onShowInfo }) {
       <div className="rankings-header">
         <div className="rankings-header-content">
           <div className="rankings-center-section">
-            <div className="rankings-icon">
-              <TrophyIcon size="lg" />
-            </div>
             <div className="rankings-title-section">
               <h1 className="rankings-title">DRIVER RANKINGS</h1>
               {onShowInfo && (
