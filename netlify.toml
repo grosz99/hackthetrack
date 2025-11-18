@@ -1,49 +1,27 @@
 # Netlify Configuration for Gibbs AI
-# Full-stack deployment: React frontend + FastAPI backend
+# Frontend-only deployment (API hosted on Heroku)
 
 [build]
-  # Build frontend
   base = "frontend"
   command = "npm run build"
   publish = "frontend/dist"
-
-  # Build backend as Netlify Function
-  functions = "netlify/functions"
-
-[functions]
-  # Include backend code and data in function bundle
-  included_files = ["backend/**"]
-  node_bundler = "none"
 
 # Frontend SPA routing - redirect all routes to index.html
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
-  # Don't apply to API routes
-  conditions = {path = ["!/api/*"]}
 
-# Proxy API requests to backend function
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-  force = true
-
-# Environment variables (non-sensitive defaults)
+# Environment variables
 [build.environment]
-  PYTHON_VERSION = "3.11"
   NODE_VERSION = "18"
+  VITE_API_URL = "https://hackthetrack-api-ae28ad6f804d.herokuapp.com"
 
 [context.production.environment]
-  VITE_API_URL = ""
-  ENVIRONMENT = "production"
-  DEBUG = "false"
+  VITE_API_URL = "https://hackthetrack-api-ae28ad6f804d.herokuapp.com"
 
 [context.deploy-preview.environment]
-  VITE_API_URL = ""
-  ENVIRONMENT = "staging"
+  VITE_API_URL = "https://hackthetrack-api-ae28ad6f804d.herokuapp.com"
 
 [context.branch-deploy.environment]
-  VITE_API_URL = ""
-  ENVIRONMENT = "development"
+  VITE_API_URL = "https://hackthetrack-api-ae28ad6f804d.herokuapp.com"
