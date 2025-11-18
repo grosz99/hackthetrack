@@ -8,4 +8,4 @@
   status = 200
 
 [build.environment]
-  VITE_API_URL = "https://hackthetrack-api-ae28ad6f804d.herokuapp.com"
+  VITE_API_URL = ""

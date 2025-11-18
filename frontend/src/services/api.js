@@ -3,19 +3,19 @@
  */
 
 // Determine API base URL based on environment
-// Production: Points to Heroku backend
+// Production: Same domain (Netlify unified deployment)
 // Development: Points to localhost backend
 const getApiBaseUrl = () => {
-  // Use environment variable if set, otherwise use production Heroku URL
-  if (import.meta.env.VITE_API_URL) {
+  // Use environment variable if set (empty string in production = same domain)
+  if (import.meta.env.VITE_API_URL !== undefined) {
     return import.meta.env.VITE_API_URL;
   }
 
-  // Default to Heroku production backend
+  // Default: localhost in dev, same domain in production
   // (in development, set VITE_API_URL=http://localhost:8000 in .env.local)
   return window.location.hostname === 'localhost'
     ? 'http://localhost:8000'
-    : 'https://hackthetrack-api-ae28ad6f804d.herokuapp.com';
+    : ''; // Empty string = use same domain (Netlify)
 };
 
 const API_BASE_URL = getApiBaseUrl();
