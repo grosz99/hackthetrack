@@ -10,14 +10,17 @@ export default function WelcomeModal({ onClose }) {
     {
       id: 'welcome',
       title: 'Decode Performance. Dominate the Track.',
-      subtitle: 'Making the Predictable Unpredictable',
+      subtitle: 'AI-Powered Driver Development',
       content: (
         <div className="welcome-intro">
           <div className="welcome-logo">
             <GibbsAIBranding size="large" />
           </div>
           <p className="intro-text">
-            Welcome to Gibbs AI. The perfect blend of AI and Scouting to help find the drivers of the future.
+            Welcome to Gibbs AI. Our platform uses a validated <strong>4-Factor Performance Model</strong> combined with Claude AI to provide data-driven insights and personalized coaching for driver development.
+          </p>
+          <p className="intro-subtext">
+            The perfect blend of statistical analysis and AI-powered scouting to help identify and develop the drivers of the future.
           </p>
         </div>
       )
@@ -60,76 +63,57 @@ export default function WelcomeModal({ onClose }) {
       )
     },
     {
-      id: 'three-pillars',
-      title: 'Three Pillars of Performance',
+      id: 'four-factors',
+      title: 'The 4-Factor Performance Model',
       content: (
-        <div className="pillars-grid">
-          <div className="pillar">
-            <h3>Performance Intelligence</h3>
-            <p className="pillar-subtitle">4-Factor Statistical Model (R²=0.895)</p>
-            <ul className="feature-list">
-              <li><strong>Speed</strong> — 46.6% weight</li>
-              <li><strong>Consistency</strong> — 29.1% weight</li>
-              <li><strong>Racecraft</strong> — 14.9% weight</li>
-              <li><strong>Tire Management</strong> — 9.5% weight</li>
-            </ul>
-            <p className="pillar-note">Validated across 291 driver-races</p>
+        <div className="four-factors-section">
+          <div className="factor-overview">
+            <p>
+              Our AI analyzes driver performance across four validated dimensions (R²=0.895). This model breaks down what makes a complete driver and identifies specific areas for improvement.
+            </p>
           </div>
 
-          <div className="pillar">
-            <h3>Claude AI Coaching</h3>
-            <p className="pillar-subtitle">Real AI-Powered Insights</p>
-            <ul className="feature-list">
-              <li><strong>Corner-by-corner</strong> telemetry analysis</li>
-              <li><strong>Personalized</strong> improvement plans</li>
-              <li><strong>Strategic</strong> race consultation</li>
-              <li><strong>Natural language</strong> Q&A</li>
-            </ul>
-            <p className="pillar-note">Powered by Anthropic's Claude</p>
-          </div>
-
-          <div className="pillar">
-            <h3>Making the Predictable Unpredictable</h3>
-            <p className="pillar-subtitle">Change Your Outcome</p>
-            <ul className="feature-list">
-              <li><strong>Practice plans</strong> that target weaknesses</li>
-              <li><strong>Track-specific</strong> insights</li>
-              <li><strong>Peer comparison</strong> analytics</li>
-              <li><strong>Position progression</strong> simulations</li>
-            </ul>
-            <p className="pillar-note">Your finish is 89% predictable — let's change that</p>
+          <div className="factor-definitions-grid">
+            <div className="factor-card-uniform">
+              <h4>Speed (46.6%)</h4>
+              <p>Raw pace through lap times and sector performance, showing pure driving ability when pushing to the limit.</p>
+            </div>
+            <div className="factor-card-uniform">
+              <h4>Consistency (29.1%)</h4>
+              <p>Lap-to-lap repeatability with lower variation indicating better control and predictable performance.</p>
+            </div>
+            <div className="factor-card-uniform">
+              <h4>Racecraft (14.9%)</h4>
+              <p>Wheel-to-wheel racing skills including overtaking efficiency, defensive positioning, and strategy execution.</p>
+            </div>
+            <div className="factor-card-uniform">
+              <h4>Tire Management (9.5%)</h4>
+              <p>Ability to preserve tire performance throughout a stint while maintaining competitive pace.</p>
+            </div>
           </div>
         </div>
       )
     },
     {
-      id: 'four-factors',
-      title: 'Understanding the 4-Factor Performance Model',
+      id: 'platform-features',
+      title: 'Platform Features',
       content: (
-        <div className="four-factors-section">
-          <div className="factor-overview">
-            <p>
-              The 4-Factor Performance Model breaks down driver performance into four essential dimensions that together reveal your complete racing profile. While raw speed shows how fast you can go, the other three factors—consistency, racecraft, and tire management—determine whether you can sustain that pace under race conditions and execute when it matters.
-            </p>
+        <div className="features-grid">
+          <div className="feature-tile">
+            <h4>Overview</h4>
+            <p>Season statistics, 4-factor radar chart, and race-by-race performance analysis</p>
           </div>
-
-          <div className="factor-definitions-grid">
-            <div className="factor-card">
-              <h4>Speed</h4>
-              <p>Measures your raw pace through lap times and sector performance, showing your pure driving ability when pushing to the limit.</p>
-            </div>
-            <div className="factor-card">
-              <h4>Consistency</h4>
-              <p>Quantifies how reliably you can reproduce your best performance lap after lap, with lower variation indicating better control and repeatability.</p>
-            </div>
-            <div className="factor-card">
-              <h4>Racecraft</h4>
-              <p>Evaluates your wheel-to-wheel racing skills including overtaking efficiency, defensive positioning, and ability to execute race strategy under pressure.</p>
-            </div>
-            <div className="factor-card">
-              <h4>Tire Management</h4>
-              <p>Assesses how effectively you preserve tire performance throughout a stint, balancing pace degradation against competitors to maintain speed over longer runs.</p>
-            </div>
+          <div className="feature-tile">
+            <h4>Skills</h4>
+            <p>Detailed factor breakdowns with underlying metrics and peer comparisons</p>
+          </div>
+          <div className="feature-tile">
+            <h4>Race Log</h4>
+            <p>Complete race history with lap times, positions, and performance trends</p>
+          </div>
+          <div className="feature-tile">
+            <h4>AI Coach</h4>
+            <p>Claude-powered insights, practice plans, and personalized improvement recommendations</p>
           </div>
         </div>
       )
