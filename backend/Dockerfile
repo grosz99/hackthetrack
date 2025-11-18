@@ -1,7 +1,6 @@
 FROM python:3.12-slim
 
-# Set working directory to backend
-WORKDIR /app/backend
+WORKDIR /app
 
 # Copy requirements first for better caching
 COPY requirements.txt .
@@ -16,5 +15,5 @@ COPY . .
 # Expose port (Heroku will set PORT env var)
 EXPOSE 8000
 
-# Start command (from backend directory)
+# Start command
 CMD python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
