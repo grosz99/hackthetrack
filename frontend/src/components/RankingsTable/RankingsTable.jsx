@@ -90,9 +90,9 @@ export default function RankingsTable({ drivers = [], onShowInfo }) {
   };
 
   const getPercentileColor = (value) => {
-    if (value >= 75) return 'var(--color-success)';
-    if (value >= 50) return 'var(--color-warning)';
-    return 'var(--color-danger)';
+    if (value >= 75) return '#000000';        // Top 25%: Black
+    if (value >= 25) return '#888888';        // Middle 50%: Grey
+    return '#EB0A1E';                         // Bottom 25%: Red
   };
 
   return (
