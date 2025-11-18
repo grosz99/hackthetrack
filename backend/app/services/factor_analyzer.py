@@ -13,10 +13,12 @@ from pydantic import BaseModel, Field
 
 
 # Mapping of factor numbers to skill names based on factor loadings analysis
+# CORRECTED: Factor 3 loads highest on positions_gained/position_changes (racecraft)
+# Factor 2 has mixed loadings (position volatility + speed features)
 FACTOR_MAPPING = {
     "factor_1": "consistency",
-    "factor_2": "racecraft",
-    "factor_3": "speed",
+    "factor_2": "speed",           # CORRECTED: Was "racecraft"
+    "factor_3": "racecraft",       # CORRECTED: Was "speed"
     "factor_4": "tire_management",
 }
 
@@ -25,8 +27,8 @@ FACTOR_MAPPING = {
 # Factor 4 has positive loadings and does not need reflection
 FACTORS_TO_REFLECT = {
     "factor_1_score": True,   # Consistency: dominant variables have negative loadings
-    "factor_2_score": True,   # Racecraft: dominant variables have negative loadings
-    "factor_3_score": True,   # Speed: all variables have negative loadings
+    "factor_2_score": True,   # Speed: CORRECTED - was labeled as Racecraft
+    "factor_3_score": True,   # Racecraft: CORRECTED - was labeled as Speed
     "factor_4_score": False,  # Tire Management: positive loadings, correct sign
     "factor_5_score": False,  # Not interpreted, keep as-is
 }
@@ -34,7 +36,7 @@ FACTORS_TO_REFLECT = {
 # Factor variable mappings with weights
 FACTOR_VARIABLES = {
     "speed": {
-        "factor_column": "factor_3_score",
+        "factor_column": "factor_2_score",  # CORRECTED: Was factor_3_score
         "variables": [
             ("qualifying_pace", "Qualifying Speed", 0.35),
             ("best_race_lap", "Fastest Lap Ability", 0.30),
@@ -57,7 +59,7 @@ FACTOR_VARIABLES = {
     },
 
     "racecraft": {
-        "factor_column": "factor_2_score",
+        "factor_column": "factor_3_score",  # CORRECTED: Was factor_2_score
         "variables": [
             ("positions_gained", "Net Positions Gained", 0.30),
             ("position_changes", "Wheel-to-Wheel Racing", 0.25),

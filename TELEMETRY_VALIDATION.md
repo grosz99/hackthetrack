@@ -18,10 +18,12 @@ The 4-Factor Performance Model (R² = 0.895) is built on **comprehensive race te
 - **Data Volume**: 1.6GB telemetry + 6,000 lap records with sector times
 
 ### Factor Weights (Regression Coefficients)
-1. **Speed**: 46.6% influence on finish position
+1. **Racecraft**: 46.6% influence on finish position (MOST IMPORTANT)
 2. **Consistency**: 29.1% influence
-3. **Racecraft**: 14.9% influence
+3. **Speed**: 14.9% influence
 4. **Tire Management**: 9.5% influence
+
+**Key Insight**: In spec racing (identical cars), racecraft (overtaking, position gains) matters MORE than raw speed (qualifying pace).
 
 ---
 
