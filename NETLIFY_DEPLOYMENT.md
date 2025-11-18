@@ -25,16 +25,10 @@ This project is configured for **unified full-stack deployment** on Netlify with
 
 5. **Add Environment Variables** (Settings → Environment variables):
    ```
-   SNOWFLAKE_ACCOUNT=your-account-id
-   SNOWFLAKE_USER=your-user
-   SNOWFLAKE_WAREHOUSE=COMPUTE_WH
-   SNOWFLAKE_DATABASE=HACKTHETRACK
-   SNOWFLAKE_SCHEMA=TELEMETRY
-   SNOWFLAKE_ROLE=ACCOUNTADMIN
-   SNOWFLAKE_PASSWORD=your-password
    ANTHROPIC_API_KEY=sk-ant-your-key-here
-   USE_SNOWFLAKE=true
    ```
+
+   **Note**: The backend uses CSV/JSON data files (no database required). Snowflake was removed to simplify deployment.
 
 6. **Click "Deploy site"**
 
@@ -84,11 +78,9 @@ https://gibbs-ai.netlify.app/
 
 | Variable | Description | Example |
 |----------|-------------|---------|
-| `SNOWFLAKE_ACCOUNT` | Snowflake account ID | `xy12345.us-east-1` |
-| `SNOWFLAKE_USER` | Service account username | `HACKTHETRACK_SVC` |
-| `SNOWFLAKE_PASSWORD` | Service account password | `your-secure-password` |
-| `ANTHROPIC_API_KEY` | Claude API key | `sk-ant-api03-...` |
-| `USE_SNOWFLAKE` | Enable Snowflake integration | `true` |
+| `ANTHROPIC_API_KEY` | Claude API key for coaching features | `sk-ant-api03-...` |
+
+**Data Source**: All race telemetry is served from CSV/JSON files in `backend/data/`. No database connection required.
 
 ## Deployment Workflow
 
