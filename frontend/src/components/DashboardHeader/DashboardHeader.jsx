@@ -38,6 +38,10 @@ export default function DashboardHeader({ driverData, pageName }) {
   const { selectedDriverNumber, setSelectedDriverNumber, drivers } = useDriver();
   const { driverNumber: routeDriverNumber } = useParams();
   const location = useLocation();
+
+  // Get current driver name
+  const currentDriver = drivers.find(d => d.number === selectedDriverNumber);
+  const currentDriverName = currentDriver?.name || `Driver #${selectedDriverNumber}`;
   const navigate = useNavigate();
 
   // Detect scout context
@@ -83,7 +87,7 @@ export default function DashboardHeader({ driverData, pageName }) {
           <div className="breadcrumb-trail">
             <span className="trail-scout">Scout Portal</span>
             <span className="trail-separator">›</span>
-            <span className="trail-driver">Driver #{selectedDriverNumber}</span>
+            <span className="trail-driver">{currentDriverName}</span>
             <span className="trail-separator">›</span>
             <span className="trail-page">{pageName}</span>
           </div>
@@ -101,7 +105,7 @@ export default function DashboardHeader({ driverData, pageName }) {
           <div className="breadcrumb-trail">
             <span className="trail-scout">Rankings</span>
             <span className="trail-separator">›</span>
-            <span className="trail-driver">Driver #{selectedDriverNumber}</span>
+            <span className="trail-driver">{currentDriverName}</span>
             <span className="trail-separator">›</span>
             <span className="trail-page">{pageName}</span>
           </div>
@@ -117,7 +121,7 @@ export default function DashboardHeader({ driverData, pageName }) {
               <span className="badge-number">{selectedDriverNumber}</span>
             </div>
             <div className="driver-info-stack">
-              <h1 className="driver-name-large">Driver #{selectedDriverNumber}</h1>
+              <h1 className="driver-name-large">{currentDriverName}</h1>
               {isFromScout && classification && (
                 <ClassificationBadge classification={classification} size="medium" />
               )}

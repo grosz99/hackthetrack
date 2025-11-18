@@ -16,6 +16,11 @@ import './Skills.css';
 export default function Skills() {
   const navigate = useNavigate();
   const { selectedDriverNumber, drivers } = useDriver();
+
+  // Get current driver name
+  const currentDriver = drivers.find(d => d.number === selectedDriverNumber);
+  const currentDriverName = currentDriver?.name || `Driver #${selectedDriverNumber}`;
+
   const [driverData, setDriverData] = useState(null);
   const [factorStats, setFactorStats] = useState({}); // NEW: Store factor stats from efficient endpoint
   const [allVariables, setAllVariables] = useState([]); // Store all variables from all factors
@@ -272,7 +277,7 @@ export default function Skills() {
               />
               {/* Current driver in red */}
               <Radar
-                name={`You (#${selectedDriverNumber})`}
+                name={currentDriverName}
                 dataKey="user"
                 stroke="#EB0A1E"
                 fill="#EB0A1E"
@@ -284,7 +289,7 @@ export default function Skills() {
           <div className="radar-legend">
             <div className="legend-item">
               <div className="legend-color" style={{ background: '#EB0A1E' }}></div>
-              <span>You (#{selectedDriverNumber})</span>
+              <span>{currentDriverName}</span>
             </div>
             <div className="legend-item">
               <div className="legend-color" style={{ background: '#555' }}></div>
