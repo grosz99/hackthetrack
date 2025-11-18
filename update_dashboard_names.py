@@ -1,46 +1,47 @@
 """
-Update driver names in dashboardData.json to match driver_factors.json.
+Update driver names in dashboardData.json with 2025 GR Cup roster.
+Source: https://www.grcupseries.com/entry-list/2025/Circuit-of-the-Americas
 """
 
 import json
 from pathlib import Path
 
-# Driver number to name mapping from 2024 GR Cup season
+# Driver number to name mapping from 2025 GR Cup season
 DRIVER_NAMES = {
     2: "Will Robusto",
-    3: "Unknown Driver #3",
-    5: "Gresham Wagner",
-    7: "Spencer Bucknum",
-    8: "Unknown Driver #8",
+    3: "Jason Kos",
+    5: "Beltre Curtis",
+    7: "Jaxon Bell",
+    8: "Tom Rudnai",
     11: "Farran Davis",
-    12: "Unknown Driver #12",
+    12: "Unknown Driver #12",  # Not in 2025 COTA roster
     13: "Westin Workman",
     14: "Alex Garcia",
-    15: "Bennett Muldoon",
-    16: "Unknown Driver #16",
-    17: "Unknown Driver #17",
-    18: "Jordan Segrini",
+    15: "Brett Kowalski",
+    16: "John Dean",
+    17: "Unknown Driver #17",  # Not in database
+    18: "Rutledge Wood",
     21: "Ford Koch",
-    31: "Luke Rumburg",
-    41: "Unknown Driver #41",
+    31: "Jackson Tovo",
+    41: "Jenson Sofronas",
     46: "Lucas Weisenberg",
-    47: "Unknown Driver #47",
-    50: "Casey Mashore",
-    51: "Adam Brickley",
+    47: "Ayden Kirk",
+    50: "Unknown Driver #50",  # Not in 2025 COTA roster
+    51: "Massimo Sunseri",
     55: "Spike Kohlbecker",
-    57: "Mia Lovell",
-    67: "Unknown Driver #67",
-    71: "Unknown Driver #71",
-    72: "Unknown Driver #72",
-    73: "Unknown Driver #73",
-    78: "Julian DaCosta",
-    80: "Tyler Wettengel",
-    86: "Unknown Driver #86",
-    88: "Henry Drury",
-    89: "Unknown Driver #89",
-    93: "Unknown Driver #93",
-    98: "Unknown Driver #98",
-    113: "Unknown Driver #113",
+    57: "Jeff Curry",
+    67: "Unknown Driver #67",  # Not in database
+    71: "Christian Weir",
+    72: "Ethan Goulart",
+    73: "Mike Lamarra",
+    78: "Ethan Ayars",
+    80: "Paityn Feyen",
+    86: "Andrew Gilleland",
+    88: "Zach Hollingshead",
+    89: "Livio Galanti",
+    93: "Patrick Brunson",
+    98: "Max Schweid",
+    113: "Ethan Tovo",
 }
 
 
