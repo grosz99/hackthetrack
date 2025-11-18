@@ -271,9 +271,10 @@
 }
 
 .rankings-table td {
-  padding: 20px 16px;
+  padding: 24px 16px;
   color: #000;
   vertical-align: middle;
+  text-align: center;
 }
 
 /* Rank Badge */
@@ -296,6 +297,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  text-align: left;
 }
 
 .driver-number-badge {
@@ -321,10 +323,9 @@
 
 /* Score Cell */
 .score-cell {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
 }
 
 .score-value {
@@ -343,18 +344,17 @@
 
 /* Factor Cell with Progress Bar */
 .factor-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: inline-block;
   min-width: 100px;
-  justify-content: center;
+  text-align: center;
 }
 
 .factor-value {
   font-weight: 900;
   font-size: 16px;
   color: #000;
-  text-align: center;
+  display: block;
+  margin-bottom: 8px;
 }
 
 .progress-bar-container {
