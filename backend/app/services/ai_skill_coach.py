@@ -130,5 +130,100 @@ Write a 5-6 sentence scouting assessment for Driver #{driver_number}'s {factor_d
 
         return prompt
 
+    def generate_comparative_coaching(
+        self,
+        current_driver_number: int,
+        comparable_driver_number: int,
+        factor_name: str,
+        improvement_delta: float,
+        track_name: str,
+        current_skills: Dict,
+        comparable_skills: Dict,
+        comparable_race_results: List[Dict] = None
+    ) -> str:
+        """
+        Generate coaching insights comparing current driver to comparable driver.
+
+        Args:
+            current_driver_number: Current driver's number
+            comparable_driver_number: Comparable driver's number
+            factor_name: Skill factor being improved (speed, consistency, etc.)
+            improvement_delta: How much the user wants to improve (e.g., 2%)
+            track_name: Selected track for insights
+            current_skills: Dict of current driver's skill percentiles
+            comparable_skills: Dict of comparable driver's skill percentiles
+            comparable_race_results: Race results from comparable driver
+
+        Returns:
+            Actionable coaching insights text
+        """
+        system_prompt = """You are a sports car racing coach for IMSA GTP series providing concise driver development advice.
+
+TASK:
+Write brief coaching guidance in 3 sections.
+
+FORMAT:
+**Key Focus Areas**
+1-2 sentences on what to work on
+
+**Track-Specific Techniques**
+1-2 sentences with specific techniques for this track
+
+**Development Path**
+1-2 sentences on how to practice this
+
+CONSTRAINTS:
+- Keep it SHORT - maximum 1-2 sentences per section
+- Sports car racing (GTP), NOT Formula 1
+- Use simple, direct language
+- Second person ("focus on...")
+- Reference specific turns/sections when possible
+- Be encouraging but concise
+"""
+
+        factor_display = factor_name.replace("_", " ").title()
+
+        user_prompt = f"""IMPROVEMENT TARGET:
+Driver #{current_driver_number} wants to improve their {factor_display} by +{improvement_delta:.0f}%
+
+CURRENT DRIVER SKILLS:
+- Speed: {current_skills.get('speed', 0):.1f}th percentile
+- Consistency: {current_skills.get('consistency', 0):.1f}th percentile
+- Racecraft: {current_skills.get('racecraft', 0):.1f}th percentile
+- Tire Management: {current_skills.get('tire_management', 0):.1f}th percentile
+
+COMPARABLE DRIVER #{comparable_driver_number} SKILLS:
+- Speed: {comparable_skills.get('speed', 0):.1f}th percentile
+- Consistency: {comparable_skills.get('consistency', 0):.1f}th percentile
+- Racecraft: {comparable_skills.get('racecraft', 0):.1f}th percentile
+- Tire Management: {comparable_skills.get('tire_management', 0):.1f}th percentile
+
+TRACK: {track_name}
+
+"""
+        if comparable_race_results:
+            user_prompt += "COMPARABLE DRIVER'S TRACK PERFORMANCE:\n"
+            for race in comparable_race_results[:6]:
+                if track_name.lower() in race.get('track_name', '').lower():
+                    user_prompt += (
+                        f"- {race.get('track_name')}: "
+                        f"P{race.get('start_position')} → P{race.get('finish_position')}, "
+                        f"Fastest lap gap: {race.get('gap_to_fastest_lap', 'N/A')}\n"
+                    )
+
+        user_prompt += f"""
+Write 3-section coaching guidance for Driver #{current_driver_number} to achieve their +{improvement_delta:.0f}% {factor_display} improvement by learning from Driver #{comparable_driver_number}'s approach at {track_name}.
+
+Remember: This is sports car racing (IMSA GTP/Gazoo Racing), not Formula 1. Focus on sports car-specific techniques."""
+
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=400,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}]
+        )
+
+        return response.content[0].text
+
 
 ai_skill_coach = AISkillCoach()

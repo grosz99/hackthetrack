@@ -20,6 +20,8 @@ export default function Improve() {
   const [targetSkills, setTargetSkills] = useState(null);
   const [bestMatch, setBestMatch] = useState(null);
   const [matchCoachingData, setMatchCoachingData] = useState(null);
+  const [liveCoachingInsights, setLiveCoachingInsights] = useState(null);
+  const [loadingInsights, setLoadingInsights] = useState(false);
   const [selectedTrack, setSelectedTrack] = useState('barber');
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
@@ -161,6 +163,7 @@ export default function Improve() {
       setSearching(true);
       setBestMatch(null);
       setMatchCoachingData(null);
+      setLiveCoachingInsights(null);
 
       // Call backend API to find similar drivers (returns top 1)
       const response = await api.post('/api/drivers/find-similar', {
@@ -172,24 +175,36 @@ export default function Improve() {
       if (response.data.similar_drivers && response.data.similar_drivers.length > 0) {
         const match = response.data.similar_drivers[0];
         setBestMatch(match);
+        setSearching(false); // Stop "Finding best match" spinner immediately
 
-        // Fetch coaching data for the matched driver (for track-specific insights)
+        // Fetch LIVE coaching insights via Claude API
         const primaryFactor = getPrimaryImprovementFactor();
-        if (primaryFactor) {
+        const improvement = getPrimaryImprovement();
+        if (primaryFactor && improvement && improvement.delta > 0) {
+          setLoadingInsights(true);
           try {
-            const coachingResponse = await api.get(`/api/factors/${primaryFactor}/coaching/${match.driver_number}`);
-            setMatchCoachingData(coachingResponse.data);
-          } catch {
-            // Coaching data may not exist for this driver
-            setMatchCoachingData(null);
+            const insightsResponse = await api.post('/api/coaching/comparative-insights', {
+              current_driver_number: selectedDriverNumber,
+              comparable_driver_number: match.driver_number,
+              factor_name: primaryFactor,
+              improvement_delta: improvement.delta,
+              track_name: tracks.find(t => t.id === selectedTrack)?.name || selectedTrack
+            });
+            setLiveCoachingInsights(insightsResponse.data.insights);
+          } catch (insightErr) {
+            console.error('Error fetching live coaching insights:', insightErr);
+            setLiveCoachingInsights(null);
+          } finally {
+            setLoadingInsights(false);
           }
         }
+      } else {
+        setSearching(false); // No match found, stop searching
       }
     } catch (err) {
       console.error('Error finding best match:', err);
       setError('Failed to find comparable driver. Please try again.');
-    } finally {
-      setSearching(false);
+      setSearching(false); // Error occurred, stop searching
     }
   };
 
@@ -247,6 +262,33 @@ export default function Improve() {
       </div>
     );
   }
+
+  // Format coaching insights markdown into HTML
+  const formatCoachingInsights = (text) => {
+    if (!text) return '';
+
+    // Split by lines and process markdown
+    return text.split('\n').map((line, index) => {
+      // Headers with ## or **
+      if (line.trim().startsWith('##')) {
+        const headerText = line.trim().replace(/^##\s*/, '');
+        return <strong key={index}>{headerText}</strong>;
+      }
+      else if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
+        const headerText = line.trim().replace(/\*\*/g, '');
+        return <strong key={index}>{headerText}</strong>;
+      }
+      // Skip lines that start with # (main title)
+      else if (line.trim().startsWith('#')) {
+        return null;
+      }
+      // Regular paragraph
+      else if (line.trim()) {
+        return <p key={index}>{line.trim()}</p>;
+      }
+      return null;
+    }).filter(Boolean);
+  };
 
   const primaryImprovement = getPrimaryImprovement();
 
@@ -387,23 +429,23 @@ export default function Improve() {
                 {/* Track-Specific Improvement Actions */}
                 {primaryImprovement && primaryImprovement.delta > 0 && (
                   <div className="track-improvement-section">
-                    <h4>How to Achieve Your +{primaryImprovement.delta}% {primaryImprovement.displayName}</h4>
+                    <h4>How to Improve at {tracks.find(t => t.id === selectedTrack)?.name}</h4>
                     <div className="improvement-insights">
-                      <p className="insight-intro">
-                        Based on Driver #{bestMatch.driver_number}'s {primaryImprovement.displayName.toLowerCase()} performance analysis:
-                      </p>
-                      {matchCoachingData && matchCoachingData.coaching_analysis ? (
+                      {loadingInsights ? (
+                        <div className="insights-loading">
+                          <div className="insights-spinner"></div>
+                          <p>Generating personalized coaching insights...</p>
+                        </div>
+                      ) : liveCoachingInsights ? (
                         <div className="coaching-analysis-box">
-                          <p className="coaching-text">{matchCoachingData.coaching_analysis}</p>
-                          <div className="coaching-stats">
-                            <span className="stat-badge">Rank: #{matchCoachingData.factor_rank} of {matchCoachingData.total_drivers}</span>
-                            <span className="stat-badge">Percentile: {matchCoachingData.factor_percentile?.toFixed(1)}%</span>
+                          <div className="coaching-text live-insights">
+                            {formatCoachingInsights(liveCoachingInsights)}
                           </div>
                         </div>
                       ) : (
                         <div className="insight-placeholder">
-                          <p><strong>AI coaching analysis not available for this driver</strong></p>
-                          <p>The comparable driver's detailed performance insights have not yet been generated.</p>
+                          <p><strong>Unable to generate coaching insights</strong></p>
+                          <p>Try adjusting your skill targets or selecting a different track.</p>
                         </div>
                       )}
                     </div>

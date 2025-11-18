@@ -1399,6 +1399,98 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
 
 
 # ============================================================================
+# LIVE COACHING INSIGHTS - DYNAMIC AI-GENERATED ADVICE
+# ============================================================================
+
+
+class ComparativeCoachingRequest(BaseModel):
+    """Request for live AI coaching insights."""
+    current_driver_number: int
+    comparable_driver_number: int
+    factor_name: str  # speed, consistency, racecraft, tire_management
+    improvement_delta: float  # e.g., 2 for +2%
+    track_name: str  # Full track name
+
+
+@router.post("/coaching/comparative-insights")
+async def get_comparative_coaching_insights(request: ComparativeCoachingRequest):
+    """
+    Generate live AI coaching insights for how to achieve skill improvement.
+
+    Compares current driver to comparable driver and generates actionable advice.
+    This is a LIVE Claude API call that generates dynamic insights based on:
+    - The specific skill being improved
+    - The amount of improvement targeted
+    - The selected track
+    - Both drivers' skill profiles and race results
+    """
+    try:
+        # Get current driver data
+        current_driver = data_loader.get_driver(request.current_driver_number)
+        if not current_driver:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Current driver {request.current_driver_number} not found"
+            )
+
+        # Get comparable driver data
+        comparable_driver = data_loader.get_driver(request.comparable_driver_number)
+        if not comparable_driver:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Comparable driver {request.comparable_driver_number} not found"
+            )
+
+        # Get comparable driver's race results for track-specific insights
+        comparable_race_results_models = data_loader.get_race_results(request.comparable_driver_number)
+
+        # Convert RaceResult models to dicts for Claude API
+        comparable_race_results = [result.dict() for result in comparable_race_results_models] if comparable_race_results_models else []
+
+        # Extract skill percentiles
+        current_skills = {
+            'speed': current_driver.speed.percentile,
+            'consistency': current_driver.consistency.percentile,
+            'racecraft': current_driver.racecraft.percentile,
+            'tire_management': current_driver.tire_management.percentile
+        }
+
+        comparable_skills = {
+            'speed': comparable_driver.speed.percentile,
+            'consistency': comparable_driver.consistency.percentile,
+            'racecraft': comparable_driver.racecraft.percentile,
+            'tire_management': comparable_driver.tire_management.percentile
+        }
+
+        # Generate live coaching insights via Claude
+        coaching_insights = ai_skill_coach.generate_comparative_coaching(
+            current_driver_number=request.current_driver_number,
+            comparable_driver_number=request.comparable_driver_number,
+            factor_name=request.factor_name,
+            improvement_delta=request.improvement_delta,
+            track_name=request.track_name,
+            current_skills=current_skills,
+            comparable_skills=comparable_skills,
+            comparable_race_results=comparable_race_results
+        )
+
+        return {
+            "insights": coaching_insights,
+            "current_driver": request.current_driver_number,
+            "comparable_driver": request.comparable_driver_number,
+            "factor": request.factor_name,
+            "improvement_target": f"+{request.improvement_delta:.0f}%",
+            "track": request.track_name
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating coaching insights: {e}")
+        raise HTTPException(status_code=500, detail=f"Error generating coaching insights: {str(e)}")
+
+
+# ============================================================================
 # PRACTICE PLAN ENDPOINT - THE KILLER FEATURE
 # ============================================================================
 
