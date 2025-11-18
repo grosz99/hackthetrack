@@ -239,7 +239,7 @@ class DataLoader:
 
             self.drivers[driver_num] = Driver(
                 driver_number=driver_num,
-                driver_name=driver_data.get("driver_name", f"Driver #{driver_num}"),
+                driver_name=driver_data.get("name", f"Driver #{driver_num}"),
                 overall_score=overall_score,
                 speed=FactorScore(
                     name="Speed",
