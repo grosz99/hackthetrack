@@ -1,84 +1,131 @@
-# Racing Analytics Platform 🏁
+# Gibbs AI 🏁
 
 **"Making the Predictable Unpredictable"**
 
-A 3-page AI-powered racing analytics platform that leverages the validated 4-Factor Model (R² = 0.895) to provide track intelligence, strategy coaching, and telemetry comparison tools for Toyota GR86 spec racing series.
+An AI-powered racing talent scouting and development platform that replicates Joe Gibbs Racing's legendary eye for talent. Built on the validated 4-Factor Performance Model (R² = 0.895), Gibbs AI helps identify and develop the drivers of the future—just as Joe Gibbs has done for decades in NASCAR and the NFL.
 
 ---
 
-## 🎯 Features
+## 🎯 Core Features
 
-### Page 1: Track Intelligence
-- **Track Selection**: Choose from 6 tracks (Barber, COTA, Road America, Sebring, Sonoma, VIR)
-- **Spider Graph**: Visualize track demand profiles across 4 skill dimensions
-- **Driver Rankings**: See predicted performance based on circuit fit scores
-- **Skill Breakdown**: Understand each driver's strengths and weaknesses
+### Driver Rankings & Scouting
+- **Global Rankings**: Complete driver standings based on the 4-Factor Model
+- **Toyota Gibbs Branding**: Professional racing team aesthetic
+- **Sortable Metrics**: Speed, Consistency, Racecraft, Tire Management
+- **Click-Through Profiles**: Deep dive into any driver's performance
 
-### Page 2: AI Strategy Coach
-- **Anthropic Claude Integration**: Chat with AI strategist powered by Claude 3.5 Sonnet
-- **Context-Aware Insights**: AI knows your driver profile and track demands
-- **Actionable Strategy**: Get specific race-day guidance based on data
-- **Suggested Questions**: Pre-built prompts to explore key topics
+### Driver Performance Dashboard (5 Pages)
+1. **Overview**: Complete performance snapshot with 4-factor breakdown
+2. **Race Log**: Season-by-season race results with filtering
+3. **Skills Analysis**: AI-powered scouting reports for each factor
+4. **Development/Improve**: Personalized improvement recommendations
+5. **Practice Plan Generator**: AI-driven training programs
 
-### Page 3: Telemetry Comparison
-- **Lap-by-Lap Analysis**: Compare your performance against any driver
-- **Sector Deltas**: Identify exactly where time is gained/lost
-- **Visual Charts**: Line charts and bar graphs showing performance gaps
-- **Key Insights**: AI-generated recommendations on improvement areas
+### AI Coaching Intelligence
+- **Factor-Specific Coaching**: AI analysis for Speed, Consistency, Racecraft, Tire Management
+- **Comparative Insights**: How to improve by learning from better drivers
+- **Practice Plan Generator**: Personalized track-specific training programs
+- **Claude 3.5 Sonnet**: Real AI-powered coaching, not templates
+
+### The 4-Factor Performance Model
+Validated statistical model explaining 89.5% of race outcomes:
+- **Speed (46.6%)**: Raw pace through lap times and sector performance
+- **Consistency (29.1%)**: Lap-to-lap repeatability and variation control
+- **Racecraft (14.9%)**: Wheel-to-wheel skills and overtaking efficiency
+- **Tire Management (9.5%)**: Pace preservation over race distance
 
 ---
 
 ## 🏗️ Architecture
 
-### Backend (Python FastAPI)
+### Production Deployment
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    USER ACCESS                           │
+│         https://gibbs-ai.netlify.app                     │
+│         (Publicly accessible, no authentication)         │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     │ React SPA
+                     ↓
+┌─────────────────────────────────────────────────────────┐
+│              FRONTEND (Netlify)                          │
+│  - React 19 + Vite                                       │
+│  - Client-side routing (React Router v7)                 │
+│  - Toyota Gibbs Racing branding                          │
+│  - No authentication required                            │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     │ HTTPS/JSON
+                     │ CORS-enabled
+                     ↓
+┌─────────────────────────────────────────────────────────┐
+│              BACKEND API (Heroku)                        │
+│  https://hackthetrack-api-ae28ad6f804d.herokuapp.com     │
+│                                                           │
+│  - FastAPI (Python 3.12)                                 │
+│  - Docker containerized                                  │
+│  - JSON file-based data (no database)                    │
+│  - Anthropic Claude API integration                      │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Backend Structure
 ```
 backend/
 ├── app/
 │   ├── api/
-│   │   └── routes.py               # All API endpoints (1,192 lines)
+│   │   └── routes.py                    # All API endpoints
 │   ├── services/
-│   │   ├── data_loader.py          # JSON/CSV data loading & caching
-│   │   ├── snowflake_service.py    # Snowflake integration (270 lines, simplified)
-│   │   ├── ai_strategy.py          # Anthropic Claude strategy chat
-│   │   ├── ai_telemetry_coach.py   # Anthropic telemetry coaching
-│   │   ├── telemetry_processor.py  # Telemetry data processing
-│   │   ├── factor_analyzer.py      # 4-factor analysis
-│   │   ├── race_log_processor.py   # Race result processing
-│   │   └── improve_predictor.py    # Performance improvement predictions
-│   ├── models.py                   # Pydantic data models
-│   └── __init__.py
-├── tests/
-│   ├── test_api_endpoints.py       # 22 comprehensive endpoint tests
-│   ├── test_deployment_validation.py
-│   └── conftest.py
-├── main.py                         # FastAPI application
-├── requirements.txt                # Python dependencies
-└── .env.example                    # Environment variables template
+│   │   ├── data_loader.py               # JSON data loading & caching
+│   │   ├── ai_skill_coach.py            # Anthropic factor coaching
+│   │   ├── ai_practice_planner.py       # Practice plan generation
+│   │   ├── factor_analyzer.py           # 4-factor analysis
+│   │   └── improve_predictor.py         # Performance predictions
+│   └── models.py                        # Pydantic data models
+├── data/                                # All race data (JSON files)
+│   ├── driver_factors.json              # 4-factor scores
+│   ├── driver_race_results.json         # Season results
+│   ├── factor_breakdowns.json           # Factor detail breakdowns
+│   ├── coaching_recommendations.json    # Pre-cached coaching data
+│   └── track_layouts.json               # Track configurations
+├── main.py                              # FastAPI application
+├── Dockerfile                           # Heroku deployment config
+└── requirements.txt                     # Python dependencies
 ```
 
-### Frontend (React + Vite)
+### Frontend Structure
 ```
 frontend/
 ├── src/
 │   ├── pages/
-│   │   ├── TrackIntelligence.jsx    # Page 1
-│   │   ├── StrategyChat.jsx          # Page 2
-│   │   └── TelemetryComparison.jsx   # Page 3
+│   │   ├── Rankings/Rankings.jsx        # Main driver rankings page
+│   │   ├── Overview/Overview.jsx        # Driver overview dashboard
+│   │   ├── RaceLog/RaceLog.jsx          # Race results history
+│   │   ├── Skills/Skills.jsx            # AI skill analysis
+│   │   └── Improve/Improve.jsx          # Improvement recommendations
 │   ├── components/
-│   │   └── Navigation.jsx            # Main navigation bar
+│   │   ├── WelcomeModal/                # Onboarding tutorial
+│   │   ├── ToyotaGibbsLogo/             # Branding components
+│   │   ├── RankingsTable/               # Driver rankings table
+│   │   ├── DashboardHeader/             # Page headers
+│   │   └── CoachRecommendations/        # AI coaching display
+│   ├── contexts/
+│   │   └── DriverContext.jsx            # Global driver state
 │   ├── services/
-│   │   └── api.js                    # API client
-│   ├── data/
-│   │   └── dashboardData.json        # Pre-calculated driver/track data
-│   ├── App.jsx                       # React Router setup
-│   └── main.jsx                      # React entry point
-├── package.json
-└── .env.example                     # Frontend environment variables
+│   │   └── api.js                       # Backend API client
+│   ├── App.jsx                          # React Router setup
+│   └── main.jsx                         # React entry point
+├── public/
+│   └── assets/                          # Images and logos
+├── netlify.toml                         # Netlify deployment config
+└── package.json                         # Node dependencies
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Local Development)
 
 ### Prerequisites
 - Python 3.11+
@@ -110,7 +157,7 @@ frontend/
 
    Edit `.env` and add your Anthropic API key:
    ```
-   ANTHROPIC_API_KEY=your_api_key_here
+   ANTHROPIC_API_KEY=sk-ant-api03-your-key-here
    PORT=8000
    ```
 
@@ -134,11 +181,7 @@ frontend/
    ```
 
 3. **Set up environment variables**:
-   ```bash
-   cp .env.example .env
-   ```
-
-   Edit `.env`:
+   Create `.env.local`:
    ```
    VITE_API_URL=http://localhost:8000
    ```
@@ -156,86 +199,225 @@ Open your browser and navigate to `http://localhost:5173`
 
 ---
 
-## 📊 API Endpoints
+## 📦 Production Deployment
 
-### Tracks
-- `GET /api/tracks` - Get all tracks with demand profiles
-- `GET /api/tracks/{track_id}` - Get specific track
+### Frontend Deployment (Netlify)
 
-### Drivers
-- `GET /api/drivers` - Get all drivers with skill profiles
-- `GET /api/drivers?track_id={track_id}` - Get drivers with circuit fit for track
-- `GET /api/drivers/{driver_number}` - Get specific driver
+**Current Production URL**: https://gibbs-ai.netlify.app
 
-### Predictions
-- `POST /api/predict` - Predict driver performance at track
-  ```json
-  {
-    "driver_number": 13,
-    "track_id": "cota"
-  }
-  ```
+#### Netlify Configuration
+The frontend deploys automatically when you push to GitHub master branch.
 
-### AI Chat
-- `POST /api/chat` - Send message to AI strategy coach
-  ```json
-  {
-    "message": "What should I focus on at Road America?",
-    "driver_number": 13,
-    "track_id": "roadamerica",
-    "history": []
-  }
-  ```
+**Configuration file**: `netlify.toml`
+```toml
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "frontend/dist"
 
-### Telemetry
-- `GET /api/telemetry/compare?track_id={id}&driver_1={num}&driver_2={num}&race_num={1|2}`
-  - Compare lap-by-lap data between two drivers
+[build.environment]
+  NODE_VERSION = "18"
+  VITE_API_URL = "https://hackthetrack-api-ae28ad6f804d.herokuapp.com"
+```
 
-### Health
-- `GET /api/health` - Check API health and data loading status
+**Benefits**:
+- ✅ Public by default (no authentication required)
+- ✅ Automatic HTTPS
+- ✅ CDN distribution
+- ✅ Automatic preview deployments for PRs
+- ✅ Free tier sufficient
+
+#### Manual Deployment (if needed)
+```bash
+# Install Netlify CLI
+npm install -g netlify-cli
+
+# Login
+netlify login
+
+# Deploy
+cd frontend
+netlify deploy --prod
+```
+
+### Backend Deployment (Heroku)
+
+**Current Production URL**: https://hackthetrack-api-ae28ad6f804d.herokuapp.com
+
+#### Heroku Configuration
+The backend uses Docker deployment via `heroku.yml`:
+
+```yaml
+build:
+  docker:
+    web: backend/Dockerfile
+run:
+  web: python -m uvicorn main:app --host 0.0.0.0 --port $PORT
+```
+
+#### Environment Variables (Heroku)
+Set these in the Heroku dashboard or via CLI:
+```bash
+heroku config:set ANTHROPIC_API_KEY=sk-ant-api03-your-key-here --app hackthetrack-api
+heroku config:set FRONTEND_URL=https://gibbs-ai.netlify.app --app hackthetrack-api
+```
+
+#### Deploy to Heroku
+```bash
+# Push to Heroku (from repository root)
+git push heroku master
+
+# Or force push if needed
+git push heroku master --force
+
+# Check deployment logs
+heroku logs --tail --app hackthetrack-api
+
+# Restart if needed
+heroku restart --app hackthetrack-api
+```
+
+#### Heroku Stack
+- **Stack**: `container` (Docker-based)
+- **Runtime**: Python 3.12 (specified in Dockerfile)
+- **Web server**: Uvicorn (ASGI server for FastAPI)
 
 ---
 
-## 🎨 Design Principles
+## 📊 API Endpoints
 
-### Color Palette
-- **Primary Red**: `#EB0A1E` (GR branding)
-- **Dark**: `#1d1d1f` (text)
-- **Mid Gray**: `#86868b` (secondary text)
-- **Light Gray**: `#e5e5e7` (borders)
-- **White**: `#ffffff` (backgrounds)
-- **Success Green**: `#34C759` (positive deltas)
+### Core Data Endpoints
+- `GET /api/drivers` - Get all drivers with 4-factor profiles
+- `GET /api/drivers/{driver_number}` - Get specific driver details
+- `GET /api/drivers/{driver_number}/season` - Get season statistics
+- `GET /api/drivers/{driver_number}/results` - Get race-by-race results
+- `GET /api/tracks` - Get all tracks
+- `GET /api/health` - API health check
+
+### AI Coaching Endpoints
+- `GET /api/factors/{factor}/coaching/{driver_number}` - Get AI coaching for specific factor
+  - Factors: `speed`, `consistency`, `racecraft`, `tire_management`
+- `POST /api/coaching/comparative-insights` - Get comparative coaching insights
+  ```json
+  {
+    "current_driver_number": 7,
+    "comparable_driver_number": 13,
+    "factor_name": "speed",
+    "improvement_delta": 15.5,
+    "track_name": "Barber Motorsports Park"
+  }
+  ```
+- `POST /api/practice-plan` - Generate personalized practice plan
+  ```json
+  {
+    "driver_number": 7,
+    "track_name": "Barber Motorsports Park",
+    "weak_factors": ["tire_management", "consistency"]
+  }
+  ```
+
+### Analysis Endpoints
+- `GET /api/drivers/{driver_number}/skill-gaps` - Calculate improvement opportunities
+- `GET /api/drivers/{driver_number}/similar` - Find similar drivers for comparison
+- `GET /api/factors/{factor}/stats` - Get factor statistics across all drivers
+
+---
+
+## 🔑 Key Technologies
+
+### Backend
+- **FastAPI**: Modern Python API framework with automatic OpenAPI docs
+- **Anthropic SDK**: Claude 3.5 Sonnet (claude-sonnet-4-5-20250929) integration
+- **Pandas**: Data manipulation and analysis
+- **Pydantic v2**: Data validation and settings management
+- **Docker**: Containerization for Heroku deployment
+- **Uvicorn**: High-performance ASGI server
+
+### Frontend
+- **React 19**: Modern UI framework with hooks
+- **React Router v7**: Client-side routing with nested routes
+- **Vite**: Fast build tool and dev server
+- **Framer Motion**: Smooth animations and transitions
+- **CSS Modules**: Scoped styling per component
+
+### Infrastructure
+- **Netlify**: Frontend hosting with automatic deployments
+- **Heroku**: Backend API hosting with Docker containers
+- **GitHub**: Version control and CI/CD trigger
+- **Anthropic API**: AI coaching and insights generation
+
+---
+
+## 🎨 Design System
+
+### Color Palette (Toyota Gibbs Racing)
+- **Primary Red**: `#EB0A1E` (Toyota GR branding)
+- **Dark Red**: `#B80818` (Darker accent)
+- **Dark Background**: `#1a1a1a` (Page backgrounds)
+- **Card Background**: `#2a2a2a` (Component backgrounds)
+- **Text Primary**: `#ffffff` (Headings)
+- **Text Secondary**: `#a0a0a0` (Body text)
+- **Success**: `#00C853` (Positive metrics)
+- **Warning**: `#FFA000` (Mid-range metrics)
+- **Danger**: `#ff3b30` (Negative metrics)
 
 ### Typography
-- **System Font Stack**: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto
+- **Font Family**: `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif`
 - **Headings**: 600-700 weight
 - **Body**: 400-500 weight
+- **Monospace**: Used for driver numbers and stats
 
-### Layout
-- **Max Width**: 1400-1600px
-- **Border Radius**: 8-16px (modern, rounded)
-- **Shadows**: Subtle elevation (0 2px 8px rgba(0,0,0,0.05))
+### Component Styling
+- **Border Radius**: 8-12px (modern, rounded corners)
+- **Shadows**: Subtle depth with `rgba(0, 0, 0, 0.3)`
+- **Animations**: Framer Motion for smooth transitions
+- **Responsive**: Mobile-first design with breakpoints
+
+---
+
+## 📈 The 4-Factor Performance Model
+
+### Statistical Validation
+- **R² = 0.895** (explains 89.5% of race finish variance)
+- **MAE = 1.78 positions** (average prediction error)
+- **Validated on**: 291 driver-race observations across 12 races
+- **34 drivers** analyzed in Toyota GR86 Cup series
+
+### Factor Weights (Regression Coefficients)
+1. **Speed**: 46.6% influence on finish position
+2. **Consistency**: 29.1% influence
+3. **Racecraft**: 14.9% influence
+4. **Tire Management**: 9.5% influence
+
+### Factor Definitions
+
+**Speed** - Raw pace capability
+- Measures: Fastest lap times, qualifying performance, sector times
+- Indicates: Pure driving speed when pushing to the limit
+
+**Consistency** - Performance repeatability
+- Measures: Lap time standard deviation, sector variation
+- Indicates: Ability to reproduce best performance lap after lap
+
+**Racecraft** - Wheel-to-wheel skills
+- Measures: Overtaking efficiency, position changes, defensive positioning
+- Indicates: Race execution under pressure and competitive situations
+
+**Tire Management** - Pace preservation
+- Measures: Early vs. late lap time degradation, long-run pace
+- Indicates: Ability to maintain speed as tires wear
 
 ---
 
 ## 🧪 Testing
 
-### Backend Tests
-The backend has a comprehensive test suite with **20/20 tests passing (100%)**:
-
+### Backend API Tests
 ```bash
 cd backend
-pytest tests/test_api_endpoints.py -v
+pytest tests/ -v
 ```
 
-**Test Coverage:**
-- ✅ Health & Root endpoints (2/2)
-- ✅ Track endpoints (3/3)
-- ✅ Driver endpoints (6/6)
-- ✅ Prediction endpoints (2/2)
-- ✅ Telemetry endpoints (3/3)
-- ✅ Factor analysis endpoints (2/2)
-- ✅ Driver improvement endpoints (2/2)
+**Test Coverage**: Comprehensive endpoint validation
 
 ### Frontend Tests
 ```bash
@@ -243,130 +425,32 @@ cd frontend
 npm test
 ```
 
-### Code Quality
-- **Simplified Architecture**: Reduced data service code by 72% (956 → 270 lines)
-- **Direct Query Pattern**: Eliminated complex 3-layer failover for faster responses
-- **100% Test Success Rate**: All API endpoints validated and working
-- **Clean Documentation**: Streamlined from 50+ markdown files to 3 essential docs
-
 ---
 
-## 📦 Deployment
+## 📝 Data Architecture
 
-### Current Production URLs
-- **Frontend**: Auto-deployed to Vercel (https://circuit-fbtth1gml-justin-groszs-projects.vercel.app)
-- **Backend API**: Heroku (https://hackthetrack-api-ae28ad6f804d.herokuapp.com)
+### Single Source of Truth
+All race data is stored in JSON files located in `backend/data/`:
 
-### Data Architecture
-**Single Source of Truth**: JSON files in `backend/data/`
-- `dashboardData.json` - Driver/track overview
-- `driver_factors.json` - Factor scores for all 34 drivers
-- `driver_season_stats.json` - Season statistics
-- `driver_race_results.json` - Race-by-race results
+- **driver_factors.json** (208 KB) - 4-factor scores for all 34 drivers
+- **driver_race_results.json** (295 KB) - Complete season race results
+- **driver_season_stats.json** (11 KB) - Aggregated season statistics
+- **factor_breakdowns.json** (116 KB) - Detailed factor component data
+- **coaching_recommendations.json** (6 KB) - Pre-calculated coaching insights
+- **track_layouts.json** (27 KB) - Track configurations and corner data
 
-All data is loaded into memory on startup. **No database queries** - responses are instant!
+### Data Loading Strategy
+- **In-Memory Cache**: All data loaded on backend startup
+- **No Database**: Zero query latency, instant responses
+- **JSON Parsing**: Fast Python json module
+- **Singleton Pattern**: Data loaded once, reused for all requests
 
-### Backend Deployment (Heroku)
-
-1. **Set environment variables** on Heroku:
-   ```bash
-   heroku config:set ANTHROPIC_API_KEY=your_key -a hackthetrack-api
-   heroku config:set CORS_ALLOW_ALL=true -a hackthetrack-api
-   ```
-
-2. **Deploy using git subtree** (backend is in subdirectory):
-   ```bash
-   git subtree push --prefix backend heroku master
-
-   # Or force push if needed:
-   git push heroku `git subtree split --prefix backend master`:master --force
-   ```
-
-3. **Verify deployment**:
-   ```bash
-   heroku logs --tail -a hackthetrack-api
-   curl https://hackthetrack-api-ae28ad6f804d.herokuapp.com/api/health
-   ```
-
-### Frontend Deployment (Vercel)
-
-**Automatic deployment** on push to master branch. No manual steps needed!
-
-1. **Environment variable** (set in Vercel dashboard):
-   - `VITE_API_URL=https://hackthetrack-api-ae28ad6f804d.herokuapp.com/api`
-
-2. **Manual deployment** (if needed):
-   ```bash
-   cd frontend
-   npm run build
-   vercel deploy
-   ```
-
-### Data Updates
-
-To update driver/track data:
+### Updating Production Data
 1. Edit JSON files in `backend/data/`
-2. Commit and push to GitHub
-3. Deploy to Heroku (restarts and loads new data automatically)
-4. No frontend changes needed - data flows through API
-
----
-
-## 🔑 Key Technologies
-
-### Backend
-- **FastAPI**: Modern Python API framework
-- **Anthropic SDK**: Claude 3.5 Sonnet integration
-- **Pandas**: Data manipulation and analysis
-- **Pydantic v2**: Data validation and settings
-- **Custom error handling**: Structured logging with sanitized responses
-
-### Frontend
-- **React 19**: UI framework
-- **React Router v7**: Client-side routing
-- **Recharts**: Data visualization
-- **Vite**: Build tool and dev server
-
-### API Endpoints
-
-#### Efficient Endpoints (Recommended for Skills Page)
-```
-GET /api/factors/{factor}/stats
-```
-Returns aggregated factor statistics (200 bytes):
-- `top_3_average`: Average of top 3 drivers
-- `league_average`: Average across all drivers
-- `min`, `max`, `count`: Basic statistics
-
-**Use this instead of loading all drivers** for statistics!
-
-#### Standard Endpoints
-```
-GET /api/health                # Health check + data counts
-GET /api/drivers               # All drivers (40KB)
-GET /api/drivers/{number}      # Single driver (2KB)
-GET /api/tracks                # All tracks
-GET /api/drivers/{num}/season  # Season stats
-GET /api/drivers/{num}/results # Race results
-GET /api/predict               # Circuit fit prediction
-GET /api/chat                  # AI strategy chat
-```
-
----
-
-## 📈 The 4-Factor Model
-
-The platform is built on a validated statistical model with:
-- **R² = 0.895** (explains 89.5% of race finishes)
-- **MAE = 1.78 positions**
-- **291 driver-race observations** across 12 races
-
-### The 4 Factors (by importance):
-
-1. **Raw Speed (50%)** - Qualifying pace, best lap times
-2. **Consistency (31%)** - Lap-to-lap variation, sector consistency
-3. **Racecraft (16%)** - Overtaking ability, position changes
-4. **Tire Management (10%)** - Late-race pace preservation
+2. Commit and push to GitHub master branch
+3. Deploy to Heroku: `git push heroku master`
+4. Heroku restarts automatically and loads new data
+5. Frontend automatically uses updated data through API
 
 ---
 
@@ -374,25 +458,32 @@ The platform is built on a validated statistical model with:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes
+4. Commit your changes (`git commit -m 'Add amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request
 
----
-
-## 📝 License
-
-This project is licensed under the MIT License.
+**Development Guidelines**:
+- Keep functions under 50 lines
+- Add tests for new features
+- Follow existing code style
+- Update README for new features
 
 ---
 
 ## 🙏 Acknowledgments
 
-- Inspired by **PFF.com** (analytics presentation)
-- Inspired by **DataGolf.com** (statistical modeling)
-- Inspired by **VRS.racing** (telemetry comparison)
-- Powered by **Anthropic Claude** (AI strategy coaching)
-- Data from **Toyota GR86 Cup** racing series
+### Inspiration
+- **Joe Gibbs Racing**: Legendary talent development in NASCAR
+- **PFF.com**: Analytics presentation and scouting approach
+- **DataGolf.com**: Statistical modeling methodology
+- **VRS.racing**: Telemetry comparison concepts
+
+### Technology
+- **Anthropic Claude**: AI-powered coaching intelligence
+- **Toyota GR86 Cup**: Racing series data and inspiration
+- **Netlify**: Reliable frontend hosting
+- **Heroku**: Stable backend infrastructure
 
 ---
 
@@ -400,8 +491,16 @@ This project is licensed under the MIT License.
 
 For issues or questions:
 - Open an issue on GitHub
-- Email: support@example.com
+- Check deployment docs in `NETLIFY_DEPLOYMENT.md`
 
 ---
 
-**Built with ❤️ for grassroots motorsports**
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+**Built with ❤️ for motorsports talent development**
+
+*"Your finish is 89% predictable — let's change that."*
