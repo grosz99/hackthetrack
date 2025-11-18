@@ -1,12 +1,18 @@
+# Core API Framework
 fastapi==0.115.6
-uvicorn[standard]==0.34.0
+uvicorn==0.34.0
 python-dotenv==1.0.1
+
+# Data Validation
+pydantic==2.11.7
+pydantic_core==2.33.2
+
+# AI Integration
 anthropic==0.47.0
-pandas==2.2.3
-numpy==1.26.4
-pydantic==2.10.6
-python-multipart==0.0.20
-httpx==0.28.1
-requests==2.32.3
+
+# Database
+snowflake-connector-python==3.17.3
+snowflake.core==1.7.0
+
+# Serverless Adapter for Netlify
 mangum==0.17.0
-gunicorn==23.0.0
