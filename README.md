@@ -429,28 +429,91 @@ npm test
 
 ## 📝 Data Architecture
 
-### Single Source of Truth
-All race data is stored in JSON files located in `backend/data/`:
+### Comprehensive Data Foundation
 
-- **driver_factors.json** (208 KB) - 4-factor scores for all 34 drivers
-- **driver_race_results.json** (295 KB) - Complete season race results
-- **driver_season_stats.json** (11 KB) - Aggregated season statistics
-- **factor_breakdowns.json** (116 KB) - Detailed factor component data
-- **coaching_recommendations.json** (6 KB) - Pre-calculated coaching insights
-- **track_layouts.json** (27 KB) - Track configurations and corner data
+Gibbs AI is built on **1.6GB of real telemetry data** and **complete sector timing** from the 2024 Toyota GR86 Cup season:
+
+**Race Coverage**:
+- 12 races across 5 tracks (Barber, COTA, Road America, Sonoma, VIR)
+- 34 drivers with complete data
+- 6,000+ lap records with sector timing
+- 291 driver-race observations for statistical validation
+
+### Telemetry Data (`/data/telemetry/processed/`)
+
+**High-Frequency Sensor Data** (20-40Hz sampling):
+- Speed, brake pressure (front/rear), throttle position
+- Steering angle, lateral G-force, longitudinal G-force
+- GPS coordinates, engine RPM, gear position
+- 11,000-12,000 data points per driver per race
+- Total size: 1.6GB across 12 race files
+
+**Example**: `barber_r1_wide.csv` = 122 MB, 1,043,290 telemetry rows
+
+### Race Timing Data (`/data/race_results/`)
+
+**Sector Timing** (`analysis_endurance/` - 12 files):
+- Complete S1, S2, S3 sector times for all laps
+- Lap-by-lap sector improvements
+- 6 intermediate timing points per lap
+- 5,940 lap records total
+
+**Race Results** (`provisional_results/` - 12 files):
+- Official finishing positions and gaps
+- Fastest laps and race statistics
+- Championship points
+
+**Qualifying Data** (`qualifying/` - 6 files):
+- Grid positions and qualifying times
+- Session-by-session results
+
+### Pre-Calculated Analytics (`/data/`)
+
+**API-Ready JSON Files**:
+- **driver_factors.json** (208 KB) - 4-factor scores (Speed, Consistency, Racecraft, Tire Mgmt)
+- **driver_race_results.json** (295 KB) - Race-by-race results with sector times
+- **driver_season_stats.json** (11 KB) - Wins, podiums, top 5/10, DNFs
+- **factor_breakdowns.json** (116 KB) - Detailed factor components
+- **telemetry_summary.json** (605 KB) - Aggregated telemetry features
+- **track_layouts.json** (27 KB) - Corner positions and track configurations
+
+### Data Processing Pipeline
+
+**Feature Engineering** (`build_features_tiered.py`):
+- Loads sector timing from `analysis_endurance/*.csv`
+- Loads telemetry from `telemetry/processed/*.csv`
+- Calculates 12 performance features per driver/race
+- Outputs to `all_races_tier1_features.csv`
+
+**Statistical Modeling** (`factor_analysis_tier1.py`):
+- Principal Component Analysis on 12 features
+- Identifies 4 latent factors (R² = 0.895)
+- Outputs to `tier1_factor_scores.csv`
+
+**API Serving** (FastAPI backend):
+- Loads pre-calculated JSON files at startup (in-memory cache)
+- Zero query latency for driver factors and race results
+- On-demand telemetry processing for comparisons
+- AI coaching insights generated via Claude 3.5 Sonnet
 
 ### Data Loading Strategy
-- **In-Memory Cache**: All data loaded on backend startup
+- **In-Memory Cache**: JSON files loaded on backend startup
 - **No Database**: Zero query latency, instant responses
-- **JSON Parsing**: Fast Python json module
+- **On-Demand Processing**: Telemetry analysis when requested
 - **Singleton Pattern**: Data loaded once, reused for all requests
 
 ### Updating Production Data
-1. Edit JSON files in `backend/data/`
-2. Commit and push to GitHub master branch
-3. Deploy to Heroku: `git push heroku master`
-4. Heroku restarts automatically and loads new data
-5. Frontend automatically uses updated data through API
+1. Update source data in `backend/data/` (JSON) or raw data (CSV)
+2. Rerun processing scripts if needed (`build_features_tiered.py`, `factor_analysis_tier1.py`)
+3. Commit and push to GitHub master branch
+4. Deploy to Heroku: `git push heroku master`
+5. Heroku restarts automatically and loads new data
+6. Frontend automatically uses updated data through API
+
+**Data Quality**:
+- Sector times: 100% lap coverage with official timing system
+- Telemetry: 95%+ uptime (20-40Hz sampling rate)
+- Race results: Official Toyota GR86 Cup data, validated against championship standings
 
 ---
 
