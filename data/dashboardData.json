@@ -10,21 +10,21 @@
       "avg_finish": 2.75,
       "factors": {
         "consistency": {
-          "score": 66,
+          "score": 92.49,
           "z_score": -0.8172365219013411,
-          "percentile": 66,
+          "percentile": 92.49,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 53,
+          "score": 91.71,
           "z_score": -0.1815840676029493,
-          "percentile": 53,
+          "percentile": 91.71,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 67,
+          "score": 92.98,
           "z_score": -0.8788424346911153,
-          "percentile": 67,
+          "percentile": 92.98,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -164,21 +164,21 @@
       "avg_finish": 4.666666666666667,
       "factors": {
         "consistency": {
-          "score": 62,
+          "score": 78.33,
           "z_score": -0.6292269061897081,
-          "percentile": 62,
+          "percentile": 78.33,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 45,
+          "score": 71.96,
           "z_score": 0.2250690304214157,
-          "percentile": 45,
+          "percentile": 71.96,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 66,
+          "score": 89.47,
           "z_score": -0.8137454521760813,
-          "percentile": 66,
+          "percentile": 89.47,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -241,21 +241,21 @@
       "avg_finish": 5.416666666666667,
       "factors": {
         "consistency": {
-          "score": 60,
+          "score": 82.5,
           "z_score": -0.512377847119461,
-          "percentile": 60,
+          "percentile": 82.5,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 46,
+          "score": 68.66,
           "z_score": 0.1947179899622273,
-          "percentile": 46,
+          "percentile": 68.66,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 66,
+          "score": 89.47,
           "z_score": -0.8189939583753164,
-          "percentile": 66,
+          "percentile": 89.47,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -318,21 +318,21 @@
       "avg_finish": 6.454545454545454,
       "factors": {
         "consistency": {
-          "score": 59,
+          "score": 78.33,
           "z_score": -0.4695974938705247,
-          "percentile": 59,
+          "percentile": 78.33,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 46,
+          "score": 59.88,
           "z_score": 0.1518174166733348,
-          "percentile": 46,
+          "percentile": 59.88,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 64,
+          "score": 81.58,
           "z_score": -0.7335660446264487,
-          "percentile": 64,
+          "percentile": 81.58,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -395,21 +395,21 @@
       "avg_finish": 7.833333333333333,
       "factors": {
         "consistency": {
-          "score": 67,
+          "score": 95.0,
           "z_score": -0.8791390605258625,
-          "percentile": 67,
+          "percentile": 95.0,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 42,
+          "score": 62.07,
           "z_score": 0.3807419930330575,
-          "percentile": 42,
+          "percentile": 62.07,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 59,
+          "score": 85.96,
           "z_score": -0.4821409269633243,
-          "percentile": 59,
+          "percentile": 85.96,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -472,21 +472,21 @@
       "avg_finish": 7.333333333333333,
       "factors": {
         "consistency": {
-          "score": 57,
+          "score": 66.67,
           "z_score": -0.3592644420410376,
-          "percentile": 57,
+          "percentile": 66.67,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 40,
+          "score": 54.4,
           "z_score": 0.4679171044598894,
-          "percentile": 40,
+          "percentile": 54.4,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 64,
+          "score": 86.84,
           "z_score": -0.7054889353995811,
-          "percentile": 64,
+          "percentile": 86.84,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -549,21 +549,21 @@
       "avg_finish": 8.272727272727273,
       "factors": {
         "consistency": {
-          "score": 57,
+          "score": 79.17,
           "z_score": -0.3634847050923525,
-          "percentile": 57,
+          "percentile": 79.17,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 39,
+          "score": 42.32,
           "z_score": 0.512414226531607,
-          "percentile": 39,
+          "percentile": 42.32,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 63,
+          "score": 82.46,
           "z_score": -0.6742801000680901,
-          "percentile": 63,
+          "percentile": 82.46,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -626,21 +626,21 @@
       "avg_finish": 9.22222222222222,
       "factors": {
         "consistency": {
-          "score": 57,
+          "score": 79.99,
           "z_score": -0.3538317997362615,
-          "percentile": 57,
+          "percentile": 79.99,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 53,
+          "score": 75.25,
           "z_score": -0.1881123598757714,
-          "percentile": 53,
+          "percentile": 75.25,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 56,
+          "score": 72.81,
           "z_score": -0.3016421398190467,
-          "percentile": 56,
+          "percentile": 72.81,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -780,21 +780,21 @@
       "avg_finish": 10.166666666666666,
       "factors": {
         "consistency": {
-          "score": 60,
+          "score": 90.0,
           "z_score": -0.5187244761986719,
-          "percentile": 60,
+          "percentile": 90.0,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 41,
+          "score": 55.5,
           "z_score": 0.4206891223492459,
-          "percentile": 41,
+          "percentile": 55.5,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 57,
+          "score": 80.7,
           "z_score": -0.3571269132408219,
-          "percentile": 57,
+          "percentile": 80.7,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -857,21 +857,21 @@
       "avg_finish": 9.909090909090908,
       "factors": {
         "consistency": {
-          "score": 47,
+          "score": 39.99,
           "z_score": 0.1067781789047858,
-          "percentile": 47,
+          "percentile": 39.99,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 42,
+          "score": 33.54,
           "z_score": 0.399922478654367,
-          "percentile": 42,
+          "percentile": 33.54,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 62,
+          "score": 50.88,
           "z_score": -0.6153173649376517,
-          "percentile": 62,
+          "percentile": 50.88,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -934,21 +934,21 @@
       "avg_finish": 11.0,
       "factors": {
         "consistency": {
-          "score": 49,
+          "score": 54.17,
           "z_score": 0.0223695157553366,
-          "percentile": 49,
+          "percentile": 54.17,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 48,
+          "score": 46.71,
           "z_score": 0.0785965285397743,
-          "percentile": 48,
+          "percentile": 46.71,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 57,
+          "score": 71.05,
           "z_score": -0.3599693685130516,
-          "percentile": 57,
+          "percentile": 71.05,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1011,21 +1011,21 @@
       "avg_finish": 11.3,
       "factors": {
         "consistency": {
-          "score": 50,
+          "score": 43.34,
           "z_score": -0.026218588447953,
-          "percentile": 50,
+          "percentile": 43.34,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 41,
+          "score": 36.83,
           "z_score": 0.4213636294328757,
-          "percentile": 41,
+          "percentile": 36.83,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 56,
+          "score": 67.54,
           "z_score": -0.3415808403887645,
-          "percentile": 56,
+          "percentile": 67.54,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1088,21 +1088,21 @@
       "avg_finish": 12.833333333333334,
       "factors": {
         "consistency": {
-          "score": 47,
+          "score": 54.17,
           "z_score": 0.1286182738078675,
-          "percentile": 47,
+          "percentile": 54.17,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 57,
+          "score": 74.15,
           "z_score": -0.3769623098802713,
-          "percentile": 57,
+          "percentile": 74.15,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 50,
+          "score": 60.53,
           "z_score": -0.0410846778792044,
-          "percentile": 50,
+          "percentile": 60.53,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1165,21 +1165,21 @@
       "avg_finish": 14.0,
       "factors": {
         "consistency": {
-          "score": 44,
+          "score": 38.34,
           "z_score": 0.297825854983098,
-          "percentile": 44,
+          "percentile": 38.34,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 49,
+          "score": 33.54,
           "z_score": 0.0151290631740261,
-          "percentile": 49,
+          "percentile": 33.54,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 52,
+          "score": 55.26,
           "z_score": -0.1457856720107972,
-          "percentile": 52,
+          "percentile": 55.26,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1242,21 +1242,21 @@
       "avg_finish": 14.416666666666666,
       "factors": {
         "consistency": {
-          "score": 44,
+          "score": 43.34,
           "z_score": 0.2627950319682029,
-          "percentile": 44,
+          "percentile": 43.34,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 47,
+          "score": 45.62,
           "z_score": 0.1204708996663462,
-          "percentile": 47,
+          "percentile": 45.62,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 49,
+          "score": 48.25,
           "z_score": 0.0128824278135278,
-          "percentile": 49,
+          "percentile": 48.25,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1319,21 +1319,21 @@
       "avg_finish": 15.583333333333334,
       "factors": {
         "consistency": {
-          "score": 48,
+          "score": 71.66,
           "z_score": 0.0717808084265905,
-          "percentile": 48,
+          "percentile": 71.66,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 61,
+          "score": 76.35,
           "z_score": -0.586978051766549,
-          "percentile": 61,
+          "percentile": 76.35,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 42,
+          "score": 42.11,
           "z_score": 0.3587176639349771,
-          "percentile": 42,
+          "percentile": 42.11,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1396,21 +1396,21 @@
       "avg_finish": 15.714285714285714,
       "factors": {
         "consistency": {
-          "score": 40,
+          "score": 5.0,
           "z_score": 0.4892347808676759,
-          "percentile": 40,
+          "percentile": 5.0,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 36,
+          "score": 15.98,
           "z_score": 0.6708677620057013,
-          "percentile": 36,
+          "percentile": 15.98,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 55,
+          "score": 52.63,
           "z_score": -0.2869216880638944,
-          "percentile": 55,
+          "percentile": 52.63,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1473,21 +1473,21 @@
       "avg_finish": 15.0,
       "factors": {
         "consistency": {
-          "score": 39,
+          "score": 36.66,
           "z_score": 0.5327877002643405,
-          "percentile": 39,
+          "percentile": 36.66,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 43,
+          "score": 35.75,
           "z_score": 0.3030493289917843,
-          "percentile": 43,
+          "percentile": 35.75,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 54,
+          "score": 61.4,
           "z_score": -0.2064270894996507,
-          "percentile": 54,
+          "percentile": 61.4,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1627,21 +1627,21 @@
       "avg_finish": 18.0,
       "factors": {
         "consistency": {
-          "score": 48,
+          "score": 48.33,
           "z_score": 0.0704700303543972,
-          "percentile": 48,
+          "percentile": 48.33,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 54,
+          "score": 44.52,
           "z_score": -0.2070186482516855,
-          "percentile": 54,
+          "percentile": 44.52,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 40,
+          "score": 37.72,
           "z_score": 0.4741779975329573,
-          "percentile": 40,
+          "percentile": 37.72,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1704,21 +1704,21 @@
       "avg_finish": 16.5,
       "factors": {
         "consistency": {
-          "score": 44,
+          "score": 45.0,
           "z_score": 0.2508939897960623,
-          "percentile": 44,
+          "percentile": 45.0,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 55,
+          "score": 47.81,
           "z_score": -0.2808518314451361,
-          "percentile": 55,
+          "percentile": 47.81,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 46,
+          "score": 35.09,
           "z_score": 0.1527805218978861,
-          "percentile": 46,
+          "percentile": 35.09,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1781,21 +1781,21 @@
       "avg_finish": 15.125,
       "factors": {
         "consistency": {
-          "score": 51,
+          "score": 59.99,
           "z_score": -0.0986183122856227,
-          "percentile": 51,
+          "percentile": 59.99,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 51,
+          "score": 50.01,
           "z_score": -0.0959355770054788,
-          "percentile": 51,
+          "percentile": 50.01,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 40,
+          "score": 34.21,
           "z_score": 0.4802818610782192,
-          "percentile": 40,
+          "percentile": 34.21,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1858,21 +1858,21 @@
       "avg_finish": 17.833333333333332,
       "factors": {
         "consistency": {
-          "score": 40,
+          "score": 36.66,
           "z_score": 0.4915782359020617,
-          "percentile": 40,
+          "percentile": 36.66,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 55,
+          "score": 40.13,
           "z_score": -0.2673303882443634,
-          "percentile": 55,
+          "percentile": 40.13,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 41,
+          "score": 31.58,
           "z_score": 0.4387178667682386,
-          "percentile": 41,
+          "percentile": 31.58,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -1935,21 +1935,21 @@
       "avg_finish": 18.571428571428573,
       "factors": {
         "consistency": {
-          "score": 44,
+          "score": 53.33,
           "z_score": 0.29604633820711,
-          "percentile": 44,
+          "percentile": 53.33,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 52,
+          "score": 51.11,
           "z_score": -0.1205697758829014,
-          "percentile": 52,
+          "percentile": 51.11,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 41,
+          "score": 38.6,
           "z_score": 0.4365831316375668,
-          "percentile": 41,
+          "percentile": 38.6,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -2012,21 +2012,21 @@
       "avg_finish": 20.75,
       "factors": {
         "consistency": {
-          "score": 45,
+          "score": 66.67,
           "z_score": 0.2106421742542211,
-          "percentile": 45,
+          "percentile": 66.67,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 55,
+          "score": 36.83,
           "z_score": -0.2684815360022693,
-          "percentile": 55,
+          "percentile": 36.83,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 33,
+          "score": 26.32,
           "z_score": 0.8339550147804355,
-          "percentile": 33,
+          "percentile": 26.32,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -2089,21 +2089,21 @@
       "avg_finish": 23.5,
       "factors": {
         "consistency": {
-          "score": 42,
+          "score": 27.51,
           "z_score": 0.3635526299052218,
-          "percentile": 42,
+          "percentile": 27.51,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 42,
+          "score": 5.0,
           "z_score": 0.3571753732003102,
-          "percentile": 42,
+          "percentile": 5.0,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 29,
+          "score": 22.81,
           "z_score": 1.0316449921244442,
-          "percentile": 29,
+          "percentile": 22.81,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -2166,21 +2166,21 @@
       "avg_finish": 22.0,
       "factors": {
         "consistency": {
-          "score": 40,
+          "score": 29.17,
           "z_score": 0.4610266595070842,
-          "percentile": 40,
+          "percentile": 29.17,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 61,
+          "score": 40.13,
           "z_score": -0.560454082446095,
-          "percentile": 61,
+          "percentile": 40.13,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 23,
+          "score": 14.91,
           "z_score": 1.308280471385434,
-          "percentile": 23,
+          "percentile": 14.91,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -2243,21 +2243,21 @@
       "avg_finish": 21.2,
       "factors": {
         "consistency": {
-          "score": 31,
+          "score": 36.66,
           "z_score": 0.9122423782908752,
-          "percentile": 31,
+          "percentile": 36.66,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 59,
+          "score": 40.13,
           "z_score": -0.4866733883415459,
-          "percentile": 59,
+          "percentile": 40.13,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 27,
+          "score": 11.4,
           "z_score": 1.1209612826318156,
-          "percentile": 27,
+          "percentile": 11.4,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -2320,21 +2320,21 @@
       "avg_finish": 22.4,
       "factors": {
         "consistency": {
-          "score": 40,
+          "score": 58.33,
           "z_score": 0.4777160043930876,
-          "percentile": 40,
+          "percentile": 58.33,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 59,
+          "score": 29.16,
           "z_score": -0.4747392871336788,
-          "percentile": 59,
+          "percentile": 29.16,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 16,
+          "score": 6.14,
           "z_score": 1.6906696202108975,
-          "percentile": 16,
+          "percentile": 6.14,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -2397,21 +2397,21 @@
       "avg_finish": 23.75,
       "factors": {
         "consistency": {
-          "score": 46,
+          "score": 46.67,
           "z_score": 0.1616067899739151,
-          "percentile": 46,
+          "percentile": 46.67,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 57,
+          "score": 40.13,
           "z_score": -0.3993792121857493,
-          "percentile": 57,
+          "percentile": 40.13,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 13,
+          "score": 11.4,
           "z_score": 1.8089089565897425,
-          "percentile": 13,
+          "percentile": 11.4,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -2474,21 +2474,21 @@
       "avg_finish": 24.0,
       "factors": {
         "consistency": {
-          "score": 43,
+          "score": 39.17,
           "z_score": 0.3270413513451545,
-          "percentile": 43,
+          "percentile": 39.17,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 55,
+          "score": 17.08,
           "z_score": -0.2564330472835456,
-          "percentile": 55,
+          "percentile": 17.08,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 9,
+          "score": 4.39,
           "z_score": 2.048827762492537,
-          "percentile": 9,
+          "percentile": 4.39,
           "trend": "stable"
         },
         "tire_mgmt": {
@@ -2551,21 +2551,21 @@
       "avg_finish": 23.83333333333333,
       "factors": {
         "consistency": {
-          "score": 45,
+          "score": 54.17,
           "z_score": 0.2328685264286761,
-          "percentile": 45,
+          "percentile": 54.17,
           "trend": "stable"
         },
         "racecraft": {
-          "score": 52,
+          "score": 24.77,
           "z_score": -0.1472080608428549,
-          "percentile": 52,
+          "percentile": 24.77,
           "trend": "stable"
         },
         "raw_speed": {
-          "score": 6,
+          "score": 6.14,
           "z_score": 2.162478283964057,
-          "percentile": 6,
+          "percentile": 6.14,
           "trend": "stable"
         },
         "tire_mgmt": {

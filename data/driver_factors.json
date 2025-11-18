@@ -8,12 +8,12 @@
       "driver_number": 2,
       "factors": {
         "consistency": {
-          "score": 67.11,
-          "percentile": 67.11
+          "score": 79.17,
+          "percentile": 79.17
         },
         "racecraft": {
-          "score": 46.05,
-          "percentile": 46.05
+          "score": 42.32,
+          "percentile": 42.32
         },
         "speed": {
           "score": 82.46,
@@ -30,12 +30,12 @@
       "driver_number": 3,
       "factors": {
         "consistency": {
-          "score": 61.18,
-          "percentile": 61.18
+          "score": 71.66,
+          "percentile": 71.66
         },
         "racecraft": {
-          "score": 66.45,
-          "percentile": 66.45
+          "score": 76.35,
+          "percentile": 76.35
         },
         "speed": {
           "score": 42.11,
@@ -52,12 +52,12 @@
       "driver_number": 5,
       "factors": {
         "consistency": {
-          "score": 40.13,
-          "percentile": 40.13
+          "score": 45.0,
+          "percentile": 45.0
         },
         "racecraft": {
-          "score": 49.34,
-          "percentile": 49.34
+          "score": 47.81,
+          "percentile": 47.81
         },
         "speed": {
           "score": 35.09,
@@ -74,12 +74,12 @@
       "driver_number": 7,
       "factors": {
         "consistency": {
-          "score": 66.45,
-          "percentile": 66.45
+          "score": 78.33,
+          "percentile": 78.33
         },
         "racecraft": {
-          "score": 63.82,
-          "percentile": 63.82
+          "score": 71.96,
+          "percentile": 71.96
         },
         "speed": {
           "score": 89.47,
@@ -96,12 +96,12 @@
       "driver_number": 8,
       "factors": {
         "consistency": {
-          "score": 41.45,
-          "percentile": 41.45
+          "score": 46.67,
+          "percentile": 46.67
         },
         "racecraft": {
-          "score": 44.74,
-          "percentile": 44.74
+          "score": 40.13,
+          "percentile": 40.13
         },
         "speed": {
           "score": 11.4,
@@ -118,12 +118,12 @@
       "driver_number": 11,
       "factors": {
         "consistency": {
-          "score": 57.24,
-          "percentile": 57.24
+          "score": 66.67,
+          "percentile": 66.67
         },
         "racecraft": {
-          "score": 42.76,
-          "percentile": 42.76
+          "score": 36.83,
+          "percentile": 36.83
         },
         "speed": {
           "score": 26.32,
@@ -140,12 +140,12 @@
       "driver_number": 12,
       "factors": {
         "consistency": {
-          "score": 50.66,
-          "percentile": 50.66
+          "score": 58.33,
+          "percentile": 58.33
         },
         "racecraft": {
-          "score": 38.16,
-          "percentile": 38.16
+          "score": 29.16,
+          "percentile": 29.16
         },
         "speed": {
           "score": 6.14,
@@ -162,12 +162,12 @@
       "driver_number": 13,
       "factors": {
         "consistency": {
-          "score": 77.63,
-          "percentile": 77.63
+          "score": 92.49,
+          "percentile": 92.49
         },
         "racecraft": {
-          "score": 75.66,
-          "percentile": 75.66
+          "score": 91.71,
+          "percentile": 91.71
         },
         "speed": {
           "score": 92.98,
@@ -184,12 +184,12 @@
       "driver_number": 14,
       "factors": {
         "consistency": {
-          "score": 42.76,
-          "percentile": 42.76
+          "score": 48.33,
+          "percentile": 48.33
         },
         "racecraft": {
-          "score": 47.37,
-          "percentile": 47.37
+          "score": 44.52,
+          "percentile": 44.52
         },
         "speed": {
           "score": 37.72,
@@ -206,12 +206,12 @@
       "driver_number": 15,
       "factors": {
         "consistency": {
-          "score": 51.97,
-          "percentile": 51.97
+          "score": 59.99,
+          "percentile": 59.99
         },
         "racecraft": {
-          "score": 50.66,
-          "percentile": 50.66
+          "score": 50.01,
+          "percentile": 50.01
         },
         "speed": {
           "score": 34.21,
@@ -228,12 +228,12 @@
       "driver_number": 16,
       "factors": {
         "consistency": {
-          "score": 79.61,
-          "percentile": 79.61
+          "score": 95.0,
+          "percentile": 95.0
         },
         "racecraft": {
-          "score": 57.89,
-          "percentile": 57.89
+          "score": 62.07,
+          "percentile": 62.07
         },
         "speed": {
           "score": 85.96,
@@ -250,12 +250,12 @@
       "driver_number": 17,
       "factors": {
         "consistency": {
-          "score": 48.68,
-          "percentile": 48.68
+          "score": 55.83,
+          "percentile": 55.83
         },
         "racecraft": {
-          "score": 26.97,
-          "percentile": 26.97
+          "score": 10.49,
+          "percentile": 10.49
         },
         "speed": {
           "score": 35.96,
@@ -272,12 +272,12 @@
       "driver_number": 18,
       "factors": {
         "consistency": {
-          "score": 47.37,
-          "percentile": 47.37
+          "score": 54.17,
+          "percentile": 54.17
         },
         "racecraft": {
-          "score": 35.53,
-          "percentile": 35.53
+          "score": 24.77,
+          "percentile": 24.77
         },
         "speed": {
           "score": 6.14,
@@ -294,12 +294,12 @@
       "driver_number": 21,
       "factors": {
         "consistency": {
-          "score": 47.37,
-          "percentile": 47.37
+          "score": 54.17,
+          "percentile": 54.17
         },
         "racecraft": {
-          "score": 48.68,
-          "percentile": 48.68
+          "score": 46.71,
+          "percentile": 46.71
         },
         "speed": {
           "score": 71.05,
@@ -316,12 +316,12 @@
       "driver_number": 31,
       "factors": {
         "consistency": {
-          "score": 33.55,
-          "percentile": 33.55
+          "score": 36.66,
+          "percentile": 36.66
         },
         "racecraft": {
-          "score": 42.11,
-          "percentile": 42.11
+          "score": 35.75,
+          "percentile": 35.75
         },
         "speed": {
           "score": 61.4,
@@ -338,12 +338,12 @@
       "driver_number": 41,
       "factors": {
         "consistency": {
-          "score": 34.87,
-          "percentile": 34.87
+          "score": 38.34,
+          "percentile": 38.34
         },
         "racecraft": {
-          "score": 40.79,
-          "percentile": 40.79
+          "score": 33.54,
+          "percentile": 33.54
         },
         "speed": {
           "score": 55.26,
@@ -360,12 +360,12 @@
       "driver_number": 46,
       "factors": {
         "consistency": {
-          "score": 66.45,
-          "percentile": 66.45
+          "score": 78.33,
+          "percentile": 78.33
         },
         "racecraft": {
-          "score": 56.58,
-          "percentile": 56.58
+          "score": 59.88,
+          "percentile": 59.88
         },
         "speed": {
           "score": 81.58,
@@ -382,12 +382,12 @@
       "driver_number": 47,
       "factors": {
         "consistency": {
-          "score": 38.82,
-          "percentile": 38.82
+          "score": 43.34,
+          "percentile": 43.34
         },
         "racecraft": {
-          "score": 42.76,
-          "percentile": 42.76
+          "score": 36.83,
+          "percentile": 36.83
         },
         "speed": {
           "score": 67.54,
@@ -404,12 +404,12 @@
       "driver_number": 50,
       "factors": {
         "consistency": {
-          "score": 63.82,
-          "percentile": 63.82
+          "score": 75.0,
+          "percentile": 75.0
         },
         "racecraft": {
-          "score": 77.63,
-          "percentile": 77.63
+          "score": 95.0,
+          "percentile": 95.0
         },
         "speed": {
           "score": 51.75,
@@ -426,12 +426,12 @@
       "driver_number": 51,
       "factors": {
         "consistency": {
-          "score": 33.55,
-          "percentile": 33.55
+          "score": 36.66,
+          "percentile": 36.66
         },
         "racecraft": {
-          "score": 44.74,
-          "percentile": 44.74
+          "score": 40.13,
+          "percentile": 40.13
         },
         "speed": {
           "score": 31.58,
@@ -448,12 +448,12 @@
       "driver_number": 55,
       "factors": {
         "consistency": {
-          "score": 57.24,
-          "percentile": 57.24
+          "score": 66.67,
+          "percentile": 66.67
         },
         "racecraft": {
-          "score": 53.29,
-          "percentile": 53.29
+          "score": 54.4,
+          "percentile": 54.4
         },
         "speed": {
           "score": 86.84,
@@ -470,12 +470,12 @@
       "driver_number": 57,
       "factors": {
         "consistency": {
-          "score": 35.53,
-          "percentile": 35.53
+          "score": 39.17,
+          "percentile": 39.17
         },
         "racecraft": {
-          "score": 30.92,
-          "percentile": 30.92
+          "score": 17.08,
+          "percentile": 17.08
         },
         "speed": {
           "score": 4.39,
@@ -492,12 +492,12 @@
       "driver_number": 67,
       "factors": {
         "consistency": {
-          "score": 48.68,
-          "percentile": 48.68
+          "score": 55.83,
+          "percentile": 55.83
         },
         "racecraft": {
-          "score": 27.63,
-          "percentile": 27.63
+          "score": 11.59,
+          "percentile": 11.59
         },
         "speed": {
           "score": 7.02,
@@ -514,12 +514,12 @@
       "driver_number": 71,
       "factors": {
         "consistency": {
-          "score": 67.76,
-          "percentile": 67.76
+          "score": 79.99,
+          "percentile": 79.99
         },
         "racecraft": {
-          "score": 65.79,
-          "percentile": 65.79
+          "score": 75.25,
+          "percentile": 75.25
         },
         "speed": {
           "score": 72.81,
@@ -536,12 +536,12 @@
       "driver_number": 72,
       "factors": {
         "consistency": {
-          "score": 69.74,
-          "percentile": 69.74
+          "score": 82.5,
+          "percentile": 82.5
         },
         "racecraft": {
-          "score": 61.84,
-          "percentile": 61.84
+          "score": 68.66,
+          "percentile": 68.66
         },
         "speed": {
           "score": 89.47,
@@ -558,12 +558,12 @@
       "driver_number": 73,
       "factors": {
         "consistency": {
-          "score": 26.32,
-          "percentile": 26.32
+          "score": 27.51,
+          "percentile": 27.51
         },
         "racecraft": {
-          "score": 23.68,
-          "percentile": 23.68
+          "score": 5.0,
+          "percentile": 5.0
         },
         "speed": {
           "score": 22.81,
@@ -580,12 +580,12 @@
       "driver_number": 78,
       "factors": {
         "consistency": {
-          "score": 75.66,
-          "percentile": 75.66
+          "score": 90.0,
+          "percentile": 90.0
         },
         "racecraft": {
-          "score": 53.95,
-          "percentile": 53.95
+          "score": 55.5,
+          "percentile": 55.5
         },
         "speed": {
           "score": 80.7,
@@ -602,12 +602,12 @@
       "driver_number": 80,
       "factors": {
         "consistency": {
-          "score": 33.55,
-          "percentile": 33.55
+          "score": 36.66,
+          "percentile": 36.66
         },
         "racecraft": {
-          "score": 44.74,
-          "percentile": 44.74
+          "score": 40.13,
+          "percentile": 40.13
         },
         "speed": {
           "score": 11.4,
@@ -624,12 +624,12 @@
       "driver_number": 86,
       "factors": {
         "consistency": {
-          "score": 27.63,
-          "percentile": 27.63
+          "score": 29.17,
+          "percentile": 29.17
         },
         "racecraft": {
-          "score": 44.74,
-          "percentile": 44.74
+          "score": 40.13,
+          "percentile": 40.13
         },
         "speed": {
           "score": 14.91,
@@ -646,12 +646,12 @@
       "driver_number": 88,
       "factors": {
         "consistency": {
-          "score": 47.37,
-          "percentile": 47.37
+          "score": 54.17,
+          "percentile": 54.17
         },
         "racecraft": {
-          "score": 65.13,
-          "percentile": 65.13
+          "score": 74.15,
+          "percentile": 74.15
         },
         "speed": {
           "score": 60.53,
@@ -668,12 +668,12 @@
       "driver_number": 89,
       "factors": {
         "consistency": {
-          "score": 8.55,
-          "percentile": 8.55
+          "score": 5.0,
+          "percentile": 5.0
         },
         "racecraft": {
-          "score": 30.26,
-          "percentile": 30.26
+          "score": 15.98,
+          "percentile": 15.98
         },
         "speed": {
           "score": 52.63,
@@ -690,12 +690,12 @@
       "driver_number": 93,
       "factors": {
         "consistency": {
-          "score": 46.71,
-          "percentile": 46.71
+          "score": 53.33,
+          "percentile": 53.33
         },
         "racecraft": {
-          "score": 51.32,
-          "percentile": 51.32
+          "score": 51.11,
+          "percentile": 51.11
         },
         "speed": {
           "score": 38.6,
@@ -712,12 +712,12 @@
       "driver_number": 98,
       "factors": {
         "consistency": {
-          "score": 36.18,
-          "percentile": 36.18
+          "score": 39.99,
+          "percentile": 39.99
         },
         "racecraft": {
-          "score": 40.79,
-          "percentile": 40.79
+          "score": 33.54,
+          "percentile": 33.54
         },
         "speed": {
           "score": 50.88,
@@ -734,12 +734,12 @@
       "driver_number": 113,
       "factors": {
         "consistency": {
-          "score": 38.82,
-          "percentile": 38.82
+          "score": 43.34,
+          "percentile": 43.34
         },
         "racecraft": {
-          "score": 48.03,
-          "percentile": 48.03
+          "score": 45.62,
+          "percentile": 45.62
         },
         "speed": {
           "score": 48.25,
