@@ -10,5 +10,8 @@ pydantic_core==2.33.2
 # AI Integration
 anthropic==0.47.0
 
+# Data Processing
+pandas==2.2.3
+
 # Serverless Adapter for Netlify
 mangum==0.17.0
