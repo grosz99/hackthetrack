@@ -12,6 +12,6 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://hackthetrack-api-ae28ad6f804d.herokuapp.com"
+    "VITE_API_URL": "/api"
   }
 }

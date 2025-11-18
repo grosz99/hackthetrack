@@ -1,0 +1,44 @@
+# Netlify Configuration for Gibbs AI
+# Full-stack deployment: React frontend + FastAPI backend
+
+[build]
+  # Build frontend
+  base = "frontend"
+  command = "npm run build"
+  publish = "frontend/dist"
+
+  # Build backend as Netlify Function
+  functions = "netlify/functions"
+
+# Frontend SPA routing - redirect all routes to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  # Don't apply to API routes
+  conditions = {path = ["!/api/*"]}
+
+# Proxy API requests to backend function
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+  force = true
+
+# Environment variables (non-sensitive defaults)
+[build.environment]
+  PYTHON_VERSION = "3.11"
+  NODE_VERSION = "18"
+
+[context.production.environment]
+  VITE_API_URL = "https://gibbs-ai.netlify.app/api"
+  ENVIRONMENT = "production"
+  DEBUG = "false"
+
+[context.deploy-preview.environment]
+  VITE_API_URL = "${DEPLOY_PRIME_URL}/api"
+  ENVIRONMENT = "staging"
+
+[context.branch-deploy.environment]
+  VITE_API_URL = "${DEPLOY_PRIME_URL}/api"
+  ENVIRONMENT = "development"
