@@ -151,53 +151,6 @@ export default function WelcomeModal({ onClose }) {
           </div>
         </div>
       )
-    },
-    {
-      id: 'why-gibbs',
-      title: 'Why Gibbs AI?',
-      content: (
-        <div className="gibbs-story-section">
-          <div className="gibbs-hero">
-            <div className="gibbs-icon">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="38" fill="#EB0A1E" stroke="#B80818" strokeWidth="4"/>
-                <path d="M40 20L48 36L64 38L52 50L55 66L40 58L25 66L28 50L16 38L32 36L40 20Z" fill="#FFD700" stroke="#B8860B" strokeWidth="2"/>
-              </svg>
-            </div>
-            <h3>An Eye for Talent</h3>
-          </div>
-
-          <div className="gibbs-story">
-            <p className="story-intro">
-              <strong>Joe Gibbs</strong> is a legendary figure in American motorsports and football—a Hall of Fame NFL coach who won three Super Bowls with the Washington Redskins and a Toyota partner who built one of NASCAR's most successful racing organizations.
-            </p>
-
-            <div className="accomplishments-grid">
-              <div className="accomplishment">
-                <h4>NASCAR Excellence</h4>
-                <p>Joe Gibbs Racing has developed and championed some of the winningest drivers of the 21st century, including <strong>Tony Stewart</strong>, <strong>Joey Logano</strong>, and <strong>Denny Hamlin</strong>.</p>
-              </div>
-
-              <div className="accomplishment">
-                <h4>Talent Development</h4>
-                <p>His ability to identify raw talent, provide world-class development programs, and create championship-winning teams is unmatched across both motorsports and professional football.</p>
-              </div>
-
-              <div className="accomplishment">
-                <h4>Toyota Partnership</h4>
-                <p>As a long-time Toyota partner in NASCAR, Joe Gibbs Racing has been instrumental in Toyota's success in American racing, combining technical excellence with driver development.</p>
-              </div>
-            </div>
-
-            <div className="our-mission">
-              <h4>Our Mission</h4>
-              <p>
-                <strong>Gibbs AI</strong> aims to replicate Joe Gibbs' legendary eye for talent and development philosophy. Using validated statistics and AI-powered analysis, we help identify and develop the drivers of the future—just as Joe Gibbs has done for decades in NASCAR and the NFL.
-              </p>
-            </div>
-          </div>
-        </div>
-      )
     }
   ];
 
