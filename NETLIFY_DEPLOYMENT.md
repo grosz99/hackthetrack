@@ -1,9 +1,9 @@
 # Netlify Deployment Guide for Gibbs AI
 
-This project is configured for **unified full-stack deployment** on Netlify with:
-- **Frontend**: React + Vite (served from `/`)
-- **Backend**: FastAPI serverless functions (served from `/api`)
-- **Public Access**: No authentication required (unlike Vercel free tier)
+This project is configured for **frontend-only deployment** on Netlify with:
+- **Frontend**: React + Vite on Netlify (publicly accessible, no authentication)
+- **Backend**: FastAPI on Heroku (existing deployment with all data)
+- **Architecture**: Frontend calls Heroku API via CORS
 
 ## Prerequisites
 
@@ -23,12 +23,9 @@ This project is configured for **unified full-stack deployment** on Netlify with
    - Publish directory: `frontend/dist`
    - Functions directory: `netlify/functions`
 
-5. **Add Environment Variables** (Settings → Environment variables):
-   ```
-   ANTHROPIC_API_KEY=sk-ant-your-key-here
-   ```
+5. **No environment variables needed for frontend!**
 
-   **Note**: The backend uses CSV/JSON data files (no database required). Snowflake was removed to simplify deployment.
+   The frontend only needs `VITE_API_URL` which is already set in `netlify.toml` to point to Heroku.
 
 6. **Click "Deploy site"**
 
@@ -55,16 +52,21 @@ netlify deploy --prod
 ## Architecture
 
 ```
+Frontend (Netlify - Public)
 https://gibbs-ai.netlify.app/
-├── /                    → React frontend (SPA)
-│   ├── /driver/7        → Driver pages
-│   ├── /rankings        → Rankings page
-│   └── ...              → All frontend routes
-│
-└── /api/*               → FastAPI backend (serverless)
-    ├── /api/drivers     → Driver endpoints
-    ├── /api/factors     → 4-Factor endpoints
-    └── ...              → All API routes
+├── /                    → React SPA
+├── /driver/7            → Driver pages
+├── /rankings            → Rankings page
+└── ...                  → All frontend routes
+                  │
+                  │ CORS requests
+                  ↓
+Backend (Heroku - Existing)
+https://hackthetrack-api-ae28ad6f804d.herokuapp.com
+├── /api/drivers         → Driver endpoints
+├── /api/factors         → 4-Factor endpoints
+├── /api/coaching        → AI coaching endpoints
+└── ...                  → All API routes
 ```
 
 ## Key Files
