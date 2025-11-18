@@ -36,14 +36,14 @@
   NODE_VERSION = "18"
 
 [context.production.environment]
-  VITE_API_URL = "https://gibbs-ai.netlify.app/api"
+  VITE_API_URL = ""
   ENVIRONMENT = "production"
   DEBUG = "false"
 
 [context.deploy-preview.environment]
-  VITE_API_URL = "${DEPLOY_PRIME_URL}/api"
+  VITE_API_URL = ""
   ENVIRONMENT = "staging"
 
 [context.branch-deploy.environment]
-  VITE_API_URL = "${DEPLOY_PRIME_URL}/api"
+  VITE_API_URL = ""
   ENVIRONMENT = "development"
