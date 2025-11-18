@@ -35,16 +35,6 @@ export default function WelcomeModal({ onClose }) {
             </p>
           </div>
 
-          <div className="gibbs-hero">
-            <div className="gibbs-icon">
-              <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                <circle cx="40" cy="40" r="38" fill="#EB0A1E" stroke="#B80818" strokeWidth="4"/>
-                <path d="M40 20L48 36L64 38L52 50L55 66L40 58L25 66L28 50L16 38L32 36L40 20Z" fill="#FFD700" stroke="#B8860B" strokeWidth="2"/>
-              </svg>
-            </div>
-            <h3>An Eye for Talent</h3>
-          </div>
-
           <div className="gibbs-story">
             <p className="story-intro">
               <strong>Joe Gibbs</strong> is a legendary figure in American motorsports and football—a Hall of Fame NFL coach who won three Super Bowls with the Washington Redskins and a Toyota partner who built one of NASCAR's most successful racing organizations.
