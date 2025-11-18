@@ -10,6 +10,11 @@
   # Build backend as Netlify Function
   functions = "netlify/functions"
 
+[functions]
+  # Include backend code and data in function bundle
+  included_files = ["backend/**"]
+  node_bundler = "none"
+
 # Frontend SPA routing - redirect all routes to index.html
 [[redirects]]
   from = "/*"
