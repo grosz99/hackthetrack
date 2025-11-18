@@ -1,6 +1,7 @@
 FROM python:3.12-slim
 
-WORKDIR /app
+# Set working directory to backend
+WORKDIR /app/backend
 
 # Copy requirements first for better caching
 COPY requirements.txt .
@@ -12,8 +13,8 @@ RUN python -m pip install --upgrade pip && \
 # Copy application code
 COPY . .
 
-# Expose port (Railway will set PORT env var)
+# Expose port (Heroku will set PORT env var)
 EXPOSE 8000
 
-# Start command
+# Start command (from backend directory)
 CMD python -m uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
