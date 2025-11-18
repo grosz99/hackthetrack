@@ -31,6 +31,11 @@ export default function Overview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showFactorInfo, setShowFactorInfo] = useState(false);
+  const [expandedCard, setExpandedCard] = useState(null);
+
+  const toggleCard = (cardName) => {
+    setExpandedCard(expandedCard === cardName ? null : cardName);
+  };
 
   // Classification for driver
   const classification = driverData ? classifyDriver(driverData) : null;
@@ -374,17 +379,17 @@ export default function Overview() {
         <div className="factor-tiles-grid">
           {/* Consistency Card */}
           <div className="factor-card">
-            <NavLink
-              to={`/driver/${selectedDriverNumber}/skills`}
+            <button
+              onClick={() => toggleCard('consistency')}
               className="card-expand-btn"
-              title="Click to learn more about this factor"
-              aria-label="Expand Consistency details"
+              title="Click to see description"
+              aria-label="Toggle Consistency description"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-            </NavLink>
+            </button>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Consistency</h4>
               <div className="factor-card-score-large">
@@ -400,22 +405,24 @@ export default function Overview() {
               <span>0</span>
               <span>{factorStats.consistency?.max?.toFixed(0) || 100}</span>
             </div>
-            <p className="factor-card-description">Measures ability to maintain steady lap times and avoid performance variability throughout a race stint.</p>
+            {expandedCard === 'consistency' && (
+              <p className="factor-card-description">Measures ability to maintain steady lap times and avoid performance variability throughout a race stint.</p>
+            )}
           </div>
 
           {/* Racecraft Card */}
           <div className="factor-card">
-            <NavLink
-              to={`/driver/${selectedDriverNumber}/skills`}
+            <button
+              onClick={() => toggleCard('racecraft')}
               className="card-expand-btn"
-              title="Click to learn more about this factor"
-              aria-label="Expand Racecraft details"
+              title="Click to see description"
+              aria-label="Toggle Racecraft description"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-            </NavLink>
+            </button>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Racecraft</h4>
               <div className="factor-card-score-large">
@@ -431,22 +438,24 @@ export default function Overview() {
               <span>0</span>
               <span>{factorStats.racecraft?.max?.toFixed(0) || 100}</span>
             </div>
-            <p className="factor-card-description">Evaluates wheel-to-wheel racing skills including overtaking ability, defensive driving, and position management.</p>
+            {expandedCard === 'racecraft' && (
+              <p className="factor-card-description">Evaluates wheel-to-wheel racing skills including overtaking ability, defensive driving, and position management.</p>
+            )}
           </div>
 
           {/* Speed Card */}
           <div className="factor-card">
-            <NavLink
-              to={`/driver/${selectedDriverNumber}/skills`}
+            <button
+              onClick={() => toggleCard('speed')}
               className="card-expand-btn"
-              title="Click to learn more about this factor"
-              aria-label="Expand Raw Speed details"
+              title="Click to see description"
+              aria-label="Toggle Raw Speed description"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-            </NavLink>
+            </button>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Raw Speed</h4>
               <div className="factor-card-score-large">
@@ -462,22 +471,24 @@ export default function Overview() {
               <span>0</span>
               <span>{factorStats.speed?.max?.toFixed(0) || 100}</span>
             </div>
-            <p className="factor-card-description">Measures pure pace including qualifying performance, fastest race laps, and overall lap time potential.</p>
+            {expandedCard === 'speed' && (
+              <p className="factor-card-description">Measures pure pace including qualifying performance, fastest race laps, and overall lap time potential.</p>
+            )}
           </div>
 
           {/* Tire Management Card */}
           <div className="factor-card">
-            <NavLink
-              to={`/driver/${selectedDriverNumber}/skills`}
+            <button
+              onClick={() => toggleCard('tire_management')}
               className="card-expand-btn"
-              title="Click to learn more about this factor"
-              aria-label="Expand Tire Management details"
+              title="Click to see description"
+              aria-label="Toggle Tire Management description"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-            </NavLink>
+            </button>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Tire Management</h4>
               <div className="factor-card-score-large">
@@ -493,7 +504,9 @@ export default function Overview() {
               <span>0</span>
               <span>{factorStats.tire_management?.max?.toFixed(0) || 100}</span>
             </div>
-            <p className="factor-card-description">Assesses ability to preserve tire performance over long stints and minimize degradation through smooth inputs.</p>
+            {expandedCard === 'tire_management' && (
+              <p className="factor-card-description">Assesses ability to preserve tire performance over long stints and minimize degradation through smooth inputs.</p>
+            )}
           </div>
         </div>
       </div>
