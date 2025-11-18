@@ -235,7 +235,16 @@ export default function RankingsTable({ drivers = [], onShowInfo }) {
                 {/* Driver Info */}
                 <td className="driver-info">
                   <div className="driver-number-badge">{driver.number}</div>
-                  <span className="driver-name">{driver.name}</span>
+                  <div className="driver-name-container">
+                    {driver.name.split(' ').length > 1 ? (
+                      <>
+                        <div className="driver-first-name">{driver.name.split(' ')[0]}</div>
+                        <div className="driver-last-name">{driver.name.split(' ').slice(1).join(' ')}</div>
+                      </>
+                    ) : (
+                      <div className="driver-name">{driver.name}</div>
+                    )}
+                  </div>
                 </td>
 
                 {/* Overall Score */}
