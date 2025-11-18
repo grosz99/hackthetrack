@@ -29,10 +29,12 @@ An AI-powered racing talent scouting and development platform that replicates Jo
 
 ### The 4-Factor Performance Model
 Validated statistical model explaining 89.5% of race outcomes:
-- **Speed (46.6%)**: Raw pace through lap times and sector performance
+- **Racecraft (46.6%)**: Wheel-to-wheel skills, overtaking efficiency, position gains (MOST IMPORTANT)
 - **Consistency (29.1%)**: Lap-to-lap repeatability and variation control
-- **Racecraft (14.9%)**: Wheel-to-wheel skills and overtaking efficiency
+- **Speed (14.9%)**: Raw pace through lap times and sector performance
 - **Tire Management (9.5%)**: Pace preservation over race distance
+
+**Key Insight**: In spec racing (identical cars), racecraft matters more than raw speed.
 
 ---
 
@@ -384,9 +386,9 @@ heroku restart --app hackthetrack-api
 - **34 drivers** analyzed in Toyota GR86 Cup series
 
 ### Factor Weights (Regression Coefficients)
-1. **Speed**: 46.6% influence on finish position
+1. **Racecraft**: 46.6% influence on finish position (MOST IMPORTANT)
 2. **Consistency**: 29.1% influence
-3. **Racecraft**: 14.9% influence
+3. **Speed**: 14.9% influence
 4. **Tire Management**: 9.5% influence
 
 ### Factor Definitions
