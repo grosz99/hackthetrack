@@ -315,6 +315,28 @@
   border: 3px solid #B80818;
 }
 
+.driver-name-container {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.driver-first-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.driver-last-name {
+  font-weight: 900;
+  font-size: 18px;
+  color: #000;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
 .rankings-table .driver-name {
   font-weight: 700;
   font-size: 16px;
