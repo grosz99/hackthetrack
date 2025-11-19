@@ -62,26 +62,26 @@ export default function WelcomeModal({ onClose }) {
         <div className="four-factors-section">
           <div className="factor-overview">
             <p>
-              Our AI analyzes driver performance across four validated dimensions (R²=0.895). This model breaks down what makes a complete driver and identifies specific areas for improvement.
+              Our AI analyzes driver performance across four validated dimensions (R²=0.895).
             </p>
           </div>
 
           <div className="factor-definitions-grid">
             <div className="factor-card-uniform">
               <h4>Speed (46.6%)</h4>
-              <p>Raw pace through lap times and sector performance, showing pure driving ability when pushing to the limit.</p>
+              <p>Raw pace through lap times and sector performance showing pure driving ability.</p>
             </div>
             <div className="factor-card-uniform">
               <h4>Consistency (29.1%)</h4>
-              <p>Lap-to-lap repeatability with lower variation indicating better control and predictable performance.</p>
+              <p>Lap-to-lap repeatability indicating better control and predictable performance.</p>
             </div>
             <div className="factor-card-uniform">
               <h4>Racecraft (14.9%)</h4>
-              <p>Wheel-to-wheel racing skills including overtaking efficiency, defensive positioning, and strategy execution.</p>
+              <p>Wheel-to-wheel racing skills including overtaking efficiency and positioning.</p>
             </div>
             <div className="factor-card-uniform">
               <h4>Tire Management (9.5%)</h4>
-              <p>Ability to preserve tire performance throughout a stint while maintaining competitive pace.</p>
+              <p>Ability to preserve tire performance throughout a stint while staying competitive.</p>
             </div>
           </div>
         </div>
