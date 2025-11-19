@@ -187,6 +187,26 @@ export default function Improve() {
         setIsTopDriver(true);
         setTopDriverData(response.data);
         setSearching(false);
+
+        // Generate AI coaching insights for top driver
+        if (response.data.target_factor && response.data.losses_to_analyze?.length > 0) {
+          setLoadingInsights(true);
+          try {
+            const insightsResponse = await api.post('/api/coaching/top-driver-insights', {
+              driver_number: selectedDriverNumber,
+              target_factor: response.data.target_factor,
+              track_name: tracks.find(t => t.id === selectedTrack)?.name || selectedTrack,
+              losses: response.data.losses_to_analyze,
+              current_skills: response.data.current_skills
+            });
+            setLiveCoachingInsights(insightsResponse.data.insights);
+          } catch (insightErr) {
+            console.error('Error fetching top driver insights:', insightErr);
+            setLiveCoachingInsights(null);
+          } finally {
+            setLoadingInsights(false);
+          }
+        }
         return;
       }
 
@@ -422,6 +442,32 @@ export default function Improve() {
                           </span>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Coaching Insights for Top Driver */}
+                {topDriverData.target_factor && (
+                  <div className="top-driver-coaching-section">
+                    <h4>AI Coaching: Converting Podiums to Wins at {tracks.find(t => t.id === selectedTrack)?.name}</h4>
+                    <div className="coaching-insights">
+                      {loadingInsights ? (
+                        <div className="insights-loading">
+                          <div className="insights-spinner"></div>
+                          <p>Analyzing your non-winning races...</p>
+                        </div>
+                      ) : liveCoachingInsights ? (
+                        <div className="coaching-analysis-box">
+                          <div className="coaching-text live-insights">
+                            {formatCoachingInsights(liveCoachingInsights)}
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="insight-placeholder">
+                          <p><strong>Ready to generate insights</strong></p>
+                          <p>Click "Find Best Match" to get AI coaching on converting your podium finishes to wins.</p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}

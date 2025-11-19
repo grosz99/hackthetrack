@@ -230,5 +230,81 @@ Remember: This is sports car racing (IMSA GTP/Gazoo Racing), not Formula 1. Focu
 
         return response.content[0].text
 
+    def generate_top_driver_insights(
+        self,
+        driver_name: str,
+        driver_number: int,
+        target_factor: str,
+        track_name: str,
+        losses: List[Dict],
+        current_skills: Dict
+    ) -> str:
+        """
+        Generate AI coaching for top drivers who have no better comparables.
+
+        Focuses on analyzing non-winning races to identify improvement opportunities.
+        """
+        system_prompt = """You are an elite motorsports performance coach analyzing a top-tier driver's races.
+
+TASK:
+Write concise coaching advice in 3 sections focused on converting P2-P3 finishes into wins.
+
+FORMAT:
+**Critical Pattern**
+1-2 sentences identifying what's preventing wins
+
+**Track-Specific Focus**
+1-2 sentences on this specific track's challenges
+
+**Path to P1**
+1-2 sentences on concrete steps to secure more wins
+
+CONSTRAINTS:
+- Keep it SHORT - maximum 1-2 sentences per section
+- This is IMSA GTP/sports car racing, not Formula 1
+- Focus on the margin between P2/P3 and P1
+- Be specific and actionable
+- Second person ("you need to...")
+"""
+
+        factor_display = target_factor.replace("_", " ").title()
+
+        user_prompt = f"""TOP DRIVER ANALYSIS: {driver_name}
+
+This driver is already elite-level but needs to convert more podiums into wins.
+
+CURRENT SKILLS:
+- Speed: {current_skills.get('speed', 0):.1f}th percentile
+- Consistency: {current_skills.get('consistency', 0):.1f}th percentile
+- Racecraft: {current_skills.get('racecraft', 0):.1f}th percentile
+- Tire Management: {current_skills.get('tire_management', 0):.1f}th percentile
+
+IMPROVEMENT FOCUS: {factor_display}
+TRACK: {track_name}
+
+NON-WINNING FINISHES TO ANALYZE:
+"""
+
+        for loss in losses[:3]:  # Top 3 losses
+            user_prompt += f"- {loss.get('track')}: Started P{loss.get('start')} → Finished P{loss.get('finish')}"
+            positions = loss.get('positions_gained', 0)
+            if positions != 0:
+                user_prompt += f" ({'+' if positions > 0 else ''}{positions} positions)"
+            user_prompt += "\n"
+
+        user_prompt += f"""
+Write 3-section coaching for {driver_name} to identify what's preventing wins and how to improve {factor_display} at {track_name}.
+
+Remember: This is sports car racing (IMSA GTP). Focus on the final details that separate P2 from P1."""
+
+        response = self.client.messages.create(
+            model=self.model,
+            max_tokens=400,
+            system=system_prompt,
+            messages=[{"role": "user", "content": user_prompt}]
+        )
+
+        return response.content[0].text
+
 
 ai_skill_coach = AISkillCoach()
