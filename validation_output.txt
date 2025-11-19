@@ -1,0 +1,170 @@
+================================================================================
+STEP 1: Loading Data Files
+================================================================================
+✓ Features DataFrame: (309, 15)
+✓ Factor Scores DataFrame: (291, 8)
+✓ Factor Loadings DataFrame: (12, 6)
+✓ Driver Factors: 34 drivers, 544 records
+✓ Race Results: 34 drivers, 298 results
+✓ Factor Breakdowns: 0 drivers
+
+================================================================================
+STEP 2: Feature Engineering Validation
+================================================================================
+Expected features: 12
+Actual features: 12
+✓ All expected features present
+
+⚠ NULL VALUES DETECTED:
+qualifying_pace         1
+best_race_lap           5
+avg_top10_pace          5
+stint_consistency      11
+sector_consistency      9
+braking_consistency     9
+pace_degradation       11
+late_stint_perf        11
+early_vs_late_pace     13
+position_changes        5
+positions_gained        5
+dtype: int64
+
+Feature Statistics:
+       qualifying_pace  best_race_lap  ...  positions_gained  performance_normalized
+count          308.000        304.000  ...           304.000                 309.000
+mean             0.983          0.987  ...             0.499                   0.508
+std              0.018          0.012  ...             0.236                   0.298
+min              0.897          0.923  ...            -0.429                   0.000
+25%              0.980          0.982  ...             0.408                   0.238
+50%              0.989          0.990  ...             0.536                   0.519
+75%              0.995          0.995  ...             0.661                   0.767
+max              1.000          1.000  ...             0.984                   1.000
+
+[8 rows x 12 columns]
+
+✓ sector_consistency range: 0.010 to 1.000
+✓ braking_consistency range: 0.023 to 1.000
+
+================================================================================
+STEP 3: Factor Analysis Validation
+================================================================================
+Cleaned data: 291 samples (removed 18 rows)
+
+4-Factor Model Explained Variance:
+  Factor 1: 28.42% (Cumulative: 28.42%)
+  Factor 2: 18.56% (Cumulative: 46.98%)
+  Factor 3: 13.64% (Cumulative: 60.62%)
+  Factor 4: 9.47% (Cumulative: 70.09%)
+
+Total variance explained by 4 factors: 70.09%
+Total variance explained by 5 factors: 78.44%
+
+Factor Loadings (top 3 features per factor):
+
+Factor_1:
+  performance_normalized: 0.425
+  late_stint_perf: 0.378
+  best_race_lap: 0.365
+
+Factor_2:
+  position_changes: 0.410
+  qualifying_pace: -0.390
+  best_race_lap: -0.359
+
+Factor_3:
+  positions_gained: 0.482
+  position_changes: 0.412
+  braking_consistency: -0.404
+
+Factor_4:
+  early_vs_late_pace: 0.644
+  late_stint_perf: 0.382
+  braking_consistency: -0.379
+
+Correlation between recomputed and stored loadings:
+  Factor_1: r = 0.4446
+  Factor_2: r = 0.5394
+  Factor_3: r = 0.2766
+  Factor_4: r = 0.8388
+
+================================================================================
+STEP 4: Model Statistics Validation
+================================================================================
+Clean samples for regression: 291 (removed 0 rows)
+
+Model Performance:
+  R² Score: 0.8947
+  MAE: 1.77 positions
+
+Factor Weights (from regression coefficients):
+  Factor 1: 29.1% (coef: 3.792)
+  Factor 2: 14.9% (coef: 1.943)
+  Factor 3: 46.6% (coef: 6.079)
+  Factor 4: 9.5% (coef: 1.237)
+
+Comparison with Documented Values:
+  R² - Documented: 0.895, Actual: 0.895, Diff: 0.000
+  MAE - Documented: 1.78, Actual: 1.77, Diff: 0.01
+
+Factor Interpretation (based on loadings):
+  Factor 1: Likely SPEED/PACE (high loadings on qualifying_pace, best_race_lap)
+  Factor 2: Likely CONSISTENCY (high loadings on sector/stint consistency)
+  Factor 3: Likely RACECRAFT (high loadings on position_changes, positions_gained)
+  Factor 4: Likely TIRE MANAGEMENT (high loadings on pace_degradation, late_stint_perf)
+
+✓ R² is within acceptable range (diff < 0.05)
+✓ MAE is within acceptable range (diff < 0.5)
+
+================================================================================
+STEP 5: Data Consistency Validation
+================================================================================
+Drivers in CSV: 37
+Drivers in driver_factors.json: 34
+✗ DRIVER MISMATCH: {22, 58, 61, 67, 111}
+
+Race results in CSV: 291
+Race results in JSON: 544
+✗ RACE COUNT MISMATCH
+
+Sample validation for driver #2:
+  CSV factor scores available: True
+  JSON factor data available: True
+
+✓ Sector timing fields present in race_results.json: True
+✓ Sector timing data populated: True
+
+================================================================================
+COMPREHENSIVE VALIDATION REPORT
+================================================================================
+
+📊 STATISTICAL VALIDATION SUMMARY:
+  Current R² Score: 0.8947
+  Documented R²: 0.8950
+  Current MAE: 1.77 positions
+  Documented MAE: 1.78 positions
+
+  Factor Weights:
+    Factor 1 (Speed): 29.1%
+    Factor 2 (Consistency): 14.9%
+    Factor 3 (Racecraft): 46.6%
+    Factor 4 (Tire Mgmt): 9.5%
+
+  Variance Explained (4 factors): 70.09%
+  Variance Explained (5 factors): 78.44%
+
+🔍 ISSUES FOUND:
+  1. Null values in features: {'qualifying_pace': 1, 'best_race_lap': 5, 'avg_top10_pace': 5, 'stint_consistency': 11, 'sector_consistency': 9, 'braking_consistency': 9, 'pace_degradation': 11, 'late_stint_perf': 11, 'early_vs_late_pace': 13, 'position_changes': 5, 'positions_gained': 5}
+  2. Low correlation for Factor_1: 0.4446
+  3. Low correlation for Factor_2: 0.5394
+  4. Low correlation for Factor_3: 0.2766
+  5. Low correlation for Factor_4: 0.8388
+  6. Factor weights differ significantly (max diff: 31.7%)
+  7. Driver mismatch between CSV and JSON: {22, 58, 61, 67, 111}
+  8. Race count mismatch: CSV=291, JSON=544
+
+💡 RECOMMENDATIONS:
+  1. Review factor weight calculations
+
+================================================================================
+
+Full report saved to: /Users/justingrosz/Documents/AI-Work/hackthetrack-master/backend/data/validation_report.json

@@ -271,6 +271,35 @@
   font-weight: 900;
 }
 
+/* Elite badge styling for top drivers */
+.match-badge.elite {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.match-badge.elite svg {
+  flex-shrink: 0;
+}
+
+/* Elite target finish styling */
+.their-finish.elite-target .label {
+  color: #FFD700;
+  font-weight: 700;
+}
+
+.their-finish.elite-target .value {
+  color: #FFD700;
+}
+
+/* Optional subtle gold border for elite cards */
+.best-match-card.elite-self-match {
+  border-color: #FFD700;
+  box-shadow: 0 0 0 1px #FFD700;
+}
+
 .driver-info {
   margin-bottom: 16px;
 }
