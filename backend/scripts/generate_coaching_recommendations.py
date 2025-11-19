@@ -60,6 +60,30 @@ def load_race_results():
         return data.get("data", {})
 
 
+def load_driver_names():
+    """Load driver names from dashboard data."""
+    dashboard_path = backend_path / "data" / "dashboardData.json"
+
+    if not dashboard_path.exists():
+        print(f"Warning: Dashboard data not found at {dashboard_path}")
+        return {}
+
+    with open(dashboard_path, 'r') as f:
+        data = json.load(f)
+        drivers = data.get("drivers", [])
+
+        # Create lookup: driver_number -> driver_name
+        driver_names = {}
+        for driver in drivers:
+            driver_num = driver.get("number", driver.get("driverNumber"))
+            driver_name = driver.get("name", f"Driver #{driver_num}")
+            if driver_num:
+                driver_names[str(driver_num)] = driver_name
+
+        print(f"Loaded names for {len(driver_names)} drivers")
+        return driver_names
+
+
 def calculate_factor_rankings(drivers_data):
     """Calculate rankings for each factor across all drivers."""
     factors = ["speed", "consistency", "racecraft", "tire_management"]
@@ -103,6 +127,7 @@ def generate_all_recommendations(dry_run=False):
     breakdowns_data = load_factor_breakdowns()
     drivers_data = load_driver_data()
     race_results = load_race_results()
+    driver_names = load_driver_names()
 
     print("Calculating factor rankings...")
     factor_rankings = calculate_factor_rankings(drivers_data)
@@ -168,6 +193,7 @@ def generate_all_recommendations(dry_run=False):
             total_drivers = ranking_info.get("total", len(driver_numbers))
 
             driver_races = race_results.get(driver_num, [])
+            driver_display_name = driver_names.get(driver_num, f"Driver #{driver_num}")
 
             try:
                 coaching_text = ai_skill_coach.generate_factor_coaching(
@@ -177,7 +203,8 @@ def generate_all_recommendations(dry_run=False):
                     overall_percentile=user_percentile,
                     rank_among_drivers=user_rank,
                     total_drivers=total_drivers,
-                    race_results=driver_races
+                    race_results=driver_races,
+                    driver_name=driver_display_name
                 )
 
                 recommendations["recommendations"][driver_num][factor_name] = {

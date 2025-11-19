@@ -610,3 +610,280 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* =================================================================
+   TOP DRIVER MESSAGING - Elite Performance
+   ================================================================= */
+.top-driver-message {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  border: 3px solid #FFD700;
+  border-radius: 16px;
+  padding: 32px;
+  color: #fff;
+  text-align: center;
+}
+
+.top-driver-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.top-driver-header h3 {
+  font-size: 32px;
+  font-weight: 900;
+  color: #FFD700;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.top-driver-subtitle {
+  font-size: 18px;
+  color: #ccc;
+  margin-bottom: 32px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.top-driver-stats {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.top-driver-stats .stat-box {
+  background: #2d2d2d;
+  border: 2px solid #444;
+  border-radius: 12px;
+  padding: 24px 32px;
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.top-driver-stats .stat-value {
+  font-size: 36px;
+  font-weight: 900;
+  color: #FFD700;
+  font-family: var(--font-mono);
+}
+
+.top-driver-stats .stat-label {
+  font-size: 14px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.improvement-focus {
+  background: #2d2d2d;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: left;
+  margin-top: 24px;
+}
+
+.improvement-focus h4 {
+  color: #FFD700;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.improvement-text {
+  color: #ccc;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.losses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.losses-list strong {
+  color: #fff;
+  font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.loss-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1a1a1a;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 3px solid #EB0A1E;
+}
+
+.loss-item .track-name {
+  color: #fff;
+  font-weight: 600;
+}
+
+.loss-item .finish-info {
+  color: #999;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+
+.loss-item .gained {
+  color: #4CAF50;
+  margin-left: 8px;
+  font-weight: 700;
+}
+
+.loss-item .lost {
+  color: #EB0A1E;
+  margin-left: 8px;
+  font-weight: 700;
+}
+
+/* =================================================================
+   MATCHING TRANSPARENCY SECTION
+   ================================================================= */
+.matching-transparency {
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+  color: #000;
+}
+
+.matching-transparency summary {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+}
+
+.matching-transparency summary::-webkit-details-marker {
+  display: none;
+}
+
+.matching-transparency summary::before {
+  content: "▶";
+  font-size: 12px;
+  transition: transform 0.2s;
+}
+
+.matching-transparency[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.matching-transparency summary:hover {
+  color: #EB0A1E;
+}
+
+.transparency-content {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #dee2e6;
+}
+
+.transparency-content p {
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.algorithm-description {
+  font-size: 14px;
+  color: #666;
+  font-family: var(--font-mono);
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.skill-deltas {
+  margin: 20px 0;
+}
+
+.skill-deltas h5 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.deltas-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.delta-item {
+  background: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #dee2e6;
+}
+
+.delta-item span:first-child {
+  font-weight: 600;
+  color: #333;
+}
+
+.delta-item .positive {
+  color: #4CAF50;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.delta-item .negative {
+  color: #EB0A1E;
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+.filters-applied {
+  margin-top: 20px;
+}
+
+.filters-applied h5 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.filters-applied ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.filters-applied li {
+  font-size: 14px;
+  color: #666;
+  padding: 8px 12px;
+  background: #fff;
+  border-left: 3px solid #EB0A1E;
+  margin-bottom: 8px;
+  border-radius: 4px;
+}

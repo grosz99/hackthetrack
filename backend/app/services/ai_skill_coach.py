@@ -26,7 +26,7 @@ CONSTRAINTS:
 - EXACTLY 5-6 sentences total, no more
 - Reference specific percentiles and rankings from the data
 - Mention actual track names from their race results when discussing evidence
-- Write in third person (the driver, Driver #X)
+- Write in third person using the driver's name provided (not "Driver #X")
 - Be direct and analytical
 - NO headers, NO bullet points, NO formatting - just flowing sentences
 """
@@ -47,7 +47,8 @@ class AISkillCoach:
         overall_percentile: float,
         rank_among_drivers: int,
         total_drivers: int,
-        race_results: List[Dict] = None
+        race_results: List[Dict] = None,
+        driver_name: str = None
     ) -> str:
         """
         Generate personalized coaching for a specific skill factor.
@@ -60,6 +61,7 @@ class AISkillCoach:
             rank_among_drivers: Driver's rank for this factor
             total_drivers: Total number of drivers
             race_results: List of race result dicts with track-specific data
+            driver_name: Driver's name (optional, defaults to "Driver #XX")
 
         Returns:
             Coaching text formatted for display
@@ -71,7 +73,8 @@ class AISkillCoach:
             overall_percentile,
             rank_among_drivers,
             total_drivers,
-            race_results or []
+            race_results or [],
+            driver_name
         )
 
         response = self.client.messages.create(
@@ -91,12 +94,14 @@ class AISkillCoach:
         overall_percentile: float,
         rank_among_drivers: int,
         total_drivers: int,
-        race_results: List[Dict]
+        race_results: List[Dict],
+        driver_name: str = None
     ) -> str:
         """Format the data into a coaching prompt for Claude."""
         factor_display = factor_name.replace("_", " ").title()
+        display_name = driver_name or f"Driver #{driver_number}"
 
-        prompt = f"""Driver #{driver_number} - {factor_display} Assessment
+        prompt = f"""{display_name} - {factor_display} Assessment
 
 OVERALL: Ranked {rank_among_drivers} of {total_drivers} drivers ({overall_percentile:.1f}th percentile)
 
@@ -126,7 +131,7 @@ SEASON RACE RESULTS:
             )
 
         prompt += f"""
-Write a 5-6 sentence scouting assessment for Driver #{driver_number}'s {factor_display}."""
+Write a 5-6 sentence scouting assessment for {display_name}'s {factor_display}."""
 
         return prompt
 

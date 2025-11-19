@@ -26,6 +26,9 @@ export default function Improve() {
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
+  const [matchingData, setMatchingData] = useState(null);
+  const [isTopDriver, setIsTopDriver] = useState(false);
+  const [topDriverData, setTopDriverData] = useState(null);
 
   const tracks = [
     { id: 'barber', name: 'Barber Motorsports Park' },
@@ -164,12 +167,28 @@ export default function Improve() {
       setBestMatch(null);
       setMatchCoachingData(null);
       setLiveCoachingInsights(null);
+      setIsTopDriver(false);
+      setTopDriverData(null);
+      setMatchingData(null);
 
       // Call backend API to find similar drivers (returns top 1)
       const response = await api.post('/api/drivers/find-similar', {
         current_driver_number: selectedDriverNumber,
         target_skills: targetSkills
       });
+
+      // Store matching algorithm data for transparency
+      if (response.data.matching_algorithm) {
+        setMatchingData(response.data.matching_algorithm);
+      }
+
+      // Handle top driver case (no better drivers available)
+      if (response.data.is_top_driver) {
+        setIsTopDriver(true);
+        setTopDriverData(response.data);
+        setSearching(false);
+        return;
+      }
 
       // Take only the best match
       if (response.data.similar_drivers && response.data.similar_drivers.length > 0) {
@@ -358,7 +377,58 @@ export default function Improve() {
 
           {/* RIGHT COLUMN - BEST MATCH RESULTS */}
           <section className="comparables-section">
-            {!searching && !bestMatch && targetSkills && (
+            {/* Top Driver Scenario - No Better Drivers Available */}
+            {!searching && isTopDriver && topDriverData && (
+              <div className="top-driver-message">
+                <div className="top-driver-header">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFD700" strokeWidth="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                  </svg>
+                  <h3>Elite Performance Level</h3>
+                </div>
+                <p className="top-driver-subtitle">{topDriverData.message}</p>
+
+                <div className="top-driver-stats">
+                  <div className="stat-box">
+                    <span className="stat-value">P{topDriverData.current_avg_finish}</span>
+                    <span className="stat-label">Avg Finish</span>
+                  </div>
+                  <div className="stat-box">
+                    <span className="stat-value">{topDriverData.wins}</span>
+                    <span className="stat-label">Wins</span>
+                  </div>
+                  <div className="stat-box">
+                    <span className="stat-value">{topDriverData.total_races}</span>
+                    <span className="stat-label">Races</span>
+                  </div>
+                </div>
+
+                {topDriverData.losses_to_analyze && topDriverData.losses_to_analyze.length > 0 && (
+                  <div className="improvement-focus">
+                    <h4>Focus on Converting to Wins</h4>
+                    <p className="improvement-text">{topDriverData.improvement_suggestion}</p>
+                    <div className="losses-list">
+                      <strong>Races to Analyze:</strong>
+                      {topDriverData.losses_to_analyze.map((loss, idx) => (
+                        <div key={idx} className="loss-item">
+                          <span className="track-name">{loss.track}</span>
+                          <span className="finish-info">
+                            Started P{loss.start} → Finished P{loss.finish}
+                            {loss.positions_gained !== 0 && (
+                              <span className={loss.positions_gained > 0 ? "gained" : "lost"}>
+                                {loss.positions_gained > 0 ? '+' : ''}{loss.positions_gained}
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {!searching && !bestMatch && !isTopDriver && targetSkills && (
               <div className="comparables-empty">
                 <div className="empty-icon" aria-hidden="true">
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5">
@@ -385,6 +455,56 @@ export default function Improve() {
                 <div className="best-match-header">
                   <h3>Best Match at {tracks.find(t => t.id === selectedTrack)?.name}</h3>
                 </div>
+
+                {/* Matching Transparency Section */}
+                {matchingData && (
+                  <details className="matching-transparency">
+                    <summary>How We Found This Match</summary>
+                    <div className="transparency-content">
+                      <p><strong>{matchingData.method}</strong></p>
+                      <p className="algorithm-description">{matchingData.description}</p>
+
+                      <div className="skill-deltas">
+                        <h5>Your Skill Improvements:</h5>
+                        <div className="deltas-grid">
+                          <div className="delta-item">
+                            <span>Speed</span>
+                            <span className={matchingData.skill_deltas.speed >= 0 ? 'positive' : 'negative'}>
+                              {matchingData.skill_deltas.speed >= 0 ? '+' : ''}{matchingData.skill_deltas.speed}
+                            </span>
+                          </div>
+                          <div className="delta-item">
+                            <span>Consistency</span>
+                            <span className={matchingData.skill_deltas.consistency >= 0 ? 'positive' : 'negative'}>
+                              {matchingData.skill_deltas.consistency >= 0 ? '+' : ''}{matchingData.skill_deltas.consistency}
+                            </span>
+                          </div>
+                          <div className="delta-item">
+                            <span>Racecraft</span>
+                            <span className={matchingData.skill_deltas.racecraft >= 0 ? 'positive' : 'negative'}>
+                              {matchingData.skill_deltas.racecraft >= 0 ? '+' : ''}{matchingData.skill_deltas.racecraft}
+                            </span>
+                          </div>
+                          <div className="delta-item">
+                            <span>Tire Mgmt</span>
+                            <span className={matchingData.skill_deltas.tire_management >= 0 ? 'positive' : 'negative'}>
+                              {matchingData.skill_deltas.tire_management >= 0 ? '+' : ''}{matchingData.skill_deltas.tire_management}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="filters-applied">
+                        <h5>Filters Applied:</h5>
+                        <ul>
+                          {matchingData.filters_applied.map((filter, idx) => (
+                            <li key={idx}>{filter}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </details>
+                )}
 
                 {/* Best Match Card */}
                 <div className="best-match-card">
