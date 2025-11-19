@@ -519,88 +519,57 @@ export default function Improve() {
                   </details>
                 )}
 
-                {/* Best Match Card */}
-                {bestMatch.is_elite_self_match ? (
-                  // No match found - Show analysis for top performer
-                  <div className="no-match-analysis">
-                    <h3>Performance Analysis</h3>
-                    <p className="analysis-intro">No drivers with better performance than your P{driverData.stats?.average_finish?.toFixed(1)} average finish. Here's how to improve further:</p>
-
-                    <div className="current-performance">
-                      <div className="stat-item">
-                        <span className="stat-label">Current Avg</span>
-                        <span className="stat-value">P{driverData.stats?.average_finish?.toFixed(1)}</span>
+                {/* Best Match Card - Unified for all drivers */}
+                <div className="best-match-card">
+                  {bestMatch.is_elite_self_match ? (
+                    // Top driver - no match available
+                    <div className="no-match-message">
+                      <p className="top-driver-note">
+                        <strong>No match found</strong> - You're already a top performer with a P{driverData.stats?.average_finish?.toFixed(1)} average finish.
+                      </p>
+                    </div>
+                  ) : (
+                    // Regular match found
+                    <>
+                      <div className="match-badge">{bestMatch.match_score}% Match</div>
+                      <div className="driver-info">
+                        <h4>Driver #{bestMatch.driver_number}</h4>
+                        <p>{bestMatch.driver_name}</p>
                       </div>
-                      {bestMatch.wins !== undefined && (
-                        <div className="stat-item">
-                          <span className="stat-label">Wins</span>
-                          <span className="stat-value">{bestMatch.wins}</span>
+                      {bestMatch.avg_finish && (
+                        <div className="finish-comparison">
+                          <div className="your-finish">
+                            <span className="label">Your Avg</span>
+                            <span className="value">P{driverData.stats?.average_finish?.toFixed(1) || 'N/A'}</span>
+                          </div>
+                          <div className="arrow">→</div>
+                          <div className="their-finish">
+                            <span className="label">Their Avg</span>
+                            <span className="value">P{bestMatch.avg_finish.toFixed(1)}</span>
+                          </div>
                         </div>
                       )}
-                      {bestMatch.total_races !== undefined && (
-                        <div className="stat-item">
-                          <span className="stat-label">Total Races</span>
-                          <span className="stat-value">{bestMatch.total_races}</span>
+                      <div className="skills-grid">
+                        <div className="skill-item">
+                          <span className="skill-label">Speed</span>
+                          <span className="skill-value">{bestMatch.skills.speed}</span>
                         </div>
-                      )}
-                    </div>
-
-                    {bestMatch.losses_to_analyze && bestMatch.losses_to_analyze.length > 0 && (
-                      <div className="races-to-analyze">
-                        <h4>Races to Analyze</h4>
-                        <p>Focus on these non-winning finishes:</p>
-                        <div className="race-list">
-                          {bestMatch.losses_to_analyze.map((loss, idx) => (
-                            <div key={idx} className="race-item">
-                              <span className="track-name">{loss.track}</span>
-                              <span className="result">P{loss.start} → P{loss.finish}</span>
-                            </div>
-                          ))}
+                        <div className="skill-item">
+                          <span className="skill-label">Consistency</span>
+                          <span className="skill-value">{bestMatch.skills.consistency}</span>
+                        </div>
+                        <div className="skill-item">
+                          <span className="skill-label">Racecraft</span>
+                          <span className="skill-value">{bestMatch.skills.racecraft}</span>
+                        </div>
+                        <div className="skill-item">
+                          <span className="skill-label">Tire Mgmt</span>
+                          <span className="skill-value">{bestMatch.skills.tire_management}</span>
                         </div>
                       </div>
-                    )}
-                  </div>
-                ) : (
-                  // Regular match found - Show comparison
-                  <div className="best-match-card">
-                    <div className="match-badge">{bestMatch.match_score}% Match</div>
-                    <div className="driver-info">
-                      <h4>Driver #{bestMatch.driver_number}</h4>
-                      <p>{bestMatch.driver_name}</p>
-                    </div>
-                    {bestMatch.avg_finish && (
-                      <div className="finish-comparison">
-                        <div className="your-finish">
-                          <span className="label">Your Avg</span>
-                          <span className="value">P{driverData.stats?.average_finish?.toFixed(1) || 'N/A'}</span>
-                        </div>
-                        <div className="arrow">→</div>
-                        <div className="their-finish">
-                          <span className="label">Their Avg</span>
-                          <span className="value">P{bestMatch.avg_finish.toFixed(1)}</span>
-                        </div>
-                      </div>
-                    )}
-                    <div className="skills-grid">
-                      <div className="skill-item">
-                        <span className="skill-label">Speed</span>
-                        <span className="skill-value">{bestMatch.skills.speed}</span>
-                      </div>
-                      <div className="skill-item">
-                        <span className="skill-label">Consistency</span>
-                        <span className="skill-value">{bestMatch.skills.consistency}</span>
-                      </div>
-                      <div className="skill-item">
-                        <span className="skill-label">Racecraft</span>
-                        <span className="skill-value">{bestMatch.skills.racecraft}</span>
-                      </div>
-                      <div className="skill-item">
-                        <span className="skill-label">Tire Mgmt</span>
-                        <span className="skill-value">{bestMatch.skills.tire_management}</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                    </>
+                  )}
+                </div>
 
                 {/* AI-Generated Improvement Guidance */}
                 {primaryImprovement && primaryImprovement.delta > 0 && (
