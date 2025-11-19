@@ -10,11 +10,12 @@
   box-sizing: border-box;
 }
 
-/* Container constraint for content */
-.improve-page > * {
+.improve-page__container {
+  width: 100%;
   max-width: 1500px;
   margin-left: auto;
   margin-right: auto;
+  box-sizing: border-box;
 }
 
 /* Main Content */
