@@ -10,9 +10,9 @@
   box-sizing: border-box;
 }
 
-/* Container constraint for content - narrower for better readability */
+/* Container constraint for content - match navigation width */
 .improve-page > * {
-  max-width: 1400px;
+  max-width: 1350px;
   margin-left: auto;
   margin-right: auto;
 }
