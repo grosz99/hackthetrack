@@ -1,0 +1,33 @@
+{
+  "validation_date": "2025-11-18T12:27:38.761794",
+  "statistics": {
+    "feature_count": 12,
+    "feature_nulls": 85.0,
+    "explained_variance_4factor": 0.7008803852876672,
+    "explained_variance_5factor": 0.7843631218652667,
+    "r2_score": 0.8946609662036447,
+    "mae": 1.7721500298341082,
+    "factor_weights": [
+      29.05696857574746,
+      14.887817859936304,
+      46.5799191061418,
+      9.475294458174442
+    ],
+    "documented_r2": 0.895,
+    "documented_mae": 1.78
+  },
+  "issues": [
+    "Null values in features: {'qualifying_pace': 1, 'best_race_lap': 5, 'avg_top10_pace': 5, 'stint_consistency': 11, 'sector_consistency': 9, 'braking_consistency': 9, 'pace_degradation': 11, 'late_stint_perf': 11, 'early_vs_late_pace': 13, 'position_changes': 5, 'positions_gained': 5}",
+    "Low correlation for Factor_1: 0.4446",
+    "Low correlation for Factor_2: 0.5394",
+    "Low correlation for Factor_3: 0.2766",
+    "Low correlation for Factor_4: 0.8388",
+    "Factor weights differ significantly (max diff: 31.7%)",
+    "Driver mismatch between CSV and JSON: {22, 58, 61, 67, 111}",
+    "Race count mismatch: CSV=291, JSON=544"
+  ],
+  "recommendations": [
+    "Review factor weight calculations"
+  ],
+  "status": "REVIEW_NEEDED"
+}

@@ -1345,9 +1345,10 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
             })
 
         # Edge case: No better drivers found (top driver scenario)
+        # Return as self-comparison to maintain UX consistency
         logger.info(f"DEBUG: find-similar for driver #{current_driver_num}, matches found: {len(matches)}, current_avg_finish: {current_avg_finish}")
         if not matches:
-            logger.info(f"DEBUG: TOP DRIVER SCENARIO - returning is_top_driver=True")
+            logger.info(f"DEBUG: TOP DRIVER SCENARIO - returning self-comparison match")
             # For top drivers, analyze their losses to identify improvement opportunities
             race_results = data_loader.get_race_results(current_driver_num)
             losses = []
@@ -1377,17 +1378,43 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
             weakest_factor = min(current_skills.items(), key=lambda x: x[1])
             target_factor = weakest_factor[0]
 
+            # Return self-comparison in same format as regular matches
             return {
-                "similar_drivers": [],
-                "is_top_driver": True,
-                "message": f"You're already one of the top performers (P{round(current_avg_finish, 2)} avg). No drivers with better results to compare against.",
-                "current_avg_finish": round(current_avg_finish, 2),
-                "total_races": len(race_results) if race_results else 0,
-                "wins": len(wins),
-                "losses_to_analyze": losses[:5],  # Top 5 losses for improvement focus
-                "improvement_suggestion": "Focus on consistency and converting strong positions to wins. Analyze races where you didn't finish P1 to identify specific areas for improvement.",
-                "target_factor": target_factor,  # For AI coaching generation
-                "current_skills": current_skills
+                "similar_drivers": [{
+                    "driver_number": current_driver_num,
+                    "driver_name": current_driver.driver_name or f"Driver #{current_driver_num}",
+                    "match_score": 100.0,  # Perfect match to self
+                    "is_elite_self_match": True,
+                    "skills": {
+                        'speed': round(current_driver.speed.percentile, 1),
+                        'consistency': round(current_driver.consistency.percentile, 1),
+                        'racecraft': round(current_driver.racecraft.percentile, 1),
+                        'tire_management': round(current_driver.tire_management.percentile, 1)
+                    },
+                    "avg_finish": round(current_avg_finish, 2),
+                    "target_avg_finish": 1.0,  # Aspirational target
+                    "current_avg_finish": round(current_avg_finish, 2),
+                    "wins": len(wins),
+                    "total_races": len(race_results) if race_results else 0,
+                    "losses_to_analyze": losses[:5],
+                    "target_factor": target_factor,
+                    "performance_improvement": round(current_avg_finish - 1.0, 2)  # Gap to perfection
+                }],
+                "matching_algorithm": {
+                    "method": "Elite Driver Self-Improvement Analysis",
+                    "description": "You're already the top performer. Analysis focuses on converting podium finishes to wins.",
+                    "filters_applied": [
+                        f"Elite driver threshold (P{round(current_avg_finish, 2)} avg)",
+                        "Self-improvement analysis",
+                        f"Focus factor: {target_factor.replace('_', ' ').title()}"
+                    ],
+                    "skill_deltas": {
+                        "speed": round(target_speed - current_driver.speed.score, 1),
+                        "consistency": round(target_consistency - current_driver.consistency.score, 1),
+                        "racecraft": round(target_racecraft - current_driver.racecraft.score, 1),
+                        "tire_management": round(target_tire - current_driver.tire_management.score, 1)
+                    }
+                }
             }
 
         # Sort by distance (closest skill match first) and take top 3
