@@ -32,8 +32,9 @@ function App() {
                 <Route path="/driver/:driverNumber/telemetry-comparison" element={<TelemetryComparison />} />
                 <Route path="/driver/:driverNumber/strategy-chat" element={<StrategyChat />} />
 
-                {/* Legacy improve route redirect */}
+                {/* Legacy improve/development route redirects */}
                 <Route path="/driver/:driverNumber/improve" element={<Navigate to="/driver/:driverNumber/driver-development" replace />} />
+                <Route path="/driver/:driverNumber/development" element={<Navigate to="/driver/:driverNumber/driver-development" replace />} />
 
                 {/* Track Intelligence - Global feature not driver-specific */}
                 <Route path="/track-intelligence" element={<TrackIntelligence />} />
