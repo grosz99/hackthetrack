@@ -10,9 +10,9 @@
   box-sizing: border-box;
 }
 
-/* Container constraint for content - matches Overview page */
+/* Container constraint for content - narrower for better readability */
 .improve-page > * {
-  max-width: 1500px;
+  max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -451,15 +451,15 @@
   background: #f8f9fa;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
-  padding: 24px;
+  padding: 18px;
   flex: 1;
 }
 
 .track-improvement-section h4 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 900;
   color: #000;
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
 }
 
 .improvement-insights {
@@ -495,13 +495,13 @@
   background: #fff;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  padding: 20px;
+  padding: 16px;
 }
 
 .coaching-text {
   font-size: 14px;
   color: #333;
-  line-height: 1.7;
+  line-height: 1.6;
   margin: 0;
   text-align: justify;
 }
