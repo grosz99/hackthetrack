@@ -168,16 +168,14 @@ TASK:
 Write coaching guidance in 3 sections showing how to learn from a comparable driver.
 
 FORMAT:
-**Key Focus Areas**
+KEY FOCUS AREAS
 2-3 sentences in conversational language on what to work on. Reference the data but explain it in simple terms.
 
-**Best Track Opportunities**
+BEST TRACK OPPORTUNITIES
 List 2-3 tracks where Driver #{comparable_driver_number} used this skill to their advantage. For each track, use this exact format:
-- [Track Name]: Brief explanation of why this track matters and what you can learn here (1 sentence max)
+- Track Name: Brief explanation of why this track matters and what you can learn here (1 sentence max)
 
-Keep it simple and clean - no asterisks, no parentheses, just clear bullet points.
-
-**Development Path**
+DEVELOPMENT PATH
 2-3 sentences on concrete, relatable steps to improve using everyday language
 
 CONSTRAINTS:
@@ -187,6 +185,9 @@ CONSTRAINTS:
 - This is IMSA GTP sports car racing
 - Keep formatting clean and easy to scan
 - No overly technical jargon
+- DO NOT use asterisks or markdown formatting
+- Use ALL CAPS for section headers only
+- Use simple hyphens for bullet points, not em-dashes or special characters
 """
 
         factor_display = factor_name.replace("_", " ").title()
@@ -255,16 +256,14 @@ TASK:
 Write coaching advice in 3 sections for an elite driver who wants to turn podiums into wins.
 
 FORMAT:
-**Critical Pattern Across Tracks**
+CRITICAL PATTERN ACROSS TRACKS
 2-3 sentences in conversational language identifying what's preventing wins. Reference specific race data but explain it in simple terms.
 
-**Track-by-Track Analysis**
+TRACK-BY-TRACK ANALYSIS
 List 2-3 tracks where this improvement will make the biggest difference. For each track, use this exact format:
-- [Track Name]: Brief explanation of why this track matters for this skill (1 sentence max)
+- Track Name: Brief explanation of why this track matters for this skill (1 sentence max)
 
-Keep it simple and clean - no asterisks, no parentheses, just clear bullet points.
-
-**Development Path**
+DEVELOPMENT PATH
 2-3 sentences on concrete, relatable steps to improve using everyday language
 
 CONSTRAINTS:
@@ -274,6 +273,9 @@ CONSTRAINTS:
 - This is IMSA GTP sports car racing
 - Keep formatting clean and easy to scan
 - No overly technical jargon
+- DO NOT use asterisks or markdown formatting
+- Use ALL CAPS for section headers only
+- Use simple hyphens for bullet points, not em-dashes or special characters
 """
 
         factor_display = target_factor.replace("_", " ").title()
