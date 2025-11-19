@@ -1363,6 +1363,18 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
                     elif race.finish_position == 1:
                         wins.append({"track": race.track_name})
 
+            # Calculate which skill to focus on (weakest factor)
+            current_skills = {
+                'speed': current_driver.speed.percentile,
+                'consistency': current_driver.consistency.percentile,
+                'racecraft': current_driver.racecraft.percentile,
+                'tire_management': current_driver.tire_management.percentile
+            }
+
+            # Find weakest factor for improvement focus
+            weakest_factor = min(current_skills.items(), key=lambda x: x[1])
+            target_factor = weakest_factor[0]
+
             return {
                 "similar_drivers": [],
                 "is_top_driver": True,
@@ -1371,7 +1383,9 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
                 "total_races": len(race_results) if race_results else 0,
                 "wins": len(wins),
                 "losses_to_analyze": losses[:5],  # Top 5 losses for improvement focus
-                "improvement_suggestion": "Focus on consistency and converting strong positions to wins. Analyze races where you didn't finish P1 to identify specific areas for improvement."
+                "improvement_suggestion": "Focus on consistency and converting strong positions to wins. Analyze races where you didn't finish P1 to identify specific areas for improvement.",
+                "target_factor": target_factor,  # For AI coaching generation
+                "current_skills": current_skills
             }
 
         # Sort by distance (closest skill match first) and take top 3
@@ -1525,6 +1539,64 @@ async def get_comparative_coaching_insights(request: ComparativeCoachingRequest)
     except Exception as e:
         logger.error(f"Error generating coaching insights: {e}")
         raise HTTPException(status_code=500, detail=f"Error generating coaching insights: {str(e)}")
+
+
+# ============================================================================
+# TOP DRIVER INSIGHTS - FOR ELITE PERFORMERS
+# ============================================================================
+
+
+class TopDriverCoachingRequest(BaseModel):
+    """Request for AI coaching insights for top drivers."""
+    driver_number: int
+    target_factor: str  # speed, consistency, racecraft, tire_management
+    track_name: str
+    losses: List[Dict]  # Non-winning races to analyze
+    current_skills: Dict[str, float]
+
+
+@router.post("/coaching/top-driver-insights")
+async def get_top_driver_insights(request: TopDriverCoachingRequest):
+    """
+    Generate AI coaching for top drivers who have no better comparables.
+
+    Analyzes non-winning races to identify what's preventing wins.
+    """
+    try:
+        # Get driver data
+        driver = data_loader.get_driver(request.driver_number)
+        if not driver:
+            raise HTTPException(
+                status_code=404,
+                detail=f"Driver {request.driver_number} not found"
+            )
+
+        # Generate top driver coaching
+        from app.services.ai_skill_coach import ai_skill_coach
+
+        coaching_insights = ai_skill_coach.generate_top_driver_insights(
+            driver_name=driver.driver_name or f"Driver #{request.driver_number}",
+            driver_number=request.driver_number,
+            target_factor=request.target_factor,
+            track_name=request.track_name,
+            losses=request.losses,
+            current_skills=request.current_skills
+        )
+
+        return {
+            "insights": coaching_insights,
+            "driver_number": request.driver_number,
+            "driver_name": driver.driver_name,
+            "target_factor": request.target_factor,
+            "track": request.track_name,
+            "is_top_driver": True
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error generating top driver insights: {e}")
+        raise HTTPException(status_code=500, detail=f"Error generating top driver insights: {str(e)}")
 
 
 # ============================================================================

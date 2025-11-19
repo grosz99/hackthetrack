@@ -887,3 +887,74 @@
   margin-bottom: 8px;
   border-radius: 4px;
 }
+
+/* =================================================================
+   TOP DRIVER COACHING SECTION
+   ================================================================= */
+.top-driver-coaching-section {
+  background: #2d2d2d;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+}
+
+.top-driver-coaching-section h4 {
+  color: #FFD700;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.top-driver-coaching-section .coaching-insights {
+  margin-top: 16px;
+}
+
+.top-driver-coaching-section .coaching-analysis-box {
+  background: #1a1a1a;
+  border: 2px solid #444;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.top-driver-coaching-section .coaching-text {
+  color: #ccc;
+  line-height: 1.8;
+}
+
+.top-driver-coaching-section .coaching-text strong {
+  color: #FFD700;
+  display: block;
+  margin: 16px 0 8px 0;
+  font-size: 16px;
+}
+
+.top-driver-coaching-section .coaching-text p {
+  margin: 8px 0;
+}
+
+.top-driver-coaching-section .insights-loading {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+
+.top-driver-coaching-section .insights-spinner {
+  border: 3px solid #333;
+  border-top-color: #FFD700;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+.top-driver-coaching-section .insight-placeholder {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+
+.top-driver-coaching-section .insight-placeholder strong {
+  color: #fff;
+  font-size: 16px;
+}
