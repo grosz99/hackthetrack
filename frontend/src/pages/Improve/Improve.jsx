@@ -196,42 +196,50 @@ export default function Improve() {
         let enrichedData = { ...response.data };
 
         if (!enrichedData.wins || !enrichedData.total_races || !enrichedData.losses_to_analyze) {
-          console.log('📊 Enriching top driver data from driver stats...');
+          console.log('📊 Enriching top driver data - fetching race results...');
 
-          // Calculate from driver data
-          if (driverData?.race_results) {
-            const wins = driverData.race_results.filter(r => r.finish_position === 1).length;
-            const losses = driverData.race_results
-              .filter(r => r.finish_position && r.finish_position > 1)
-              .map(r => ({
-                track: r.track_name,
-                finish: r.finish_position,
-                start: r.start_position || 0,
-                positions_gained: (r.start_position && r.finish_position)
-                  ? r.start_position - r.finish_position
-                  : 0
-              }))
-              .slice(0, 5);
+          try {
+            // Fetch race results from dedicated endpoint
+            const raceResultsResponse = await api.get(`/api/drivers/${selectedDriverNumber}/results`);
+            const raceResults = raceResultsResponse.data;
+            console.log(`  Fetched ${raceResults.length} race results`);
 
-            // Find weakest skill for target factor
-            const skills = {
-              speed: driverData.speed?.percentile || 0,
-              consistency: driverData.consistency?.percentile || 0,
-              racecraft: driverData.racecraft?.percentile || 0,
-              tire_management: driverData.tire_management?.percentile || 0
-            };
-            const weakestSkill = Object.entries(skills).sort((a, b) => a[1] - b[1])[0];
+            if (raceResults && raceResults.length > 0) {
+              const wins = raceResults.filter(r => r.finish_position === 1).length;
+              const losses = raceResults
+                .filter(r => r.finish_position && r.finish_position > 1)
+                .map(r => ({
+                  track: r.track_name,
+                  finish: r.finish_position,
+                  start: r.start_position || 0,
+                  positions_gained: (r.start_position && r.finish_position)
+                    ? r.start_position - r.finish_position
+                    : 0
+                }))
+                .slice(0, 5);
 
-            enrichedData = {
-              ...enrichedData,
-              wins,
-              total_races: driverData.race_results.length,
-              losses_to_analyze: losses,
-              target_factor: weakestSkill[0],
-              current_skills: skills,
-              improvement_suggestion: "Focus on consistency and converting strong positions to wins. Analyze races where you didn't finish P1 to identify specific areas for improvement."
-            };
-            console.log('✅ Enriched data:', enrichedData);
+              // Find weakest skill for target factor
+              const skills = {
+                speed: driverData.speed?.percentile || 0,
+                consistency: driverData.consistency?.percentile || 0,
+                racecraft: driverData.racecraft?.percentile || 0,
+                tire_management: driverData.tire_management?.percentile || 0
+              };
+              const weakestSkill = Object.entries(skills).sort((a, b) => a[1] - b[1])[0];
+
+              enrichedData = {
+                ...enrichedData,
+                wins,
+                total_races: raceResults.length,
+                losses_to_analyze: losses,
+                target_factor: weakestSkill[0],
+                current_skills: skills,
+                improvement_suggestion: "Focus on consistency and converting strong positions to wins. Analyze races where you didn't finish P1 to identify specific areas for improvement."
+              };
+              console.log('✅ Enriched data:', enrichedData);
+            }
+          } catch (fetchErr) {
+            console.error('Error fetching race results:', fetchErr);
           }
         }
 
