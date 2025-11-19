@@ -574,27 +574,26 @@ export default function Improve() {
                         </div>
                       </div>
                     )}
+                    <div className="skills-grid">
+                      <div className="skill-item">
+                        <span className="skill-label">Speed</span>
+                        <span className="skill-value">{bestMatch.skills.speed}</span>
+                      </div>
+                      <div className="skill-item">
+                        <span className="skill-label">Consistency</span>
+                        <span className="skill-value">{bestMatch.skills.consistency}</span>
+                      </div>
+                      <div className="skill-item">
+                        <span className="skill-label">Racecraft</span>
+                        <span className="skill-value">{bestMatch.skills.racecraft}</span>
+                      </div>
+                      <div className="skill-item">
+                        <span className="skill-label">Tire Mgmt</span>
+                        <span className="skill-value">{bestMatch.skills.tire_management}</span>
+                      </div>
+                    </div>
                   </div>
                 )}
-                  <div className="skills-grid">
-                    <div className="skill-item">
-                      <span className="skill-label">Speed</span>
-                      <span className="skill-value">{bestMatch.skills.speed}</span>
-                    </div>
-                    <div className="skill-item">
-                      <span className="skill-label">Consistency</span>
-                      <span className="skill-value">{bestMatch.skills.consistency}</span>
-                    </div>
-                    <div className="skill-item">
-                      <span className="skill-label">Racecraft</span>
-                      <span className="skill-value">{bestMatch.skills.racecraft}</span>
-                    </div>
-                    <div className="skill-item">
-                      <span className="skill-label">Tire Mgmt</span>
-                      <span className="skill-value">{bestMatch.skills.tire_management}</span>
-                    </div>
-                  </div>
-                </div>
 
                 {/* Track-Specific Improvement Actions */}
                 {primaryImprovement && primaryImprovement.delta > 0 && (
