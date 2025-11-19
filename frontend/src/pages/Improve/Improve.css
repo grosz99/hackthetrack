@@ -10,12 +10,7 @@
   box-sizing: border-box;
 }
 
-/* Container constraint for content - exclude header and tabs like Overview */
-.improve-page > *:not(.dashboard-header):not(.dashboard-nav-tabs-container) {
-  max-width: 1500px;
-  margin-left: auto;
-  margin-right: auto;
-}
+/* No global constraint - apply width limits to specific sections only */
 
 /* Main Content */
 .improve-content {
@@ -23,6 +18,9 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
+  max-width: 1460px;
+  margin-left: auto;
+  margin-right: auto;
   box-sizing: border-box;
 }
 
