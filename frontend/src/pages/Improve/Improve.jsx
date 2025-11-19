@@ -469,56 +469,6 @@ export default function Improve() {
                   <h3>Best Match</h3>
                 </div>
 
-                {/* Matching Transparency Section */}
-                {matchingData && (
-                  <details className="matching-transparency">
-                    <summary>How We Found This Match</summary>
-                    <div className="transparency-content">
-                      <p><strong>{matchingData.method}</strong></p>
-                      <p className="algorithm-description">{matchingData.description}</p>
-
-                      <div className="skill-deltas">
-                        <h5>Your Skill Improvements:</h5>
-                        <div className="deltas-grid">
-                          <div className="delta-item">
-                            <span>Speed</span>
-                            <span className={matchingData.skill_deltas.speed >= 0 ? 'positive' : 'negative'}>
-                              {matchingData.skill_deltas.speed >= 0 ? '+' : ''}{matchingData.skill_deltas.speed}
-                            </span>
-                          </div>
-                          <div className="delta-item">
-                            <span>Consistency</span>
-                            <span className={matchingData.skill_deltas.consistency >= 0 ? 'positive' : 'negative'}>
-                              {matchingData.skill_deltas.consistency >= 0 ? '+' : ''}{matchingData.skill_deltas.consistency}
-                            </span>
-                          </div>
-                          <div className="delta-item">
-                            <span>Racecraft</span>
-                            <span className={matchingData.skill_deltas.racecraft >= 0 ? 'positive' : 'negative'}>
-                              {matchingData.skill_deltas.racecraft >= 0 ? '+' : ''}{matchingData.skill_deltas.racecraft}
-                            </span>
-                          </div>
-                          <div className="delta-item">
-                            <span>Tire Mgmt</span>
-                            <span className={matchingData.skill_deltas.tire_management >= 0 ? 'positive' : 'negative'}>
-                              {matchingData.skill_deltas.tire_management >= 0 ? '+' : ''}{matchingData.skill_deltas.tire_management}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="filters-applied">
-                        <h5>Filters Applied:</h5>
-                        <ul>
-                          {matchingData.filters_applied.map((filter, idx) => (
-                            <li key={idx}>{filter}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </details>
-                )}
-
                 {/* Best Match Card - Unified for all drivers */}
                 <div className="best-match-card">
                   {bestMatch.is_elite_self_match ? (
