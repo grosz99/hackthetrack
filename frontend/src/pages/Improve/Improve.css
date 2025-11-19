@@ -373,17 +373,17 @@
   margin: 0;
 }
 
-/* Finish Comparison */
+/* Finish Comparison - Toyota Red Branding */
 .finish-comparison {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
-  border: 2px solid #ffc107;
+  gap: 12px;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+  border: 2px solid #EB0A1E;
   border-radius: 8px;
-  padding: 14px;
-  margin-bottom: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
 }
 
 .your-finish,
@@ -392,25 +392,25 @@
 }
 
 .finish-comparison .label {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
-  color: #f57f17;
+  color: #666;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   display: block;
-  margin-bottom: 4px;
+  margin-bottom: 3px;
 }
 
 .finish-comparison .value {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 900;
-  color: #f57f17;
+  color: #EB0A1E;
   font-family: var(--font-mono);
 }
 
 .finish-comparison .arrow {
-  font-size: 24px;
-  color: #f57f17;
+  font-size: 20px;
+  color: #EB0A1E;
   font-weight: 900;
 }
 
@@ -451,20 +451,26 @@
   background: #f8f9fa;
   border: 2px solid #e0e0e0;
   border-radius: 12px;
-  padding: 18px;
+  padding: 16px;
   flex: 1;
+  max-height: 520px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .track-improvement-section h4 {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   color: #000;
-  margin: 0 0 12px 0;
+  margin: 0 0 10px 0;
 }
 
 .improvement-insights {
   color: #333;
-  line-height: 1.6;
+  line-height: 1.5;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .insight-intro {
@@ -495,13 +501,14 @@
   background: #fff;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
-  padding: 16px;
+  padding: 14px;
+  margin-bottom: 10px;
 }
 
 .coaching-text {
-  font-size: 14px;
+  font-size: 13px;
   color: #333;
-  line-height: 1.6;
+  line-height: 1.5;
   margin: 0;
   text-align: justify;
 }
