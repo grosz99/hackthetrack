@@ -271,33 +271,95 @@
   font-weight: 900;
 }
 
-/* Elite badge styling for top drivers */
-.match-badge.elite {
-  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+/* No match analysis - Professional, no-nonsense styling */
+.no-match-analysis {
+  background: white;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.no-match-analysis h3 {
+  font-size: 20px;
+  font-weight: 900;
+  text-transform: uppercase;
   color: #000;
+  margin: 0 0 12px 0;
+}
+
+.analysis-intro {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.current-performance {
   display: flex;
-  align-items: center;
-  gap: 6px;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #dee2e6;
 }
 
-.match-badge.elite svg {
-  flex-shrink: 0;
+.current-performance .stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-/* Elite target finish styling */
-.their-finish.elite-target .label {
-  color: #FFD700;
+.current-performance .stat-label {
+  font-size: 12px;
   font-weight: 700;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.their-finish.elite-target .value {
-  color: #FFD700;
+.current-performance .stat-value {
+  font-size: 24px;
+  font-weight: 900;
+  color: #000;
 }
 
-/* Optional subtle gold border for elite cards */
-.best-match-card.elite-self-match {
-  border-color: #FFD700;
-  box-shadow: 0 0 0 1px #FFD700;
+.races-to-analyze h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #000;
+  margin: 0 0 8px 0;
+}
+
+.races-to-analyze p {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 12px 0;
+}
+
+.race-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.race-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.race-item .track-name {
+  font-weight: 700;
+  color: #000;
+}
+
+.race-item .result {
+  font-size: 14px;
+  color: #666;
+  font-family: 'Courier New', monospace;
 }
 
 .driver-info {
