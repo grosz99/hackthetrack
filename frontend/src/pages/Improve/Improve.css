@@ -10,7 +10,12 @@
   box-sizing: border-box;
 }
 
-/* No global width constraint - let content flow naturally */
+/* Container constraint for content - matching Skills page pattern */
+.improve-page > * {
+  max-width: 1500px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 /* Main Content */
 .improve-content {
@@ -133,9 +138,6 @@
   gap: 24px;
   margin-bottom: 48px;
   align-items: start;
-  max-width: 1420px;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .skill-sliders-section,
