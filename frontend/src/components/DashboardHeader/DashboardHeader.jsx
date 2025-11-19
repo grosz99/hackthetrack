@@ -64,7 +64,7 @@ export default function DashboardHeader({ driverData, pageName }) {
 
     // Determine current page from pathname
     const currentPage = location.pathname.split('/').pop();
-    const validPages = ['overview', 'race-log', 'skills', 'improve'];
+    const validPages = ['overview', 'race-log', 'skills', 'improve', 'driver-development'];
     const page = validPages.includes(currentPage) ? currentPage : 'overview';
 
     // Navigate to same page with new driver
