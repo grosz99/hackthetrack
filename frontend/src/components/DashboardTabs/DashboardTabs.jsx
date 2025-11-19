@@ -40,7 +40,7 @@ export default function DashboardTabs() {
           Skills
         </NavLink>
         <NavLink
-          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/improve` : `/driver/${selectedDriverNumber}/improve`}
+          to={isFromScout ? `/scout/driver/${selectedDriverNumber}/driver-development` : `/driver/${selectedDriverNumber}/driver-development`}
           className={({ isActive }) => `dashboard-tab ${isActive ? 'active' : ''}`}
         >
           Development

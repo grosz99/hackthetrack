@@ -28,9 +28,12 @@ function App() {
                 <Route path="/driver/:driverNumber/overview" element={<Overview />} />
                 <Route path="/driver/:driverNumber/race-log" element={<RaceLog />} />
                 <Route path="/driver/:driverNumber/skills" element={<Skills />} />
-                <Route path="/driver/:driverNumber/improve" element={<Improve />} />
+                <Route path="/driver/:driverNumber/driver-development" element={<Improve />} />
                 <Route path="/driver/:driverNumber/telemetry-comparison" element={<TelemetryComparison />} />
                 <Route path="/driver/:driverNumber/strategy-chat" element={<StrategyChat />} />
+
+                {/* Legacy improve route redirect */}
+                <Route path="/driver/:driverNumber/improve" element={<Navigate to="/driver/:driverNumber/driver-development" replace />} />
 
                 {/* Track Intelligence - Global feature not driver-specific */}
                 <Route path="/track-intelligence" element={<TrackIntelligence />} />
@@ -39,7 +42,8 @@ function App() {
                 <Route path="/overview" element={<Navigate to="/driver/7/overview" replace />} />
                 <Route path="/race-log" element={<Navigate to="/driver/7/race-log" replace />} />
                 <Route path="/skills" element={<Navigate to="/driver/7/skills" replace />} />
-                <Route path="/improve" element={<Navigate to="/driver/7/improve" replace />} />
+                <Route path="/improve" element={<Navigate to="/driver/7/driver-development" replace />} />
+                <Route path="/driver-development" element={<Navigate to="/driver/7/driver-development" replace />} />
 
                 {/* Old scout routes - redirect to rankings */}
                 <Route path="/scout" element={<Navigate to="/rankings" replace />} />

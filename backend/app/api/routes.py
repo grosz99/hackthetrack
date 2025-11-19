@@ -1344,12 +1344,34 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
                 'performance_improvement': round(current_avg_finish - avg_finish, 2)  # How much better
             })
 
-        # Edge case: No better drivers found
+        # Edge case: No better drivers found (top driver scenario)
         if not matches:
+            # For top drivers, analyze their losses to identify improvement opportunities
+            race_results = data_loader.get_race_results(current_driver_num)
+            losses = []
+            wins = []
+
+            if race_results:
+                for race in race_results:
+                    if race.finish_position and race.finish_position > 1:
+                        losses.append({
+                            "track": race.track_name,
+                            "finish": race.finish_position,
+                            "start": race.start_position,
+                            "positions_gained": race.positions_gained or 0
+                        })
+                    elif race.finish_position == 1:
+                        wins.append({"track": race.track_name})
+
             return {
                 "similar_drivers": [],
-                "message": f"No drivers found with better performance than current avg finish of {round(current_avg_finish, 2)}",
-                "current_avg_finish": round(current_avg_finish, 2)
+                "is_top_driver": True,
+                "message": f"You're already one of the top performers (P{round(current_avg_finish, 2)} avg). No drivers with better results to compare against.",
+                "current_avg_finish": round(current_avg_finish, 2),
+                "total_races": len(race_results) if race_results else 0,
+                "wins": len(wins),
+                "losses_to_analyze": losses[:5],  # Top 5 losses for improvement focus
+                "improvement_suggestion": "Focus on consistency and converting strong positions to wins. Analyze races where you didn't finish P1 to identify specific areas for improvement."
             }
 
         # Sort by distance (closest skill match first) and take top 3
@@ -1388,7 +1410,22 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
         return {
             "similar_drivers": similar_drivers,
             "current_avg_finish": round(current_avg_finish, 2),
-            "total_better_drivers": len(matches)
+            "total_better_drivers": len(matches),
+            "matching_algorithm": {
+                "method": "Euclidean Distance in 4D Skill Space",
+                "description": "We calculate the distance between your target skills and every other driver's skills using the formula: √[(speed₁-speed₂)² + (consistency₁-consistency₂)² + (racecraft₁-racecraft₂)² + (tire_mgmt₁-tire_mgmt₂)²]",
+                "filters_applied": [
+                    f"Only drivers with better avg finish (< P{round(current_avg_finish, 2)})",
+                    "Sorted by closest skill match",
+                    "Top 3 matches returned"
+                ],
+                "skill_deltas": {
+                    "speed": round(target_speed - current_driver.speed.score, 1),
+                    "consistency": round(target_consistency - current_driver.consistency.score, 1),
+                    "racecraft": round(target_racecraft - current_driver.racecraft.score, 1),
+                    "tire_management": round(target_tire - current_driver.tire_management.score, 1)
+                }
+            }
         }
 
     except HTTPException:
