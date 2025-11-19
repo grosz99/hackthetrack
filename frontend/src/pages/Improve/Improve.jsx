@@ -340,10 +340,12 @@ export default function Improve() {
   if (loading) {
     return (
       <div className="improve-page">
-        <DashboardHeader driverData={driverData} pageName="Driver Development" />
-        <DashboardTabs />
-        <div className="loading-container">
-          <div className="loading-text">Loading development data...</div>
+        <div className="improve-page__container">
+          <DashboardHeader driverData={driverData} pageName="Driver Development" />
+          <DashboardTabs />
+          <div className="loading-container">
+            <div className="loading-text">Loading development data...</div>
+          </div>
         </div>
       </div>
     );
@@ -380,177 +382,179 @@ export default function Improve() {
 
   return (
     <div className="improve-page">
-      {/* Unified Header */}
-      <DashboardHeader driverData={driverData} pageName="Driver Development" />
+      <div className="improve-page__container">
+        {/* Unified Header */}
+        <DashboardHeader driverData={driverData} pageName="Driver Development" />
 
-      {/* Unified Navigation Tabs */}
-      <DashboardTabs />
+        {/* Unified Navigation Tabs */}
+        <DashboardTabs />
 
-      {/* Main Content */}
-      <div className="improve-content">
+        {/* Main Content */}
+        <div className="improve-content">
 
-        {/* AI RECOMMENDED ALLOCATION */}
-        {recommendedAllocation && !targetSkills && (
-          <div className="ai-recommendation-banner">
-            <div className="recommendation-header">
-              <span className="recommendation-icon">AI</span>
-              <h3>Recommended Budget Allocation</h3>
-            </div>
-            <p className="recommendation-reasoning">{recommendedAllocation.reasoning}</p>
-            <div className="recommendation-values">
-              <span>Speed +{recommendedAllocation.allocation.speed}%</span>
-              <span>Consistency +{recommendedAllocation.allocation.consistency}%</span>
-              <span>Racecraft +{recommendedAllocation.allocation.racecraft}%</span>
-              <span>Tire Mgmt +{recommendedAllocation.allocation.tire_management}%</span>
-            </div>
-            <div className="recommendation-actions">
-              <button className="apply-btn" onClick={handleApplyRecommendation}>
-                Apply Recommendation
-              </button>
-              <button className="skip-btn" onClick={() => setTargetSkills({
-                speed: driverData.speed?.percentile || 0,
-                consistency: driverData.consistency?.percentile || 0,
-                racecraft: driverData.racecraft?.percentile || 0,
-                tire_management: driverData.tire_management?.percentile || 0
-              })}>
-                Allocate Manually
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* TWO COLUMN LAYOUT - Skills & Best Match */}
-        <div className="improve-grid">
-          {/* LEFT COLUMN - SKILL SLIDERS */}
-          {driverData && targetSkills && (
-            <section className="skill-sliders-section">
-              <SkillSliders
-                currentSkills={{
+          {/* AI RECOMMENDED ALLOCATION */}
+          {recommendedAllocation && !targetSkills && (
+            <div className="ai-recommendation-banner">
+              <div className="recommendation-header">
+                <span className="recommendation-icon">AI</span>
+                <h3>Recommended Budget Allocation</h3>
+              </div>
+              <p className="recommendation-reasoning">{recommendedAllocation.reasoning}</p>
+              <div className="recommendation-values">
+                <span>Speed +{recommendedAllocation.allocation.speed}%</span>
+                <span>Consistency +{recommendedAllocation.allocation.consistency}%</span>
+                <span>Racecraft +{recommendedAllocation.allocation.racecraft}%</span>
+                <span>Tire Mgmt +{recommendedAllocation.allocation.tire_management}%</span>
+              </div>
+              <div className="recommendation-actions">
+                <button className="apply-btn" onClick={handleApplyRecommendation}>
+                  Apply Recommendation
+                </button>
+                <button className="skip-btn" onClick={() => setTargetSkills({
                   speed: driverData.speed?.percentile || 0,
                   consistency: driverData.consistency?.percentile || 0,
                   racecraft: driverData.racecraft?.percentile || 0,
                   tire_management: driverData.tire_management?.percentile || 0
-                }}
-                initialTargets={targetSkills}
-                onTargetChange={handleTargetChange}
-                onFindSimilar={handleFindBestMatch}
-                aiRecommendation={recommendedAllocation}
-              />
-            </section>
+                })}>
+                  Allocate Manually
+                </button>
+              </div>
+            </div>
           )}
 
-          {/* RIGHT COLUMN - BEST MATCH RESULTS */}
-          <section className="comparables-section">
-            {!searching && !bestMatch && targetSkills && (
-              <div className="comparables-empty">
-                <div className="empty-icon" aria-hidden="true">
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
-                </div>
-                <h3>Find Your Best Match</h3>
-                <p>Adjust your skill targets and select a track, then click "Find Best Match" to see a comparable driver and track-specific improvement actions.</p>
-              </div>
+          {/* TWO COLUMN LAYOUT - Skills & Best Match */}
+          <div className="improve-grid">
+            {/* LEFT COLUMN - SKILL SLIDERS */}
+            {driverData && targetSkills && (
+              <section className="skill-sliders-section">
+                <SkillSliders
+                  currentSkills={{
+                    speed: driverData.speed?.percentile || 0,
+                    consistency: driverData.consistency?.percentile || 0,
+                    racecraft: driverData.racecraft?.percentile || 0,
+                    tire_management: driverData.tire_management?.percentile || 0
+                  }}
+                  initialTargets={targetSkills}
+                  onTargetChange={handleTargetChange}
+                  onFindSimilar={handleFindBestMatch}
+                  aiRecommendation={recommendedAllocation}
+                />
+              </section>
             )}
 
-            {searching && (
-              <div className="comparables-loading">
-                <div className="loading-spinner"></div>
-                <p>Finding best match...</p>
-              </div>
-            )}
-
-            {bestMatch && driverData && (
-              <div className="best-match-results">
-                <div className="best-match-header">
-                  <h3>Best Match</h3>
+            {/* RIGHT COLUMN - BEST MATCH RESULTS */}
+            <section className="comparables-section">
+              {!searching && !bestMatch && targetSkills && (
+                <div className="comparables-empty">
+                  <div className="empty-icon" aria-hidden="true">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                      <circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                  </div>
+                  <h3>Find Your Best Match</h3>
+                  <p>Adjust your skill targets and select a track, then click "Find Best Match" to see a comparable driver and track-specific improvement actions.</p>
                 </div>
+              )}
 
-                {/* Best Match Card - Unified for all drivers */}
-                <div className="best-match-card">
-                  {bestMatch.is_elite_self_match ? (
-                    // Top driver - no match available
-                    <div className="no-match-message">
-                      <p className="top-driver-note">
-                        <strong>No match found</strong> - You're already a top performer with a P{driverData.stats?.average_finish?.toFixed(1)} average finish.
-                      </p>
+              {searching && (
+                <div className="comparables-loading">
+                  <div className="loading-spinner"></div>
+                  <p>Finding best match...</p>
+                </div>
+              )}
+
+              {bestMatch && driverData && (
+                <div className="best-match-results">
+                  <div className="best-match-header">
+                    <h3>Best Match</h3>
+                  </div>
+
+                  {/* Best Match Card - Unified for all drivers */}
+                  <div className="best-match-card">
+                    {bestMatch.is_elite_self_match ? (
+                      // Top driver - no match available
+                      <div className="no-match-message">
+                        <p className="top-driver-note">
+                          <strong>No match found</strong> - You're already a top performer with a P{driverData.stats?.average_finish?.toFixed(1)} average finish.
+                        </p>
+                      </div>
+                    ) : (
+                      // Regular match found
+                      <>
+                        <div className="match-badge">{bestMatch.match_score}% Match</div>
+                        <div className="driver-info">
+                          <h4>Driver #{bestMatch.driver_number}</h4>
+                          <p>{bestMatch.driver_name}</p>
+                        </div>
+                        {bestMatch.avg_finish && (
+                          <div className="finish-comparison">
+                            <div className="your-finish">
+                              <span className="label">Your Avg</span>
+                              <span className="value">P{driverData.stats?.average_finish?.toFixed(1) || 'N/A'}</span>
+                            </div>
+                            <div className="arrow">→</div>
+                            <div className="their-finish">
+                              <span className="label">Their Avg</span>
+                              <span className="value">P{bestMatch.avg_finish.toFixed(1)}</span>
+                            </div>
+                          </div>
+                        )}
+                        <div className="skills-grid">
+                          <div className="skill-item">
+                            <span className="skill-label">Speed</span>
+                            <span className="skill-value">{bestMatch.skills.speed}</span>
+                          </div>
+                          <div className="skill-item">
+                            <span className="skill-label">Consistency</span>
+                            <span className="skill-value">{bestMatch.skills.consistency}</span>
+                          </div>
+                          <div className="skill-item">
+                            <span className="skill-label">Racecraft</span>
+                            <span className="skill-value">{bestMatch.skills.racecraft}</span>
+                          </div>
+                          <div className="skill-item">
+                            <span className="skill-label">Tire Mgmt</span>
+                            <span className="skill-value">{bestMatch.skills.tire_management}</span>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* AI-Generated Improvement Guidance */}
+                  {primaryImprovement && primaryImprovement.delta > 0 && (
+                    <div className="track-improvement-section">
+                      <h4>How to Improve</h4>
+                      <div className="improvement-insights">
+                        {loadingInsights ? (
+                          <div className="insights-loading">
+                            <div className="insights-spinner"></div>
+                            <p>Generating personalized coaching insights...</p>
+                          </div>
+                        ) : liveCoachingInsights ? (
+                          <div className="coaching-analysis-box">
+                            <div className="coaching-text live-insights">
+                              {formatCoachingInsights(liveCoachingInsights)}
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="insight-placeholder">
+                            <p><strong>Unable to generate coaching insights</strong></p>
+                            <p>Try adjusting your skill targets or selecting a different track.</p>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  ) : (
-                    // Regular match found
-                    <>
-                      <div className="match-badge">{bestMatch.match_score}% Match</div>
-                      <div className="driver-info">
-                        <h4>Driver #{bestMatch.driver_number}</h4>
-                        <p>{bestMatch.driver_name}</p>
-                      </div>
-                      {bestMatch.avg_finish && (
-                        <div className="finish-comparison">
-                          <div className="your-finish">
-                            <span className="label">Your Avg</span>
-                            <span className="value">P{driverData.stats?.average_finish?.toFixed(1) || 'N/A'}</span>
-                          </div>
-                          <div className="arrow">→</div>
-                          <div className="their-finish">
-                            <span className="label">Their Avg</span>
-                            <span className="value">P{bestMatch.avg_finish.toFixed(1)}</span>
-                          </div>
-                        </div>
-                      )}
-                      <div className="skills-grid">
-                        <div className="skill-item">
-                          <span className="skill-label">Speed</span>
-                          <span className="skill-value">{bestMatch.skills.speed}</span>
-                        </div>
-                        <div className="skill-item">
-                          <span className="skill-label">Consistency</span>
-                          <span className="skill-value">{bestMatch.skills.consistency}</span>
-                        </div>
-                        <div className="skill-item">
-                          <span className="skill-label">Racecraft</span>
-                          <span className="skill-value">{bestMatch.skills.racecraft}</span>
-                        </div>
-                        <div className="skill-item">
-                          <span className="skill-label">Tire Mgmt</span>
-                          <span className="skill-value">{bestMatch.skills.tire_management}</span>
-                        </div>
-                      </div>
-                    </>
                   )}
                 </div>
+              )}
+            </section>
+          </div>
 
-                {/* AI-Generated Improvement Guidance */}
-                {primaryImprovement && primaryImprovement.delta > 0 && (
-                  <div className="track-improvement-section">
-                    <h4>How to Improve</h4>
-                    <div className="improvement-insights">
-                      {loadingInsights ? (
-                        <div className="insights-loading">
-                          <div className="insights-spinner"></div>
-                          <p>Generating personalized coaching insights...</p>
-                        </div>
-                      ) : liveCoachingInsights ? (
-                        <div className="coaching-analysis-box">
-                          <div className="coaching-text live-insights">
-                            {formatCoachingInsights(liveCoachingInsights)}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="insight-placeholder">
-                          <p><strong>Unable to generate coaching insights</strong></p>
-                          <p>Try adjusting your skill targets or selecting a different track.</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </section>
         </div>
-
       </div>
     </div>
   );
