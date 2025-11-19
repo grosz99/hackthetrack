@@ -185,7 +185,11 @@ export default function Improve() {
       }
 
       // Handle top driver case (no better drivers available)
-      if (response.data.is_top_driver) {
+      // Check both explicit is_top_driver flag AND empty similar_drivers with message
+      const isTopDriverScenario = response.data.is_top_driver ||
+        (response.data.similar_drivers?.length === 0 && response.data.message);
+
+      if (isTopDriverScenario) {
         console.log('🏆 TOP DRIVER DETECTED:', response.data);
         setIsTopDriver(true);
         setTopDriverData(response.data);
