@@ -271,28 +271,22 @@
   font-weight: 900;
 }
 
-/* No match analysis - Professional, no-nonsense styling */
-.no-match-analysis {
-  background: white;
-  border: 2px solid #dee2e6;
-  border-radius: 8px;
-  padding: 24px;
-  margin-bottom: 24px;
+/* No match message for top drivers - integrated into best-match-card */
+.no-match-message {
+  padding: 20px;
+  text-align: center;
 }
 
-.no-match-analysis h3 {
-  font-size: 20px;
-  font-weight: 900;
-  text-transform: uppercase;
+.top-driver-note {
+  color: #495057;
+  font-size: 16px;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.top-driver-note strong {
   color: #000;
-  margin: 0 0 12px 0;
-}
-
-.analysis-intro {
-  color: #666;
-  font-size: 14px;
-  margin-bottom: 20px;
-  line-height: 1.5;
+  font-weight: 700;
 }
 
 .current-performance {
