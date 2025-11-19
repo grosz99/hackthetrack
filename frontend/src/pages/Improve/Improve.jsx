@@ -189,8 +189,9 @@ export default function Improve() {
         setBestMatch(match);
         setSearching(false);
 
-        // Fetch LIVE coaching insights via Claude API (for non-elite matches)
+        // Fetch LIVE coaching insights via Claude API
         if (!match.is_elite_self_match) {
+          // Regular match - comparative insights
           const primaryFactor = getPrimaryImprovementFactor();
           const improvement = getPrimaryImprovement();
           if (primaryFactor && improvement && improvement.delta > 0) {
@@ -206,6 +207,27 @@ export default function Improve() {
               setLiveCoachingInsights(insightsResponse.data.insights);
             } catch (insightErr) {
               console.error('Error fetching live coaching insights:', insightErr);
+              setLiveCoachingInsights(null);
+            } finally {
+              setLoadingInsights(false);
+            }
+          }
+        } else {
+          // Top driver - self-improvement insights
+          const primaryFactor = getPrimaryImprovementFactor();
+          if (primaryFactor && match.losses_to_analyze && match.losses_to_analyze.length > 0) {
+            setLoadingInsights(true);
+            try {
+              const insightsResponse = await api.post('/api/coaching/top-driver-insights', {
+                driver_number: selectedDriverNumber,
+                target_factor: primaryFactor,
+                track_name: tracks.find(t => t.id === selectedTrack)?.name || selectedTrack,
+                losses: match.losses_to_analyze,
+                current_skills: match.skills
+              });
+              setLiveCoachingInsights(insightsResponse.data.insights);
+            } catch (insightErr) {
+              console.error('Error fetching top driver insights:', insightErr);
               setLiveCoachingInsights(null);
             } finally {
               setLoadingInsights(false);
