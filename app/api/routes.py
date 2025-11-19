@@ -1345,7 +1345,9 @@ async def find_similar_driver(request: FindSimilarDriverRequest):
             })
 
         # Edge case: No better drivers found (top driver scenario)
+        logger.info(f"DEBUG: find-similar for driver #{current_driver_num}, matches found: {len(matches)}, current_avg_finish: {current_avg_finish}")
         if not matches:
+            logger.info(f"DEBUG: TOP DRIVER SCENARIO - returning is_top_driver=True")
             # For top drivers, analyze their losses to identify improvement opportunities
             race_results = data_loader.get_race_results(current_driver_num)
             losses = []
