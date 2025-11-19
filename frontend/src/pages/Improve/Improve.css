@@ -137,7 +137,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 24px;
   margin-bottom: 48px;
-  align-items: stretch;
+  align-items: start;
 }
 
 .skill-sliders-section,
@@ -146,7 +146,6 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  min-height: 600px;
 }
 
 /* =================================================================
@@ -157,7 +156,6 @@
   border: 4px solid #EB0A1E;
   border-radius: 16px;
   padding: 32px;
-  min-height: 600px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -254,10 +252,10 @@
 .best-match-card {
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border: 3px solid #EB0A1E;
-  border-radius: 16px;
-  padding: 24px;
+  border-radius: 12px;
+  padding: 16px;
   position: relative;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .match-badge {
@@ -358,18 +356,18 @@
 }
 
 .driver-info {
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .driver-info h4 {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 900;
   color: #000;
-  margin: 0 0 4px 0;
+  margin: 0 0 2px 0;
 }
 
 .driver-info p {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
   color: #666;
   margin: 0;
@@ -380,12 +378,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 16px;
   background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
   border: 2px solid #ffc107;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 12px;
 }
 
 .your-finish,
@@ -404,7 +402,7 @@
 }
 
 .finish-comparison .value {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 900;
   color: #f57f17;
   font-family: var(--font-mono);
@@ -419,14 +417,14 @@
 .skills-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 8px;
 }
 
 .skill-item {
   background: #ffffff;
   border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 12px;
+  border-radius: 6px;
+  padding: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
