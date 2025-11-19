@@ -10,8 +10,8 @@
   box-sizing: border-box;
 }
 
-/* Container constraint for content - match navigation width */
-.improve-page > * {
+/* Container constraint for content - exclude header and tabs like Overview */
+.improve-page > *:not(.dashboard-header):not(.scout-breadcrumb):not(.dashboard-nav-tabs-container) {
   max-width: 1280px;
   margin-left: auto;
   margin-right: auto;
