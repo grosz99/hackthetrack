@@ -10,8 +10,8 @@
   box-sizing: border-box;
 }
 
-/* Container constraint for content - matching Skills page pattern */
-.improve-page > * {
+/* Container constraint for content - exclude header and tabs like Overview */
+.improve-page > *:not(.dashboard-header):not(.dashboard-nav-tabs-container) {
   max-width: 1500px;
   margin-left: auto;
   margin-right: auto;
