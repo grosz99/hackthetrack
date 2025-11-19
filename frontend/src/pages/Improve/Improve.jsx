@@ -191,20 +191,64 @@ export default function Improve() {
 
       if (isTopDriverScenario) {
         console.log('🏆 TOP DRIVER DETECTED:', response.data);
+
+        // If the response doesn't have full top driver data, enrich it
+        let enrichedData = { ...response.data };
+
+        if (!enrichedData.wins || !enrichedData.total_races || !enrichedData.losses_to_analyze) {
+          console.log('📊 Enriching top driver data from driver stats...');
+
+          // Calculate from driver data
+          if (driverData?.race_results) {
+            const wins = driverData.race_results.filter(r => r.finish_position === 1).length;
+            const losses = driverData.race_results
+              .filter(r => r.finish_position && r.finish_position > 1)
+              .map(r => ({
+                track: r.track_name,
+                finish: r.finish_position,
+                start: r.start_position || 0,
+                positions_gained: (r.start_position && r.finish_position)
+                  ? r.start_position - r.finish_position
+                  : 0
+              }))
+              .slice(0, 5);
+
+            // Find weakest skill for target factor
+            const skills = {
+              speed: driverData.speed?.percentile || 0,
+              consistency: driverData.consistency?.percentile || 0,
+              racecraft: driverData.racecraft?.percentile || 0,
+              tire_management: driverData.tire_management?.percentile || 0
+            };
+            const weakestSkill = Object.entries(skills).sort((a, b) => a[1] - b[1])[0];
+
+            enrichedData = {
+              ...enrichedData,
+              wins,
+              total_races: driverData.race_results.length,
+              losses_to_analyze: losses,
+              target_factor: weakestSkill[0],
+              current_skills: skills,
+              improvement_suggestion: "Focus on consistency and converting strong positions to wins. Analyze races where you didn't finish P1 to identify specific areas for improvement."
+            };
+            console.log('✅ Enriched data:', enrichedData);
+          }
+        }
+
         setIsTopDriver(true);
-        setTopDriverData(response.data);
+        setTopDriverData(enrichedData);
         setSearching(false);
 
         // Generate AI coaching insights for top driver
-        if (response.data.target_factor && response.data.losses_to_analyze?.length > 0) {
+        if (enrichedData.target_factor && enrichedData.losses_to_analyze?.length > 0) {
           setLoadingInsights(true);
           try {
             const insightsResponse = await api.post('/api/coaching/top-driver-insights', {
               driver_number: selectedDriverNumber,
-              target_factor: response.data.target_factor,
+              target_factor: enrichedData.target_factor,
               track_name: tracks.find(t => t.id === selectedTrack)?.name || selectedTrack,
-              losses: response.data.losses_to_analyze,
-              current_skills: response.data.current_skills
+              losses: enrichedData.losses_to_analyze,
+              current_skills: enrichedData.current_skills
             });
             setLiveCoachingInsights(insightsResponse.data.insights);
           } catch (insightErr) {
