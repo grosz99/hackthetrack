@@ -449,32 +449,56 @@
 }
 
 /* =================================================================
-   TRACK-SPECIFIC IMPROVEMENT SECTION
+   TRACK-SPECIFIC IMPROVEMENT SECTION - Match Skills Scouting Report
    ================================================================= */
 .track-improvement-section {
-  background: #f8f9fa;
-  border: 2px solid #e0e0e0;
+  background: #ffffff;
+  border: 3px solid #EB0A1E;
   border-radius: 12px;
-  padding: 16px;
+  padding: 0;
   flex: 1;
   max-height: 520px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .track-improvement-section h4 {
-  font-size: 15px;
-  font-weight: 900;
-  color: #000;
-  margin: 0 0 10px 0;
+  font-family: 'Oswald', 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0;
+  padding: 16px 24px;
+  background: #1A1A1A;
+  border-bottom: 3px solid #EB0A1E;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.track-improvement-section h4::before {
+  content: '';
+  display: inline-block;
+  width: 4px;
+  height: 20px;
+  background: #EB0A1E;
+  border-radius: 2px;
 }
 
 .improvement-insights {
-  color: #333;
-  line-height: 1.5;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333333;
+  line-height: 1.8;
+  padding: 24px;
   flex: 1;
   overflow-y: auto;
+  text-align: left;
 }
 
 .insight-intro {
@@ -500,22 +524,7 @@
   margin-bottom: 0;
 }
 
-/* Coaching Analysis Box - Match Scouting Report Style */
-.coaching-analysis-box {
-  background: #fff;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 14px;
-  margin-bottom: 10px;
-}
-
-.coaching-text {
-  font-size: 13px;
-  color: #333;
-  line-height: 1.5;
-  margin: 0;
-  text-align: justify;
-}
+/* Coaching Analysis Box - Removed, using direct styling in improvement-insights */
 
 .coaching-stats {
   display: flex;
