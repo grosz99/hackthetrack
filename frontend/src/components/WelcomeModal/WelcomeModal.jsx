@@ -30,13 +30,6 @@ export default function WelcomeModal({ onClose }) {
       title: 'Why Gibbs AI?',
       content: (
         <div className="gibbs-story-section">
-          <div className="our-mission">
-            <h4>Our Mission</h4>
-            <p>
-              <strong>Gibbs AI</strong> aims to replicate Joe Gibbs' legendary eye for talent and development philosophy. Using validated statistics and AI-powered analysis, we help identify and develop the drivers of the future—just as Joe Gibbs has done for decades in NASCAR and the NFL.
-            </p>
-          </div>
-
           <div className="gibbs-story">
             <p className="story-intro">
               <strong>Joe Gibbs</strong> is a legendary figure in American motorsports and football—a Hall of Fame NFL coach who won three Super Bowls with the Washington Redskins and a Toyota partner who built one of NASCAR's most successful racing organizations.
