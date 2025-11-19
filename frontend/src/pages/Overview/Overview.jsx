@@ -526,7 +526,7 @@ export default function Overview() {
       {/* Right side: Driver Development Button */}
       <div className="expand-button-container">
         <NavLink
-          to={`/driver/${selectedDriverNumber}/skills`}
+          to={`/driver/${selectedDriverNumber}/driver-development`}
           className="expand-button"
           aria-label="Driver development"
         >
