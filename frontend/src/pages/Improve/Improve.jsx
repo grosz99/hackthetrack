@@ -180,12 +180,92 @@ export default function Improve() {
         setMatchingData(response.data.matching_algorithm);
       }
 
-      // Take the best match (could be regular driver OR elite self-match)
-      if (response.data.similar_drivers && response.data.similar_drivers.length > 0) {
+      // Handle both normal matches AND elite drivers with empty array + message
+      // (Backend should return elite drivers in array, but handle legacy response too)
+      if (response.data.similar_drivers?.length > 0) {
+        // Regular match or elite self-match in array
         const match = response.data.similar_drivers[0];
         console.log('✅ Best match found:', match);
         setBestMatch(match);
-        setSearching(false); // Stop "Finding best match" spinner immediately
+        setSearching(false);
+      } else if (response.data.similar_drivers?.length === 0 && response.data.message && response.data.current_avg_finish) {
+        // Legacy: Backend returned empty array for elite driver - create self-match manually
+        console.log('🏆 Elite driver (legacy response) - creating self-match...');
+
+        // Fetch race results to populate losses
+        try {
+          const raceResultsResponse = await api.get(`/api/drivers/${selectedDriverNumber}/results`);
+          const raceResults = raceResultsResponse.data;
+
+          const wins = raceResults.filter(r => r.finish_position === 1).length;
+          const losses = raceResults
+            .filter(r => r.finish_position && r.finish_position > 1)
+            .map(r => ({
+              track: r.track_name,
+              finish: r.finish_position,
+              start: r.start_position || 0,
+              positions_gained: (r.start_position && r.finish_position)
+                ? r.start_position - r.finish_position
+                : 0
+            }))
+            .slice(0, 5);
+
+          const skills = {
+            speed: driverData.speed?.percentile || 0,
+            consistency: driverData.consistency?.percentile || 0,
+            racecraft: driverData.racecraft?.percentile || 0,
+            tire_management: driverData.tire_management?.percentile || 0
+          };
+
+          const weakestSkill = Object.entries(skills).sort((a, b) => a[1] - b[1])[0];
+
+          const eliteSelfMatch = {
+            driver_number: selectedDriverNumber,
+            driver_name: driverData.driver_name || `Driver #${selectedDriverNumber}`,
+            match_score: 100,
+            is_elite_self_match: true,
+            skills: {
+              speed: skills.speed,
+              consistency: skills.consistency,
+              racecraft: skills.racecraft,
+              tire_management: skills.tire_management
+            },
+            avg_finish: response.data.current_avg_finish,
+            target_avg_finish: 1.0,
+            wins,
+            total_races: raceResults.length,
+            losses_to_analyze: losses,
+            target_factor: weakestSkill[0]
+          };
+
+          console.log('✅ Created elite self-match:', eliteSelfMatch);
+          setBestMatch(eliteSelfMatch);
+          setSearching(false);
+        } catch (err) {
+          console.error('Error creating elite self-match:', err);
+          setSearching(false);
+        }
+        return;
+      } else {
+        // No matches found at all
+        setSearching(false);
+        return;
+      }
+
+      // Continue with regular match flow
+      if (!response.data.similar_drivers || response.data.similar_drivers.length === 0) {
+        setSearching(false);
+        return;
+      }
+
+      const match = response.data.similar_drivers[0];
+      if (!match) {
+        setSearching(false);
+        return;
+      }
+
+      setBestMatch(match);
+      setSearching(false);
 
         // Fetch LIVE coaching insights via Claude API
         const primaryFactor = getPrimaryImprovementFactor();
