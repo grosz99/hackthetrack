@@ -14,7 +14,7 @@ const SKILLS = [
   { key: 'tire_management', label: 'TIRE MGMT', icon: '' }
 ];
 
-export default function SkillSliders({ currentSkills, initialTargets, onTargetChange, onFindSimilar, tracks, selectedTrack, onTrackChange, aiRecommendation }) {
+export default function SkillSliders({ currentSkills, initialTargets, onTargetChange, onFindSimilar, aiRecommendation }) {
   // Initialize target skills to initial targets if provided, otherwise use current skills (clamped to valid range)
   const getInitialTargets = () => {
     if (initialTargets) {
@@ -218,23 +218,6 @@ export default function SkillSliders({ currentSkills, initialTargets, onTargetCh
       </div>
 
       <div className="sliders-footer">
-        {/* Track Selector */}
-        <div className="track-selector-container">
-          <label htmlFor="track-select">Select Track</label>
-          <select
-            id="track-select"
-            value={selectedTrack}
-            onChange={(e) => onTrackChange(e.target.value)}
-            className="track-selector"
-          >
-            {tracks.map(track => (
-              <option key={track.id} value={track.id}>
-                {track.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
         {/* Find Best Match Button */}
         <button
           onClick={onFindSimilar}
@@ -268,12 +251,6 @@ SkillSliders.propTypes = {
   }),
   onTargetChange: PropTypes.func.isRequired,
   onFindSimilar: PropTypes.func.isRequired,
-  tracks: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string
-  })).isRequired,
-  selectedTrack: PropTypes.string.isRequired,
-  onTrackChange: PropTypes.func.isRequired,
   aiRecommendation: PropTypes.shape({
     reasoning: PropTypes.string,
     weakestFactor: PropTypes.string,
