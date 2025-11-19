@@ -1489,7 +1489,6 @@ class ComparativeCoachingRequest(BaseModel):
     comparable_driver_number: int
     factor_name: str  # speed, consistency, racecraft, tire_management
     improvement_delta: float  # e.g., 2 for +2%
-    track_name: str  # Full track name
 
 
 @router.post("/coaching/comparative-insights")
@@ -1501,8 +1500,8 @@ async def get_comparative_coaching_insights(request: ComparativeCoachingRequest)
     This is a LIVE Claude API call that generates dynamic insights based on:
     - The specific skill being improved
     - The amount of improvement targeted
-    - The selected track
     - Both drivers' skill profiles and race results
+    - 4-factor performance model analysis
     """
     try:
         # Get current driver data
@@ -1521,7 +1520,7 @@ async def get_comparative_coaching_insights(request: ComparativeCoachingRequest)
                 detail=f"Comparable driver {request.comparable_driver_number} not found"
             )
 
-        # Get comparable driver's race results for track-specific insights
+        # Get comparable driver's race results for track performance analysis
         comparable_race_results_models = data_loader.get_race_results(request.comparable_driver_number)
 
         # Convert RaceResult models to dicts for Claude API
@@ -1548,7 +1547,6 @@ async def get_comparative_coaching_insights(request: ComparativeCoachingRequest)
             comparable_driver_number=request.comparable_driver_number,
             factor_name=request.factor_name,
             improvement_delta=request.improvement_delta,
-            track_name=request.track_name,
             current_skills=current_skills,
             comparable_skills=comparable_skills,
             comparable_race_results=comparable_race_results
@@ -1559,8 +1557,7 @@ async def get_comparative_coaching_insights(request: ComparativeCoachingRequest)
             "current_driver": request.current_driver_number,
             "comparable_driver": request.comparable_driver_number,
             "factor": request.factor_name,
-            "improvement_target": f"+{request.improvement_delta:.0f}%",
-            "track": request.track_name
+            "improvement_target": f"+{request.improvement_delta:.0f}%"
         }
 
     except HTTPException:
@@ -1579,7 +1576,6 @@ class TopDriverCoachingRequest(BaseModel):
     """Request for AI coaching insights for top drivers."""
     driver_number: int
     target_factor: str  # speed, consistency, racecraft, tire_management
-    track_name: str
     losses: List[Dict]  # Non-winning races to analyze
     current_skills: Dict[str, float]
 
@@ -1589,7 +1585,8 @@ async def get_top_driver_insights(request: TopDriverCoachingRequest):
     """
     Generate AI coaching for top drivers who have no better comparables.
 
-    Analyzes non-winning races to identify what's preventing wins.
+    Analyzes non-winning races across all tracks to identify patterns
+    and prioritize which tracks offer the best improvement opportunities.
     """
     try:
         # Get driver data
@@ -1607,7 +1604,6 @@ async def get_top_driver_insights(request: TopDriverCoachingRequest):
             driver_name=driver.driver_name or f"Driver #{request.driver_number}",
             driver_number=request.driver_number,
             target_factor=request.target_factor,
-            track_name=request.track_name,
             losses=request.losses,
             current_skills=request.current_skills
         )
@@ -1617,7 +1613,6 @@ async def get_top_driver_insights(request: TopDriverCoachingRequest):
             "driver_number": request.driver_number,
             "driver_name": driver.driver_name,
             "target_factor": request.target_factor,
-            "track": request.track_name,
             "is_top_driver": True
         }
 
