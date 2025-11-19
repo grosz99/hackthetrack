@@ -163,6 +163,7 @@ export default function Improve() {
     if (!targetSkills) return;
 
     try {
+      console.log('🔍 Finding best match for driver:', selectedDriverNumber);
       setSearching(true);
       setBestMatch(null);
       setMatchCoachingData(null);
@@ -176,6 +177,7 @@ export default function Improve() {
         current_driver_number: selectedDriverNumber,
         target_skills: targetSkills
       });
+      console.log('📡 API Response:', response.data);
 
       // Store matching algorithm data for transparency
       if (response.data.matching_algorithm) {
@@ -184,6 +186,7 @@ export default function Improve() {
 
       // Handle top driver case (no better drivers available)
       if (response.data.is_top_driver) {
+        console.log('🏆 TOP DRIVER DETECTED:', response.data);
         setIsTopDriver(true);
         setTopDriverData(response.data);
         setSearching(false);
@@ -241,7 +244,12 @@ export default function Improve() {
         setSearching(false); // No match found, stop searching
       }
     } catch (err) {
-      console.error('Error finding best match:', err);
+      console.error('❌ Error finding best match:', err);
+      console.error('Error details:', {
+        message: err.message,
+        response: err.response,
+        stack: err.stack
+      });
       setError('Failed to find comparable driver. Please try again.');
       setSearching(false); // Error occurred, stop searching
     }
@@ -398,6 +406,10 @@ export default function Improve() {
           {/* RIGHT COLUMN - BEST MATCH RESULTS */}
           <section className="comparables-section">
             {/* Top Driver Scenario - No Better Drivers Available */}
+            {(() => {
+              console.log('🎯 Render check - Top Driver:', { searching, isTopDriver, hasData: !!topDriverData });
+              return null;
+            })()}
             {!searching && isTopDriver && topDriverData && (
               <div className="top-driver-message">
                 <div className="top-driver-header">
