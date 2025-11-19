@@ -1,6 +1,7 @@
 # Core API Framework
 fastapi==0.115.6
 uvicorn==0.34.0
+gunicorn==23.0.0
 python-dotenv==1.0.1
 
 # Data Validation
