@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
 import { DriverProvider } from './context/DriverContext'
 import { ScoutProvider } from './context/ScoutContext'
 
@@ -11,6 +11,17 @@ import Improve from './pages/Improve/Improve'
 import TrackIntelligence from './pages/TrackIntelligence/TrackIntelligence'
 import StrategyChat from './pages/StrategyChat/StrategyChat'
 import TelemetryComparison from './pages/TelemetryComparison/TelemetryComparison'
+
+// Redirect component for routes with params
+function DevelopmentRedirect() {
+  const { driverNumber } = useParams()
+  return <Navigate to={`/driver/${driverNumber}/driver-development`} replace />
+}
+
+function ImproveRedirect() {
+  const { driverNumber } = useParams()
+  return <Navigate to={`/driver/${driverNumber}/driver-development`} replace />
+}
 
 function App() {
   return (
@@ -33,8 +44,8 @@ function App() {
                 <Route path="/driver/:driverNumber/strategy-chat" element={<StrategyChat />} />
 
                 {/* Legacy improve/development route redirects */}
-                <Route path="/driver/:driverNumber/improve" element={<Navigate to="/driver/:driverNumber/driver-development" replace />} />
-                <Route path="/driver/:driverNumber/development" element={<Navigate to="/driver/:driverNumber/driver-development" replace />} />
+                <Route path="/driver/:driverNumber/improve" element={<ImproveRedirect />} />
+                <Route path="/driver/:driverNumber/development" element={<DevelopmentRedirect />} />
 
                 {/* Track Intelligence - Global feature not driver-specific */}
                 <Route path="/track-intelligence" element={<TrackIntelligence />} />
