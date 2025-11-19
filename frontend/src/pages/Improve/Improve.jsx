@@ -27,8 +27,6 @@ export default function Improve() {
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
   const [matchingData, setMatchingData] = useState(null);
-  const [isTopDriver, setIsTopDriver] = useState(false);
-  const [topDriverData, setTopDriverData] = useState(null);
 
   const tracks = [
     { id: 'barber', name: 'Barber Motorsports Park' },
@@ -168,8 +166,6 @@ export default function Improve() {
       setBestMatch(null);
       setMatchCoachingData(null);
       setLiveCoachingInsights(null);
-      setIsTopDriver(false);
-      setTopDriverData(null);
       setMatchingData(null);
 
       // Call backend API to find similar drivers (returns top 1)
@@ -184,94 +180,10 @@ export default function Improve() {
         setMatchingData(response.data.matching_algorithm);
       }
 
-      // Handle top driver case (no better drivers available)
-      // Check both explicit is_top_driver flag AND empty similar_drivers with message
-      const isTopDriverScenario = response.data.is_top_driver ||
-        (response.data.similar_drivers?.length === 0 && response.data.message);
-
-      if (isTopDriverScenario) {
-        console.log('🏆 TOP DRIVER DETECTED:', response.data);
-
-        // If the response doesn't have full top driver data, enrich it
-        let enrichedData = { ...response.data };
-
-        if (!enrichedData.wins || !enrichedData.total_races || !enrichedData.losses_to_analyze) {
-          console.log('📊 Enriching top driver data - fetching race results...');
-
-          try {
-            // Fetch race results from dedicated endpoint
-            const raceResultsResponse = await api.get(`/api/drivers/${selectedDriverNumber}/results`);
-            const raceResults = raceResultsResponse.data;
-            console.log(`  Fetched ${raceResults.length} race results`);
-
-            if (raceResults && raceResults.length > 0) {
-              const wins = raceResults.filter(r => r.finish_position === 1).length;
-              const losses = raceResults
-                .filter(r => r.finish_position && r.finish_position > 1)
-                .map(r => ({
-                  track: r.track_name,
-                  finish: r.finish_position,
-                  start: r.start_position || 0,
-                  positions_gained: (r.start_position && r.finish_position)
-                    ? r.start_position - r.finish_position
-                    : 0
-                }))
-                .slice(0, 5);
-
-              // Find weakest skill for target factor
-              const skills = {
-                speed: driverData.speed?.percentile || 0,
-                consistency: driverData.consistency?.percentile || 0,
-                racecraft: driverData.racecraft?.percentile || 0,
-                tire_management: driverData.tire_management?.percentile || 0
-              };
-              const weakestSkill = Object.entries(skills).sort((a, b) => a[1] - b[1])[0];
-
-              enrichedData = {
-                ...enrichedData,
-                wins,
-                total_races: raceResults.length,
-                losses_to_analyze: losses,
-                target_factor: weakestSkill[0],
-                current_skills: skills,
-                improvement_suggestion: "Focus on consistency and converting strong positions to wins. Analyze races where you didn't finish P1 to identify specific areas for improvement."
-              };
-              console.log('✅ Enriched data:', enrichedData);
-            }
-          } catch (fetchErr) {
-            console.error('Error fetching race results:', fetchErr);
-          }
-        }
-
-        setIsTopDriver(true);
-        setTopDriverData(enrichedData);
-        setSearching(false);
-
-        // Generate AI coaching insights for top driver
-        if (enrichedData.target_factor && enrichedData.losses_to_analyze?.length > 0) {
-          setLoadingInsights(true);
-          try {
-            const insightsResponse = await api.post('/api/coaching/top-driver-insights', {
-              driver_number: selectedDriverNumber,
-              target_factor: enrichedData.target_factor,
-              track_name: tracks.find(t => t.id === selectedTrack)?.name || selectedTrack,
-              losses: enrichedData.losses_to_analyze,
-              current_skills: enrichedData.current_skills
-            });
-            setLiveCoachingInsights(insightsResponse.data.insights);
-          } catch (insightErr) {
-            console.error('Error fetching top driver insights:', insightErr);
-            setLiveCoachingInsights(null);
-          } finally {
-            setLoadingInsights(false);
-          }
-        }
-        return;
-      }
-
-      // Take only the best match
+      // Take the best match (could be regular driver OR elite self-match)
       if (response.data.similar_drivers && response.data.similar_drivers.length > 0) {
         const match = response.data.similar_drivers[0];
+        console.log('✅ Best match found:', match);
         setBestMatch(match);
         setSearching(false); // Stop "Finding best match" spinner immediately
 
@@ -461,88 +373,7 @@ export default function Improve() {
 
           {/* RIGHT COLUMN - BEST MATCH RESULTS */}
           <section className="comparables-section">
-            {/* Top Driver Scenario - No Better Drivers Available */}
-            {(() => {
-              console.log('🎯 Render check - Top Driver:', { searching, isTopDriver, hasData: !!topDriverData });
-              return null;
-            })()}
-            {!searching && isTopDriver && topDriverData && (
-              <div className="top-driver-message">
-                <div className="top-driver-header">
-                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFD700" strokeWidth="2">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                  </svg>
-                  <h3>Elite Performance Level</h3>
-                </div>
-                <p className="top-driver-subtitle">{topDriverData.message}</p>
-
-                <div className="top-driver-stats">
-                  <div className="stat-box">
-                    <span className="stat-value">P{topDriverData.current_avg_finish}</span>
-                    <span className="stat-label">Avg Finish</span>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-value">{topDriverData.wins}</span>
-                    <span className="stat-label">Wins</span>
-                  </div>
-                  <div className="stat-box">
-                    <span className="stat-value">{topDriverData.total_races}</span>
-                    <span className="stat-label">Races</span>
-                  </div>
-                </div>
-
-                {topDriverData.losses_to_analyze && topDriverData.losses_to_analyze.length > 0 && (
-                  <div className="improvement-focus">
-                    <h4>Focus on Converting to Wins</h4>
-                    <p className="improvement-text">{topDriverData.improvement_suggestion}</p>
-                    <div className="losses-list">
-                      <strong>Races to Analyze:</strong>
-                      {topDriverData.losses_to_analyze.map((loss, idx) => (
-                        <div key={idx} className="loss-item">
-                          <span className="track-name">{loss.track}</span>
-                          <span className="finish-info">
-                            Started P{loss.start} → Finished P{loss.finish}
-                            {loss.positions_gained !== 0 && (
-                              <span className={loss.positions_gained > 0 ? "gained" : "lost"}>
-                                {loss.positions_gained > 0 ? '+' : ''}{loss.positions_gained}
-                              </span>
-                            )}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* AI Coaching Insights for Top Driver */}
-                {topDriverData.target_factor && (
-                  <div className="top-driver-coaching-section">
-                    <h4>AI Coaching: Converting Podiums to Wins at {tracks.find(t => t.id === selectedTrack)?.name}</h4>
-                    <div className="coaching-insights">
-                      {loadingInsights ? (
-                        <div className="insights-loading">
-                          <div className="insights-spinner"></div>
-                          <p>Analyzing your non-winning races...</p>
-                        </div>
-                      ) : liveCoachingInsights ? (
-                        <div className="coaching-analysis-box">
-                          <div className="coaching-text live-insights">
-                            {formatCoachingInsights(liveCoachingInsights)}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="insight-placeholder">
-                          <p><strong>Ready to generate insights</strong></p>
-                          <p>Click "Find Best Match" to get AI coaching on converting your podium finishes to wins.</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {!searching && !bestMatch && !isTopDriver && targetSkills && (
+            {!searching && !bestMatch && targetSkills && (
               <div className="comparables-empty">
                 <div className="empty-icon" aria-hidden="true">
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5">
@@ -621,8 +452,19 @@ export default function Improve() {
                 )}
 
                 {/* Best Match Card */}
-                <div className="best-match-card">
-                  <div className="match-badge">{bestMatch.match_score}% Match</div>
+                <div className={`best-match-card ${bestMatch.is_elite_self_match ? 'elite-self-match' : ''}`}>
+                  <div className={`match-badge ${bestMatch.is_elite_self_match ? 'elite' : ''}`}>
+                    {bestMatch.is_elite_self_match ? (
+                      <>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        Elite
+                      </>
+                    ) : (
+                      `${bestMatch.match_score}% Match`
+                    )}
+                  </div>
                   <div className="driver-info">
                     <h4>Driver #{bestMatch.driver_number}</h4>
                     <p>{bestMatch.driver_name}</p>
@@ -630,13 +472,13 @@ export default function Improve() {
                   {bestMatch.avg_finish && (
                     <div className="finish-comparison">
                       <div className="your-finish">
-                        <span className="label">Your Avg</span>
+                        <span className="label">{bestMatch.is_elite_self_match ? 'Current Avg' : 'Your Avg'}</span>
                         <span className="value">P{driverData.stats?.average_finish?.toFixed(1) || 'N/A'}</span>
                       </div>
                       <div className="arrow">→</div>
-                      <div className="their-finish">
-                        <span className="label">Their Avg</span>
-                        <span className="value">P{bestMatch.avg_finish.toFixed(1)}</span>
+                      <div className={`their-finish ${bestMatch.is_elite_self_match ? 'elite-target' : ''}`}>
+                        <span className="label">{bestMatch.is_elite_self_match ? 'Target' : 'Their Avg'}</span>
+                        <span className="value">P{bestMatch.is_elite_self_match ? '1.0' : bestMatch.avg_finish.toFixed(1)}</span>
                       </div>
                     </div>
                   )}
