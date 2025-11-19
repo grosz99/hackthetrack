@@ -22,20 +22,10 @@ export default function Improve() {
   const [matchCoachingData, setMatchCoachingData] = useState(null);
   const [liveCoachingInsights, setLiveCoachingInsights] = useState(null);
   const [loadingInsights, setLoadingInsights] = useState(false);
-  const [selectedTrack, setSelectedTrack] = useState('barber');
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
   const [matchingData, setMatchingData] = useState(null);
-
-  const tracks = [
-    { id: 'barber', name: 'Barber Motorsports Park' },
-    { id: 'cota', name: 'Circuit of the Americas' },
-    { id: 'roadamerica', name: 'Road America' },
-    { id: 'sebring', name: 'Sebring International' },
-    { id: 'sonoma', name: 'Sonoma Raceway' },
-    { id: 'vir', name: 'Virginia International Raceway' }
-  ];
 
   // Generate AI-recommended budget allocation based on weaknesses
   const generateRecommendedAllocation = (driverFactors, coaching) => {
@@ -201,8 +191,7 @@ export default function Improve() {
                 current_driver_number: selectedDriverNumber,
                 comparable_driver_number: match.driver_number,
                 factor_name: primaryFactor,
-                improvement_delta: improvement.delta,
-                track_name: tracks.find(t => t.id === selectedTrack)?.name || selectedTrack
+                improvement_delta: improvement.delta
               });
               setLiveCoachingInsights(insightsResponse.data.insights);
             } catch (insightErr) {
@@ -217,11 +206,10 @@ export default function Improve() {
           const primaryFactor = getPrimaryImprovementFactor();
           if (primaryFactor && match.losses_to_analyze && match.losses_to_analyze.length > 0) {
             setLoadingInsights(true);
-            try {
+            try{
               const insightsResponse = await api.post('/api/coaching/top-driver-insights', {
                 driver_number: selectedDriverNumber,
                 target_factor: primaryFactor,
-                track_name: tracks.find(t => t.id === selectedTrack)?.name || selectedTrack,
                 losses: match.losses_to_analyze,
                 current_skills: match.skills
               });
@@ -446,9 +434,6 @@ export default function Improve() {
                 initialTargets={targetSkills}
                 onTargetChange={handleTargetChange}
                 onFindSimilar={handleFindBestMatch}
-                tracks={tracks}
-                selectedTrack={selectedTrack}
-                onTrackChange={setSelectedTrack}
                 aiRecommendation={recommendedAllocation}
               />
             </section>
@@ -481,7 +466,7 @@ export default function Improve() {
             {bestMatch && driverData && (
               <div className="best-match-results">
                 <div className="best-match-header">
-                  <h3>Best Match at {tracks.find(t => t.id === selectedTrack)?.name}</h3>
+                  <h3>Best Match</h3>
                 </div>
 
                 {/* Matching Transparency Section */}
@@ -617,10 +602,10 @@ export default function Improve() {
                   </div>
                 )}
 
-                {/* Track-Specific Improvement Actions */}
+                {/* AI-Generated Improvement Guidance */}
                 {primaryImprovement && primaryImprovement.delta > 0 && (
                   <div className="track-improvement-section">
-                    <h4>How to Improve at {tracks.find(t => t.id === selectedTrack)?.name}</h4>
+                    <h4>How to Improve</h4>
                     <div className="improvement-insights">
                       {loadingInsights ? (
                         <div className="insights-loading">

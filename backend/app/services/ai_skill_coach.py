@@ -141,7 +141,6 @@ Write a 5-6 sentence scouting assessment for {display_name}'s {factor_display}."
         comparable_driver_number: int,
         factor_name: str,
         improvement_delta: float,
-        track_name: str,
         current_skills: Dict,
         comparable_skills: Dict,
         comparable_race_results: List[Dict] = None
@@ -154,7 +153,6 @@ Write a 5-6 sentence scouting assessment for {display_name}'s {factor_display}."
             comparable_driver_number: Comparable driver's number
             factor_name: Skill factor being improved (speed, consistency, etc.)
             improvement_delta: How much the user wants to improve (e.g., 2%)
-            track_name: Selected track for insights
             current_skills: Dict of current driver's skill percentiles
             comparable_skills: Dict of comparable driver's skill percentiles
             comparable_race_results: Race results from comparable driver
@@ -162,28 +160,29 @@ Write a 5-6 sentence scouting assessment for {display_name}'s {factor_display}."
         Returns:
             Actionable coaching insights text
         """
-        system_prompt = """You are a sports car racing coach for IMSA GTP series providing concise driver development advice.
+        system_prompt = """You are a performance coach for the Toyota Gazoo Racing Cup series. You are analytically driven in your approach to helping drivers improve.
+
+You use the 4-factor performance model (Speed, Consistency, Racecraft, Tire Management) combined with race history data and track knowledge to guide drivers.
 
 TASK:
-Write brief coaching guidance in 3 sections.
+Write data-driven coaching guidance in 3 sections.
 
 FORMAT:
 **Key Focus Areas**
-1-2 sentences on what to work on
+2-3 sentences on what specific aspects to work on based on the data
 
-**Track-Specific Techniques**
-1-2 sentences with specific techniques for this track
+**Best Track Opportunities**
+Identify which 2-3 tracks where Driver #{comparable_driver_number} excelled in this skill factor, citing specific performances. Explain why these tracks showcase this skill and where the driver will see most benefit.
 
 **Development Path**
-1-2 sentences on how to practice this
+2-3 sentences on concrete practice methods using the 4-factor model
 
 CONSTRAINTS:
-- Keep it SHORT - maximum 1-2 sentences per section
-- Sports car racing (GTP), NOT Formula 1
-- Use simple, direct language
-- Second person ("focus on...")
-- Reference specific turns/sections when possible
-- Be encouraging but concise
+- Be analytical and data-driven - cite specific percentiles and race results
+- Prioritize tracks where the comparable driver's strength in this factor made the difference
+- This is IMSA GTP / Toyota Gazoo Racing sports car racing, NOT Formula 1
+- Use second person ("you should focus...")
+- Connect track characteristics to the 4-factor model
 """
 
         factor_display = factor_name.replace("_", " ").title()
@@ -191,39 +190,40 @@ CONSTRAINTS:
         user_prompt = f"""IMPROVEMENT TARGET:
 Driver #{current_driver_number} wants to improve their {factor_display} by +{improvement_delta:.0f}%
 
-CURRENT DRIVER SKILLS:
+CURRENT DRIVER 4-FACTOR PROFILE:
 - Speed: {current_skills.get('speed', 0):.1f}th percentile
 - Consistency: {current_skills.get('consistency', 0):.1f}th percentile
 - Racecraft: {current_skills.get('racecraft', 0):.1f}th percentile
 - Tire Management: {current_skills.get('tire_management', 0):.1f}th percentile
 
-COMPARABLE DRIVER #{comparable_driver_number} SKILLS:
-- Speed: {comparable_skills.get('speed', 0):.1f}th percentile
-- Consistency: {comparable_skills.get('consistency', 0):.1f}th percentile
-- Racecraft: {comparable_skills.get('racecraft', 0):.1f}th percentile
-- Tire Management: {comparable_skills.get('tire_management', 0):.1f}th percentile
-
-TRACK: {track_name}
+COMPARABLE DRIVER #{comparable_driver_number} 4-FACTOR PROFILE:
+- Speed: {comparable_skills.get('speed', 0):.1f}th percentile (+{comparable_skills.get('speed', 0) - current_skills.get('speed', 0):.1f} advantage)
+- Consistency: {comparable_skills.get('consistency', 0):.1f}th percentile (+{comparable_skills.get('consistency', 0) - current_skills.get('consistency', 0):.1f} advantage)
+- Racecraft: {comparable_skills.get('racecraft', 0):.1f}th percentile (+{comparable_skills.get('racecraft', 0) - current_skills.get('racecraft', 0):.1f} advantage)
+- Tire Management: {comparable_skills.get('tire_management', 0):.1f}th percentile (+{comparable_skills.get('tire_management', 0) - current_skills.get('tire_management', 0):.1f} advantage)
 
 """
         if comparable_race_results:
-            user_prompt += "COMPARABLE DRIVER'S TRACK PERFORMANCE:\n"
-            for race in comparable_race_results[:6]:
-                if track_name.lower() in race.get('track_name', '').lower():
-                    user_prompt += (
-                        f"- {race.get('track_name')}: "
-                        f"P{race.get('start_position')} → P{race.get('finish_position')}, "
-                        f"Fastest lap gap: {race.get('gap_to_fastest_lap', 'N/A')}\n"
-                    )
+            user_prompt += f"DRIVER #{comparable_driver_number}'S SEASON RESULTS (showing where {factor_display} strength delivered results):\n"
+            for race in comparable_race_results[:12]:
+                user_prompt += (
+                    f"- {race.get('track_name')}: "
+                    f"P{race.get('start_position')} → P{race.get('finish_position')}"
+                )
+                if race.get('positions_gained'):
+                    user_prompt += f" ({'+' if race.get('positions_gained') > 0 else ''}{race.get('positions_gained')} positions)"
+                user_prompt += "\n"
 
         user_prompt += f"""
-Write 3-section coaching guidance for Driver #{current_driver_number} to achieve their +{improvement_delta:.0f}% {factor_display} improvement by learning from Driver #{comparable_driver_number}'s approach at {track_name}.
+Using the 4-factor model and race data, write coaching for Driver #{current_driver_number} to achieve +{improvement_delta:.0f}% {factor_display} improvement.
 
-Remember: This is sports car racing (IMSA GTP/Gazoo Racing), not Formula 1. Focus on sports car-specific techniques."""
+Focus on: Which tracks Driver #{comparable_driver_number} performed best at using {factor_display} as a strength, and why those tracks will show the most benefit for this improvement.
+
+Remember: Toyota Gazoo Racing Cup / IMSA GTP sports car racing. Use data and track analysis."""
 
         response = self.client.messages.create(
             model=self.model,
-            max_tokens=400,
+            max_tokens=500,
             system=system_prompt,
             messages=[{"role": "user", "content": user_prompt}]
         )
@@ -235,7 +235,6 @@ Remember: This is sports car racing (IMSA GTP/Gazoo Racing), not Formula 1. Focu
         driver_name: str,
         driver_number: int,
         target_factor: str,
-        track_name: str,
         losses: List[Dict],
         current_skills: Dict
     ) -> str:
@@ -244,27 +243,29 @@ Remember: This is sports car racing (IMSA GTP/Gazoo Racing), not Formula 1. Focu
 
         Focuses on analyzing non-winning races to identify improvement opportunities.
         """
-        system_prompt = """You are an elite motorsports performance coach analyzing a top-tier driver's races.
+        system_prompt = """You are a performance coach for the Toyota Gazoo Racing Cup series. You are analytically driven in your approach to helping elite drivers convert podiums into wins.
+
+You use the 4-factor performance model (Speed, Consistency, Racecraft, Tire Management) combined with race history data and track patterns to guide drivers.
 
 TASK:
-Write concise coaching advice in 3 sections focused on converting P2-P3 finishes into wins.
+Write data-driven coaching advice in 3 sections for an elite driver.
 
 FORMAT:
-**Critical Pattern**
-1-2 sentences identifying what's preventing wins
+**Critical Pattern Across Tracks**
+2-3 sentences identifying what's preventing wins based on analyzing the non-winning results across different circuits
 
-**Track-Specific Focus**
-1-2 sentences on this specific track's challenges
+**Track-by-Track Analysis**
+Identify which 2-3 tracks from the losses show the clearest opportunity for this skill improvement, citing specific race data. Explain what track characteristics make these the priority targets.
 
-**Path to P1**
-1-2 sentences on concrete steps to secure more wins
+**Development Path**
+2-3 sentences on concrete steps to convert podiums to wins using the 4-factor model
 
 CONSTRAINTS:
-- Keep it SHORT - maximum 1-2 sentences per section
-- This is IMSA GTP/sports car racing, not Formula 1
+- Be analytical and data-driven - cite specific races and patterns
+- This is IMSA GTP / Toyota Gazoo Racing sports car racing, NOT Formula 1
 - Focus on the margin between P2/P3 and P1
-- Be specific and actionable
-- Second person ("you need to...")
+- Use second person ("you should focus...")
+- Connect track characteristics to the 4-factor model
 """
 
         factor_display = target_factor.replace("_", " ").title()
@@ -273,19 +274,18 @@ CONSTRAINTS:
 
 This driver is already elite-level but needs to convert more podiums into wins.
 
-CURRENT SKILLS:
+4-FACTOR PERFORMANCE PROFILE:
 - Speed: {current_skills.get('speed', 0):.1f}th percentile
 - Consistency: {current_skills.get('consistency', 0):.1f}th percentile
 - Racecraft: {current_skills.get('racecraft', 0):.1f}th percentile
 - Tire Management: {current_skills.get('tire_management', 0):.1f}th percentile
 
-IMPROVEMENT FOCUS: {factor_display}
-TRACK: {track_name}
+PRIMARY IMPROVEMENT TARGET: {factor_display}
 
 NON-WINNING FINISHES TO ANALYZE:
 """
 
-        for loss in losses[:3]:  # Top 3 losses
+        for loss in losses[:5]:  # Analyze more losses for pattern detection
             user_prompt += f"- {loss.get('track')}: Started P{loss.get('start')} → Finished P{loss.get('finish')}"
             positions = loss.get('positions_gained', 0)
             if positions != 0:
@@ -293,13 +293,15 @@ NON-WINNING FINISHES TO ANALYZE:
             user_prompt += "\n"
 
         user_prompt += f"""
-Write 3-section coaching for {driver_name} to identify what's preventing wins and how to improve {factor_display} at {track_name}.
+Using the 4-factor model and race data, write coaching for {driver_name} to identify patterns preventing wins and prioritize which tracks to focus on for {factor_display} improvement.
 
-Remember: This is sports car racing (IMSA GTP). Focus on the final details that separate P2 from P1."""
+Focus on: Which of these non-winning races show the clearest opportunity for improvement in {factor_display}, and why those tracks are priority targets.
+
+Remember: Toyota Gazoo Racing Cup / IMSA GTP sports car racing. Use data to identify patterns."""
 
         response = self.client.messages.create(
             model=self.model,
-            max_tokens=400,
+            max_tokens=500,
             system=system_prompt,
             messages=[{"role": "user", "content": user_prompt}]
         )
