@@ -338,18 +338,9 @@ export default function Skills() {
         <div className="factor-cards-container">
           {/* Instructional Banner */}
           <div className="factor-instructions-banner">
-            <div className="instructions-icon">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2.5">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="12"/>
-                <line x1="12" y1="16" x2="12.01" y2="16"/>
-              </svg>
-            </div>
-            <div className="instructions-content">
-              <p className="instructions-text">
-                <strong>Explore Each Factor:</strong> Click the <span className="plus-icon-inline">+</span> button on any card below to see the detailed variables that make up each factor and get personalized coaching on how this driver can improve.
-              </p>
-            </div>
+            <p className="instructions-text">
+              <strong>Explore Each Factor:</strong> Click the <span className="plus-icon-inline">+</span> button on any card below to see the detailed variables that make up each factor and get personalized coaching on how this driver can improve.
+            </p>
           </div>
 
           <div className="factor-cards-grid-new">

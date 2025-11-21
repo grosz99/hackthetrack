@@ -150,39 +150,17 @@
   background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
   border: 3px solid #EB0A1E;
   border-radius: 12px;
-  padding: 20px 24px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
+  padding: 20px 32px;
   box-shadow: 0 4px 12px rgba(235, 10, 30, 0.1);
-}
-
-.instructions-icon {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  background: #EB0A1E;
-  border-radius: 50%;
-  padding: 8px;
-}
-
-.instructions-icon svg {
-  stroke: #ffffff;
-}
-
-.instructions-content {
-  flex: 1;
+  text-align: center;
 }
 
 .instructions-text {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #333333;
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .instructions-text strong {
