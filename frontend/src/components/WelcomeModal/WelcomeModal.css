@@ -57,8 +57,8 @@
 
 /* Modal Body */
 .modal-body {
-  padding: 32px 60px 24px;
-  min-height: 320px;
+  padding: 24px 60px 20px;
+  min-height: 280px;
 }
 
 .modal-title {
@@ -86,24 +86,24 @@
 
 .welcome-intro {
   text-align: center;
-  padding: 32px 0;
+  padding: 16px 0;
 }
 
 .welcome-logo {
-  margin: 0 auto 32px;
+  margin: 0 auto 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  max-width: 700px;
+  max-width: 400px;
 }
 
 .welcome-logo .gibbs-branding-large .gibbs-logo {
-  height: 220px;
+  height: 140px;
 }
 
 .intro-text {
-  font-size: 16px;
-  line-height: 1.7;
+  font-size: 15px;
+  line-height: 1.65;
   color: #1a1a1a;
   max-width: 650px;
   margin: 0 auto;
@@ -639,11 +639,11 @@
 }
 
 .intro-subtext {
-  font-size: 14px;
-  line-height: 1.65;
+  font-size: 13px;
+  line-height: 1.6;
   color: #666;
   max-width: 600px;
-  margin: 16px auto 0;
+  margin: 12px auto 0;
   font-style: italic;
 }
 
