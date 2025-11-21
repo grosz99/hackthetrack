@@ -145,6 +145,68 @@
   text-align: center;
 }
 
+/* New Instructional Banner */
+.factor-instructions-banner {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border: 3px solid #EB0A1E;
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 4px 12px rgba(235, 10, 30, 0.1);
+}
+
+.instructions-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: #EB0A1E;
+  border-radius: 50%;
+  padding: 8px;
+}
+
+.instructions-icon svg {
+  stroke: #ffffff;
+}
+
+.instructions-content {
+  flex: 1;
+}
+
+.instructions-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333333;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.instructions-text strong {
+  font-weight: 900;
+  color: #EB0A1E;
+  font-size: 15px;
+}
+
+.plus-icon-inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: #EB0A1E;
+  color: #ffffff;
+  border-radius: 4px;
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 1;
+  margin: 0 2px;
+  vertical-align: middle;
+}
+
 .instructions-title {
   font-size: 20px;
   font-weight: 900;
@@ -152,13 +214,6 @@
   margin: 0 0 8px 0;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-}
-
-.instructions-text {
-  font-size: 14px;
-  font-weight: 600;
-  color: #333333;
-  margin: 0;
 }
 
 .factor-cards-grid-new {
