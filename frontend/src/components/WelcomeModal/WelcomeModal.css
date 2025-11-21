@@ -299,7 +299,7 @@
 
 .accomplishments-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-top: 8px;
   align-items: stretch;
@@ -315,6 +315,12 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+.accomplishment:nth-child(3):last-child {
+  grid-column: 1 / -1;
+  max-width: calc(50% - 8px);
+  margin: 0 auto;
 }
 
 .accomplishment:hover {

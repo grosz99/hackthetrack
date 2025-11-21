@@ -11,9 +11,8 @@ export default function Rankings() {
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
-    // Check if user has seen welcome modal
-    const hasSeenWelcome = localStorage.getItem('httt_welcome_seen');
-    if (!hasSeenWelcome && !loading) {
+    // Show welcome modal every time the page loads
+    if (!loading) {
       // Small delay for dramatic entrance after data loads
       setTimeout(() => setShowWelcome(true), 500);
     }
