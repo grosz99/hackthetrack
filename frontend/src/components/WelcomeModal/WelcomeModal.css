@@ -302,6 +302,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-top: 8px;
+  align-items: stretch;
 }
 
 .accomplishment {
@@ -311,7 +312,6 @@
   border: 2px solid #EB0A1E;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: all 0.3s ease;
-  height: 180px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -517,6 +517,7 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+  align-items: stretch;
 }
 
 .factor-card {
@@ -565,7 +566,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 180px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -599,6 +599,7 @@
   grid-template-columns: repeat(2, 1fr);
   gap: 16px;
   margin-top: 20px;
+  align-items: stretch;
 }
 
 .feature-tile {
@@ -610,7 +611,6 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  height: 180px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -650,12 +650,5 @@
 @media (max-width: 768px) {
   .features-grid {
     grid-template-columns: 1fr;
-  }
-
-  .factor-card-uniform,
-  .feature-tile,
-  .accomplishment {
-    height: auto;
-    min-height: 180px;
   }
 }
