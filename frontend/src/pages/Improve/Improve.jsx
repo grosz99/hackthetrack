@@ -26,6 +26,7 @@ export default function Improve() {
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState(null);
   const [matchingData, setMatchingData] = useState(null);
+  const [hasSearched, setHasSearched] = useState(false);
 
   // Generate AI-recommended budget allocation based on weaknesses
   const generateRecommendedAllocation = (driverFactors, coaching) => {
@@ -153,6 +154,7 @@ export default function Improve() {
     try {
       console.log('🔍 Finding best match for driver:', selectedDriverNumber);
       setSearching(true);
+      setHasSearched(true);
       setBestMatch(null);
       setMatchCoachingData(null);
       setLiveCoachingInsights(null);
@@ -419,8 +421,8 @@ export default function Improve() {
           </div>
         )}
 
-        {/* TWO COLUMN LAYOUT - Skills & Best Match */}
-        <div className="improve-grid">
+        {/* DYNAMIC LAYOUT - Single column before search, two columns after */}
+        <div className={`improve-grid ${!hasSearched ? 'single-column' : ''}`}>
           {/* LEFT COLUMN - SKILL SLIDERS */}
           {driverData && targetSkills && (
             <section className="skill-sliders-section">
@@ -439,22 +441,23 @@ export default function Improve() {
             </section>
           )}
 
-          {/* RIGHT COLUMN - BEST MATCH RESULTS */}
-          <section className="comparables-section">
-            {!searching && !bestMatch && targetSkills && (
-              <div className="comparables-empty">
-                <div className="empty-icon" aria-hidden="true">
-                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                    <circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
+          {/* RIGHT COLUMN - BEST MATCH RESULTS (Only shown after first search) */}
+          {hasSearched && (
+            <section className="comparables-section">
+              {!searching && !bestMatch && targetSkills && (
+                <div className="comparables-empty">
+                  <div className="empty-icon" aria-hidden="true">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#999" strokeWidth="1.5">
+                      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                      <circle cx="9" cy="7" r="4"/>
+                      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                  </div>
+                  <h3>Find Your Best Match</h3>
+                  <p>Adjust your skill targets and select a track, then click "Find Best Match" to see a comparable driver and track-specific improvement actions.</p>
                 </div>
-                <h3>Find Your Best Match</h3>
-                <p>Adjust your skill targets and select a track, then click "Find Best Match" to see a comparable driver and track-specific improvement actions.</p>
-              </div>
-            )}
+              )}
 
             {searching && (
               <div className="comparables-loading">
@@ -548,7 +551,8 @@ export default function Improve() {
                 )}
               </div>
             )}
-          </section>
+            </section>
+          )}
         </div>
 
       </div>
