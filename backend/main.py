@@ -15,6 +15,12 @@ from app.utils.errors import AppError
 # Load environment variables
 load_dotenv()
 
+# Validate critical environment variables at startup
+required_env_vars = ["ANTHROPIC_API_KEY"]
+missing_vars = [var for var in required_env_vars if not os.getenv(var)]
+if missing_vars:
+    raise RuntimeError(f"Missing required environment variables: {', '.join(missing_vars)}")
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -30,7 +36,7 @@ app = FastAPI(
 )
 
 # Configure CORS for React frontend
-# Allow all Vercel deployments and local development
+# Allow Netlify deployments and local development
 allowed_origins = [
     "http://localhost:5173",  # Vite default
     "http://localhost:5174",  # Vite alternative port
@@ -42,22 +48,23 @@ allowed_origins = [
 ]
 
 # Add production URLs from environment or defaults
-production_url = os.getenv("FRONTEND_URL", "https://circuit-fbtth1gml-justin-groszs-projects.vercel.app")
+production_url = os.getenv("FRONTEND_URL", "https://gibbs-ai.netlify.app")
 if production_url:
     allowed_origins.append(production_url)
 
-# Also allow any vercel.app subdomain for preview deployments
-allowed_origins.append("https://*.vercel.app")
+# Also allow any netlify.app subdomain for preview deployments
+allowed_origins.append("https://*.netlify.app")
 
 # TEMPORARY: Allow all origins for development
-# TODO: Restrict this in production
+# TODO: Remove CORS_ALLOW_ALL from Heroku config after verifying Netlify works
 if os.getenv("CORS_ALLOW_ALL"):
     allowed_origins = ["*"]
+    logger.warning("CORS_ALLOW_ALL is enabled - all origins allowed (development only)")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
-    allow_origin_regex=r"https://.*\.vercel\.app",  # Allow all Vercel preview deployments
+    allow_origin_regex=r"https://.*\.netlify\.app",  # Allow all Netlify preview deployments
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

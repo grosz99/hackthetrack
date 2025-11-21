@@ -70,6 +70,31 @@ temp/
 *.tmp
 .vercel
 
+# Backup files
+*.bak
+*_REMOVED.py
+*_backup.py
+
+# Vercel (not using - using Netlify)
+.vercel/
+vercel.json
+.vercelignore
+
+# ChatGPT generated images
+ChatGPT*.png
+
+# Validation output files
+validation_output.txt
+
+# Root-level scripts (should be in /scripts/)
+/add_*.py
+/update_*.py
+/export_*.py
+/upload_*.py
+/validate_*.py
+/reduce_*.py
+/shrink_*.py
+
 # Telemetry data - too large for Git (3.2GB)
 # Stored externally - see DATA_MANAGEMENT.md
 data/telemetry/
