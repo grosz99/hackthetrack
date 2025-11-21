@@ -102,10 +102,10 @@
 }
 
 .intro-text {
-  font-size: 15px;
-  line-height: 1.65;
+  font-size: 17px;
+  line-height: 1.7;
   color: #1a1a1a;
-  max-width: 650px;
+  max-width: 680px;
   margin: 0 auto 16px auto;
   font-weight: 500;
 }
@@ -585,7 +585,7 @@
 
 .factor-card-uniform h4 {
   color: #EB0A1E;
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 800;
   margin: 0;
   text-transform: uppercase;
@@ -594,8 +594,8 @@
 
 .factor-card-uniform p {
   color: #333;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.65;
   margin: 0;
   flex-grow: 1;
   font-weight: 500;
@@ -630,7 +630,7 @@
 
 .feature-tile h4 {
   color: #EB0A1E;
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 800;
   margin: 0;
   text-transform: uppercase;
@@ -639,18 +639,18 @@
 
 .feature-tile p {
   color: #333;
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.65;
   margin: 0;
   flex-grow: 1;
   font-weight: 500;
 }
 
 .intro-subtext {
-  font-size: 13px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.65;
   color: #666;
-  max-width: 600px;
+  max-width: 650px;
   margin: 12px auto 0;
   font-style: italic;
 }
