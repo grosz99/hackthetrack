@@ -6,11 +6,17 @@ coaching recommendations for each skill factor.
 """
 
 import os
+import logging
 from typing import Dict, List
 from anthropic import Anthropic
+import anthropic
+from fastapi import HTTPException
 from dotenv import load_dotenv
 
 load_dotenv()
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 
 SKILL_COACH_SYSTEM_PROMPT = """You are an elite motorsports talent scout writing concise scouting reports.
@@ -77,14 +83,26 @@ class AISkillCoach:
             driver_name
         )
 
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=500,
-            system=SKILL_COACH_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": user_prompt}]
-        )
-
-        return response.content[0].text
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=500,
+                system=SKILL_COACH_SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": user_prompt}]
+            )
+            return response.content[0].text
+        except anthropic.APIError as e:
+            logger.exception(f"Anthropic API error in skill coaching: {e}")
+            raise HTTPException(
+                status_code=503,
+                detail="AI skill coaching service temporarily unavailable. Please try again in a moment."
+            )
+        except Exception as e:
+            logger.exception(f"Unexpected error in skill coaching: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail="Unable to generate skill coaching. Please try again."
+            )
 
     def _format_coaching_prompt(
         self,
@@ -225,14 +243,26 @@ Focus on: Which tracks Driver #{comparable_driver_number} performed best at usin
 
 Remember: Toyota Gazoo Racing Cup / IMSA GTP sports car racing. Use data and track analysis."""
 
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=500,
-            system=system_prompt,
-            messages=[{"role": "user", "content": user_prompt}]
-        )
-
-        return response.content[0].text
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=500,
+                system=system_prompt,
+                messages=[{"role": "user", "content": user_prompt}]
+            )
+            return response.content[0].text
+        except anthropic.APIError as e:
+            logger.exception(f"Anthropic API error in improvement coaching: {e}")
+            raise HTTPException(
+                status_code=503,
+                detail="AI improvement coaching service temporarily unavailable. Please try again in a moment."
+            )
+        except Exception as e:
+            logger.exception(f"Unexpected error in improvement coaching: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail="Unable to generate improvement coaching. Please try again."
+            )
 
     def generate_top_driver_insights(
         self,
@@ -307,14 +337,26 @@ Focus on: Which of these non-winning races show the clearest opportunity for imp
 
 Remember: Toyota Gazoo Racing Cup / IMSA GTP sports car racing. Use data to identify patterns."""
 
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=500,
-            system=system_prompt,
-            messages=[{"role": "user", "content": user_prompt}]
-        )
-
-        return response.content[0].text
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=500,
+                system=system_prompt,
+                messages=[{"role": "user", "content": user_prompt}]
+            )
+            return response.content[0].text
+        except anthropic.APIError as e:
+            logger.exception(f"Anthropic API error in top driver insights: {e}")
+            raise HTTPException(
+                status_code=503,
+                detail="AI top driver insights service temporarily unavailable. Please try again in a moment."
+            )
+        except Exception as e:
+            logger.exception(f"Unexpected error in top driver insights: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail="Unable to generate top driver insights. Please try again."
+            )
 
 
 ai_skill_coach = AISkillCoach()

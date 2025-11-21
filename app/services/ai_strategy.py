@@ -3,13 +3,19 @@ AI Strategy Chatbot Service using Anthropic Claude.
 """
 
 import os
+import logging
 from typing import List, Optional
 from anthropic import Anthropic
+import anthropic
+from fastapi import HTTPException
 from models import ChatMessage, Driver, Track
 from dotenv import load_dotenv
 
 # Load environment variables before initializing the client
 load_dotenv()
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 
 class AIStrategyService:
@@ -143,15 +149,27 @@ Help drivers understand how their unique skill profile can overcome predictions 
         # Add current message
         messages.append({"role": "user", "content": message})
 
-        # Call Claude API
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=1024,
-            system=system_prompt,
-            messages=messages,
-        )
-
-        response_text = response.content[0].text
+        # Call Claude API with error handling
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=1024,
+                system=system_prompt,
+                messages=messages,
+            )
+            response_text = response.content[0].text
+        except anthropic.APIError as e:
+            logger.exception(f"Anthropic API error: {e}")
+            raise HTTPException(
+                status_code=503,
+                detail="AI strategy service temporarily unavailable. Please try again in a moment."
+            )
+        except Exception as e:
+            logger.exception(f"Unexpected error in AI strategy service: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail="Unable to generate strategy insights. Please try again."
+            )
 
         # Generate suggested follow-up questions
         suggested_questions = self._generate_suggested_questions(

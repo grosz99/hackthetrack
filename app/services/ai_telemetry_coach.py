@@ -6,13 +6,19 @@ in the style of a professional race engineer.
 """
 
 import os
+import logging
 import pandas as pd
 from typing import Dict, List, Optional
 from anthropic import Anthropic
+import anthropic
+from fastapi import HTTPException
 from dotenv import load_dotenv
 from pathlib import Path
 
 load_dotenv()
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 
 RACE_ENGINEER_SYSTEM_PROMPT = """You are an expert motorsports race engineer and driver coach with 20+ years of experience analyzing telemetry data and coaching professional drivers. Your goal is to provide specific, actionable coaching advice that helps drivers improve lap times.
@@ -101,15 +107,27 @@ class AITelemetryCoach:
             corner_analysis
         )
 
-        # Call Claude API
-        response = self.client.messages.create(
-            model=self.model,
-            max_tokens=2000,
-            system=RACE_ENGINEER_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": user_prompt}]
-        )
-
-        return response.content[0].text
+        # Call Claude API with error handling
+        try:
+            response = self.client.messages.create(
+                model=self.model,
+                max_tokens=2000,
+                system=RACE_ENGINEER_SYSTEM_PROMPT,
+                messages=[{"role": "user", "content": user_prompt}]
+            )
+            return response.content[0].text
+        except anthropic.APIError as e:
+            logger.exception(f"Anthropic API error in telemetry coaching: {e}")
+            raise HTTPException(
+                status_code=503,
+                detail="AI telemetry coaching service temporarily unavailable. Please try again in a moment."
+            )
+        except Exception as e:
+            logger.exception(f"Unexpected error in telemetry coaching: {e}")
+            raise HTTPException(
+                status_code=500,
+                detail="Unable to generate telemetry coaching. Please try again."
+            )
 
     def _format_coaching_prompt(
         self,
