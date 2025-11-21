@@ -213,21 +213,57 @@ export default function Skills() {
           <p className="scouting-headline-big">
             {(() => {
               const factors = [
-                { name: 'speed', adjective: 'fast', score: driverData.speed?.score || 0, max: factorStats.speed?.max || 100 },
-                { name: 'consistency', adjective: 'consistent', score: driverData.consistency?.score || 0, max: factorStats.consistency?.max || 100 },
-                { name: 'racecraft', adjective: 'tactical', score: driverData.racecraft?.score || 0, max: factorStats.racecraft?.max || 100 },
-                { name: 'tire management', adjective: 'tire-savvy', score: driverData.tire_management?.score || 0, max: factorStats.tire_management?.max || 100 }
+                {
+                  name: 'speed',
+                  adjective: 'fast',
+                  score: driverData.speed?.score || 0,
+                  max: factorStats.speed?.max || 100,
+                  percentile: driverData.speed?.percentile || 0
+                },
+                {
+                  name: 'consistency',
+                  adjective: 'consistent',
+                  score: driverData.consistency?.score || 0,
+                  max: factorStats.consistency?.max || 100,
+                  percentile: driverData.consistency?.percentile || 0
+                },
+                {
+                  name: 'racecraft',
+                  adjective: 'tactical',
+                  score: driverData.racecraft?.score || 0,
+                  max: factorStats.racecraft?.max || 100,
+                  percentile: driverData.racecraft?.percentile || 0
+                },
+                {
+                  name: 'tire management',
+                  adjective: 'tire-savvy',
+                  score: driverData.tire_management?.score || 0,
+                  max: factorStats.tire_management?.max || 100,
+                  percentile: driverData.tire_management?.percentile || 0
+                }
               ];
               const sorted = [...factors].sort((a, b) => (b.score / b.max) - (a.score / a.max));
               const top = sorted[0];
               const second = sorted[1];
               const weakest = sorted[3];
 
+              // Generate more personalized description based on driver performance
+              const avgPercentile = factors.reduce((sum, f) => sum + f.percentile, 0) / factors.length;
+
+              let description;
+              if (avgPercentile >= 75) {
+                // Elite driver
+                description = `${currentDriverName} is an elite competitor who excels in ${top.name}, ranking in the ${Math.round(top.percentile)}th percentile. Their ${second.adjective} approach complements their natural ${top.adjective} abilities, though ${weakest.name} remains an area for continued development to reach championship-caliber performance.`;
+              } else if (avgPercentile >= 50) {
+                // Above average driver
+                description = `${currentDriverName} shows strong ${top.adjective} capabilities with ${top.name} as their calling card (${Math.round(top.percentile)}th percentile). They demonstrate ${second.adjective} tendencies that make them competitive on race day. Focusing development on ${weakest.name} could unlock the next level of performance.`;
+              } else {
+                // Developing driver
+                description = `${currentDriverName} is a developing talent with clear strengths in ${top.name} (${Math.round(top.percentile)}th percentile). Their ${second.adjective} driving style provides a solid foundation to build upon. Significant gains are possible through targeted work on ${weakest.name} fundamentals.`;
+              }
+
               return (
-                <>
-                  <span className="headline-bold">A {top.adjective}, {second.adjective} driver</span>
-                  <span className="headline-light"> with strong {top.name} fundamentals and room to grow in {weakest.name}.</span>
-                </>
+                <span className="headline-light">{description}</span>
               );
             })()}
           </p>
