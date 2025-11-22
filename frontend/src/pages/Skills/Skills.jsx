@@ -511,6 +511,41 @@ export default function Skills() {
               <div className="explanation-box">
                 <h3>What This Means</h3>
                 <p>{factorBreakdown.explanation}</p>
+
+                <div className="interpretation-guide">
+                  <h4>How to Read the Distribution Charts</h4>
+                  <p>
+                    Each variable below shows a <strong>competitive position chart</strong> with the driver's performance
+                    marked as a <span className="red-dot-inline">●</span> red dot. The horizontal bar represents all drivers
+                    in the field from left (needs improvement) to right (elite performance).
+                  </p>
+                  <ul className="interpretation-list">
+                    <li>
+                      <strong>Gray zones</strong> show performance tiers: lightest gray (bottom 25%), medium gray (25-50%),
+                      darker gray (50-75%), darkest gray (top 25%)
+                    </li>
+                    <li>
+                      <strong>Vertical lines</strong> mark quartiles—the 25th, 50th (median), and 75th percentile benchmarks
+                    </li>
+                    <li>
+                      <strong>Red dot position</strong> shows where this driver ranks. Hover over the dot to see the exact percentile
+                    </li>
+                    <li>
+                      <strong>Left side (0-25%)</strong>: Critical development area—driver is in bottom quartile
+                    </li>
+                    <li>
+                      <strong>Middle (25-75%)</strong>: Competitive range—driver is performing at or near field average
+                    </li>
+                    <li>
+                      <strong>Right side (75-100%)</strong>: Strength area—driver is in top quartile, elite performance
+                    </li>
+                  </ul>
+                  <p className="coaching-tip">
+                    <strong>Coaching Priority:</strong> Focus development time on variables where the red dot is in the
+                    left half (below 50th percentile). These represent the biggest competitive gaps and highest-ROI
+                    training opportunities.
+                  </p>
+                </div>
               </div>
 
               {/* Variables Grid */}
