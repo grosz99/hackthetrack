@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
-import GibbsAIBranding from '../GibbsAIBranding/GibbsAIBranding';
+import ToyotaGibbsLogo from '../ToyotaGibbsLogo/ToyotaGibbsLogo';
 import './WelcomeModal.css';
 
 export default function WelcomeModal({ onClose }) {
@@ -14,13 +14,10 @@ export default function WelcomeModal({ onClose }) {
       content: (
         <div className="welcome-intro">
           <div className="welcome-logo">
-            <GibbsAIBranding size="large" />
+            <ToyotaGibbsLogo size="large" />
           </div>
           <p className="intro-text">
-            Welcome to Gibbs AI. Our platform uses a validated <strong>4-Factor Performance Model</strong> combined with Claude AI to provide data-driven insights and personalized coaching for driver development.
-          </p>
-          <p className="intro-subtext">
-            The perfect blend of statistical analysis and AI-powered scouting to help identify and develop the drivers of the future.
+            Welcome to Gibbs AI. Our platform uses a validated <strong>4-Factor Performance Model</strong> and live AI feeds to personalize coaching needs for driver development.
           </p>
         </div>
       )
@@ -70,18 +67,42 @@ export default function WelcomeModal({ onClose }) {
             <div className="factor-card-uniform">
               <h4>Speed (46.6%)</h4>
               <p>Raw pace through lap times and sector performance showing pure driving ability.</p>
+              <div className="factor-variables">
+                <span className="variable-label">Variables:</span>
+                <span className="variable-tag">Avg Lap Time</span>
+                <span className="variable-tag">Best Lap</span>
+                <span className="variable-tag">Sector Times</span>
+              </div>
             </div>
             <div className="factor-card-uniform">
               <h4>Consistency (29.1%)</h4>
               <p>Lap-to-lap repeatability indicating better control and predictable performance.</p>
+              <div className="factor-variables">
+                <span className="variable-label">Variables:</span>
+                <span className="variable-tag">Lap Time Std Dev</span>
+                <span className="variable-tag">Clean Laps %</span>
+                <span className="variable-tag">DNF Rate</span>
+              </div>
             </div>
             <div className="factor-card-uniform">
               <h4>Racecraft (14.9%)</h4>
               <p>Wheel-to-wheel racing skills including overtaking efficiency and positioning.</p>
+              <div className="factor-variables">
+                <span className="variable-label">Variables:</span>
+                <span className="variable-tag">Passes Made</span>
+                <span className="variable-tag">Positions Gained</span>
+                <span className="variable-tag">Start Performance</span>
+              </div>
             </div>
             <div className="factor-card-uniform">
               <h4>Tire Management (9.5%)</h4>
               <p>Ability to preserve tire performance throughout a stint while staying competitive.</p>
+              <div className="factor-variables">
+                <span className="variable-label">Variables:</span>
+                <span className="variable-tag">Lap Deg Rate</span>
+                <span className="variable-tag">Stint Length</span>
+                <span className="variable-tag">Late Pace</span>
+              </div>
             </div>
           </div>
         </div>
@@ -91,22 +112,29 @@ export default function WelcomeModal({ onClose }) {
       id: 'platform-features',
       title: 'Platform Features',
       content: (
-        <div className="features-grid">
-          <div className="feature-tile">
-            <h4>Overview</h4>
-            <p>Season statistics, 4-factor radar chart, and race-by-race performance analysis</p>
+        <div className="features-flow">
+          <div className="feature-tile flow-start">
+            <h4>Rankings</h4>
+            <p>Browse all drivers ranked by overall performance. Click any driver to dive into their insights.</p>
           </div>
-          <div className="feature-tile">
-            <h4>Skills</h4>
-            <p>Detailed factor breakdowns with underlying metrics and peer comparisons</p>
-          </div>
-          <div className="feature-tile">
-            <h4>Race Log</h4>
-            <p>Complete race history with lap times, positions, and performance trends</p>
-          </div>
-          <div className="feature-tile">
-            <h4>AI Coach</h4>
-            <p>Claude-powered insights, practice plans, and personalized improvement recommendations</p>
+          <div className="flow-arrow">↓</div>
+          <div className="features-grid-flow">
+            <div className="feature-tile">
+              <h4>Driver Overview</h4>
+              <p>Season statistics, 4-factor radar chart, and race-by-race performance analysis</p>
+            </div>
+            <div className="feature-tile">
+              <h4>Race Log</h4>
+              <p>Complete race history with lap times, positions, and performance trends</p>
+            </div>
+            <div className="feature-tile">
+              <h4>Coach Skill Review</h4>
+              <p>Detailed factor breakdowns with underlying metrics and peer comparisons</p>
+            </div>
+            <div className="feature-tile">
+              <h4>AI Driver Development</h4>
+              <p>AI-powered insights, practice plans, and personalized improvement recommendations</p>
+            </div>
           </div>
         </div>
       )
