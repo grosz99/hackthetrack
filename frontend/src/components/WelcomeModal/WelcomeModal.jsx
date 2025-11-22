@@ -13,36 +13,21 @@ export default function WelcomeModal({ onClose }) {
   const handleRoleSelect = (role) => {
     setSelectedRole(role);
     updateRole(role);
+    // Auto-advance to next slide after selecting role
+    setTimeout(() => {
+      setCurrentSlide(1);
+    }, 300);
   };
 
   // Build slides dynamically based on selected role
   const getSlides = () => {
-    const baseSlides = [
-    {
+    // Slide 1: Welcome with role selection (same for everyone)
+    const welcomeSlide = {
       id: 'welcome',
-      title: 'Decode Performance. Dominate the Track.',
-      subtitle: 'AI-Powered Driver Development',
-      content: (
-        <div className="welcome-intro">
-          <div className="welcome-logo">
-            <ToyotaGibbsLogo size="large" />
-          </div>
-          <p className="intro-text">
-            Welcome to Gibbs AI. Our platform uses a validated <strong>4-Factor Performance Model</strong> and live AI feeds to personalize coaching needs for driver development.
-          </p>
-        </div>
-      )
-    },
-    {
-      id: 'role-selection',
-      title: 'Personalize Your Experience',
+      title: 'Welcome to Gibbs AI',
+      subtitle: 'Choose your role to unlock AI-powered performance insights',
       content: (
         <div className="role-selection-section">
-          <div className="role-selection-intro">
-            <h3>Help us customize your journey...</h3>
-            <p>Are you using this platform as a driver looking to improve, or as a coach evaluating athletes?</p>
-          </div>
-
           <div className="role-cards-container">
             <div
               className={`role-card ${selectedRole === 'driver' ? 'selected' : ''}`}
@@ -54,9 +39,16 @@ export default function WelcomeModal({ onClose }) {
               onKeyPress={(e) => { if (e.key === 'Enter' || e.key === ' ') handleRoleSelect('driver'); }}
             >
               <div className="role-icon-wrapper">
-                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 2v20M2 12h20"></path>
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  {/* Outer rim with flat bottom */}
+                  <path d="M4 12 A8 8 0 0 1 20 12"></path>
+                  <path d="M4 12 L6 15 L18 15 L20 12"></path>
+                  {/* Center hub */}
+                  <circle cx="12" cy="12" r="2.5"></circle>
+                  {/* Three spokes */}
+                  <line x1="12" y1="4" x2="12" y2="9.5"></line>
+                  <line x1="5.5" y1="9.5" x2="10" y2="11"></line>
+                  <line x1="18.5" y1="9.5" x2="14" y2="11"></line>
                 </svg>
               </div>
               <h4>DRIVER</h4>
@@ -80,8 +72,10 @@ export default function WelcomeModal({ onClose }) {
             >
               <div className="role-icon-wrapper">
                 <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M9 5H2v14h7M15 5h7v14h-7M9 5v14M15 5v14"></path>
-                  <path d="M9 12h6"></path>
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="9" y1="9" x2="15" y2="9"></line>
+                  <line x1="9" y1="15" x2="15" y2="15"></line>
+                  <line x1="9" y1="12" x2="12" y2="12"></line>
                 </svg>
               </div>
               <h4>COACH</h4>
@@ -96,65 +90,85 @@ export default function WelcomeModal({ onClose }) {
           </div>
         </div>
       )
-    },
-    {
-      id: 'welcome',
-      title: 'Decode Performance. Dominate the Track.',
-      subtitle: 'AI-Powered Driver Development',
-      content: (
-        <div className="welcome-intro">
-          <div className="welcome-logo">
-            <ToyotaGibbsLogo size="large" />
-          </div>
-          <p className="intro-text">
-            Welcome to Gibbs AI. Our platform uses a validated <strong>4-Factor Performance Model</strong> and live AI feeds to personalize coaching needs for driver development.
-          </p>
-        </div>
-      )
-    },
-    {
+    };
+
+    // Slide 2: Why Gibbs AI (same for everyone)
+    const whyGibbsSlide = {
       id: 'why-gibbs',
       title: 'Why Gibbs AI?',
       content: (
         <div className="gibbs-story-section">
+          <div className="welcome-logo">
+            <ToyotaGibbsLogo size="large" />
+          </div>
           <div className="gibbs-story">
             <p className="story-intro">
               <strong>Joe Gibbs</strong> is a legendary figure in American motorsports and football—a Hall of Fame NFL coach who won three Super Bowls with the Washington Redskins and a Toyota partner who built one of NASCAR's most successful racing organizations.
             </p>
-
-            <div className="accomplishments-grid">
-              <div className="accomplishment">
-                <h4>NASCAR Excellence</h4>
-                <p>Joe Gibbs Racing has developed and championed some of the winningest drivers of the 21st century, including <strong>Tony Stewart</strong>, <strong>Joey Logano</strong>, and <strong>Denny Hamlin</strong>.</p>
-              </div>
-
-              <div className="accomplishment">
-                <h4>Talent Development</h4>
-                <p>His ability to identify raw talent, provide world-class development programs, and create championship-winning teams is unmatched across both motorsports and professional football.</p>
-              </div>
-
-              <div className="accomplishment">
-                <h4>Toyota Partnership</h4>
-                <p>As a long-time Toyota partner in NASCAR, Joe Gibbs Racing has been instrumental in Toyota's success in American racing, combining technical excellence with driver development.</p>
-              </div>
-            </div>
+            <p className="story-intro">
+              Joe Gibbs Racing has developed and championed some of the winningest drivers of the 21st century, including <strong>Tony Stewart</strong>, <strong>Joey Logano</strong>, and <strong>Denny Hamlin</strong>. His ability to identify raw talent, provide world-class development programs, and create championship-winning teams is unmatched across both motorsports and professional football. As a long-time Toyota partner in NASCAR, Joe Gibbs Racing has been instrumental in Toyota's success in American racing, combining technical excellence with driver development.
+            </p>
           </div>
         </div>
       )
-    },
-    ];
+    };
 
-    // Role-specific slide for 4 Factors
-    const fourFactorsSlide = {
-      id: 'four-factors',
+    // Driver-specific slides (3-4)
+    const driverSlide1 = {
+      id: 'driver-performance',
+      title: 'Track Your Performance',
+      content: (
+        <div className="features-grid">
+          <div className="feature-tile">
+            <h4>Performance Dashboard</h4>
+            <p>View your season statistics, 4-factor radar chart, and race-by-race performance analysis to understand your strengths.</p>
+          </div>
+          <div className="feature-tile">
+            <h4>Race Log</h4>
+            <p>Track your progress over time with complete race history, lap times, and performance trends across the season.</p>
+          </div>
+          <div className="feature-tile">
+            <h4>Rankings</h4>
+            <p>See where you stand against other drivers. Find benchmarks and study top performers in areas where you want to improve.</p>
+          </div>
+          <div className="feature-tile">
+            <h4>Driver Development</h4>
+            <p>Get personalized practice recommendations based on your weakest factors. Understand exactly what skills to work on to maximize your lap time improvements.</p>
+          </div>
+        </div>
+      )
+    };
+
+    const driverSlide2 = {
+      id: 'driver-development',
+      title: 'Get Faster with Validated AI Insights',
+      content: (
+        <div className="features-flow">
+          <div className="feature-tile">
+            <h4>Proven Performance Prediction (R²=0.895)</h4>
+            <p>Our 4-Factor Model explains 89.5% of race performance variation—validated across thousands of laps. When you improve your weakest factor, you WILL see measurable lap time gains. This isn't guesswork, it's data science.</p>
+          </div>
+          <div className="feature-tile">
+            <h4>Focus on What Actually Makes You Faster</h4>
+            <p>Stop wasting practice time on random drills. Our AI identifies your biggest performance limiters across Speed (46.6%), Consistency (29.1%), Racecraft (14.9%), and Tire Management (9.5%). Target your weakest link for maximum improvement.</p>
+          </div>
+          <div className="feature-tile">
+            <h4>Personalized Path to Podiums</h4>
+            <p>Get specific, actionable recommendations tailored to YOUR performance gaps. Whether you need to work on qualifying pace, reduce lap time variance, improve overtaking, or extend tire life—you'll know exactly what to practice and why it matters.</p>
+          </div>
+        </div>
+      )
+    };
+
+    // Coach-specific slides (3-4)
+    const coachSlide1 = {
+      id: 'coach-4-factors',
       title: 'The 4-Factor Performance Model',
       content: (
         <div className="four-factors-section">
-          <div className="factor-overview">
+          <div className="factor-overview" style={{ display: 'block' }}>
             <p>
-              Our AI analyzes driver performance across four validated dimensions (R²=0.895).
-              {selectedRole === 'driver' && <strong> Identify which factor needs the most improvement.</strong>}
-              {selectedRole === 'coach' && <strong> Use this validated model to objectively assess athlete strengths and weaknesses.</strong>}
+              Our AI analyzes driver performance across four validated dimensions (R²=0.895). Use this model to objectively assess athlete strengths and weaknesses.
             </p>
           </div>
 
@@ -202,58 +216,38 @@ export default function WelcomeModal({ onClose }) {
           </div>
         </div>
       )
-    },
     };
 
-    // Role-specific slide for Platform Features
-    const platformFeaturesSlide = {
-      id: 'platform-features',
-      title: 'Platform Features',
+    const coachSlide2 = {
+      id: 'coach-development',
+      title: 'Build Championship-Winning Drivers',
       content: (
         <div className="features-flow">
-          <div className="feature-tile flow-start">
-            <h4>Rankings</h4>
-            <p>
-              {selectedRole === 'driver' && 'Browse all drivers ranked by overall performance. Find benchmarks and study top performers in areas where you want to improve.'}
-              {selectedRole === 'coach' && 'Browse all drivers ranked by overall performance. Compare your athletes against the field and identify development opportunities.'}
-            </p>
+          <div className="feature-tile">
+            <h4>Identify High-Impact Development Areas</h4>
+            <p>Pinpoint exactly which of the 4 factors will yield the biggest performance gains for each athlete. Focus coaching efforts where they matter most—speed deficits, consistency issues, racecraft gaps, or tire management weaknesses.</p>
           </div>
-          <div className="flow-arrow">↓</div>
-          <div className="features-grid-flow">
-            <div className="feature-tile">
-              <h4>{selectedRole === 'driver' ? 'Your Performance Dashboard' : 'Athlete Overview'}</h4>
-              <p>
-                {selectedRole === 'driver' && 'Your season statistics, 4-factor radar chart, and race-by-race performance analysis'}
-                {selectedRole === 'coach' && 'Complete athlete evaluation: season stats, 4-factor radar chart, and detailed performance analysis'}
-              </p>
-            </div>
-            <div className="feature-tile">
-              <h4>Race Log</h4>
-              <p>
-                {selectedRole === 'driver' && 'Track your progress over time with complete race history, lap times, and performance trends'}
-                {selectedRole === 'coach' && 'Performance trend analysis: complete race history with lap times and positions for planning'}
-              </p>
-            </div>
-            <div className="feature-tile">
-              <h4>{selectedRole === 'driver' ? 'Skills Breakdown' : 'Coach Skill Review'}</h4>
-              <p>
-                {selectedRole === 'driver' && 'Identify your development priorities with detailed factor breakdowns and performance gaps'}
-                {selectedRole === 'coach' && 'Objective skill assessment tool with detailed factor breakdowns and peer comparisons'}
-              </p>
-            </div>
-            <div className="feature-tile">
-              <h4>{selectedRole === 'driver' ? 'Your Development Plan' : 'Coaching Recommendations'}</h4>
-              <p>
-                {selectedRole === 'driver' && 'AI-powered personalized practice plans and improvement recommendations based on your gaps'}
-                {selectedRole === 'coach' && 'Evidence-based coaching recommendations and development planning insights for your athletes'}
-              </p>
-            </div>
+          <div className="feature-tile">
+            <h4>Track Measurable Progress</h4>
+            <p>Monitor athlete improvement over time with objective metrics. See how your coaching interventions impact Speed, Consistency, Racecraft, and Tire Management scores across race weekends and seasons.</p>
+          </div>
+          <div className="feature-tile">
+            <h4>Build Data-Driven Development Plans</h4>
+            <p>Create personalized training programs backed by AI analysis. Target specific weaknesses with evidence-based recommendations that accelerate driver development and close performance gaps.</p>
           </div>
         </div>
       )
     };
 
-    return [...baseSlides, fourFactorsSlide, platformFeaturesSlide];
+    // Return appropriate slides based on selected role
+    if (selectedRole === 'driver') {
+      return [welcomeSlide, whyGibbsSlide, driverSlide1, driverSlide2];
+    } else if (selectedRole === 'coach') {
+      return [welcomeSlide, whyGibbsSlide, coachSlide1, coachSlide2];
+    } else {
+      // No role selected yet, just show welcome slide
+      return [welcomeSlide, whyGibbsSlide];
+    }
   };
 
   const slides = getSlides();
@@ -324,9 +318,11 @@ export default function WelcomeModal({ onClose }) {
               <button className="btn-skip" onClick={handleSkip}>
                 Skip
               </button>
-              <button className="btn-next" onClick={handleNext}>
-                {currentSlide < slides.length - 1 ? 'Next' : 'Get Started'}
-              </button>
+              {currentSlide !== 0 && (
+                <button className="btn-next" onClick={handleNext}>
+                  {currentSlide < slides.length - 1 ? 'Next' : 'Get Started'}
+                </button>
+              )}
             </div>
           </div>
         </motion.div>

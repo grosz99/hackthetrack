@@ -98,7 +98,7 @@
 
 .welcome-logo {
   margin: 0 auto 24px;
-  display: inline-flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 
@@ -108,6 +108,7 @@
   border-radius: 8px;
   padding: 20px 28px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  width: fit-content;
 }
 
 .welcome-logo .toyota-gibbs-logo-large .logo-image {
@@ -279,6 +280,7 @@
 /* Gibbs Story Section */
 .gibbs-story-section {
   padding: 0;
+  text-align: center;
 }
 
 .gibbs-hero {
@@ -874,7 +876,7 @@
 }
 
 .role-benefits li {
-  font-size: 12px;
+  font-size: 14px;
   color: #555;
   display: flex;
   align-items: center;

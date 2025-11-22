@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import ToyotaGibbsLogo from '../ToyotaGibbsLogo/ToyotaGibbsLogo';
-import RoleGuidanceBanner from '../RoleGuidanceBanner/RoleGuidanceBanner';
 import './RankingsTable.css';
 
 export default function RankingsTable({ drivers = [], onShowInfo }) {
@@ -120,9 +119,6 @@ export default function RankingsTable({ drivers = [], onShowInfo }) {
           </p>
         </div>
       </div>
-
-      {/* Role-Specific Guidance Banner */}
-      <RoleGuidanceBanner />
 
       <div className="table-wrapper">
         <table className="rankings-table">
