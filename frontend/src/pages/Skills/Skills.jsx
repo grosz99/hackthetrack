@@ -501,6 +501,34 @@ export default function Skills() {
             <button className="close-button" onClick={() => setSelectedFactor(null)} aria-label="Close factor breakdown">✕</button>
           </div>
 
+          {/* Factor Navigation Tabs */}
+          <div className="breakdown-tabs">
+            <button
+              className={`breakdown-tab ${selectedFactor === 'Consistency' ? 'active' : ''}`}
+              onClick={() => handleFactorClick('Consistency')}
+            >
+              Consistency
+            </button>
+            <button
+              className={`breakdown-tab ${selectedFactor === 'Racecraft' ? 'active' : ''}`}
+              onClick={() => handleFactorClick('Racecraft')}
+            >
+              Racecraft
+            </button>
+            <button
+              className={`breakdown-tab ${selectedFactor === 'Raw Speed' ? 'active' : ''}`}
+              onClick={() => handleFactorClick('Raw Speed')}
+            >
+              Raw Speed
+            </button>
+            <button
+              className={`breakdown-tab ${selectedFactor === 'Tire Management' ? 'active' : ''}`}
+              onClick={() => handleFactorClick('Tire Management')}
+            >
+              Tire Management
+            </button>
+          </div>
+
           {loadingBreakdown ? (
             <div className="loading-breakdown">
               <div className="loading-text">Loading breakdown...</div>

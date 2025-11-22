@@ -705,6 +705,55 @@
   transform: scale(1.1);
 }
 
+/* Breakdown Navigation Tabs */
+.breakdown-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #E5E5E5;
+  overflow-x: auto;
+}
+
+.breakdown-tab {
+  background: #F5F5F5;
+  border: 2px solid #E5E5E5;
+  color: #666;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.breakdown-tab:hover {
+  border-color: #EB0A1E;
+  color: #EB0A1E;
+  transform: translateY(-2px);
+}
+
+.breakdown-tab.active {
+  background: #EB0A1E;
+  border-color: #EB0A1E;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(235, 10, 30, 0.3);
+}
+
+.breakdown-tab.active:hover {
+  transform: translateY(0);
+}
+
+.close-button:hover {
+  background: #B80818;
+  transform: scale(1.1);
+}
+
 .variable-detail-content {
   padding: 24px;
   text-align: center;
