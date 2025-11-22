@@ -594,25 +594,9 @@ export default function Skills() {
                     <span className="assessment-loading-text">Generating scouting report...</span>
                   </div>
                 ) : coachingAnalysis ? (
-                  <>
-                    <div className="assessment-stats">
-                      <div className="stat-pill">
-                        <span className="stat-pill-value">#{coachingAnalysis.factor_rank}</span>
-                        <span className="stat-pill-label">Overall Rank</span>
-                      </div>
-                      <div className="stat-pill">
-                        <span className="stat-pill-value">{coachingAnalysis.factor_percentile.toFixed(0)}th</span>
-                        <span className="stat-pill-label">Percentile</span>
-                      </div>
-                      <div className="stat-pill">
-                        <span className="stat-pill-value">{coachingAnalysis.total_drivers}</span>
-                        <span className="stat-pill-label">Drivers</span>
-                      </div>
-                    </div>
-                    <div className="assessment-body">
-                      <p className="assessment-text">{coachingAnalysis.coaching_analysis}</p>
-                    </div>
-                  </>
+                  <div className="assessment-body">
+                    <p className="assessment-text">{coachingAnalysis.coaching_analysis}</p>
+                  </div>
                 ) : (
                   <div className="assessment-body">
                     <p className="assessment-text" style={{ color: '#666', textAlign: 'center' }}>
