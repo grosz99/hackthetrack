@@ -492,15 +492,15 @@
 }
 
 .info-button {
-  width: 44px;
-  height: 44px;
-  min-width: 44px;
-  min-height: 44px;
+  width: 32px;
+  height: 32px;
+  min-width: 32px;
+  min-height: 32px;
   border-radius: 50%;
   background: #EB0A1E;
   color: #fff;
   border: none;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 700;
   cursor: pointer;
   display: flex;
