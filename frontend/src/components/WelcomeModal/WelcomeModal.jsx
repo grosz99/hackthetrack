@@ -15,14 +15,31 @@ export default function WelcomeModal({ onClose }) {
     updateRole(role);
   };
 
-  const slides = [
+  // Build slides dynamically based on selected role
+  const getSlides = () => {
+    const baseSlides = [
+    {
+      id: 'welcome',
+      title: 'Decode Performance. Dominate the Track.',
+      subtitle: 'AI-Powered Driver Development',
+      content: (
+        <div className="welcome-intro">
+          <div className="welcome-logo">
+            <ToyotaGibbsLogo size="large" />
+          </div>
+          <p className="intro-text">
+            Welcome to Gibbs AI. Our platform uses a validated <strong>4-Factor Performance Model</strong> and live AI feeds to personalize coaching needs for driver development.
+          </p>
+        </div>
+      )
+    },
     {
       id: 'role-selection',
       title: 'Personalize Your Experience',
       content: (
         <div className="role-selection-section">
           <div className="role-selection-intro">
-            <h3>Before we begin, help us customize your journey...</h3>
+            <h3>Help us customize your journey...</h3>
             <p>Are you using this platform as a driver looking to improve, or as a coach evaluating athletes?</p>
           </div>
 
@@ -125,7 +142,10 @@ export default function WelcomeModal({ onClose }) {
         </div>
       )
     },
-    {
+    ];
+
+    // Role-specific slide for 4 Factors
+    const fourFactorsSlide = {
       id: 'four-factors',
       title: 'The 4-Factor Performance Model',
       content: (
@@ -133,6 +153,8 @@ export default function WelcomeModal({ onClose }) {
           <div className="factor-overview">
             <p>
               Our AI analyzes driver performance across four validated dimensions (R²=0.895).
+              {selectedRole === 'driver' && <strong> Identify which factor needs the most improvement.</strong>}
+              {selectedRole === 'coach' && <strong> Use this validated model to objectively assess athlete strengths and weaknesses.</strong>}
             </p>
           </div>
 
@@ -181,38 +203,60 @@ export default function WelcomeModal({ onClose }) {
         </div>
       )
     },
-    {
+    };
+
+    // Role-specific slide for Platform Features
+    const platformFeaturesSlide = {
       id: 'platform-features',
       title: 'Platform Features',
       content: (
         <div className="features-flow">
           <div className="feature-tile flow-start">
             <h4>Rankings</h4>
-            <p>Browse all drivers ranked by overall performance. Click any driver to dive into their insights.</p>
+            <p>
+              {selectedRole === 'driver' && 'Browse all drivers ranked by overall performance. Find benchmarks and study top performers in areas where you want to improve.'}
+              {selectedRole === 'coach' && 'Browse all drivers ranked by overall performance. Compare your athletes against the field and identify development opportunities.'}
+            </p>
           </div>
           <div className="flow-arrow">↓</div>
           <div className="features-grid-flow">
             <div className="feature-tile">
-              <h4>Driver Overview</h4>
-              <p>Season statistics, 4-factor radar chart, and race-by-race performance analysis</p>
+              <h4>{selectedRole === 'driver' ? 'Your Performance Dashboard' : 'Athlete Overview'}</h4>
+              <p>
+                {selectedRole === 'driver' && 'Your season statistics, 4-factor radar chart, and race-by-race performance analysis'}
+                {selectedRole === 'coach' && 'Complete athlete evaluation: season stats, 4-factor radar chart, and detailed performance analysis'}
+              </p>
             </div>
             <div className="feature-tile">
               <h4>Race Log</h4>
-              <p>Complete race history with lap times, positions, and performance trends</p>
+              <p>
+                {selectedRole === 'driver' && 'Track your progress over time with complete race history, lap times, and performance trends'}
+                {selectedRole === 'coach' && 'Performance trend analysis: complete race history with lap times and positions for planning'}
+              </p>
             </div>
             <div className="feature-tile">
-              <h4>Coach Skill Review</h4>
-              <p>Detailed factor breakdowns with underlying metrics and peer comparisons</p>
+              <h4>{selectedRole === 'driver' ? 'Skills Breakdown' : 'Coach Skill Review'}</h4>
+              <p>
+                {selectedRole === 'driver' && 'Identify your development priorities with detailed factor breakdowns and performance gaps'}
+                {selectedRole === 'coach' && 'Objective skill assessment tool with detailed factor breakdowns and peer comparisons'}
+              </p>
             </div>
             <div className="feature-tile">
-              <h4>AI Driver Development</h4>
-              <p>AI-powered insights, practice plans, and personalized improvement recommendations</p>
+              <h4>{selectedRole === 'driver' ? 'Your Development Plan' : 'Coaching Recommendations'}</h4>
+              <p>
+                {selectedRole === 'driver' && 'AI-powered personalized practice plans and improvement recommendations based on your gaps'}
+                {selectedRole === 'coach' && 'Evidence-based coaching recommendations and development planning insights for your athletes'}
+              </p>
             </div>
           </div>
         </div>
       )
-    }
-  ];
+    };
+
+    return [...baseSlides, fourFactorsSlide, platformFeaturesSlide];
+  };
+
+  const slides = getSlides();
 
   const handleNext = () => {
     if (currentSlide < slides.length - 1) {
