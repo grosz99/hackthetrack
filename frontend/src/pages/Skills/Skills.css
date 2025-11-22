@@ -934,14 +934,169 @@
   margin: 12px 0 16px 0;
 }
 
-.variable-percentile-badge {
-  display: inline-block;
-  font-size: 13px;
+/* Percentile Distribution Visualization */
+.percentile-distribution {
+  margin-top: 16px;
+}
+
+.distribution-track {
+  position: relative;
+  width: 100%;
+  height: 40px;
+  margin-bottom: 8px;
+}
+
+.quartile-zones {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  right: 0;
+  height: 12px;
+  display: flex;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #E5E5E5;
+}
+
+.quartile-zone {
+  flex: 1;
+  transition: opacity 0.2s ease;
+}
+
+.q1-zone {
+  background: linear-gradient(90deg, #F3F4F6 0%, #E5E7EB 100%);
+}
+
+.q2-zone {
+  background: linear-gradient(90deg, #E5E7EB 0%, #D1D5DB 100%);
+}
+
+.q3-zone {
+  background: linear-gradient(90deg, #D1D5DB 0%, #9CA3AF 100%);
+}
+
+.q4-zone {
+  background: linear-gradient(90deg, #9CA3AF 0%, #6B7280 100%);
+}
+
+.variable-card:hover .quartile-zone {
+  opacity: 0.8;
+}
+
+.quartile-marker {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+}
+
+.marker-line {
+  width: 2px;
+  height: 20px;
+  background: #9CA3AF;
+  position: relative;
+}
+
+.marker-line.median {
+  width: 3px;
+  height: 24px;
+  background: #374151;
+}
+
+.driver-position-dot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 14px;
+  height: 14px;
+  background: #EB0A1E;
+  border: 3px solid #FFFFFF;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 0 2px rgba(235, 10, 30, 0.2);
+  z-index: 10;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.driver-position-dot:hover {
+  width: 18px;
+  height: 18px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), 0 0 0 4px rgba(235, 10, 30, 0.3);
+}
+
+.driver-position-dot:hover::after {
+  content: attr(data-percentile);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 6px 10px;
+  background: #000000;
+  color: #FFFFFF;
+  font-size: 12px;
   font-weight: 700;
-  color: #EB0A1E;
-  background: rgba(231, 76, 60, 0.1);
-  padding: 6px 12px;
-  border-radius: 16px;
+  white-space: nowrap;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+}
+
+.driver-position-dot:hover::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #000000;
+  pointer-events: none;
+}
+
+.dot-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #EB0A1E;
+  opacity: 0.5;
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+.distribution-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.label-left {
+  color: #9CA3AF;
+}
+
+.label-right {
+  color: #374151;
 }
 
 /* Comparison Section */

@@ -528,8 +528,44 @@ export default function Skills() {
                         <span className="variable-rank">{clampedRank}{clampedRank === 1 ? 'st' : clampedRank === 2 ? 'nd' : clampedRank === 3 ? 'rd' : 'th'} of {totalDrivers}</span>
                       </div>
                       <p className="variable-description">{variable.description}</p>
-                      <div className="variable-percentile-badge">
-                        {variable.percentile.toFixed(0)}th percentile
+
+                      {/* Percentile Distribution Chart */}
+                      <div className="percentile-distribution">
+                        <div className="distribution-track">
+                          {/* Quartile zones background */}
+                          <div className="quartile-zones">
+                            <div className="quartile-zone q1-zone"></div>
+                            <div className="quartile-zone q2-zone"></div>
+                            <div className="quartile-zone q3-zone"></div>
+                            <div className="quartile-zone q4-zone"></div>
+                          </div>
+
+                          {/* Quartile markers */}
+                          <div className="quartile-marker" style={{ left: '25%' }}>
+                            <div className="marker-line"></div>
+                          </div>
+                          <div className="quartile-marker" style={{ left: '50%' }}>
+                            <div className="marker-line median"></div>
+                          </div>
+                          <div className="quartile-marker" style={{ left: '75%' }}>
+                            <div className="marker-line"></div>
+                          </div>
+
+                          {/* Driver position dot */}
+                          <div
+                            className="driver-position-dot"
+                            style={{ left: `${variable.percentile}%` }}
+                            data-percentile={`${variable.percentile.toFixed(0)}th percentile`}
+                          >
+                            <div className="dot-pulse"></div>
+                          </div>
+                        </div>
+
+                        {/* Scale labels */}
+                        <div className="distribution-labels">
+                          <span className="label-left">Needs Work</span>
+                          <span className="label-right">Elite</span>
+                        </div>
                       </div>
                     </div>
                   );
