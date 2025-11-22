@@ -15,6 +15,7 @@ const SKILLS = [
 ];
 
 export default function SkillSliders({ currentSkills, initialTargets, onTargetChange, onFindSimilar, aiRecommendation }) {
+  const [showSkillInfo, setShowSkillInfo] = useState(false);
   // Initialize target skills to initial targets if provided, otherwise use current skills (clamped to valid range)
   const getInitialTargets = () => {
     if (initialTargets) {
@@ -120,6 +121,14 @@ export default function SkillSliders({ currentSkills, initialTargets, onTargetCh
 
   return (
     <div className="skill-sliders">
+      <button
+        className="info-button-corner"
+        onClick={() => setShowSkillInfo(true)}
+        aria-label="Learn how to use skill sliders"
+      >
+        ?
+      </button>
+
       <div className="sliders-header">
         <h3>Set Your Target Skills</h3>
         <p className="sliders-subtitle">You have a total budget of 5% to distribute across all skills</p>
@@ -232,6 +241,68 @@ export default function SkillSliders({ currentSkills, initialTargets, onTargetCh
           <p className="helper-text">Use your {MAX_TOTAL_INCREASE}% budget to set target skills</p>
         )}
       </div>
+
+      {/* Skill Sliders Info Modal */}
+      {showSkillInfo && (
+        <div className="modal-overlay" onClick={() => setShowSkillInfo(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>How to Leverage the Skill Sliders</h2>
+              <button
+                className="modal-close"
+                onClick={() => setShowSkillInfo(false)}
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="factor-info-section">
+                <h3>What Are Skill Sliders?</h3>
+                <p>
+                  The skill sliders allow you to set development targets for your driver across all four performance factors. You have a 5% total budget to allocate, representing realistic improvement goals over a training period. This constraint ensures focused development rather than unrealistic expectations.
+                </p>
+              </div>
+
+              <div className="factor-info-section">
+                <h3>How to Use the Sliders</h3>
+                <ul className="info-list">
+                  <li><strong>Adjust sliders to set targets:</strong> Use the +1% and -1% buttons or drag the slider to allocate your 5% budget across Speed, Consistency, Racecraft, and Tire Management.</li>
+                  <li><strong>Watch the remaining budget:</strong> The budget indicator shows how much of your 5% you've allocated. Once depleted, you must reduce one skill to increase another.</li>
+                  <li><strong>Review AI recommendations:</strong> If shown, the AI suggests optimal allocation based on performance gaps and development efficiency. You can follow or adjust these recommendations.</li>
+                  <li><strong>Click "Find Best Match":</strong> Once you've set targets, this finds drivers who currently perform at your target levels, providing real-world benchmarks of what that skill profile achieves.</li>
+                </ul>
+              </div>
+
+              <div className="factor-info-section">
+                <h3>Strategic Allocation Strategies</h3>
+                <ul className="info-list">
+                  <li><strong>For developing drivers:</strong> Focus the entire 5% budget on the single weakest factor to eliminate critical deficiencies and build a foundation.</li>
+                  <li><strong>For competitive drivers:</strong> Distribute 3-4% to a strength factor to reach elite level, with 1-2% addressing the next biggest weakness for balance.</li>
+                  <li><strong>For elite drivers:</strong> Maximize dominant strengths with 4-5% allocation to extend competitive advantages, or balance with 2-3% in two complementary factors.</li>
+                  <li><strong>Consider factor synergies:</strong> Consistency + Tire Management work well together for endurance racing. Speed + Racecraft combine for qualifying and sprint performance.</li>
+                </ul>
+              </div>
+
+              <div className="factor-info-section">
+                <h3>Understanding the "Find Best Match" Results</h3>
+                <p>
+                  After setting targets and clicking "Find Best Match," the system identifies drivers whose current performance matches your target profile. This shows you what race results and overall competitiveness your driver could achieve if they reach those targets. Use these benchmarks to validate whether your targets align with your competitive goals and to demonstrate realistic outcomes to your driver.
+                </p>
+              </div>
+
+              <div className="factor-info-section">
+                <h3>Training Implementation Tips</h3>
+                <ul className="info-list">
+                  <li><strong>Set realistic timelines:</strong> A 5% improvement in one factor typically requires 4-6 focused training sessions or a full race weekend of targeted practice.</li>
+                  <li><strong>Track progress incrementally:</strong> Return to this page after each race weekend to see actual improvement and adjust targets based on real performance changes.</li>
+                  <li><strong>Combine data with coaching:</strong> Use these targets as quantified development goals, but supplement with video review, driver feedback, and on-track observation for complete development plans.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

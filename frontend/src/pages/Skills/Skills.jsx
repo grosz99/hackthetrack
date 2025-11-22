@@ -32,6 +32,7 @@ export default function Skills() {
   const [loading, setLoading] = useState(true);
   const [loadingBreakdown, setLoadingBreakdown] = useState(false);
   const [error, setError] = useState(null);
+  const [showRadarInfo, setShowRadarInfo] = useState(false);
 
   useEffect(() => {
     const fetchDriverData = async () => {
@@ -288,9 +289,27 @@ export default function Skills() {
       <div className="skills-content-new">
         {/* Radar Chart on left side */}
         <div className="radar-chart-container-new">
-          <h3 className="chart-title">Performance Comparison</h3>
-          <p className="chart-subtitle">You vs Top 3 Average</p>
-          <ResponsiveContainer width="100%" height={500}>
+          <div className="chart-header-with-info">
+            <h3 className="chart-title">Performance Comparison</h3>
+            <button
+              className="info-button"
+              onClick={() => setShowRadarInfo(true)}
+              aria-label="How to interpret this radar chart"
+            >
+              ?
+            </button>
+          </div>
+          <div className="radar-legend-top">
+            <div className="legend-item">
+              <div className="legend-color" style={{ background: '#EB0A1E' }}></div>
+              <span>{currentDriverName}</span>
+            </div>
+            <div className="legend-item">
+              <div className="legend-color" style={{ background: '#555' }}></div>
+              <span>Top 3 Average</span>
+            </div>
+          </div>
+          <ResponsiveContainer width="100%" height={480}>
             <RadarChart data={radarData}>
               <PolarGrid stroke="#ddd" strokeWidth={1} />
               <PolarAngleAxis
@@ -322,16 +341,6 @@ export default function Skills() {
               />
             </RadarChart>
           </ResponsiveContainer>
-          <div className="radar-legend">
-            <div className="legend-item">
-              <div className="legend-color" style={{ background: '#EB0A1E' }}></div>
-              <span>{currentDriverName}</span>
-            </div>
-            <div className="legend-item">
-              <div className="legend-color" style={{ background: '#555' }}></div>
-              <span>Top 3 Average</span>
-            </div>
-          </div>
         </div>
 
         {/* Factor Cards Grid - 2x2 on right side */}
@@ -588,6 +597,60 @@ export default function Skills() {
         </div>
         </div>
       )}
+
+      {/* Radar Chart Interpretation Modal */}
+      {showRadarInfo && (
+        <div className="modal-overlay" onClick={() => setShowRadarInfo(false)}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>How to Interpret the Performance Radar Chart</h2>
+              <button
+                className="modal-close"
+                onClick={() => setShowRadarInfo(false)}
+                aria-label="Close modal"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="modal-body">
+              <div className="factor-info-section">
+                <h3>For Coaches: Reading the Radar</h3>
+                <p>
+                  The Performance Comparison radar chart visualizes your driver's percentile rankings across all four performance factors compared to the top 3 drivers in the field. This visualization makes it immediately clear where your driver excels and where development is needed.
+                </p>
+              </div>
+
+              <div className="factor-info-section">
+                <h3>What the Chart Shows</h3>
+                <ul className="info-list">
+                  <li><strong>Red Area ({currentDriverName}):</strong> Your driver's percentile performance in each factor. Larger area means stronger all-around performance.</li>
+                  <li><strong>Gray Area (Top 3 Average):</strong> The average performance of the top 3 drivers. This represents elite-level benchmarks to target.</li>
+                  <li><strong>Each Axis (0-100):</strong> Percentile ranking, where 100 = best in field and 0 = lowest in field.</li>
+                </ul>
+              </div>
+
+              <div className="factor-info-section">
+                <h3>Coaching Interpretation Guide</h3>
+                <ul className="info-list">
+                  <li><strong>Balanced Shape:</strong> A relatively even diamond indicates well-rounded development. Focus on incremental gains across all areas.</li>
+                  <li><strong>Spiky Shape:</strong> Significant variance between factors reveals clear strengths and weaknesses. Prioritize addressing the weakest factor while maintaining strengths.</li>
+                  <li><strong>Red Exceeds Gray:</strong> When your driver's area extends beyond the gray benchmark in a factor, they are performing at or above elite level in that dimension.</li>
+                  <li><strong>Gray Exceeds Red:</strong> Gaps between the gray and red areas highlight development opportunities. Larger gaps indicate higher-priority training focus areas.</li>
+                  <li><strong>Overall Size:</strong> A larger red area relative to gray suggests your driver is competitive with top performers. A smaller area indicates room for substantial overall improvement.</li>
+                </ul>
+              </div>
+
+              <div className="factor-info-section">
+                <h3>Development Strategy</h3>
+                <p>
+                  Use this chart to guide training priorities. While it's tempting to focus solely on weaknesses, remember that <strong>elite drivers often win by maximizing their strengths</strong> while bringing weaknesses to "good enough" levels. For developing drivers, addressing major deficiencies first creates the fastest path to competitive performance.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

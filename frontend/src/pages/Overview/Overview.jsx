@@ -155,18 +155,61 @@ export default function Overview() {
     }
   ] : [];
 
-  // Prepare race performance data for chart
-  const racePerformanceData = raceResults.map(result => {
-    const delta = (result.start_position - result.finish_position) || 0;
-    return {
-      race: result.track_name?.substring(0, 8) || `R${result.round}`,
-      startPos: result.start_position,
-      finishPos: result.finish_position,
-      delta: delta,
-      deltaPositive: delta > 0 ? delta : 0,
-      deltaNegative: delta < 0 ? delta : 0
-    };
-  });
+  // Define correct race order
+  const raceOrder = [
+    'Sonoma',
+    'Circuit of the Americas',
+    'Sebring',
+    'Virginia International',
+    'Road America',
+    'Barber'
+  ];
+
+  // Prepare race performance data for chart - sorted by correct race order
+  const racePerformanceData = raceResults
+    .map(result => {
+      const delta = (result.start_position - result.finish_position) || 0;
+      const trackName = result.track_name || `Round ${result.round}`;
+      return {
+        race: trackName,
+        fullName: trackName,
+        startPos: result.start_position,
+        finishPos: result.finish_position,
+        delta: delta,
+        deltaPositive: delta > 0 ? delta : 0,
+        deltaNegative: delta < 0 ? delta : 0,
+        round: result.round,
+        sortOrder: raceOrder.findIndex(r => trackName.includes(r.split(' ')[0])) ?? 999
+      };
+    })
+    .sort((a, b) => a.sortOrder - b.sortOrder);
+
+  // Custom tooltip to show full track name
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div style={{
+          backgroundColor: '#fff',
+          border: '2px solid #EB0A1E',
+          borderRadius: '8px',
+          padding: '12px',
+          minWidth: '200px'
+        }}>
+          <p style={{ fontWeight: 700, marginBottom: '8px', color: '#000' }}>
+            {data.fullName}
+          </p>
+          <p style={{ color: '#666', margin: '4px 0' }}>
+            Starting Position: {data.startPos}
+          </p>
+          <p style={{ color: '#666', margin: '4px 0' }}>
+            Finishing Position: {data.finishPos}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="driver-overview">
@@ -215,33 +258,33 @@ export default function Overview() {
         {racePerformanceData.length > 0 && (
           <div className="race-chart-wrapper">
             <div className="race-performance" style={{ flex: 1 }}>
-              <h2>Race by Race Performance</h2>
-              <ResponsiveContainer width="100%" height={350}>
+              <h2 style={{ marginTop: '0', marginBottom: '8px' }}>Race by Race Performance</h2>
+              <ResponsiveContainer width="100%" height={400}>
                 <ComposedChart
                   data={racePerformanceData}
-                  margin={{ top: 20, right: 30, left: 20, bottom: 50 }}
+                  margin={{ top: 10, right: 40, left: 30, bottom: 60 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
                   <XAxis
                     dataKey="race"
                     angle={-45}
                     textAnchor="end"
-                    height={100}
-                    tick={{ fill: '#000', fontSize: 11, fontWeight: 600 }}
+                    height={110}
+                    tick={{ fill: '#000', fontSize: 12, fontWeight: 600 }}
+                    interval={0}
                   />
                   <YAxis
                     reversed
                     domain={[1, 20]}
-                    label={{ value: 'Position', angle: -90, position: 'insideLeft', fill: '#000', fontWeight: 600 }}
+                    label={{ value: 'Position', angle: -90, position: 'insideLeft', fill: '#000', fontWeight: 600, offset: 10 }}
                     tick={{ fill: '#000', fontWeight: 600 }}
+                    width={60}
                   />
-                  <Tooltip
-                    contentStyle={{ backgroundColor: '#fff', border: '2px solid #EB0A1E', borderRadius: '8px' }}
-                    labelStyle={{ color: '#000', fontWeight: 600 }}
-                  />
+                  <Tooltip content={<CustomTooltip />} />
                   <Legend
-                    wrapperStyle={{ paddingTop: '20px' }}
+                    wrapperStyle={{ paddingTop: '30px' }}
                     iconType="line"
+                    verticalAlign="bottom"
                   />
                   <Line
                     type="monotone"
@@ -383,7 +426,6 @@ export default function Overview() {
               <button
                 onClick={() => toggleCard('consistency')}
                 className="card-expand-btn"
-                title="Click to see what makes up this metric"
                 aria-label="Toggle Consistency description"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -391,7 +433,6 @@ export default function Overview() {
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
               </button>
-              <span className="expand-hint">Click for details</span>
             </div>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Consistency</h4>
@@ -419,7 +460,6 @@ export default function Overview() {
               <button
                 onClick={() => toggleCard('racecraft')}
                 className="card-expand-btn"
-                title="Click to see what makes up this metric"
                 aria-label="Toggle Racecraft description"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -427,7 +467,6 @@ export default function Overview() {
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
               </button>
-              <span className="expand-hint">Click for details</span>
             </div>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Racecraft</h4>
@@ -455,7 +494,6 @@ export default function Overview() {
               <button
                 onClick={() => toggleCard('speed')}
                 className="card-expand-btn"
-                title="Click to see what makes up this metric"
                 aria-label="Toggle Raw Speed description"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -463,7 +501,6 @@ export default function Overview() {
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
               </button>
-              <span className="expand-hint">Click for details</span>
             </div>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Raw Speed</h4>
@@ -491,7 +528,6 @@ export default function Overview() {
               <button
                 onClick={() => toggleCard('tire_management')}
                 className="card-expand-btn"
-                title="Click to see what makes up this metric"
                 aria-label="Toggle Tire Management description"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
@@ -499,7 +535,6 @@ export default function Overview() {
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
               </button>
-              <span className="expand-hint">Click for details</span>
             </div>
             <div className="factor-card-header-stacked">
               <h4 className="factor-card-title-large">Tire Management</h4>
