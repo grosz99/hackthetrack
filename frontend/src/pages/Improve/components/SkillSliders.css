@@ -64,6 +64,35 @@
   margin: 0 0 var(--spacing-3) 0;
 }
 
+/* Budget Explanation Box */
+.budget-explanation-box {
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFEBEB 100%);
+  border: 3px solid var(--color-primary);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-5) var(--spacing-6);
+  margin: var(--spacing-4) 0;
+}
+
+.budget-headline {
+  margin-bottom: var(--spacing-3);
+}
+
+.budget-amount {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-black);
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.budget-rationale {
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-gray-800);
+  margin: 0;
+  font-weight: var(--font-semibold);
+}
+
 /* AI Insight Box - TGR Style */
 .ai-insight-box {
   background: var(--color-gray-100);

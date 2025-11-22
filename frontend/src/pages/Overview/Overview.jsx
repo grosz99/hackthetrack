@@ -40,6 +40,13 @@ export default function Overview() {
   // Classification for driver
   const classification = driverData ? classifyDriver(driverData) : null;
 
+  // State for scouting report variables
+  const [allVariables, setAllVariables] = useState([]);
+
+  // Get current driver name
+  const currentDriver = drivers.find(d => d.number === selectedDriverNumber);
+  const currentDriverName = currentDriver?.name || `Driver #${selectedDriverNumber}`;
+
   // Sync route params with DriverContext
   useEffect(() => {
     if (routeDriverNumber) {
@@ -56,7 +63,7 @@ export default function Overview() {
         setLoading(true);
         setError(null);
 
-        // Fetch season stats, race results, driver factors, all drivers, and factor stats in parallel
+        // Fetch season stats, race results, driver factors, all drivers, factor stats, and breakdowns in parallel
         const [statsResponse, resultsResponse, driverResponse, allDriversResponse, ...factorResponses] = await Promise.all([
           api.get(`/api/drivers/${selectedDriverNumber}/stats`),
           api.get(`/api/drivers/${selectedDriverNumber}/results`),
@@ -65,7 +72,11 @@ export default function Overview() {
           api.get('/api/factors/speed/stats'),
           api.get('/api/factors/consistency/stats'),
           api.get('/api/factors/racecraft/stats'),
-          api.get('/api/factors/tire_management/stats')
+          api.get('/api/factors/tire_management/stats'),
+          api.get(`/api/factors/speed/breakdown/${selectedDriverNumber}`),
+          api.get(`/api/factors/consistency/breakdown/${selectedDriverNumber}`),
+          api.get(`/api/factors/racecraft/breakdown/${selectedDriverNumber}`),
+          api.get(`/api/factors/tire_management/breakdown/${selectedDriverNumber}`)
         ]);
 
         setSeasonStats(statsResponse.data);
@@ -79,6 +90,29 @@ export default function Overview() {
           racecraft: factorResponses[2].data,
           tire_management: factorResponses[3].data
         });
+
+        // Collect all variables from all factor breakdowns for scouting badges
+        const variables = [];
+        const breakdowns = [
+          factorResponses[4].data,
+          factorResponses[5].data,
+          factorResponses[6].data,
+          factorResponses[7].data
+        ];
+        breakdowns.forEach(breakdown => {
+          if (breakdown.variables) {
+            breakdown.variables.forEach(v => {
+              variables.push({
+                name: v.display_name,
+                percentile: v.percentile,
+                factor: breakdown.factor_name
+              });
+            });
+          }
+        });
+        // Sort by percentile descending to get top variables
+        variables.sort((a, b) => b.percentile - a.percentile);
+        setAllVariables(variables);
 
         // Get top 3 drivers by overall score (excluding current driver)
         const sortedDrivers = allDriversResponse.data
@@ -218,6 +252,85 @@ export default function Overview() {
 
       {/* Navigation Tabs - Full Width Below Header */}
       <DashboardTabs />
+
+      {/* AI-Generated Driver Overview - NBA Scouting Report Style */}
+      {driverData && (
+        <div className="scouting-report-section">
+          <h2 className="scouting-report-title">SCOUTING REPORT</h2>
+
+          <p className="scouting-headline-big">
+            {(() => {
+              const factors = [
+                {
+                  name: 'speed',
+                  adjective: 'fast',
+                  score: driverData.speed?.score || 0,
+                  max: factorStats.speed?.max || 100,
+                  percentile: driverData.speed?.percentile || 0
+                },
+                {
+                  name: 'consistency',
+                  adjective: 'consistent',
+                  score: driverData.consistency?.score || 0,
+                  max: factorStats.consistency?.max || 100,
+                  percentile: driverData.consistency?.percentile || 0
+                },
+                {
+                  name: 'racecraft',
+                  adjective: 'tactical',
+                  score: driverData.racecraft?.score || 0,
+                  max: factorStats.racecraft?.max || 100,
+                  percentile: driverData.racecraft?.percentile || 0
+                },
+                {
+                  name: 'tire management',
+                  adjective: 'tire-savvy',
+                  score: driverData.tire_management?.score || 0,
+                  max: factorStats.tire_management?.max || 100,
+                  percentile: driverData.tire_management?.percentile || 0
+                }
+              ];
+              const sorted = [...factors].sort((a, b) => (b.score / b.max) - (a.score / a.max));
+              const top = sorted[0];
+              const second = sorted[1];
+              const weakest = sorted[3];
+
+              // Generate more personalized description based on driver performance
+              const avgPercentile = factors.reduce((sum, f) => sum + f.percentile, 0) / factors.length;
+
+              let description;
+              if (avgPercentile >= 75) {
+                // Elite driver
+                description = `${currentDriverName} is an elite competitor who excels in ${top.name}, ranking in the ${Math.round(top.percentile)}th percentile. Their ${second.adjective} approach complements their natural ${top.adjective} abilities, though ${weakest.name} remains an area for continued development to reach championship-caliber performance.`;
+              } else if (avgPercentile >= 50) {
+                // Above average driver
+                description = `${currentDriverName} shows strong ${top.adjective} capabilities with ${top.name} as their calling card (${Math.round(top.percentile)}th percentile). They demonstrate ${second.adjective} tendencies that make them competitive on race day. Focusing development on ${weakest.name} could unlock the next level of performance.`;
+              } else {
+                // Developing driver
+                description = `${currentDriverName} is a developing talent with clear strengths in ${top.name} (${Math.round(top.percentile)}th percentile). Their ${second.adjective} driving style provides a solid foundation to build upon. Significant gains are possible through targeted work on ${weakest.name} fundamentals.`;
+              }
+
+              return (
+                <span className="headline-light">{description}</span>
+              );
+            })()}
+          </p>
+
+          <div className="scouting-badges">
+            {allVariables.slice(0, 4).map((variable) => (
+              <div key={variable.name} className="scouting-badge">
+                <div className="scouting-badge-icon">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EB0A1E" strokeWidth="2">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                    <polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                </div>
+                <span className="scouting-badge-label">{variable.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Top Section - Compact Tiles + Race Chart */}
       <div className="top-section">

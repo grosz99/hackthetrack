@@ -131,7 +131,17 @@ export default function SkillSliders({ currentSkills, initialTargets, onTargetCh
 
       <div className="sliders-header">
         <h3>Set Your Target Skills</h3>
-        <p className="sliders-subtitle">You have a total budget of 5% to distribute across all skills</p>
+
+        {/* Budget Explanation Box */}
+        <div className="budget-explanation-box">
+          <div className="budget-headline">
+            <span className="budget-amount">5% Total Improvement Budget</span>
+          </div>
+          <p className="budget-rationale">
+            Research shows that focusing development on 5% total skill improvement creates realistic, achievable goals while maintaining driver confidence.
+            Attempting larger jumps often leads to frustration and inconsistent results. This constraint forces strategic prioritization of your weakest areas for maximum impact.
+          </p>
+        </div>
 
         {/* AI Recommendation Insight */}
         {aiRecommendation && (
@@ -227,18 +237,22 @@ export default function SkillSliders({ currentSkills, initialTargets, onTargetCh
       </div>
 
       <div className="sliders-footer">
-        {/* Find Best Match Button */}
+        {/* Find Comparable Driver Button */}
         <button
           onClick={onFindSimilar}
           disabled={!hasChanges()}
           className="find-comparables-btn"
         >
           <span className="btn-icon">TARGET</span>
-          <span>Find Best Match</span>
+          <span>Find Comparable Driver</span>
         </button>
 
-        {!hasChanges() && (
-          <p className="helper-text">Use your {MAX_TOTAL_INCREASE}% budget to set target skills</p>
+        {hasChanges() ? (
+          <p className="helper-text success">
+            Click above to find a driver with your target skill profile and see what results they achieve
+          </p>
+        ) : (
+          <p className="helper-text">Use your {MAX_TOTAL_INCREASE}% budget to set target skills, then find a comparable driver</p>
         )}
       </div>
 
