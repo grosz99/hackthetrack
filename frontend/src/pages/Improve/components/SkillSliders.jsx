@@ -148,10 +148,12 @@ export default function SkillSliders({ currentSkills, initialTargets, onTargetCh
           <div className="ai-insight-box">
             <div className="ai-insight-header">
               <span className="ai-badge">AI</span>
-              <span>Recommended Allocation</span>
+              <span>Recommended Allocation (Pre-Selected)</span>
             </div>
-            <p className="ai-insight-text">{aiRecommendation.reasoning}</p>
-            <p className="ai-insight-adjust">Feel free to adjust sliders to match your priorities</p>
+            <p className="ai-insight-text">
+              {aiRecommendation.reasoning} The sliders below are pre-set to this optimal allocation, but you can adjust them to match your training priorities.
+              Once set, you'll be matched to a driver with your target performance profile to see what results are achievable.
+            </p>
           </div>
         )}
 
@@ -247,11 +249,7 @@ export default function SkillSliders({ currentSkills, initialTargets, onTargetCh
           <span>Find Comparable Driver</span>
         </button>
 
-        {hasChanges() ? (
-          <p className="helper-text success">
-            Click above to find a driver with your target skill profile and see what results they achieve
-          </p>
-        ) : (
+        {!hasChanges() && (
           <p className="helper-text">Use your {MAX_TOTAL_INCREASE}% budget to set target skills, then find a comparable driver</p>
         )}
       </div>
