@@ -33,6 +33,7 @@ export default function Skills() {
   const [loadingBreakdown, setLoadingBreakdown] = useState(false);
   const [error, setError] = useState(null);
   const [showRadarInfo, setShowRadarInfo] = useState(false);
+  const [allDriversVariables, setAllDriversVariables] = useState({}); // Store all drivers' variable data for clustering viz
 
   useEffect(() => {
     const fetchDriverData = async () => {
@@ -177,6 +178,9 @@ export default function Skills() {
       setFactorBreakdown(breakdownResponse.data);
       setFactorComparison(comparisonResponse.data);
 
+      // Fetch all drivers' variable data for clustering visualization
+      fetchAllDriversVariables(apiFactorName);
+
       // Fetch AI coaching analysis asynchronously (don't block the UI)
       setLoadingCoaching(true);
       api.get(`/api/factors/${apiFactorName}/coaching/${selectedDriverNumber}`)
@@ -195,6 +199,43 @@ export default function Skills() {
       setError(`Failed to load ${factorName} breakdown. Please try again later.`);
     } finally {
       setLoadingBreakdown(false);
+    }
+  };
+
+  // Fetch all drivers' variable data for the selected factor to show clustering
+  const fetchAllDriversVariables = async (apiFactorName) => {
+    try {
+      // Fetch breakdown for all drivers
+      const allDriversData = await Promise.all(
+        drivers.map(driver =>
+          api.get(`/api/factors/${apiFactorName}/breakdown/${driver.number}`)
+            .then(res => ({ driverNumber: driver.number, data: res.data }))
+            .catch(err => {
+              console.error(`Failed to fetch ${apiFactorName} for driver ${driver.number}:`, err);
+              return null;
+            })
+        )
+      );
+
+      // Organize data by variable name
+      const variableMap = {};
+      allDriversData.forEach(driverData => {
+        if (driverData && driverData.data.variables) {
+          driverData.data.variables.forEach(variable => {
+            if (!variableMap[variable.display_name]) {
+              variableMap[variable.display_name] = [];
+            }
+            variableMap[variable.display_name].push({
+              driverNumber: driverData.driverNumber,
+              percentile: variable.percentile
+            });
+          });
+        }
+      });
+
+      setAllDriversVariables(variableMap);
+    } catch (err) {
+      console.error('[Skills] Error fetching all drivers variables:', err);
     }
   };
 
@@ -511,7 +552,22 @@ export default function Skills() {
                             <div className="marker-line"></div>
                           </div>
 
-                          {/* Driver position dot */}
+                          {/* All drivers' dots for clustering visualization */}
+                          {allDriversVariables[variable.display_name]?.map((driverVar, idx) => {
+                            // Skip the current driver (will be shown as red dot)
+                            if (driverVar.driverNumber === selectedDriverNumber) return null;
+
+                            return (
+                              <div
+                                key={idx}
+                                className="clustering-dot"
+                                style={{ left: `${driverVar.percentile}%` }}
+                                title={`Driver #${driverVar.driverNumber}: ${driverVar.percentile.toFixed(0)}th percentile`}
+                              />
+                            );
+                          })}
+
+                          {/* Current driver position dot (larger, red, pulsing) */}
                           <div
                             className="driver-position-dot"
                             style={{ left: `${variable.percentile}%` }}

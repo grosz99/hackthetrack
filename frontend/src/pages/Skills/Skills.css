@@ -1201,6 +1201,31 @@
   animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* Clustering dots for all drivers */
+.clustering-dot {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: #888888;
+  border: 1px solid #FFFFFF;
+  border-radius: 50%;
+  z-index: 5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.7;
+}
+
+.clustering-dot:hover {
+  width: 10px;
+  height: 10px;
+  background: #555555;
+  opacity: 1;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 9;
+}
+
 @keyframes pulse-ring {
   0% {
     transform: translate(-50%, -50%) scale(1);

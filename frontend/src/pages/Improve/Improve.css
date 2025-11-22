@@ -135,6 +135,7 @@
 .improve-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 1fr;
   gap: 24px;
   margin-bottom: 48px;
   align-items: stretch;
@@ -260,6 +261,7 @@
 .best-match-results {
   display: flex;
   flex-direction: column;
+  flex: 1;
   height: 100%;
 }
 
@@ -481,8 +483,7 @@
   border: 3px solid #EB0A1E;
   border-radius: 12px;
   padding: 0;
-  flex: 1;
-  max-height: 520px;
+  height: 800px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -598,21 +599,21 @@
 
 /* Live Insights Formatting - Structured Sections */
 .live-insights {
-  font-size: 14px;
-  line-height: 1.7;
+  font-size: 16px;
+  line-height: 1.8;
   color: #333;
   margin: 0;
 }
 
 .live-insights strong {
   display: block;
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 900;
   color: #EB0A1E;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-top: 16px;
-  margin-bottom: 8px;
+  margin-top: 20px;
+  margin-bottom: 10px;
 }
 
 .live-insights strong:first-child {
@@ -620,8 +621,9 @@
 }
 
 .live-insights p {
-  margin: 0 0 12px 0;
+  margin: 0 0 14px 0;
   text-align: justify;
+  font-size: 16px;
 }
 
 .live-insights p:last-child {
