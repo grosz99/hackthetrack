@@ -438,22 +438,28 @@ export default function Improve() {
 
     // Split by lines and process markdown
     return text.split('\n').map((line, index) => {
+      const trimmedLine = line.trim();
+
       // Headers with ## or **
-      if (line.trim().startsWith('##')) {
-        const headerText = line.trim().replace(/^##\s*/, '');
+      if (trimmedLine.startsWith('##')) {
+        const headerText = trimmedLine.replace(/^##\s*/, '');
         return <strong key={index}>{headerText}</strong>;
       }
-      else if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
-        const headerText = line.trim().replace(/\*\*/g, '');
+      else if (trimmedLine.startsWith('**') && trimmedLine.endsWith('**')) {
+        const headerText = trimmedLine.replace(/\*\*/g, '');
         return <strong key={index}>{headerText}</strong>;
       }
       // Skip lines that start with # (main title)
-      else if (line.trim().startsWith('#')) {
+      else if (trimmedLine.startsWith('#')) {
         return null;
       }
+      // All-caps headers (e.g., "KEY FOCUS AREAS", "BEST TRACK OPPORTUNITIES")
+      else if (trimmedLine.length > 0 && trimmedLine === trimmedLine.toUpperCase() && /^[A-Z\s]+$/.test(trimmedLine)) {
+        return <strong key={index}>{trimmedLine}</strong>;
+      }
       // Regular paragraph
-      else if (line.trim()) {
-        return <p key={index}>{line.trim()}</p>;
+      else if (trimmedLine) {
+        return <p key={index}>{trimmedLine}</p>;
       }
       return null;
     }).filter(Boolean);
