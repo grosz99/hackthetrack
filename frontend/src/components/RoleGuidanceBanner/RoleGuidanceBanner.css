@@ -1,0 +1,141 @@
+/**
+ * RoleGuidanceBanner Styles
+ * NASCAR-themed guidance banner for role-specific tips
+ */
+
+.role-guidance-banner {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border: 3px solid #EB0A1E;
+  border-radius: 12px;
+  padding: 20px 28px;
+  margin: 0 0 24px 0;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(235, 10, 30, 0.15);
+}
+
+.role-guidance-icon {
+  width: 56px;
+  height: 56px;
+  background: #EB0A1E;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 3px solid white;
+  box-shadow: 0 0 0 2px #EB0A1E;
+}
+
+.role-icon-emoji {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.role-guidance-content {
+  flex: 1;
+}
+
+.role-guidance-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.role-badge {
+  background: #EB0A1E;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.role-guidance-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: white;
+  margin: 0;
+  letter-spacing: 0.3px;
+}
+
+.role-guidance-tips {
+  color: #ccc;
+  font-size: 14px;
+  line-height: 1.6;
+  font-weight: 500;
+  margin: 0;
+}
+
+.role-guidance-tips strong {
+  color: #EB0A1E;
+  font-weight: 800;
+}
+
+.role-toggle-btn {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.role-toggle-btn:hover {
+  border-color: #EB0A1E;
+  background: rgba(235, 10, 30, 0.1);
+  color: #EB0A1E;
+}
+
+.banner-dismiss-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px 8px;
+  transition: color 0.2s ease;
+  line-height: 1;
+}
+
+.banner-dismiss-btn:hover {
+  color: #EB0A1E;
+}
+
+@media (max-width: 768px) {
+  .role-guidance-banner {
+    flex-direction: column;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .role-guidance-header {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .role-toggle-btn {
+    width: 100%;
+  }
+
+  .banner-dismiss-btn {
+    top: 8px;
+    right: 8px;
+  }
+}

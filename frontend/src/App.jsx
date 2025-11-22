@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, useParams } from 'react-router-dom'
 import { DriverProvider } from './context/DriverContext'
 import { ScoutProvider } from './context/ScoutContext'
+import { RoleProvider } from './context/RoleContext'
 
 // Import pages
 import Rankings from './pages/Rankings/Rankings'
@@ -26,8 +27,9 @@ function ImproveRedirect() {
 function App() {
   return (
     <Router>
-      <DriverProvider>
-        <ScoutProvider>
+      <RoleProvider>
+        <DriverProvider>
+          <ScoutProvider>
           <div className="app min-h-screen bg-bg-primary">
             <main>
               <Routes>
@@ -63,8 +65,9 @@ function App() {
               </Routes>
             </main>
           </div>
-        </ScoutProvider>
-      </DriverProvider>
+          </ScoutProvider>
+        </DriverProvider>
+      </RoleProvider>
     </Router>
   )
 }

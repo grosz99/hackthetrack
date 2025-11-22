@@ -1,12 +1,85 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState } from 'react';
+import PropTypes from 'prop-types';
+import { useRole } from '../../context/RoleContext';
 import ToyotaGibbsLogo from '../ToyotaGibbsLogo/ToyotaGibbsLogo';
 import './WelcomeModal.css';
 
 export default function WelcomeModal({ onClose }) {
+  const { userRole, updateRole } = useRole();
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [selectedRole, setSelectedRole] = useState(userRole);
+
+  const handleRoleSelect = (role) => {
+    setSelectedRole(role);
+    updateRole(role);
+  };
 
   const slides = [
+    {
+      id: 'role-selection',
+      title: 'Personalize Your Experience',
+      content: (
+        <div className="role-selection-section">
+          <div className="role-selection-intro">
+            <h3>Before we begin, help us customize your journey...</h3>
+            <p>Are you using this platform as a driver looking to improve, or as a coach evaluating athletes?</p>
+          </div>
+
+          <div className="role-cards-container">
+            <div
+              className={`role-card ${selectedRole === 'driver' ? 'selected' : ''}`}
+              onClick={() => handleRoleSelect('driver')}
+              role="button"
+              tabIndex="0"
+              aria-label="Select Driver role"
+              aria-pressed={selectedRole === 'driver'}
+              onKeyPress={(e) => { if (e.key === 'Enter' || e.key === ' ') handleRoleSelect('driver'); }}
+            >
+              <div className="role-icon-wrapper">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2v20M2 12h20"></path>
+                </svg>
+              </div>
+              <h4>DRIVER</h4>
+              <p>I'm looking to improve my performance</p>
+              <ul className="role-benefits">
+                <li>Personal improvement tracking</li>
+                <li>Benchmark against top drivers</li>
+                <li>Identify skill gaps</li>
+                <li>Actionable practice recommendations</li>
+              </ul>
+            </div>
+
+            <div
+              className={`role-card ${selectedRole === 'coach' ? 'selected' : ''}`}
+              onClick={() => handleRoleSelect('coach')}
+              role="button"
+              tabIndex="0"
+              aria-label="Select Coach role"
+              aria-pressed={selectedRole === 'coach'}
+              onKeyPress={(e) => { if (e.key === 'Enter' || e.key === ' ') handleRoleSelect('coach'); }}
+            >
+              <div className="role-icon-wrapper">
+                <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 5H2v14h7M15 5h7v14h-7M9 5v14M15 5v14"></path>
+                  <path d="M9 12h6"></path>
+                </svg>
+              </div>
+              <h4>COACH</h4>
+              <p>I'm coaching & evaluating athletes</p>
+              <ul className="role-benefits">
+                <li>Athlete evaluation tools</li>
+                <li>Development planning insights</li>
+                <li>Comparative performance analysis</li>
+                <li>Team-wide skill assessments</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      )
+    },
     {
       id: 'welcome',
       title: 'Decode Performance. Dominate the Track.',
@@ -217,3 +290,7 @@ export default function WelcomeModal({ onClose }) {
     </AnimatePresence>
   );
 }
+
+WelcomeModal.propTypes = {
+  onClose: PropTypes.func.isRequired
+};
