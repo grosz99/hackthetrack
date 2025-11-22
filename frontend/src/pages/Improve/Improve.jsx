@@ -28,6 +28,58 @@ export default function Improve() {
   const [matchingData, setMatchingData] = useState(null);
   const [hasSearched, setHasSearched] = useState(false);
 
+  /**
+   * Calculate driver similarity percentage using weighted Euclidean distance
+   * Based on validated 4-Factor Performance Model (R²=0.895)
+   *
+   * @param {Object} driverA - First driver's factor scores (percentiles 0-100)
+   * @param {Object} driverB - Second driver's factor scores (percentiles 0-100)
+   * @returns {number} Similarity percentage (0-100)
+   */
+  const calculateDriverSimilarity = (driverA, driverB) => {
+    // Validated factor weights from regression analysis
+    const weights = {
+      speed: 0.466,          // 46.6% contribution to performance
+      consistency: 0.291,    // 29.1%
+      racecraft: 0.149,      // 14.9%
+      tireManagement: 0.095  // 9.5%
+    };
+
+    // Extract scores, defaulting to 0 if missing
+    const scoresA = {
+      speed: driverA.speed || 0,
+      consistency: driverA.consistency || 0,
+      racecraft: driverA.racecraft || 0,
+      tireManagement: driverA.tire_management || 0
+    };
+
+    const scoresB = {
+      speed: driverB.speed || 0,
+      consistency: driverB.consistency || 0,
+      racecraft: driverB.racecraft || 0,
+      tireManagement: driverB.tire_management || 0
+    };
+
+    // Calculate weighted squared differences
+    const squaredDifferences =
+      weights.speed * Math.pow(scoresA.speed - scoresB.speed, 2) +
+      weights.consistency * Math.pow(scoresA.consistency - scoresB.consistency, 2) +
+      weights.racecraft * Math.pow(scoresA.racecraft - scoresB.racecraft, 2) +
+      weights.tireManagement * Math.pow(scoresA.tireManagement - scoresB.tireManagement, 2);
+
+    // Weighted Euclidean distance
+    const distance = Math.sqrt(squaredDifferences);
+
+    // Maximum possible distance (all factors differ by 100 points)
+    const maxDistance = 100.0;
+
+    // Convert to similarity percentage
+    const similarity = (1 - distance / maxDistance) * 100;
+
+    // Ensure result is bounded [0, 100]
+    return Math.max(0, Math.min(100, similarity));
+  };
+
   // Generate AI-recommended budget allocation based on weaknesses
   const generateRecommendedAllocation = (driverFactors, coaching) => {
     const factors = ['speed', 'consistency', 'racecraft', 'tire_management'];
@@ -177,8 +229,37 @@ export default function Improve() {
       if (response.data.similar_drivers?.length > 0) {
         // Regular match or elite self-match in array
         const match = response.data.similar_drivers[0];
-        console.log('✅ Best match found:', match);
-        setBestMatch(match);
+
+        // Recalculate match score using validated mathematical formula
+        const currentDriverScores = {
+          speed: driverData.speed?.percentile || 0,
+          consistency: driverData.consistency?.percentile || 0,
+          racecraft: driverData.racecraft?.percentile || 0,
+          tire_management: driverData.tire_management?.percentile || 0
+        };
+
+        const matchDriverScores = {
+          speed: match.skills?.speed || 0,
+          consistency: match.skills?.consistency || 0,
+          racecraft: match.skills?.racecraft || 0,
+          tire_management: match.skills?.tire_management || 0
+        };
+
+        const calculatedMatchScore = calculateDriverSimilarity(currentDriverScores, matchDriverScores);
+
+        // Override backend match_score with our calculated value
+        const matchWithRealScore = {
+          ...match,
+          match_score: Math.round(calculatedMatchScore * 10) / 10 // Round to 1 decimal
+        };
+
+        console.log('✅ Best match found:', matchWithRealScore);
+        console.log('📊 Match calculation:', {
+          currentDriver: currentDriverScores,
+          matchDriver: matchDriverScores,
+          similarity: `${matchWithRealScore.match_score}%`
+        });
+        setBestMatch(matchWithRealScore);
         setSearching(false);
 
         // Fetch LIVE coaching insights via Claude API
