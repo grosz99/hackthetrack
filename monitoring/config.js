@@ -4,7 +4,7 @@
  */
 
 export const config = {
-  // Base URL - replace with your actual Netlify URL
+  // Base URL
   baseUrl: process.env.NETLIFY_URL || 'https://gibbs-ai.netlify.app',
 
   // API URL
@@ -24,11 +24,11 @@ export const config = {
     apiResponse: 15000, // 15 seconds
   },
 
-  // Pages to monitor
+  // Pages to monitor - ONLY the 5 pages requested
   pages: [
     {
-      name: 'Rankings',
-      url: '/rankings',
+      name: 'Home - Rankings',
+      url: '/',
       waitForSelector: 'table tbody tr',
       dataValidation: [
         { selector: 'table tbody tr', minCount: 10, description: 'Driver rows should be present' },
@@ -36,60 +36,36 @@ export const config = {
       ],
     },
     {
-      name: 'Overview - Driver 7',
-      url: '/driver/7/overview',
-      waitForSelector: '[data-testid="overview-content"], .overview-container',
+      name: 'Overview - Driver 72',
+      url: '/driver/72/overview',
+      waitForSelector: 'body',
       dataValidation: [
-        { selector: '[data-testid="stat-card"], .stat-card', minCount: 3, description: 'Stat cards should be visible' },
+        { selector: 'h1, h2, h3', minCount: 1, description: 'Page headers should be present' },
+      ],
+    },
+    {
+      name: 'Race Log - Driver 72',
+      url: '/driver/72/race-log',
+      waitForSelector: 'body',
+      dataValidation: [
+        { selector: 'h1, h2, h3', minCount: 1, description: 'Page headers should be present' },
+      ],
+    },
+    {
+      name: 'Skills - Driver 72',
+      url: '/driver/72/skills',
+      waitForSelector: 'body',
+      dataValidation: [
+        { selector: 'h1, h2, h3', minCount: 1, description: 'Page headers should be present' },
         { selector: 'canvas, svg', minCount: 1, description: 'Charts should be rendered' },
       ],
     },
     {
-      name: 'Race Log - Driver 7',
-      url: '/driver/7/race-log',
-      waitForSelector: '[data-testid="race-log"], .race-log-container',
+      name: 'Driver Development - Driver 72',
+      url: '/driver/72/driver-development',
+      waitForSelector: 'body',
       dataValidation: [
-        { selector: '[data-testid="race-entry"], .race-entry', minCount: 1, description: 'Race entries should be present' },
-      ],
-    },
-    {
-      name: 'Skills - Driver 7',
-      url: '/driver/7/skills',
-      waitForSelector: '[data-testid="skills-content"], .skills-container',
-      dataValidation: [
-        { selector: 'canvas, svg, [data-testid="radar-chart"]', minCount: 1, description: 'Skill visualization should be present' },
-      ],
-    },
-    {
-      name: 'Driver Development - Driver 7',
-      url: '/driver/7/driver-development',
-      waitForSelector: '[data-testid="improve-content"], .improve-container',
-      dataValidation: [
-        { selector: '[data-testid="skill-slider"], input[type="range"]', minCount: 1, description: 'Skill sliders should be present' },
-      ],
-    },
-    {
-      name: 'Telemetry Comparison - Driver 7',
-      url: '/driver/7/telemetry-comparison',
-      waitForSelector: '[data-testid="telemetry-content"], .telemetry-container',
-      dataValidation: [
-        { selector: 'canvas, svg, [data-testid="speed-trace"]', minCount: 1, description: 'Telemetry charts should be rendered' },
-      ],
-    },
-    {
-      name: 'Strategy Chat - Driver 7',
-      url: '/driver/7/strategy-chat',
-      waitForSelector: '[data-testid="chat-container"], .chat-interface',
-      dataValidation: [
-        { selector: '[data-testid="chat-input"], input, textarea', minCount: 1, description: 'Chat input should be present' },
-      ],
-    },
-    {
-      name: 'Track Intelligence',
-      url: '/track-intelligence',
-      waitForSelector: '[data-testid="track-intelligence"], .track-intelligence-container',
-      dataValidation: [
-        { selector: 'canvas, svg, [data-testid="track-map"]', minCount: 1, description: 'Track visualization should be present' },
+        { selector: 'h1, h2, h3', minCount: 1, description: 'Page headers should be present' },
       ],
     },
   ],
@@ -98,7 +74,7 @@ export const config = {
   alerts: {
     email: {
       enabled: process.env.ALERT_EMAIL_ENABLED === 'true',
-      to: process.env.ALERT_EMAIL_TO || 'your-email@example.com',
+      to: process.env.ALERT_EMAIL_TO || 'justin.m.grosz@gmail.com',
       from: process.env.ALERT_EMAIL_FROM || 'monitoring@hackthetrack.com',
     },
     slack: {

@@ -32,13 +32,13 @@ jobs:
       - name: Run monitoring
         working-directory: ./monitoring
         env:
-          NETLIFY_URL: ${{ secrets.NETLIFY_URL || 'https://gibbs-ai.netlify.app' }}
-          VITE_API_URL: https://hackthetrack-api-ae28ad6f804d.herokuapp.com
-          ALERT_EMAIL_ENABLED: ${{ secrets.ALERT_EMAIL_ENABLED || 'false' }}
-          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
-          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
-          SMTP_HOST: ${{ secrets.SMTP_HOST }}
-          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          NETLIFY_URL: 'https://gibbs-ai.netlify.app'
+          VITE_API_URL: 'https://hackthetrack-api-ae28ad6f804d.herokuapp.com'
+          ALERT_EMAIL_ENABLED: 'true'
+          ALERT_EMAIL_TO: 'justin.m.grosz@gmail.com'
+          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM || 'monitoring@hackthetrack.com' }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           ALERT_SLACK_ENABLED: ${{ secrets.ALERT_SLACK_ENABLED || 'false' }}
@@ -79,24 +79,21 @@ jobs:
 
             const issueBody = `## 🚨 Monitoring Alert
 
-**Timestamp:** ${reportData.timestamp}
-**Failed Pages:** ${failures.length} / ${reportData.summary.total}
+            **Timestamp:** ${reportData.timestamp}
+            **Failed Pages:** ${failures.length} / ${reportData.summary.total}
 
-### Failed Pages:
-${failures.map(f => `
-- **${f.name}** (${f.url})
-  - Errors: ${f.errors.join(', ')}
-  - Validations: ${f.validationSummary.failed} failed
-`).join('\n')}
+            ### Failed Pages:
+            ${failures.map(f => `- **${f.name}** (${f.url})
+              - Errors: ${f.errors.join(', ')}
+              - Validations: ${f.validationSummary.failed} failed`).join('\n')}
 
-### Actions Required:
-1. Review the screenshots in the workflow artifacts
-2. Check if the site is down or experiencing issues
-3. Verify API connectivity
-4. Check for any recent deployments that may have caused issues
+            ### Actions Required:
+            1. Review the screenshots in the workflow artifacts
+            2. Check if the site is down or experiencing issues
+            3. Verify API connectivity
+            4. Check for any recent deployments that may have caused issues
 
-[View Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
-`;
+            [View Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})`;
 
             await github.rest.issues.create({
               owner: context.repo.owner,
