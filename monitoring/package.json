@@ -1,0 +1,18 @@
+{
+  "name": "hackthetrack-monitoring",
+  "version": "1.0.0",
+  "description": "Automated monitoring and screenshot system for HackTheTrack",
+  "type": "module",
+  "scripts": {
+    "monitor": "node monitor.js",
+    "test": "node test-monitor.js"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.5"
+  }
+}

@@ -1,0 +1,107 @@
+name: Automated Site Monitoring
+
+on:
+  # Run every 6 hours
+  schedule:
+    - cron: '0 */6 * * *'  # At minute 0 past every 6th hour
+
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install monitoring dependencies
+        working-directory: ./monitoring
+        run: npm install
+
+      - name: Install Playwright browsers
+        working-directory: ./monitoring
+        run: npx playwright install chromium --with-deps
+
+      - name: Run monitoring
+        working-directory: ./monitoring
+        env:
+          NETLIFY_URL: ${{ secrets.NETLIFY_URL || 'https://gibbs-ai.netlify.app' }}
+          VITE_API_URL: https://hackthetrack-api-ae28ad6f804d.herokuapp.com
+          ALERT_EMAIL_ENABLED: ${{ secrets.ALERT_EMAIL_ENABLED || 'false' }}
+          ALERT_EMAIL_TO: ${{ secrets.ALERT_EMAIL_TO }}
+          ALERT_EMAIL_FROM: ${{ secrets.ALERT_EMAIL_FROM }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          ALERT_SLACK_ENABLED: ${{ secrets.ALERT_SLACK_ENABLED || 'false' }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: node monitor.js
+
+      - name: Upload screenshots as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: screenshots-${{ github.run_number }}
+          path: monitoring/screenshots/
+          retention-days: 7
+
+      - name: Upload monitoring reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reports-${{ github.run_number }}
+          path: monitoring/reports/
+          retention-days: 30
+
+      - name: Create Issue on Failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Read the latest report
+            const reportsDir = path.join(process.cwd(), 'monitoring', 'reports');
+            const files = fs.readdirSync(reportsDir);
+            const latestReport = files.sort().reverse()[0];
+            const reportData = JSON.parse(fs.readFileSync(path.join(reportsDir, latestReport), 'utf8'));
+
+            const failures = reportData.results.filter(r => !r.success);
+
+            const issueBody = `## 🚨 Monitoring Alert
+
+**Timestamp:** ${reportData.timestamp}
+**Failed Pages:** ${failures.length} / ${reportData.summary.total}
+
+### Failed Pages:
+${failures.map(f => `
+- **${f.name}** (${f.url})
+  - Errors: ${f.errors.join(', ')}
+  - Validations: ${f.validationSummary.failed} failed
+`).join('\n')}
+
+### Actions Required:
+1. Review the screenshots in the workflow artifacts
+2. Check if the site is down or experiencing issues
+3. Verify API connectivity
+4. Check for any recent deployments that may have caused issues
+
+[View Full Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+`;
+
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🚨 Site Monitoring Failed: ${failures.length} page(s) - ${new Date(reportData.timestamp).toLocaleString()}`,
+              body: issueBody,
+              labels: ['monitoring', 'alert', 'bug']
+            });
